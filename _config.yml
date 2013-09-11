@@ -1,0 +1,5 @@
+permalink: /:year/:month/:day.html
+markdown: rdiscount
+
+redcarpet:
+  extensions: ['no_intra_emphasis', 'tables', 'space_after_headers']

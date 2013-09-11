@@ -1,15 +1,14 @@
 ---
 layout: default
-title : 发条兔子的博客
-description : 发条兔子的博客
+title: 发条兔子的博客（归档）
+description: 发条兔子的博客, 技术博客, 分享技术, 关注 web，交流学习，共同进步
 ---
 
-<div class="well">
-    <span>文章总计： {{ site.posts | size }} 篇</span>
-    <span class="pull-right">最后更新时间：{{ site.time | date: "%Y年%m月%d日" }}</span>
-</div>
-
 <div class="well well-header">
+  <h2>所有文章：</h2>
+  {% capture year %}{% endcapture %}
+  {% capture month %}{% endcapture %}
+
   <div>
   {% for post in site.posts %}
     {% capture new_year %}{{ post.date | date: "%Y" }}{% endcapture %}
