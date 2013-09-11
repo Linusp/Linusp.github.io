@@ -1,0 +1,10 @@
+{% capture new_month %}{{ post.date | date: "%m" }}{% endcapture %}
+{% if month == new_month %}
+  <li>{{ post.date | date: "%d日" }} »»» <a href="{{ post.url }}">{{ post.title }}</a></li>
+{% else %}
+  </ul>
+  {% capture month %}{{ new_month }}{% endcapture %}
+  <h4>{{ month }} 月</h4>
+  <ul  id="month">
+    <li>{{ post.date | date: "%d日" }} »»» <a href="{{ post.url }}">{{ post.title }}</a></li>
+{% endif %}
