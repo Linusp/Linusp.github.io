@@ -1,0 +1,546 @@
+---
+layout     : post
+title      : 使用Github Pages服务建立个人博客
+categories : IT
+tags       : github emacs org-mode jekyll
+---
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Github Pages的基本机制</a></li>
+<li><a href="#sec-2">2 为什么要使用Github Pages来建立个人博客</a></li>
+<li><a href="#sec-3">3 环境准备</a></li>
+<li><a href="#sec-4">4 方案选择</a></li>
+<li><a href="#sec-5">5 行动纲领</a></li>
+<li><a href="#sec-6">6 jekyll博客配置</a>
+<ul>
+<li><a href="#sec-6-1">6.1 博客目录结构</a></li>
+<li><a href="#sec-6-2">6.2 博客模板</a></li>
+<li><a href="#sec-6-3">6.3 _config.yml</a></li>
+<li><a href="#sec-6-4">6.4 archives页面示例</a></li>
+<li><a href="#sec-6-5">6.5 _site目录</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 使用emacs的org-mode</a></li>
+<li><a href="#sec-8">8 尚存的问题</a></li>
+<li><a href="#sec-9">9 关于本博客</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1">Github Pages的基本机制</h3>
+<div class="outline-text-3" id="text-1">
+
+
+<p>
+<a href="https://github.com">Github</a> 是一个用于使用Git版本控制系统项目的共享虚拟主机服务<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>。对开源知识有一定了解的朋友对这个名词应该不陌生，就算陌生也可以在进行搜索后迅速地了解。Github提供了<a href="http://pages.github.com/">Github Pages</a> 这么一个服务来让Github用户能为个人或个人项目建立项目页面来展示个人或项目的一些信息。本意是这样的。
+</p>
+<p>
+Github Pages的机制其实很简单，它将指定目录下的文件（默认要求使用markdown语法编写）编译成html然后发布，当然，如果是已经编译好的html文件它也可以处理。其后端使用的就是<a href="http://jekyllrb.com/">Jekyll</a> 。如果玩过诸如如Apache、Ngix之类的web服务器（IIS？抱歉，我是故意的），那么想必会对这个过程很熟悉。这样一个服务允许人们在本地的项目仓库里编写好文章，然后push到github上去。
+</p>
+<p>
+而且，没错，使用Github Pages建立的网站只能是静态的网站，不过对于个人博客来说，这些已经足够了，其他更多的理由后面再说。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">为什么要使用Github Pages来建立个人博客</h3>
+<div class="outline-text-3" id="text-2">
+
+
+<p>
+使用什么博客平台取决于个人的需求，因此，并不是所有人都适合使用本文介绍的这种形式，一般来说，追求简洁的一些程序员可能会使用这种方式。
+</p>
+<p>
+对于有以下需求的人来说，使用Github Pages建立博客是个好主意：
+</p><ul>
+<li>希望能在本地编写文章
+</li>
+<li>希望有掌握整个网站的权限
+</li>
+<li>追求简洁、轻便
+</li>
+<li>不想购买主机空间和域名
+</li>
+</ul>
+
+
+<p>
+对于第一条，著名的博客平台<a href="http://wordpress.org/">WordPress</a> 提供xml-rpc接口，允许用户通过相关软件在本地编写好文章后远程发布。说实话，我还是比较喜欢WordPress的，但它不满足后面三个需求。说到xml-rpc，早些年国内各大博客平台都是支持xml-rpc借口的（如CSDN，ChinaUnix等），但是后来据说是出于安全因素的考虑，似乎有些网站是关闭了这个接口，现在网上的相关搜索结果普遍是四五年前的讨论结果。新浪以前似乎也支持xml-rpc接口，但据我测试现在是无法进行发布了，CSDN貌似也有点问题，应该是关闭了接口。之所以要说xml-rpc，是因为emacs有一个插件org2blog能够通过xml-rpc接口来进行远程发布，顾名思义org2blog是使用org-mode作为major-mode的，熟悉org-mode并且正在使用WordPress的朋友一定会喜欢这个插件，如果需要，可以到这个<a href="https://github.com/punchagan/org2blog">链接</a> 下载org2blog，此外org2blog依赖xml-rpc.el，点<a href="http://www.emacswiki.org/emacs/xml-rpc.el">这里</a> 可以下载。
+</p>
+<p>
+第二条需求的话见仁见智吧，强迫症首选。
+</p>
+<p>
+第三条，还是说WordPress吧，WordPress是使用php编写的，使用mysql数据库来管理文章。从功能上来说WordPress是非常好的，它提供丰富的主题、插件以及拥有很多用户的论坛（好吧我不是在这里推荐WordPress的，不过我确实挺喜欢WordPress，之前也说过了），与此相对应的，为了完全了解WordPress，用户不得不去学习如何安装它的主题和插件、熟悉选项繁多的后台管理界面。至于国内的一些博客平台，外观暂且不说，一般都带有很多广告，我特别讨厌这一点。
+</p>
+<p>
+第四条，好吧这是我选择这一条路的主要理由，你懂得，我很穷，没有钱买主机空间和域名（求一个土豪朋友）。为什么我穷？因为我现在待业在家，没有工作——没有工作是因为我把工作辞了在家准备考公务员，至于这后面的故事就很复杂啦，如果有兴趣的话可以发邮件给我和我谈谈心哟。
+</p>
+<p>
+如果看到这里您对我的观点基本赞同的话，您可以继续读下去，否则我觉得您可以考虑一下WordPress或者其他平台。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-3">
+<h3 id="sec-3">环境准备</h3>
+<div class="outline-text-3" id="text-3">
+
+
+<p>
+对于想使用Github Pages服务来建立个人博客的朋友来说，您需要以下环境：
+</p><ul>
+<li>github帐号
+</li>
+<li>配置好的本地git工具
+</li>
+<li>markdown编辑器或者其他的编辑器
+</li>
+<li>jekyll(可选)
+</li>
+</ul>
+
+
+<p>
+前面两个我不想多说，相关的文章太多了，在这里重复那些内容没有什么意义。
+</p>
+<p>
+特别要说的是，建议使用linux系统，虽然理论上windows也可以使用msysgit来管理，但我不认为那是个好主意，当然如果愿意折腾，就无所谓了。
+</p>
+<p>
+至于markdown，它的语法简单明了，很快就能上手，因此不要担心这个问题，需要学习的话，可以到github的首页，按下键盘的 <b>M</b> 键进行学习。至于编辑器，简单的文本编辑器如gedit、leafpad甚至nano都可以，当然，本人选择使用emacs并且不使用markdown模式而是坚持使用org-mode，感兴趣的可以在文章尾部找到相关的配置以及使用方法。此外一些支持markdown语法的编辑器也是比较好的选择。
+</p>
+<p>
+最后的Jekyll为什么标注是可选呢？因为我们并不需要对相关的项目仓库做什么特别的事情，我们只需要写文章，然后commit-&gt;push就是了，之所以需要jekyll，是为了方便本地预览博客以及进行调试。怎么说也要保证自己的网站确实能够运行然后才去让别人阅览吧？总而言之，jekyll并不是建立博客必须的部分，但它是帮助我们更好地进行管理的工具。
+</p>
+<p>
+jekyll的安装：
+</p>
+
+
+<pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">&#20197;debian&#31995;linux&#21457;&#34892;&#29256;&#20026;&#20363;</span>
+sudo apt-get install rubygems1.8
+gem install jekyll liquid open4 maruku classifier rdiscount
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-3">
+<h3 id="sec-4">方案选择</h3>
+<div class="outline-text-3" id="text-4">
+
+
+<p>
+可选的方案有三个：
+</p><ul>
+<li><a href="http://jekyllbootstrap.com/">Jekyll-Bootstrap</a> （简称JB-不信自己去看_includes目录）
+</li>
+<li><a href="http://octopress.org/">Octopress</a>
+</li>
+<li>自己动手丰衣足食
+</li>
+</ul>
+
+
+<p>
+Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们能够快速地得到一个基本好看的、能够运行的博客系统，不过还是那个问题，因为已经够用了，所以你不会去关心它们到底干了什么怎么干的，直到你遇到问题。不过它们还是不错的，这是真心话。相对来说我个人比较推荐Jekyll-Bootstrap，因为它在Jekyll的基础上并没有作太大的改变，只是增加了主题和一些配置而已，Octopress干的事就多了。
+</p>
+<p>
+这里主要说一下第三种方案。
+</p>
+<p>
+自己动手呢，也分两种情况：
+</p><ul>
+<li>复用他人的博客模板
+</li>
+<li>自行编写每一行网站代码
+</li>
+</ul>
+
+
+<p>
+显然第二种情况是如果不是对前端知识足够熟悉是比较困难的。因此复用他人的博客模板是比较好的选择，这里的复用并不是简单的拷贝然后使用（当然你想的话也可以），其他人的博客一般都会有一些细节无法满足自己，所以还需要自己进行修改、定制，这个过程就是意义所在。
+</p>
+<p>
+这个<a href="https://github.com/mojombo/jekyll/wiki/sites">页面</a> 收集了非常多Jekyll博客的链接及其源代码，我比较喜欢codepiano的风格，然后我最初用来学习的是唐九军的博客，唐九军的博客没有使用Jekyll-Bootstrap等其他东西，完全是自己编写的css和js，其文件结构也比较清晰——这两个人的博客和源代码链接都可以在刚才说的页面上找到，请善用快捷键 <b>Ctrl+F</b> 。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-3">
+<h3 id="sec-5">行动纲领</h3>
+<div class="outline-text-3" id="text-5">
+
+
+<p>
+按照以下步骤进行：
+</p><ol>
+<li>在github上建立一个名为&lt;username&gt;.github.io的repo，其中的username为github用户名.
+</li>
+<li>在本地建立对应的repo目录并设置好.
+</li>
+<li>将下载下来的模板拷贝到本地repo目录中.
+</li>
+</ol>
+
+
+<p>
+前期的工作就是这么三步,主要的工作集中在对自己的博客的配置中，下面将讲述博客配置的一些细节。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-3">
+<h3 id="sec-6">jekyll博客配置</h3>
+<div class="outline-text-3" id="text-6">
+
+
+<p>
+之前说jekyll并不是必须的，但这里为什么要说“jekyll博客配置”呢？因为虽然我们可以不用jekyll，但最终github pages生成我们的博客时就是用的jekyll，所以我们在配置上还是得按照jekyll的规矩来。
+</p>
+
+</div>
+
+<div id="outline-container-6-1" class="outline-4">
+<h4 id="sec-6-1">博客目录结构</h4>
+<div class="outline-text-4" id="text-6-1">
+
+
+<p>
+首先明确一点，博客目录中不以下划线为命名开始的文件/文件夹都会在生成博客时复制过去，根据个人的不同喜好，博客的结构会不一样，这里只说一下jekyll要求的一些结构：
+</p>
+
+
+<pre class="src src-sh">-- index.html         &#32593;&#31449;&#39318;&#39029;&#25991;&#20214;
+-- _layouts           &#21338;&#23458;&#27169;&#26495;&#30446;&#24405;
+   -- default.html
+   --post.html
+-- _posts             &#25991;&#31456;&#23384;&#25918;&#30446;&#24405;
+   -- 2013-09-08-test.md
+   -- 2013-09-08-test.html
+   -- &lt;other posts&gt;                         
+</pre>
+
+<p>
+除此以外其他文件都不是必须的，但光有这三个东西很难保证能生成一个足够完整的博客——事实上网站模板和文章目录也不是必须的，除了index.html，因为完全可以乱七八糟写一堆html文件然后自己在各个html文件之间理清关系。因此，通常的一个功能完整的jekyll博客目录包含以下结构和文件：
+</p>
+
+
+<pre class="src src-sh">-- index.html         &#32593;&#31449;&#39318;&#39029;&#25991;&#20214;
+-- archives.html      &#25991;&#31456;&#23384;&#26723;&#39029;&#38754;&#25991;&#20214;&#65292;&#25991;&#20214;&#21517;&#21487;&#25913;
+-- categories.html    &#25991;&#31456;&#20998;&#31867;&#39029;&#38754;&#25991;&#20214;&#65292;&#25991;&#20214;&#21517;&#21487;&#25913;
+-- tags.html          &#25991;&#31456;&#26631;&#31614;&#39029;&#38754;&#25991;&#20214;&#65292;&#25991;&#20214;&#21517;&#21487;&#25913;
+-- about.html         &#8220;&#20851;&#20110;&#25105;&#8221;&#39029;&#38754;&#25991;&#20214;&#65292;&#25991;&#20214;&#21517;&#21487;&#25913;
+-- rss.xml&#25110;atom.xml  &#21338;&#23458;feed&#25991;&#20214;&#65292;&#25991;&#20214;&#21517;&#21487;&#25913;
+-- sitemap.xml        &#21338;&#23458;&#22320;&#22270;&#65292;&#20026;&#21338;&#23458;&#20570;SEO&#20248;&#21270;&#65292;&#36825;&#20010;&#25105;&#19981;&#22826;&#25026;
+-- _config.yml        jekyll&#21338;&#23458;&#37197;&#32622;&#25991;&#20214;
+-- _layouts           &#21338;&#23458;&#27169;&#26495;&#30446;&#24405;
+   -- default.html
+   -- post.html
+-- _includes          &#21487;&#22797;&#29992;&#30340;&#20844;&#29992;&#27169;&#26495;&#25991;&#20214;&#30446;&#24405;&#65292;&#20363;&#22914;&#21338;&#23458;&#30340;&#23548;&#33322;&#26465;&#12290;&#19981;&#26159;&#24517;&#39035;&#30340;&#65292;&#20294;&#20998;&#31163;&#20986;&#21508;&#20010;&#39029;&#38754;&#30340;&#20844;&#26377;&#37096;&#20998;&#21487;&#20197;&#20351;&#24471;&#27169;&#26495;&#26356;&#26131;&#35835;&#65292;&#32467;&#26500;&#26356;&#28165;&#26224;
+   -- footer.html
+   -- footer.html
+   -- &lt;other file to include<span style="color: #cf4a44;"> in</span> template&gt;
+-- _posts             &#25991;&#31456;&#23384;&#25918;&#30446;&#24405;
+   -- 2013-09-08-test.md
+   -- 2013-09-08-test.html
+   -- &lt;other posts&gt;                         
+-- assets/            &#20854;&#20182;&#21338;&#23458;&#25991;&#20214;&#23384;&#25918;&#30446;&#24405;&#65292;&#22914;css&#65292;&#22270;&#29255;&#65292;js&#25991;&#20214;&#65292;&#30446;&#24405;&#32467;&#26500;&#20165;&#20026;&#31034;&#20363;&#65292;&#21487;&#26681;&#25454;&#20010;&#20154;&#24847;&#24895;&#33258;&#34892;&#35774;&#32622;
+   -- css
+      -- style.css
+   -- img
+      -- favicon.ico
+   -- js
+      -- blog.js
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-6-2" class="outline-4">
+<h4 id="sec-6-2">博客模板</h4>
+<div class="outline-text-4" id="text-6-2">
+
+
+<p>
+正如上面的示例一样，博客模板一般包含一个default.html和一个post.html，正如其名字一样，default.html是博客的模板，而post.html一般是文章的生成模板。查看一些jekyll博客的模板，您会发现其中会有
+</p><blockquote>
+
+<p>\\{\\{ site.url }} \\{\\{ for post in site.posts }}
+</p>
+</blockquote>
+
+
+<p>
+这样的语句，这是因为jekyll使用<a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers">liquid语法</a> 来解析模板，诸如 <b>site.url</b> 、 <b>site.posts</b> 这样的部分是jekyll内置的一些变量，关于jekyll的变量的更多内容可以到<a href="http://jekyllrb.com/">jekyll的官网</a> 上深入了解。
+</p>
+<p>
+有了模板文件后，其他的页面都可以通过jekyll所谓的front-matter来使用模板，举例来说，撰写文章时，一般这样写：
+</p>
+<p class="verse">
+&mdash;<br/>
+layout     : post<br/>
+title      : &lt;文章标题&gt;<br/>
+categories : &lt;分类&gt;<br/>
+tags       : &lt;标签&gt;<br/>
+&mdash;<br/>
+&lt;正文&gt;<br/>
+&hellip;<br/>
+</p>
+
+
+<p>
+这样在编写文章时就只需要关心文章内容了。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-3" class="outline-4">
+<h4 id="sec-6-3">_config.yml</h4>
+<div class="outline-text-4" id="text-6-3">
+
+
+<p>
+_config.yml文件是jekyll博客的配置文件，用户可以在这个配置文件中设定博客名称、博客描述、作者名称等信息，并可以在模板中作为变量使用。
+</p>
+<p>
+我的配置文件如下所示：
+</p>
+
+
+<pre class="src src-html">permalink:        /:year/:month/:day.html
+markdown:         rdiscount
+pygments:         true
+paginate:         5
+
+title:            &#31548;&#20013;&#26790;
+url:              http://linusp.github.io/
+feed:             /atom.xml
+author:
+    name:         &#21457;&#26465;&#20820;&#23376;
+    email:        linusp1024@gmail.com
+    description:  <span style="color: #25ef29;">"&#21464;&#25104;&#20820;&#23376;&#30340;&#38738;&#34521;"</span>
+
+follow:
+    email:        linusp1024@gmail.com
+    github:       https://github.com/Linusp
+
+
+description:      &#21457;&#26465;&#20820;&#23376;&#30340;&#19981;&#23436;&#20840;&#25216;&#26415;&#21338;&#23458;
+
+indexContent:     true
+
+style:            /assets/css/style.css
+blogName:         &#31548;&#20013;&#26790;
+blogDesc:         &#21457;&#26465;&#20820;&#23376;&#30340;&#19981;&#23436;&#20840;&#25216;&#26415;&#21338;&#23458;
+favicon:          /assets/img/favicon.ico
+theme:            blue
+
+disqus:           linuspb
+
+copyright:        &#169; 2013 
+test:             ok
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-4" class="outline-4">
+<h4 id="sec-6-4">archives页面示例</h4>
+<div class="outline-text-4" id="text-6-4">
+
+
+<p>
+一个简单的archives页面<sup><a class="footref" name="fnr-.2" href="#fn-.2">2</a></sup>如下
+</p>
+
+
+<pre class="src src-html">---
+layout: default
+title : Archives
+---
+&lt;<span style="color: #ed8a0c;">ul</span>&gt;
+  {% for post in site.posts %}
+  &lt;<span style="color: #ed8a0c;">li</span>&gt;
+    &lt;<span style="color: #ed8a0c;">a</span> <span style="color: #fefc58;">href</span>=<span style="color: #25ef29;">"{{ post.url }}"</span> <span style="color: #fefc58;">title</span>=<span style="color: #25ef29;">"{{ post.title }}"</span>&gt;
+      &lt;<span style="color: #ed8a0c;">span</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"date"</span>&gt;
+        &lt;<span style="color: #ed8a0c;">span</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"day"</span>&gt;{{ post.date | date: '<span style="color: #fefc58;">%d</span>' }}&lt;/<span style="color: #ed8a0c;">span</span>&gt;
+        &lt;<span style="color: #ed8a0c;">span</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"month"</span>&gt;&lt;<span style="color: #ed8a0c;">abbr</span>&gt;{{ post.date | date: '<span style="color: #fefc58;">%b</span>' }}&lt;/<span style="color: #ed8a0c;">abbr</span>&gt;&lt;/<span style="color: #ed8a0c;">span</span>&gt;
+        &lt;<span style="color: #ed8a0c;">span</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"year"</span>&gt;{{ post.date | date: '<span style="color: #fefc58;">%Y</span>' }}&lt;/<span style="color: #ed8a0c;">span</span>&gt;
+      &lt;/<span style="color: #ed8a0c;">span</span>&gt;
+      &lt;<span style="color: #ed8a0c;">span</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"title"</span>&gt;{{ post.title }}&lt;/<span style="color: #ed8a0c;">span</span>&gt;
+    &lt;/<span style="color: #ed8a0c;">a</span>&gt;
+  &lt;/<span style="color: #ed8a0c;">li</span>&gt;
+  {% endfor %}
+&lt;/<span style="color: #ed8a0c;">ul</span>&gt;
+</pre>
+
+<p>
+同样的，categories页面和tags页面的形式差不多，也是使用jekyll内置的变量，当然要做得好看还是要费点功夫的，比如说本人这个博客的这两个页面还是一团糟（因为博客主题的作者并没有提供这两个页面，这就是所谓 <b>自己动手丰衣足食</b> 啦）。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6-5" class="outline-4">
+<h4 id="sec-6-5">_site目录</h4>
+<div class="outline-text-4" id="text-6-5">
+
+
+<p>
+本地调试时，jekyll会在目录下生成一个<sub>site目录，目录就是真正生成的博客目录和文件，但这个文件对Github</sub> Pages是无意义的，仅仅是用来方便本地预览和调试，因此建议在.gitignore文件中添加该目录以在push时不用上传该目录及其中的文件。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-3">
+<h3 id="sec-7">使用emacs的org-mode</h3>
+<div class="outline-text-3" id="text-7">
+
+
+<p>
+对于emacser来说，使用org-mode来写作才是最幸福的事情，因此就有了这一部分。这一部分的绝大部分内容来自脚注2<sup><a class="footref" name="fnr-.2.2" href="#fn-.2">2</a></sup>中提到的文章，基本的配置过程和要点在文章中都已经说得很详细了，因此我在这里就简略地说几点。
+</p>
+<p>
+因为jekyll可以识别markdown文件和html文件，所以使用emacs的org-mode将org文件publish成html文件就是我们要做的。值得一提的是Jekyll-Bootstrap在本地调试时直接无视_posts目录下后缀为html的文件，虽然说肯定有办法改变这种行为，但我找了一会没找到就放弃了，加之Jekyll-Bootstrap在jekyll的基础上又多加了一些东西，所以导致我并没有去使用Jekyll-Bootstrap以及使用了Jekyll-Bootstrap的博客模板。
+</p>
+<p>
+我的方案：
+</p>
+<ol>
+<li>建立一个目录，在其中建立两个子目录，一个名为 <b>org</b> ，一个名为 <b>jekyll</b> 。后者是和username.github.io这个repo对应的本地repo目录，前者是org格式的文章存放目录，注意org目录下再建立一个 <b>_posts</b> 目录，将文章存放到 <b>org/_posts</b> 下面，这样在执行 <b>org-publish-project</b> 时才能保证生成到指定目录。
+
+</li>
+<li>使用org-mode 7.x。emacs23自带的org-mode版本为6.x，其中的bug会导致插入的front-matter在生成时发生错误。emacs24自带的org-mode工作良好。
+
+</li>
+<li>org-mode的publish参数中一定要加上 <b>:body-only t</b> 否则就会生成完整的html文件，这不是我们想要的。
+
+</li>
+<li>编写文章时，在头部添加front matter，如下
+</li>
+</ol>
+
+
+
+
+<pre class="src src-html">#+BEGIN_HTML
+---
+layout     : post
+title      : &#20351;&#29992;Github Pages&#26381;&#21153;&#24314;&#31435;&#20010;&#20154;&#21338;&#23458;
+categories : IT
+tags       : github emacs org-mode jekyll
+---
+\#+END_HTML
+</pre>
+
+<p>
+而不需要其他信息，并在之后编写正文。
+</p>
+<p>
+我的publish配置（仅供参考）
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">require</span> '<span style="color: #ffffff;">org-publish</span>)
+(setq org-publish-project-alist
+      '(
+        (<span style="color: #25ef29;">"org-linusp"</span>
+         <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your org files.</span>
+         <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
+         <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"org"</span>
+         <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your Jekyll project.</span>
+         <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/jekyll/"</span>
+         <span style="color: #31d3c4;">:recursive</span> t
+         <span style="color: #31d3c4;">:publishing-function</span> org-publish-org-to-html
+         <span style="color: #31d3c4;">:headline-levels</span> 4 
+         <span style="color: #31d3c4;">:html-extension</span> <span style="color: #25ef29;">"html"</span>
+         <span style="color: #31d3c4;">:body-only</span> t <span style="color: #e81122;">;; </span><span style="color: #e81122;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
+         )
+        (<span style="color: #25ef29;">"org-static-linusp"</span>
+         <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
+         <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"css</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">js</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">png</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">jpg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">gif</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">pdf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">mp3</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">ogg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">swf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">php"</span>
+         <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/jekyll/"</span>
+         <span style="color: #31d3c4;">:recursive</span> t
+         <span style="color: #31d3c4;">:publishing-function</span> org-publish-attachment
+         )
+        (<span style="color: #25ef29;">"blog-linusp"</span> <span style="color: #31d3c4;">:components</span> (<span style="color: #25ef29;">"org-linusp"</span> <span style="color: #25ef29;">"org-static-linusp"</span>))
+        ))
+</pre>
+
+<p>
+执行 <b>org-publish-project</b> 时，选择 <b>blog-linusp</b> 进行publish（按照我这个配置）。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-3">
+<h3 id="sec-8">尚存的问题</h3>
+<div class="outline-text-3" id="text-8">
+
+
+<p>
+目前还存在以下问题：
+</p><ul>
+<li>在emacs中使用 <b>#+begin<sub>src</sub></b> 插入的代码块背景色太浅导致有些部分看不清.
+</li>
+<li>在emacs中使用 <b>#+begin<sub>quote</sub></b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.
+</li>
+<li>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.
+</li>
+<li>分类页面和标签页面还存在问题（如果您想使用本博客模板的话，建议使用<a href="#pizn.github.io-blogTheme">初始模板</a>）.
+</li>
+<li>首页显示了每篇文章的全部内容，应当改成显示文章概要以处理像本文这样内容较多的文章.
+</li>
+</ul>
+
+
+<p>
+如果您看了这篇文章并发现本文未描述出的一些问题，或者觉得我有可以帮上忙的地方，都可以<a href="mailto:linusp1024@gmail.com">发邮件给我</a>。
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-3">
+<h3 id="sec-9">关于本博客</h3>
+<div class="outline-text-3" id="text-9">
+
+
+<p>
+如果您够细心，应该会发现博客底端的脚注上的信息。在这里感谢<a href="http://zhanxin.info">PIZn</a> ，本博客使用的就是他设计的主题 <b>The One</b> ，当然本人在该主题的基础上做了一定的修改并还会继续进行修改。此外还要感谢<a href="http://tangjiujun.github.io">唐九军</a> ，他的结构清晰、简洁的博客模板让我对jekyll博客的基础有了足够的了解。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> 详情见维基百科的<a href="http://zh.wikipedia.org/zh/GitHub">Github条目</a>.
+</p>
+
+
+<p class="footnote"><sup><a class="footnum" name="fn-.2" href="#fnr-.2">2</a></sup> 来自<a href="http://orgmode.org/worg/org-tutorials/org-jekyll.html">Using org to Blog with Jekyll</a>.
+</p></div>
+</div>
+
+</div>
+</div>
