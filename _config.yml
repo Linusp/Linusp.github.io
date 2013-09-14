@@ -1,5 +1,32 @@
-permalink: /:year/:month/:day.html
-markdown: rdiscount
+permalink:        /:year/:month/:day.html
+markdown:         rdiscount
+pygments:         true
+paginate:         5
 
-redcarpet:
-  extensions: ['no_intra_emphasis', 'tables', 'space_after_headers']
+title:            笼中梦
+url:              http://linusp.github.io/
+feed:             /atom.xml
+author:
+    name:         发条兔子
+    email:        linusp1024@gmail.com
+    description:  "变成兔子的青蛙"
+
+follow:
+    email:        linusp1024@gmail.com
+    github:       https://github.com/Linusp
+    
+
+description:      发条兔子的不完全技术博客
+
+indexContent:     true
+
+style:            /assets/css/style.css
+blogName:         笼中梦
+blogDesc:         发条兔子的不完全技术博客
+favicon:          /assets/img/favicon.ico
+theme:            blue
+
+disqus:           linuspb
+
+copyright:        © 2013 
+test:             ok

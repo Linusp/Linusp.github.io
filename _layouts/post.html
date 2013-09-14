@@ -1,26 +1,16 @@
-{% include header.html %}
-{% include navbar.html %}
-  <div class="well well-header">
-      <ul>
-          <li  class="badge badge-info badge-large pull-right">
-            <a href="/categories.html?#anchor{{ page.categories | first}}">分类：{{ page.categories | first}}</a></li>
-      </ul>
-      <ul>
-        {% for tag in page.tags %}
-          <li  class="badge badge-inverse pull-right">
-              <a href="/tags.html?#anchor{{ tag }}">{{ tag }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-
-      <a class="time-backgroud"></a>
-      <span class="time-meta">{{ page.date | date: "%Y年%m月%d日" }}</span>
-      <h1>{{ page.title }}</h1>
-      <hr>
-      <p>{{ page.description }}</p>
-  </div>
-
-  <div class="well">
+---
+layout: default
+---
+<article class="post">
+    <h1 class="post-title">{{ page.title }}</h1>
     {{ content }}
-  </div>
-{% include footer.html %}
+    <nav class="pagination-link">
+        {% if page.previous %}
+        <a class="prev" href="{{ site.url }}{{ page.previous.url }}" rel="bookmark">&laquo;&nbsp;{{ page.previous.title | truncatewords:5 }}</a>
+        {% endif %}
+        {% if page.next %}
+        <a class="next" href="{{ site.url }}{{ page.next.url }}" rel="bookmark">{{ page.next.title | truncatewords:5 }}&nbsp;&raquo;</a>
+        {% endif %}
+     </nav>
+     <div id="disqus_thread"></div>
+</article>  

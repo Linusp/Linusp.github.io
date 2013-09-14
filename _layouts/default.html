@@ -1,4 +1,76 @@
-{% include header.html %}
-{% include navbar.html %}
-  {{ content }}
-{% include footer.html %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="generator" content="Jekyll" />
+    <meta name="author" content="{{ site.author.name }}" />
+    <meta name="description" content="{{ site.descripton }}" />
+    <link rel="stylesheet" href="{{ site.style }}" type="text/css" />
+    <link rel="alternate" type="application/atom+xml" title="Recent Entries" href="{{ site.feed }}" />
+    <link rel="shortcut icon" href="{{ site.favicon }}" type="image/x-icon" />
+    <!--[if lt IE 9]>
+    <script src="/assets/js/html5.js" type="text/javascript"></script>
+    <![endif]-->
+</head>
+<body id="{{ site.theme }}">
+<div id="head-line"></div>
+<div id="content">
+    <header id="head">
+        <div id="logo">
+	    <img src="/assets/img/icon.png" width="200" height="200"/>
+	    <h2>{{ site.blogName }}</h2>
+	    <h4>{{ site.blogDesc }}</h4>
+        </div>
+        <nav id="nav">
+            <ul>
+                <li class="fn-clear"><a href="/" rel="nofollow" class="action"><i class="icon-home"></i> 首页</a></li>
+                <li class="fn-clear"><a href="/archives.html"><i class="icon-list-ul"></i> 存档</a></li>
+		<li class="fn-clear"><a href="/categories.html"><i class="icon-flag"></i> 分类</a></li>
+		<li class="fn-clear"><a href="/tags.html"><i class="icon-tags"></i> 标签</a></li>
+                <li class="fn-clear"><a href="/about.html"><i class="icon-user"></i> 关于</a></li>
+		<li class="fn-clear"><a href="/rss.xml"><i class="icon-rss"></i> 订阅</a></li>
+            </ul>
+        </nav>
+    </header>
+    <section id="contain">
+        <header id="begin">
+            <span>{{ page.date }}</span>
+        </header>
+		{{ content }}
+        <footer id="foot">
+            <p>{{ site.copyright }} 发条兔子 - Crafted with 
+              <a href="http://jekyllrb.com/"><strong>Jekyll</strong></a>, Hosted on 
+              <a href="https://github.com/"><strong>GitHub</strong></a>, Theme designed by
+	      <a href="http://www.zhanxin.info/"><strong>PIZn</strong></a></p>
+        </footer>
+    </section>
+</div>
+<div id="foot-line"></div>
+<a class="fork-me" href="https://github.com/Linusp" target="_blank" rel="nofollow">
+    <img src="/assets/img/forkme.png" alt="Fork me on GitHub">
+</a>
+<script src="/assets/js/jquery.js" type="text/javascript"></script>
+<script src="/assets/js/jquery.scrollTo.js" type="text/javascript"></script>
+<script src="/assets/js/theOne.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    /**
+     * disqus
+     */
+    var disqusId = $("#disqus_thread");
+    if(disqusId && typeof disqusId != "undefined" && disqusId.length != 0) {
+        var disqusName = "{{ site.disqus }}";
+        var disqus_shortname = disqusName != "" ? disqusName : "linuspb";
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] ||
+                document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    }
+});
+</script>
+</body>
+</html>

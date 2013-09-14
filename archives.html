@@ -1,27 +1,21 @@
 ---
 layout: default
-title: 发条兔子的博客（归档）
-description: 发条兔子的博客, 技术博客, 分享技术, 关注 web，交流学习，共同进步
+title: 存档
+date: All posts are here.
 ---
-
-<div class="well well-header">
-  <h2>所有文章：</h2>
-  {% capture year %}{% endcapture %}
-  {% capture month %}{% endcapture %}
-
-  <div>
-  {% for post in site.posts %}
-    {% capture new_year %}{{ post.date | date: "%Y" }}{% endcapture %}
-
-    {% if year == new_year %}
-      {% include archives_month.html %}
-    {% else %}
-      </div>
-      {% capture year %}{{ new_year }}{% endcapture %}
-      <h3>{{ year }} 年</h3>
-      <div id"=year"> {% include archives_month.html %}
-    {% endif %}
-
-  {% endfor %}
-  </ul></div>
-</div>
+<article class="post">
+    {% capture post_year1 %}{{ 'now' | date: '%Y' }}{% endcapture %}
+            <h3>{{ post_year1 }}</h3>
+            <ul>
+            {% for post in site.posts %}
+                        {% capture post_year2 %}{{ post.date | date: '%Y' }}{% endcapture %}
+                        {% if post_year1 != post_year2 %}
+                            {% assign post_year1 = post_year2 %}
+                            </ul>
+                            <h3>{{ post_year1 }}</h3>
+                            <ul>
+                            {% endif %}
+                            <li><a href="{{ site.url }}{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+            {% endfor %}
+            </ul>
+</article>
