@@ -280,7 +280,12 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 正如上面的示例一样，博客模板一般包含一个default.html和一个post.html，正如其名字一样，default.html是博客的模板，而post.html一般是文章的生成模板。查看一些jekyll博客的模板，您会发现其中会有
 </p><blockquote>
 
-<p>\\{\\{ site.url }} \\{\\{ for post in site.posts }}
+<p>{% raw %}
+{{ site.url }} 
+{% endraw %}
+{% raw %}
+{{ for post in site.posts }}
+{% endraw %}
 </p>
 </blockquote>
 
@@ -405,7 +410,7 @@ title : Archives
 
 
 <p>
-本地调试时，jekyll会在目录下生成一个<sub>site目录，目录就是真正生成的博客目录和文件，但这个文件对Github</sub> Pages是无意义的，仅仅是用来方便本地预览和调试，因此建议在.gitignore文件中添加该目录以在push时不用上传该目录及其中的文件。
+本地调试时，jekyll会在目录下生成一个_site目录，目录就是真正生成的博客目录和文件，但这个文件对Github Pages是无意义的，仅仅是用来方便本地预览和调试，因此建议在.gitignore文件中添加该目录以在push时不用上传该目录及其中的文件。
 </p>
 </div>
 </div>
@@ -450,7 +455,7 @@ title      : &#20351;&#29992;Github Pages&#26381;&#21153;&#24314;&#31435;&#20010
 categories : IT
 tags       : github emacs org-mode jekyll
 ---
-\#+END_HTML
+#+END\_HTML
 </pre>
 
 <p>
@@ -502,9 +507,9 @@ tags       : github emacs org-mode jekyll
 <p>
 目前还存在以下问题：
 </p><ul>
-<li>在emacs中使用 <b>#+begin<sub>src</sub></b> 插入的代码块背景色太浅导致有些部分看不清.
+<li>在emacs中使用 <b>#+begin_src</b> 插入的代码块背景色太浅导致有些部分看不清.
 </li>
-<li>在emacs中使用 <b>#+begin<sub>quote</sub></b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.
+<li>在emacs中使用 <b>#+begin_quote</b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.
 </li>
 <li>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.
 </li>
