@@ -4,6 +4,7 @@ pygments:         true
 paginate:         5
 
 title:            笼中梦
+description:      发条兔子的不完全技术博客
 url:              http://linusp.github.io/
 feed:             /atom.xml
 author:
@@ -15,9 +16,6 @@ follow:
     email:        linusp1024@gmail.com
     github:       https://github.com/Linusp
     
-
-description:      发条兔子的不完全技术博客
-
 indexContent:     true
 
 style:            /assets/css/style.css
