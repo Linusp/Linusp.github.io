@@ -10,8 +10,8 @@ tags       : github emacs org-mode jekyll
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1 Github Pages的基本机制</a></li>
-<li><a href="#sec-2">2 为什么要使用Github Pages来建立个人博客</a></li>
+<li><a href="#sec-1">1 为什么要使用Github Pages来建立个人博客</a></li>
+<li><a href="#sec-2">2 Github Pages是什么</a></li>
 <li><a href="#sec-3">3 环境准备</a></li>
 <li><a href="#sec-4">4 方案选择</a></li>
 <li><a href="#sec-5">5 行动纲领</a></li>
@@ -32,26 +32,8 @@ tags       : github emacs org-mode jekyll
 </div>
 
 <div id="outline-container-1" class="outline-3">
-<h3 id="sec-1">Github Pages的基本机制</h3>
+<h3 id="sec-1">为什么要使用Github Pages来建立个人博客</h3>
 <div class="outline-text-3" id="text-1">
-
-
-<p>
-<a href="https://github.com">Github</a> 是一个用于使用Git版本控制系统项目的共享虚拟主机服务<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>。对开源知识有一定了解的朋友对这个名词应该不陌生，就算陌生也可以在进行搜索后迅速地了解。Github提供了<a href="http://pages.github.com/">Github Pages</a> 这么一个服务来让Github用户能为个人或个人项目建立项目页面来展示个人或项目的一些信息。本意是这样的。
-</p>
-<p>
-Github Pages的机制其实很简单，它将指定目录下的文件（默认要求使用markdown语法编写）编译成html然后发布，当然，如果是已经编译好的html文件它也可以处理。其后端使用的就是<a href="http://jekyllrb.com/">Jekyll</a> 。如果玩过诸如如Apache、Ngix之类的web服务器（IIS？抱歉，我是故意的），那么想必会对这个过程很熟悉。这样一个服务允许人们在本地的项目仓库里编写好文章，然后push到github上去。
-</p>
-<p>
-而且，没错，使用Github Pages建立的网站只能是静态的网站，不过对于个人博客来说，这些已经足够了，其他更多的理由后面再说。
-</p>
-</div>
-
-</div>
-
-<div id="outline-container-2" class="outline-3">
-<h3 id="sec-2">为什么要使用Github Pages来建立个人博客</h3>
-<div class="outline-text-3" id="text-2">
 
 
 <p>
@@ -62,8 +44,6 @@ Github Pages的机制其实很简单，它将指定目录下的文件（默认�
 </p><ul>
 <li>希望能在本地编写文章
 </li>
-<li>希望有掌握整个网站的权限
-</li>
 <li>追求简洁、轻便
 </li>
 <li>不想购买主机空间和域名
@@ -72,19 +52,40 @@ Github Pages的机制其实很简单，它将指定目录下的文件（默认�
 
 
 <p>
-对于第一条，著名的博客平台<a href="http://wordpress.org/">WordPress</a> 提供xml-rpc接口，允许用户通过相关软件在本地编写好文章后远程发布。说实话，我还是比较喜欢WordPress的，但它不满足后面三个需求。说到xml-rpc，早些年国内各大博客平台都是支持xml-rpc借口的（如CSDN，ChinaUnix等），但是后来据说是出于安全因素的考虑，似乎有些网站是关闭了这个接口，现在网上的相关搜索结果普遍是四五年前的讨论结果。新浪以前似乎也支持xml-rpc接口，但据我测试现在是无法进行发布了，CSDN貌似也有点问题，应该是关闭了接口。之所以要说xml-rpc，是因为emacs有一个插件org2blog能够通过xml-rpc接口来进行远程发布，顾名思义org2blog是使用org-mode作为major-mode的，熟悉org-mode并且正在使用WordPress的朋友一定会喜欢这个插件，如果需要，可以到这个<a href="https://github.com/punchagan/org2blog">链接</a> 下载org2blog，此外org2blog依赖xml-rpc.el，点<a href="http://www.emacswiki.org/emacs/xml-rpc.el">这里</a> 可以下载。
+第一条，本地编写允许文章允许用户选择自己喜欢的编辑器来进行写作，而不是使用博客平台的编辑器——对于我等emacser来说，许多博客平台的编辑器功能实在是有点不够看。著名的博客平台<a href="http://wordpress.org/">WordPress</a> 提供xml-rpc接口，允许用户通过相关软件在本地编写好文章后远程发布。说实话，我还是比较喜欢WordPress的，但它不满足后面三个需求。说到xml-rpc，早些年国内各大博客平台都是支持xml-rpc借口的（如CSDN，ChinaUnix等），但是后来据说是出于安全因素的考虑，似乎有些网站是关闭了这个接口，现在网上的相关搜索结果普遍是四五年前的讨论结果。新浪以前似乎也支持xml-rpc接口，但据我测试现在是无法进行发布了，CSDN貌似也有点问题，应该是关闭了接口。之所以要说xml-rpc，是因为emacs有一个插件org2blog能够通过xml-rpc接口来进行远程发布，顾名思义org2blog是使用org-mode作为major-mode的，熟悉org-mode并且正在使用WordPress的朋友一定会喜欢这个插件，如果需要，可以到这个<a href="https://github.com/punchagan/org2blog">链接</a> 下载org2blog，此外org2blog依赖xml-rpc.el，点<a href="http://www.emacswiki.org/emacs/xml-rpc.el">这里</a> 可以下载。
 </p>
 <p>
-第二条需求的话见仁见智吧，强迫症首选。
+第二条，还是说WordPress吧，WordPress是使用php编写的，使用mysql数据库来管理文章。从功能上来说WordPress是非常好的，它提供丰富的主题、插件以及拥有很多用户的论坛（好吧我不是在这里推荐WordPress的，不过我确实挺喜欢WordPress，之前也说过了），与此相对应的，为了完全了解WordPress，用户不得不去学习如何安装它的主题和插件、熟悉选项繁多的后台管理界面。至于国内的一些博客平台，外观暂且不说，一般都带有很多广告，我特别讨厌这一点。
 </p>
 <p>
-第三条，还是说WordPress吧，WordPress是使用php编写的，使用mysql数据库来管理文章。从功能上来说WordPress是非常好的，它提供丰富的主题、插件以及拥有很多用户的论坛（好吧我不是在这里推荐WordPress的，不过我确实挺喜欢WordPress，之前也说过了），与此相对应的，为了完全了解WordPress，用户不得不去学习如何安装它的主题和插件、熟悉选项繁多的后台管理界面。至于国内的一些博客平台，外观暂且不说，一般都带有很多广告，我特别讨厌这一点。
-</p>
-<p>
-第四条，好吧这是我选择这一条路的主要理由，你懂得，我很穷，没有钱买主机空间和域名（求一个土豪朋友）。为什么我穷？因为我现在待业在家，没有工作——没有工作是因为我把工作辞了在家准备考公务员，至于这后面的故事就很复杂啦，如果有兴趣的话可以发邮件给我和我谈谈心哟。
+第三条，好吧这是我选择这一条路的主要理由，你懂得，我很穷，没有钱买主机空间和域名（求一个土豪朋友）。为什么我穷？因为我现在待业在家，没有工作——没有工作是因为我把工作辞了在家准备考公务员，至于这后面的故事就很复杂啦，如果有兴趣的话可以发邮件给我和我谈谈心哟。
 </p>
 <p>
 如果看到这里您对我的观点基本赞同的话，您可以继续读下去，否则我觉得您可以考虑一下WordPress或者其他平台。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">Github Pages是什么</h3>
+<div class="outline-text-3" id="text-2">
+
+
+<p>
+<a href="https://github.com">Github</a> 是一个用于使用Git版本控制系统项目的共享虚拟主机服务<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>。简单说，它是一个具有版本管理功能的代码仓库，每个项目都有一个主页，列出项目的源文件。
+</p>
+<p>
+<a href="#site.url-assets-img-github.png">{{ site.url }}/assets/img/github.png</a>
+</p>
+<p>
+但是对于一个新手来说，看到一大堆源码，只会让人头晕脑涨，不知何处入手。他希望看到的是，一个简明易懂的网页，说明每一步应该怎么做。因此，Github就设计了Pages功能，允许用户自定义项目首页，用来替代默认的源码列表。所以，Github Pages可以被认为是用户编写的、托管在Github上的静态网页。
+</p>
+<p>
+Github提供模板，允许站内生成网页，但也允许用户自己编写网页，然后上传。有意思的是，这种上传并不是单纯的上传，而是会经过Jekyll程序的再处理。这里的<a href="http://jekyllrb.com">Jekyll</a> 是一个静态站点生成器，它提供了模板、变量、插件等功能，所以实际上可以用来编写整个网站。它也是Github Pages的后端处理工具。
+</p>
+<p>
+利用Github Pages的这些特点，我们就可以搭建一个个人的博客——虽然是静态的网站，不过足够了。
 </p>
 </div>
 
@@ -197,7 +198,7 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 
 
 <p>
-前期的工作就是这么三步,主要的工作集中在对自己的博客的配置中，下面将讲述博客配置的一些细节。
+前期的工作就是这么三步,当然这里说得比较简略，详细的步骤可以到<a href="https://help.github.com/categories/20/articles">Github Pages的帮助页面</a> 里进行了解。后面主要的工作集中在对自己的博客的配置中，下面将讲述博客配置的一些细节。
 </p>
 </div>
 
@@ -250,7 +251,8 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 -- _layouts           &#21338;&#23458;&#27169;&#26495;&#30446;&#24405;
    -- default.html
    -- post.html
--- _includes          &#21487;&#22797;&#29992;&#30340;&#20844;&#29992;&#27169;&#26495;&#25991;&#20214;&#30446;&#24405;&#65292;&#20363;&#22914;&#21338;&#23458;&#30340;&#23548;&#33322;&#26465;&#12290;&#19981;&#26159;&#24517;&#39035;&#30340;&#65292;&#20294;&#20998;&#31163;&#20986;&#21508;&#20010;&#39029;&#38754;&#30340;&#20844;&#26377;&#37096;&#20998;&#21487;&#20197;&#20351;&#24471;&#27169;&#26495;&#26356;&#26131;&#35835;&#65292;&#32467;&#26500;&#26356;&#28165;&#26224;
+-- _includes          &#21487;&#22797;&#29992;&#30340;&#20844;&#29992;&#27169;&#26495;&#25991;&#20214;&#30446;&#24405;&#65292;&#20363;&#22914;&#21338;&#23458;&#30340;&#23548;&#33322;&#26465;&#12290;&#19981;&#26159;&#24517;&#39035;&#30340;&#65292;
+                      &#20294;&#20998;&#31163;&#20986;&#21508;&#20010;&#39029;&#38754;&#30340;&#20844;&#26377;&#37096;&#20998;&#21487;&#20197;&#20351;&#24471;&#27169;&#26495;&#26356;&#26131;&#35835;&#65292;&#32467;&#26500;&#26356;&#28165;&#26224;
    -- footer.html
    -- footer.html
    -- &lt;other file to include<span style="color: #cf4a44;"> in</span> template&gt;
@@ -258,7 +260,8 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
    -- 2013-09-08-test.md
    -- 2013-09-08-test.html
    -- &lt;other posts&gt;                         
--- assets/            &#20854;&#20182;&#21338;&#23458;&#25991;&#20214;&#23384;&#25918;&#30446;&#24405;&#65292;&#22914;css&#65292;&#22270;&#29255;&#65292;js&#25991;&#20214;&#65292;&#30446;&#24405;&#32467;&#26500;&#20165;&#20026;&#31034;&#20363;&#65292;&#21487;&#26681;&#25454;&#20010;&#20154;&#24847;&#24895;&#33258;&#34892;&#35774;&#32622;
+-- assets/            &#20854;&#20182;&#21338;&#23458;&#25991;&#20214;&#23384;&#25918;&#30446;&#24405;&#65292;&#22914;css&#65292;&#22270;&#29255;&#65292;js&#25991;&#20214;&#65292;&#30446;&#24405;&#32467;&#26500;&#20165;&#20026;
+                      &#31034;&#20363;&#65292;&#21487;&#26681;&#25454;&#20010;&#20154;&#24847;&#24895;&#33258;&#34892;&#35774;&#32622;
    -- css
       -- style.css
    -- img
@@ -295,17 +298,18 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 </p>
 <p>
 有了模板文件后，其他的页面都可以通过jekyll所谓的front-matter来使用模板，举例来说，撰写文章时，一般这样写：
+</p><blockquote>
+
+<p>---
+layout     : post
+title      : &lt;文章标题&gt;
+categories : &lt;分类&gt;
+tags       : &lt;标签&gt;
+---
+&lt;正文&gt;
+&hellip;
 </p>
-<p class="verse">
-&mdash;<br/>
-layout     : post<br/>
-title      : &lt;文章标题&gt;<br/>
-categories : &lt;分类&gt;<br/>
-tags       : &lt;标签&gt;<br/>
-&mdash;<br/>
-&lt;正文&gt;<br/>
-&hellip;<br/>
-</p>
+</blockquote>
 
 
 <p>
@@ -445,21 +449,18 @@ title : Archives
 </li>
 </ol>
 
-
-
-
-<pre class="src src-html">#+BEGIN_HTML
+<pre class="example">
+#+BEGIN_HTML
 ---
 layout     : post
-title      : &#20351;&#29992;Github Pages&#26381;&#21153;&#24314;&#31435;&#20010;&#20154;&#21338;&#23458;
+title      : 使用Github Pages服务建立个人博客
 categories : IT
 tags       : github emacs org-mode jekyll
 ---
-#+END\_HTML
+#+END_HTML
 </pre>
 
-<p>
-而不需要其他信息，并在之后编写正文。
+<p>而不需要其他信息，并在之后编写正文。
 </p>
 <p>
 我的publish配置（仅供参考）
@@ -507,13 +508,13 @@ tags       : github emacs org-mode jekyll
 <p>
 目前还存在以下问题：
 </p><ul>
-<li>在emacs中使用 <b>#+begin_src</b> 插入的代码块背景色太浅导致有些部分看不清.
+<li><del>在emacs中使用 *#+begin_src* 插入的代码块背景色太浅导致有些部分看不清.</del> （解决办法：修改css文件中pre的背景色为深色）
 </li>
-<li>在emacs中使用 <b>#+begin_quote</b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.
+<li><del>在emacs中使用 *#+begin_quote* 插入的引用行间距很大而且有下划线，应该是博客主题 *The One* 的css导致的.</del>
 </li>
-<li>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.
+<li><del>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.</del>
 </li>
-<li>分类页面和标签页面还存在问题（如果您想使用本博客模板的话，建议使用<a href="#pizn.github.io-blogTheme">初始模板</a>）.
+<li>+分类页面和标签页面还存在问题（如果您想使用本博客模板的话，建议使用<a href="#pizn.github.io-blogTheme">初始模板</a>）.+
 </li>
 <li>首页显示了每篇文章的全部内容，应当改成显示文章概要以处理像本文这样内容较多的文章.
 </li>
@@ -523,7 +524,6 @@ tags       : github emacs org-mode jekyll
 <p>
 如果您看了这篇文章并发现本文未描述出的一些问题，或者觉得我有可以帮上忙的地方，都可以<a href="mailto:linusp1024@gmail.com">发邮件给我</a>。
 </p>
-
 </div>
 
 </div>
