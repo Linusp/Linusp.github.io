@@ -1,35 +1,10 @@
 ---
 layout     : post
 title      : 使用Github Pages服务建立个人博客
-categories : IT
+categories : web
 tags       : github emacs org-mode jekyll
 ---
 
-
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1 为什么要使用Github Pages来建立个人博客</a></li>
-<li><a href="#sec-2">2 Github Pages是什么</a></li>
-<li><a href="#sec-3">3 环境准备</a></li>
-<li><a href="#sec-4">4 方案选择</a></li>
-<li><a href="#sec-5">5 行动纲领</a></li>
-<li><a href="#sec-6">6 jekyll博客配置</a>
-<ul>
-<li><a href="#sec-6-1">6.1 博客目录结构</a></li>
-<li><a href="#sec-6-2">6.2 博客模板</a></li>
-<li><a href="#sec-6-3">6.3 _config.yml</a></li>
-<li><a href="#sec-6-4">6.4 archives页面示例</a></li>
-<li><a href="#sec-6-5">6.5 _site目录</a></li>
-</ul>
-</li>
-<li><a href="#sec-7">7 使用emacs的org-mode</a></li>
-<li><a href="#sec-8">8 尚存的问题</a></li>
-<li><a href="#sec-9">9 关于本博客</a></li>
-</ul>
-</div>
-</div>
 
 <div id="outline-container-1" class="outline-3">
 <h3 id="sec-1">为什么要使用Github Pages来建立个人博客</h3>
@@ -73,7 +48,7 @@ tags       : github emacs org-mode jekyll
 
 
 <p>
-<a href="https://github.com">Github</a> 是一个用于使用Git版本控制系统项目的共享虚拟主机服务<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>。简单说，它是一个具有版本管理功能的代码仓库，每个项目都有一个主页，列出项目的源文件。
+<a href="https://github.com">Github</a> 是一个用于使用Git版本控制系统项目的共享虚拟主机服务<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>。简单说，它是一个具有版本管理功能的代码仓库，每个项目都有一个主页，列出项目的源文件。
 </p>
 <p>
 <a href="#site.url-assets-img-github.png">{{ site.url }}/assets/img/github.png</a>
@@ -377,7 +352,7 @@ test:             ok
 
 
 <p>
-一个简单的archives页面<sup><a class="footref" name="fnr-.2" href="#fn-.2">2</a></sup>如下
+一个简单的archives页面<sup><a class="footref" name="fnr.2" href="#fn.2">2</a></sup>如下
 </p>
 
 
@@ -427,7 +402,7 @@ title : Archives
 
 
 <p>
-对于emacser来说，使用org-mode来写作才是最幸福的事情，因此就有了这一部分。这一部分的绝大部分内容来自脚注2<sup><a class="footref" name="fnr-.2.2" href="#fn-.2">2</a></sup>中提到的文章，基本的配置过程和要点在文章中都已经说得很详细了，因此我在这里就简略地说几点。
+对于emacser来说，使用org-mode来写作才是最幸福的事情，因此就有了这一部分。这一部分的绝大部分内容来自脚注2<sup><a class="footref" name="fnr.2.2" href="#fn.2">2</a></sup>中提到的文章，基本的配置过程和要点在文章中都已经说得很详细了，因此我在这里就简略地说几点。
 </p>
 <p>
 因为jekyll可以识别markdown文件和html文件，所以使用emacs的org-mode将org文件publish成html文件就是我们要做的。值得一提的是Jekyll-Bootstrap在本地调试时直接无视_posts目录下后缀为html的文件，虽然说肯定有办法改变这种行为，但我找了一会没找到就放弃了，加之Jekyll-Bootstrap在jekyll的基础上又多加了一些东西，所以导致我并没有去使用Jekyll-Bootstrap以及使用了Jekyll-Bootstrap的博客模板。
@@ -512,9 +487,9 @@ tags       : github emacs org-mode jekyll
 </li>
 <li><del>在emacs中使用 *#+begin_quote* 插入的引用行间距很大而且有下划线，应该是博客主题 *The One* 的css导致的.</del>
 </li>
-<li><del>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.</del>
+<li><del>在emacs中引用liquid语法的语句会被jekyll解析而不能正确显示.</del> 
 </li>
-<li>+分类页面和标签页面还存在问题（如果您想使用本博客模板的话，建议使用<a href="#pizn.github.io-blogTheme">初始模板</a>）.+
+<li><del>分类页面和标签页面还存在问题</del> （如果您想使用本博客模板的话，建议使用<a href="#pizn.github.io-blogTheme">初始模板</a>）.
 </li>
 <li>首页显示了每篇文章的全部内容，应当改成显示文章概要以处理像本文这样内容较多的文章.
 </li>
@@ -536,14 +511,15 @@ tags       : github emacs org-mode jekyll
 <p>
 如果您够细心，应该会发现博客底端的脚注上的信息。在这里感谢<a href="http://zhanxin.info">PIZn</a> ，本博客使用的就是他设计的主题 <b>The One</b> ，当然本人在该主题的基础上做了一定的修改并还会继续进行修改。此外还要感谢<a href="http://tangjiujun.github.io">唐九军</a> ，他的结构清晰、简洁的博客模板让我对jekyll博客的基础有了足够的了解。
 </p>
+
 <div id="footnotes">
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
-<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> 详情见维基百科的<a href="http://zh.wikipedia.org/zh/GitHub">Github条目</a>.
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 详情见维基百科的<a href="http://zh.wikipedia.org/zh/GitHub">Github条目</a>.
 </p>
 
 
-<p class="footnote"><sup><a class="footnum" name="fn-.2" href="#fnr-.2">2</a></sup> 来自<a href="http://orgmode.org/worg/org-tutorials/org-jekyll.html">Using org to Blog with Jekyll</a>.
+<p class="footnote"><sup><a class="footnum" name="fn.2" href="#fnr.2">2</a></sup> 来自<a href="http://orgmode.org/worg/org-tutorials/org-jekyll.html">Using org to Blog with Jekyll</a>.
 </p></div>
 </div>
 
