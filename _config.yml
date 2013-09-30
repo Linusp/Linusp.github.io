@@ -3,9 +3,9 @@ markdown:         rdiscount
 pygments:         true
 paginate:         5
 
-title:            笼中梦
+title:            发条兔子
 description:      发条兔子的不完全技术博客
-url:              http://linusp.github.io/
+url:              http://linusp.github.io
 feed:             /atom.xml
 author:
     name:         发条兔子
@@ -19,7 +19,7 @@ follow:
 indexContent:     true
 
 style:            /assets/css/style.css
-blogName:         笼中梦
+blogName:         发条兔子
 blogDesc:         发条兔子的不完全技术博客
 favicon:          /assets/img/favicon.ico
 theme:            blue

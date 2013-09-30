@@ -1,0 +1,218 @@
+---
+layout     : post
+title      : 简洁、轻便——静态博客写作方案
+categories : web
+tags       : Github Jekyll hexo OctoPress Pelican Dropbox Markdown
+---
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">静态博客写作的优势</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+纯静态博客写作有以下优势：  
+</p><ol>
+<li>响应速度快（访问时）
+
+<p>
+   博客站点页面都是静态页面，访问时不需要查询数据库，因此自然就能够有较好的响应速度。
+</p></li>
+<li>最大限度的控制
+
+<p>
+   对于大部分静态博客写作方案而言，网站的每一个实现细节都是可以由自己来调整掌控的，这样虽然带来了一定的技术难度，但一来流行的解决方案在网上都有许多可用的模板，二来网站的可定制性非常高。
+</p></li>
+<li>更好的写作体验
+
+<p>
+   在解决了网站的外观后，就可以体验静态博客写作的最大好处了。常见的静态博客写作方案都支持在本地编写文章，这样的优势是可以自行选用最合适最顺手的编辑器，而不是那些常见博客平台上简陋的在线编辑器。
+</p></li>
+<li>更加方便进行备份
+
+<p>
+   静态博客写作方案都支持本地编写文章（甚至有的解决方案只能在本地编写文章），这样的好处是我们可以在本地有所有自己文章的一个备份，只要小心地使用你的计算机，这些数据就能够得到很好的保护，不放心的话还可以使用Dropbox之类的工具进行进一步的备份。
+</p></li>
+<li>省钱
+
+<p>
+   我不是开玩笑的，待会你就知道了。
+</p></li>
+</ol>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">解决方案</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+大致有三种解决方案，且看我一一道来。
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">自购主机方案</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<p>
+   如果能够有条件购买主机空间，那么这是最理想的。试想一下，都有自己的主机空间了，想怎么折腾不行是不？想用Wordpress就用Wordpress，想自己写html就自己写html。这种情况下如果还是想构建静态博客，参看下一个解决方案。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2">Github Pages</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+<p>
+   Github Pages的介绍以及使用它来建立个人博客的内容可以看我之前的一篇文章<a href="http://linusp.github.io//2013/09/14.html">使用Github Pages服务建立个人博客</a> 。使用Github Pages的好处是不用花钱购买自己的主机空间，这后面的Dropbox方案同样如此。
+</p>
+<p>
+   说到Github Pages，大部分人对其有所了解的人可能会第一时间联想到Jekyll。没错，Github Pages是在后端使用Jekyll来生成我们的静态博客，但我们在本地并不是只有Jekyll一个选择。
+</p>
+<p>
+   Jekyll是一个静态博客生成器，事实上还有很多其他静态博客生成器供我们选择——它们和Github Pages合作得很好，因为其中的一些就是为了和Github Pages适配而开发出来的。
+</p>
+<p>
+   此外还包括了一些基于某些静态博客生成器的框架也可以使用。
+</p>
+<p>
+   这里列举一些比较流行的静态博客生成器或者静态博客框架：
+</p><ul>
+<li>Jekyll
+
+<p>
+     Github Pages官方推荐产品，依赖ruby。
+</p></li>
+<li>Jekyll-bootstrap
+
+<p>
+     基于Jekyll的框架，提供了几种现成的外观主题。
+</p></li>
+<li>OctoPress
+
+<p>
+     基于Jekyll的框架，只用过短短几天时间，不予置评。
+</p></li>
+<li>hexo
+
+<p>
+     由Node.js驱动的博客框架，功能强大、使用简单。
+</p></li>
+<li>Pelican
+
+<p>
+     Python编写的静态博客生成器，对Python有爱的人不妨一用。
+</p></li>
+<li>OpooPress
+
+<p>
+     一个基于Java 的可用于博客的静态网站生成器。
+</p></li>
+</ul>
+
+
+<p>
+   以上所有方案都支持Markdown语法。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3">Dropbox App</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+<p>
+   DropBox 是一款非常优秀的免费网络文件同步工具，它有以下几个优点：
+</p><ul>
+<li>全平台支持
+</li>
+<li>稳定，不用担心宕机
+</li>
+<li>第三方应用丰富
+</li>
+</ul>
+
+
+<p>
+   前两个特点是对于现在的云存储服务来说并无特殊之处，Dropbox的强大之处就在于第三点。这里有一篇<a href="http://wangyueblog.com/2012/03/07/dropbox/">文章</a> 讲述了Dropbox的“另类”功用。
+</p>
+<p>
+   文中第一条就是
+</p><blockquote>
+
+<p>使用Dropbox搭建一个网站或博客
+</p>
+</blockquote>
+
+
+<p>
+   没错，我们要的就是这个。
+</p>
+<p>
+   以下应用可以用于和Dropbox一起来搭建个人博客：
+</p><ul>
+<li>Scriptogr.am
+
+<p>
+     我尝试了一下Scriptogr.am，这里是我用它搭建的<a href="#http-scriptogr.am-zix">博客</a> 。
+</p>
+<p>
+     Scriptogr.am只要求用户编写Markdown格式的文章即可，除了通用的在本地编写文章外，Scriptogr.am还提供了一个非常简洁的后台管理界面，在那里可以管理文章、编写文章，此外还能修改网站的css和html源代码。
+     <img src="/assets/img/2013-09-30-scriptogr-am.png"/>
+     </p>
+</p>
+<p>     
+     网站的默认外观干净、清爽，不过除了首页外，只有一个Archive页面，可能稍显美中不足。
+</p></li>
+<li>DropPages
+
+<p>
+     DropPages不同于Scriptogr.am，它会将网站的构成细节交由用户，用户可以自由地修改网站布局、外观等等，默认提供一个可用的主题，不过说实话，我不知道它用的是什么模板语言。
+</p></li>
+<li>site44
+
+<p>
+     site44和DropPages类似，但也有不同之处，DropPages生成的应用目录下并不是网站的完整结构，而是一些用户可以修改的文件；site44则不一样，它将对应的应用目录下的文件作为网站来进行发布，相对来说site44的自由度更高一些——此外，site44默认只有一个index.html，所以要想有一个功能完整、丰富的博客，还得下点功夫，可以考虑用之前提到的静态博客生成器来做这件事情。
+</p></li>
+<li>FarBox
+
+<p>
+     FarBox也是一款受到相关人群喜爱的Dropbox应用，其使用和Scriptogr.am类似，用户只要关心文章的撰写就可以了，至于外观，官方提供六种模板。相对Scriptogr.am来说，FarBox的后台管理功能更为强大，而且支持categories。另外，FarBox不仅可以和Dropbox一起使用，通过Google Drive同样可以利用FarBox进行博客写作。
+</p>
+<p>
+     不知道是Bug还是什么，我在FarBox上写文时，插入的链接不能正常显示，看<a href="http://linusp1024.farbox.com">这里</a> ——我保证我遵守了Markdown的语法。
+</p></li>
+</ul>
+
+
+<p>   
+   事实上相关的Dropbox应用不止上述四个，只不过这四个是比较常用的。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">其他一些话</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  总的来说，可选的解决方案是很多的，选择何种方式就看自己喜好了，不过我想不应该太纠结于形式，一旦选定了一个平台，老实点多写点东西才是正道吧。
+</p>
+<p>
+  完。
+</p></div>
+</div>
