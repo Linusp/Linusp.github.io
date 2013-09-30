@@ -1,4 +1,4 @@
-permalink:        /:year/:month/:day.html
+permalink:        /:year/:month/:day/:title.html
 markdown:         rdiscount
 pygments:         true
 paginate:         5
