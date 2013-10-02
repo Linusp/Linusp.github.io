@@ -1,0 +1,20 @@
+---
+layout : default
+title  : 标签
+date   : Tags here
+---
+<header id="begin">
+  {% for tag in site.tags %}
+  <a class="tag" href="/tags.html#{{tag[0]}}">{{tag[0]}}<span class="tagcount">{{tag[1] | size}}</span></a>
+  {% endfor %}
+</header>
+
+<article class="post">
+{% for tag in site.tags %}
+    <h1 class="post-title" id="{{tag[0]}}" name="{{tag[0]}}">{{tag[0]}}</h1>
+    {% for post in tag[1] %}
+          <p>{{ post.date | date: "%Y年%m月%d日" }}>>
+	    <a href="{{ post.url }}">{{ post.title }}</a></p>
+    {% endfor %}
+{% endfor %}
+</article>

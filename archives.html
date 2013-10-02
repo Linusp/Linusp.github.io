@@ -5,7 +5,7 @@ date: All posts are here.
 ---
 <article class="post">
     {% capture post_year1 %}{{ 'now' | date: '%Y' }}{% endcapture %}
-            <h3>{{ post_year1 }}</h3>
+            <h1 class="post-title">{{ post_year1 }}</h1>
             <ul>
             {% for post in site.posts %}
                         {% capture post_year2 %}{{ post.date | date: '%Y' }}{% endcapture %}

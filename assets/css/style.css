@@ -7,8 +7,7 @@
   src: url( '../font/JennaSue.eot');                         /* IE9 Compat Modes */
   src: url( '../font/JennaSue.eot?iefix' ) format( 'eot' ),  /* IE6-IE8 */
        url( '../font/JennaSue.ttf' ) format( 'truetype' );   /* sofari .. */
-}
-html { color: #4d4d4d; background: #fff; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+}html { color: #4d4d4d; background: #fff; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 body, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td, hr, button, article, aside, details, figcaption, figure, footer, header, group, menu, nav, section { margin: 0; padding: 0; }
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
 audio, canvas, video { display: inline-block;  }
@@ -48,7 +47,7 @@ body .fn-hide               { display:none; }
 .fn-left                    { float:left; }
 .fn-right                   { float:right; }
 
-article a:link, article a:visited, article a:hover, article a:active, #foot p a, #foot p a:hover, #pagination a:hover { text-decoration: none; border-bottom: 1px solid #ccc; color: black; }
+article a:link, article a:visited, article a:hover, article a:active, #foot p a, #foot p a:hover, #pagination a:hover { text-decoration: none; border-bottom: 1px solid #ccc; color: blue; }
 
 /*  Font Awesome
     the iconic font designed for use with Twitter Bootstrap
@@ -109,7 +108,6 @@ li [class^="icon-"], li [class*=" icon-"] {
 }
 li .icon-large[class^="icon-"], li .icon-large[class*=" icon-"] {
     /* 1.5 increased font size for icon-large * 1.25 width */
-
     width: 1.875em;
 }
 li[class^="icon-"], li[class*=" icon-"] {
@@ -370,7 +368,8 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
 #nav a:hover, #nav a.action { text-decoration: none;color: #000; border-color: #000;}
 #nav a:hover { -moz-transition:  border-color .3s linear, color .3s linear; -webkit-transition: border-color .3s linear, color .3s linear; transition: border-color .3s linear, color .3s linear; }
 #contain { margin-left: 320px; border-left: 1px solid #d8d8d8; min-height: 900px; position: relative; min-width: 658px; z-index: 100;}
-#begin { font-weight: 700;  padding: 40px 0 40px 40px; display: block; border-bottom: 1px solid #ccc; font-size: 18px;text-shadow: -1px 1px 1px #d8d8d8; font-style: italic; }
+/* #begin { font-weight: 700;  padding: 40px 0 40px 40px; display: block; border-bottom: 1px solid #ccc; font-size: 18px;text-shadow: -1px 1px 1px #d8d8d8; font-style: italic; } */
+#begin { font-weight: 700;  padding: 20px 0 20px 40px; display: block; border-bottom: 1px solid #ccc; font-size: 18px;text-shadow: -1px 1px 1px #d8d8d8; font-style: italic; }
 #foot { padding: 10px 0 10px 40px; color: #D8D8D8;}
 #foot p { color: #5d5d5d;}
 #J-backTop { color: #000; font-size: 52px; z-index: 10001; }
@@ -389,10 +388,10 @@ li[class^="icon-"].icon-large:before, li[class*=" icon-"].icon-large:before {
  * Post style
  *************************/
 /* .post { margin: 40px 0 0px 40px; padding-bottom: 40px; width: auto; border-bottom: 1px dotted #d8d8d8;} */
-.post { margin: 40px 0 0px 40px; width: auto; border-bottom: 1px dotted #d8d8d8;}
+.post { margin: 0 0 0px 40px; width: auto; border-bottom: 1px dotted #d8d8d8;}
 /* .post p, .post pre, .post ul, .post ol, .post dl, .post form, .post hr, .post table { margin-bottom: 2em; } */
 .post p, .post pre, .post ul, .post ol, .post dl, .post form, .post hr, .post table { margin-bottom: 1em; }
-.post .time { margin-bottom: .5em; color: #d8d8d8; }
+.post .time { margin-bottom: .5em; color: #a0a0a0; }
 .post blockquote { padding: 0.5em 1em 0.4em 1em; margin-bottom: 1em;  border-left: .9em solid #232323; }
 /* .post pre { width: 100%; margin-left: -40px; background: #1c1c1c; border-top:  1px solid #d8d8d8; border-bottom: 1px solid #d8d8d8; padding: 1em 0 1em 40px; } */
 .post pre { margin-right: 160px; background: #000000; border-top:  1px solid #d8d8d8; border-bottom: 1px solid #d8d8d8; }
@@ -423,6 +422,29 @@ h1, h2, h3, h4, h5, h6{ font-weight: 500; color:#333; }
 .post .post-title a:hover { border-bottom: 1px dotted #343434; }
 .fork-me { position: fixed; right: 0; top: 0; z-index: 999; }
 
+.tag {
+    padding: 2px 3px;
+    margin-left:5px;
+    margin-bottom:3px;
+}
+.tag:hover .tagcount {
+    background:#BBB;
+}
+.tagcount {
+    display: inline-block;
+    min-width: 6px;
+    padding: 3px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1;
+    color: #ffffff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #999999;
+    border-radius: 6px;
+    margin-left:2px;
+}
 
 /*************************
  * custom style
