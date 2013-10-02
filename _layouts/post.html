@@ -7,11 +7,6 @@ layout: default
       <i class="icon-time"></i>
       <time pubdate="{{ page.date }}">{{ page.date | date:"%Y年%m月%d日" }}</time>
     </span>
-    <!-- {% for tag in page.tags %} -->
-    <!-- <li class="fn-clear"> -->
-    <!--   <a class="tag" href="/tags.html"><i class="icon-tag"></i>Github</a> -->
-    <!-- </li> -->
-    {% endfor %}
     {{ content }}
     <nav class="pagination-link">
         {% if page.previous %}
