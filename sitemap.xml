@@ -15,6 +15,10 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>http://linusp.github.io/tags.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>http://linusp.github.io/about.html</loc>
     <priority>0.6</priority>
   </url>
