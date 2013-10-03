@@ -8,13 +8,13 @@ date: Index
 {% for rpost in paginator.posts %}
 	<article class="post fn-clear">
         <h2 class="post-title"><a href="{{ rpost.url }}" title="{{ rpost.title }}" rel="bookmark">{{ rpost.title }}</a></h2>
-	<span class="time">
+	<p class="time">
 	  <i class="icon-time"></i>
 	  <time pubdate="{{ rpost.date }}">{{ rpost.date | date:"%Y年%m月%d日" }}</time>
-	</span>
-	<!-- {% for tag in rpost.tags %} -->
-	<!-- <a class="tag" href="/tags.html"><i class="icon-tag"></i>Github</a> -->
-	<!-- {% endfor %} -->
+	</p>
+	{% for tag in rpost.tags %}
+	<a class="tag" href="/tags.html#{{ tag }}"><i class="icon-tag"></i>{{ tag }}</a>
+	{% endfor %}
         {% if site.indexContent == true %}
         {{ rpost.content }}
         {% else %}

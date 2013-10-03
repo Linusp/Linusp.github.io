@@ -3,10 +3,13 @@ layout: default
 ---
 <article class="post">
     <h1 class="post-title">{{ page.title }}</h1>
-    <span class="time">
+    <p class="time">
       <i class="icon-time"></i>
       <time pubdate="{{ page.date }}">{{ page.date | date:"%Y年%m月%d日" }}</time>
-    </span>
+    </p>
+    {% for tag in page.tags %}
+    <a class="tag" href="/tags.html#{{ tag }}"><i class="icon-tag"></i>{{ tag }}</a>
+    {% endfor %}
     {{ content }}
     <nav class="pagination-link">
         {% if page.previous %}
