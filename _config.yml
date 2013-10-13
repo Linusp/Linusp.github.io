@@ -1,9 +1,8 @@
-permalink: /:year/:month/:day/:title
+permalink: /:year/:month/:day/:title.html
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 pygments: true
 
 title : Linusp's Blog
-tagline: Site Tagline
 author :
   name : Linusp
   email : linusp1024@gmail.com
