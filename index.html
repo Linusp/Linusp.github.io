@@ -1,11 +1,19 @@
 ---
-layout: page
-title: Post List
+layout: default
 tagline: [计算机 小说 科学]
 ---
 {% include JB/setup %}
-<ul class="posts">
-  {% for post in site.posts %}
-    <li><span>{{ post.date | date: "%Y-%m-%d" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
+<div class="page-header">
+  <h1>文章列表 <small>{{ page.tagline }}</small></h1>
+</div>
+
+<div class="row">
+  <div class="span14">
+    <ul class="posts">
+      {% for post in site.posts %}
+      <li><span>{{ post.date | date: "%Y-%m-%d" }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
