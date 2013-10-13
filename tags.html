@@ -1,20 +1,21 @@
 ---
-layout : default
-title  : 标签
-date   : Tags here
+layout: page
+title: 标签
+header: Posts By Tag
+group: navigation
 ---
-<header id="begin">
-  {% for tag in site.tags %}
-  <a class="tag" href="/tags.html#{{tag[0]}}">{{tag[0]}}<span class="tagcount">{{tag[1] | size}}</span></a>
-  {% endfor %}
-</header>
+{% include JB/setup %}
 
-<article class="post">
-{% for tag in site.tags %}
-    <h1 class="post-title" id="{{tag[0]}}" name="{{tag[0]}}">{{tag[0]}}</h1>
-    {% for post in tag[1] %}
-          <p>{{ post.date | date: "%Y年%m月%d日" }}>>
-	    <a href="{{ post.url }}">{{ post.title }}</a></p>
-    {% endfor %}
+<ul class="tag_box inline">
+  {% assign tags_list = site.tags %}  
+  {% include JB/tags_list %}
+</ul>
+
+
+{% for tag in site.tags %} 
+  <h2 id="{{ tag[0] }}-ref">{{ tag[0] }}</h2>
+  <ul>
+    {% assign pages_list = tag[1] %}  
+    {% include JB/pages_list %}
+  </ul>
 {% endfor %}
-</article>

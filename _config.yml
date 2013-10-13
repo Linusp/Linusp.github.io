@@ -1,30 +1,37 @@
-permalink:        /:year/:month/:day/:title.html
-markdown:         rdiscount
-pygments:         true
-paginate:         5
+permalink: /:year/:month/:day/:title
+exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
+pygments: true
 
-title:            发条兔子
-description:      发条兔子的不完全技术博客
-url:              http://linusp.github.io
-feed:             /atom.xml
-author:
-    name:         发条兔子
-    email:        linusp1024@gmail.com
-    description:  "变成兔子的青蛙"
+title : Linusp's Blog
+tagline: Site Tagline
+author :
+  name : Linusp
+  email : linusp1024@gmail.com
+  github : Linusp
 
-follow:
-    email:        linusp1024@gmail.com
-    github:       https://github.com/Linusp
-    
-indexContent:     true
 
-style:            /assets/css/style.css
-blogName:         发条兔子
-blogDesc:         发条兔子的不完全技术博客
-favicon:          /assets/img/favicon.ico
-theme:            blue
+production_url : http://linusp.github.io
 
-disqus:           linuspb
+JB :
+  version : 0.3.0
 
-copyright:        © 2013 
-test:             ok
+  archive_path: /archive.html
+  categories_path : /categories.html
+  tags_path : /tags.html
+  atom_path : /atom.xml
+
+  # Settings for comments helper
+  # Set 'provider' to the comment provider you want to use.
+  # Set 'provider' to false to turn commenting off globally.
+  #
+  comments :
+    provider : disqus
+    disqus :
+      short_name : linuspb
+
+  analytics :
+    provider : google 
+    google : 
+        tracking_id : UA-44461305-1'
+  sharing :
+    provider : false

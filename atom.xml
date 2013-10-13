@@ -1,32 +1,29 @@
 ---
 layout: nil
+title : Atom Feed
+
 ---
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
-  <title>笼中梦</title>
-  <link href="{{ site.url }}"/>
-  <link type="application/atom+xml" rel="self" href="{{ site.url }}{{ site.feed }}"/>
-  <updated>{{ site.time | date_to_xmlschema }}</updated>
-  <id>{{ site.url }}</id>
-  <author>
-    <name>{{ site.author.name }}</name>
-    <email>{{ site.author.email }}</email>
-  </author>
+ <title>{{ site.title }}</title>
+ <link href="{{ site.production_url }}/{{ site.atom_path }}" rel="self"/>
+ <link href="{{ site.production_url }}"/>
+ <updated>{{ site.time | date_to_xmlschema }}</updated>
+ <id>{{ site.production_url }}</id>
+ <author>
+   <name>{{ site.author.name }}</name>
+   <email>{{ site.author.email }}</email>
+ </author>
 
-  {% for post in site.posts %}
-  <entry>
-    <id>{{ site.url }}{{ post.id }}</id>
-    <link type="text/html" rel="alternate" href="{{ site.url }}{{ post.url }}"/>
-    <title>{{ post.title }}</title>
-    <published>{{ post.date | date_to_xmlschema }}</published>
-    <updated>{{ post.date | date_to_xmlschema }}</updated>
-    <author>
-      <name>{{ site.author.name }}</name>
-      <uri>{{ site.url }}</uri>
-    </author>
-    <content type="html">{{ post.content | xml_escape }}</content>
-  </entry>
-  {% endfor %}
+ {% for post in site.posts %}
+ <entry>
+   <title>{{ post.title }}</title>
+   <link href="{{ site.production_url }}{{ post.url }}"/>
+   <updated>{{ post.date | date_to_xmlschema }}</updated>
+   <id>{{ site.production_url }}{{ post.id }}</id>
+   <content type="html">{{ post.content | xml_escape }}</content>
+ </entry>
+ {% endfor %}
  
 </feed>
