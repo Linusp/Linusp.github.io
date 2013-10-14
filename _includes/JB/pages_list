@@ -34,7 +34,6 @@ Usage:
       {% endif %}
     {% endif %}
   {% endfor %}
-  <li><a href="/atom.xml" target="_blank">RSS</a></li>
 {% endif %}
 {% assign pages_list = nil %}
 {% assign group = nil %}
