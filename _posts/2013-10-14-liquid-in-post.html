@@ -1,0 +1,129 @@
+---
+layout     : post
+title      : 在Github Pages博客内容中插入liquid语句示例
+categories : web
+tags       : Jekyll Liquid
+---
+
+<p>
+由于Github Pages在后端使用jekyll来处理博客文件，对于文章内部插入的原本用来做示例的liquid语句，会被它解析而不是展示原本的内容，比如说，我在文中插入这样的示例(org-mode)：
+</p><pre class="example">
+#+begin_example
+{% raw %}{% for post in site.posts %}{% endraw %}
+{% raw %}{{ post.title }}{% endraw %}
+{% raw %}{% endfor %}{% endraw %}
+#+end_example
+</pre>
+
+<p>最后得到的内容却会是这样的：
+</p>
+
+
+<pre class="example">{% for post in site.posts %}
+{{ post.title }}
+{% endfor %}
+</pre>
+
+<p>
+这显然不是我们想要的，解决办法也很简单，那就是在每一个liquid语句前后用
+</p>
+
+
+<pre class="example">{{ "{% raw " }}%}
+</pre>
+
+<p>
+和
+</p>
+
+
+<pre class="example">{{ "{% endraw "}}%}
+</pre>
+
+<p>
+包裹起来，这样liquid模板引擎会将内部的文本作为普通文本处理而不是按照liquid语法去解析它，下面是正确的示例：
+</p><pre class="example">
+#+begin_example
+{{ "{% raw " }}%}{{ "{% for post in site.posts " }}%}{{ "{% endraw " }}%}
+{{ "{% raw " }}%}{{ "{{ post.title " }}}}{{ "{% endraw " }}%}
+{{ "{% raw " }}%}{{ "{% endfor" }}%}{{ "{% endraw " }}%}
+#+end_example
+</pre>
+
+<p>就能够得到这样正确的示例结果：
+</p>
+
+
+<pre class="example">{% raw %}{% for post in site.posts %}{% endraw %}
+{% raw %}{{ post.title }}{% endraw %}
+{% raw %}{% endfor %}{% endraw %}
+</pre>
+
+
+<p>
+不过，还没完呢，比如说，像
+</p>
+
+
+<pre class="example">{{ "{% raw " }}%}
+</pre>
+
+<p>
+这样的标签，又怎么在文中显示呢？用刚才说的方法是不行的，不信试试在文中直接这样写
+</p>
+
+
+<pre class="example">{{ "{% raw " }}%}
+{{ "{% raw " }}%}
+{{ "{% endraw " }}%}
+</pre>
+
+<p>
+本地运行
+</p>
+
+
+<pre class="src src-sh">jekyll build
+</pre>
+
+<p>
+试试，没错，会得到一个错误。下面的写法同样会得到错误。
+</p>
+
+
+<pre class="example">{{ "{% raw " }}%}
+{{ "{% endraw " }}%}
+{{ "{% endraw " }}%}
+</pre>
+
+<p>
+究其原因，应该是liquid的 <b>raw/endraw</b> 标签在匹配时按照就近原则吧——这个是我推测的。
+</p>
+<p>
+最后我在Stack Overflow上找到了一个<a href="http://stackoverflow.com/questions/3426182/how-to-escape-liquid-template-tags">解决方案</a>。
+</p>
+<p>
+像这样：
+</p>
+
+
+<pre class="example">{{ "{{ " }}"{{ "{% raw" }} " }}{{ "}}%}
+</pre>
+
+<p>
+就可以得到：
+</p>
+
+
+<pre class="example">{{ "{% raw " }}%}
+</pre>
+
+<p>
+的显示效果。
+</p>
+<p>
+也就是说，把 <b>{{ "{%" }}</b> 和 <b>%}</b> 这一对标签的开闭符号分开了，一部分用双引号括起来并用 <b>{{ "{{" }}和}}</b> 包裹起来，另一部分则按照平常的方式书写。同样的， <b>{{ "{{" }}</b> 和 <b>}}</b> 也可以通过这种方式来处理。本文第五个示例就是这么得到的。
+</p>
+<p>
+自己动手试一试吧！
+</p>
