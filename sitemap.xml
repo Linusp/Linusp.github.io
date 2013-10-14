@@ -7,7 +7,7 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>http://linusp.github.io/archives.html</loc>
+    <loc>http://linusp.github.io/archive.html</loc>
     <priority>0.6</priority>
   </url>
   <url>
@@ -20,6 +20,10 @@
   </url>
   <url>
     <loc>http://linusp.github.io/about.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>http://linusp.github.io/link.html</loc>
     <priority>0.6</priority>
   </url>
   {% for post in site.posts %}
