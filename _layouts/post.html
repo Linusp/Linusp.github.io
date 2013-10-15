@@ -33,6 +33,14 @@ layout: default
     <h4>发布日期</h4>
     <div class="date"><span>{{ page.date | date: "%Y年 %m月 %d日" }}</span></div>
 
+  {% unless page.categories == empty %}
+    <h4>类别</h4>
+    <ul class="tag_box">
+    {% assign categories_list = page.categories %}
+    {% include JB/categories_list %}
+    </ul>
+  {% endunless %}  
+
   {% unless page.tags == empty %}
     <h4>标签</h4>
     <ul class="tag_box">

@@ -1,0 +1,221 @@
+---
+layout     : post
+title      : 基于Node.js的博客平台Ghost试用
+categories : web
+tags       : Node.js Ghost Markdown
+---
+
+
+<div id="outline-container-1" class="outline-3">
+<h3 id="sec-1">Ghost是什么</h3>
+<div class="outline-text-3" id="text-1">
+
+<p>Ghost是一个基于Node.js的博客平台，于昨日(2013/10/14)正式在Github上发布。
+</p>
+<p>
+Ghost源于John O'Nolan的想法——交互设计师John O'Nolan是WordPress UI组的核心成员。大概一年前，他有感于WordPress越来越脱离博客平台的初衷，变为一个CMS，决定开发新一代的博客平台。
+</p>
+<p>
+4月29日，项目在KickStarter上募集资金，轰动一时。最后在一个月内筹得近20万英镑。
+</p>
+<p>
+在Ghost正式发布前就已经有非常多的人在盼望着它出来了。
+</p>
+<p>
+一位网友是这么评价Ghost的
+</p><blockquote>
+
+<p>简单简洁, 响应式设计, 支持完全自定义, 免费, 专注博客
+</p>
+</blockquote>
+
+
+<p>
+我的消息比较滞后，今天才得知这个东西——这还是Gmail里收到了Ghost团队的邮件才知道的。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-3">
+<h3 id="sec-2">本地安装</h3>
+<div class="outline-text-3" id="text-2">
+
+
+<p>
+Ghost的本地安装非常简单。这里以linux平台为例（我才懒得在windows下折腾呢）
+</p>
+</div>
+
+<div id="outline-container-2-1" class="outline-4">
+<h4 id="sec-2-1">安装Node.js</h4>
+<div class="outline-text-4" id="text-2-1">
+
+
+<p>
+到<a href="http://nodejs.org">Node.js的官方网站</a> 上下载Node.js并安装，源码包和二进制包都有，这里就不多嘴了。
+</p>
+<p>
+确认是否安装了Node.js，在终端里运行：
+</p>
+
+
+<pre class="example">node -v
+</pre>
+
+<p>
+和
+</p>
+
+
+<pre class="example">npm -v
+</pre>
+
+<p>
+看看，如果有显示版本信息就说明安装好了。
+</p></div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-4">
+<h4 id="sec-2-2">安装并运行Ghost</h4>
+<div class="outline-text-4" id="text-2-2">
+
+
+<p>
+不得不说安装真的是非常简单，先到<a href="http://ghost.org">Ghost的官网</a> 上下载Ghost并解压到本地目录，进入到目录下后执行
+</p>
+
+
+<pre class="example">npm install --production
+</pre>
+
+<p>
+就OK了。
+</p>
+<p>
+安装好后就可以执行
+</p>
+
+
+<pre class="example">npm start
+</pre>
+
+<p>
+在本地的2368端口运行Ghost了。
+</p>
+<p>
+<a href="http://docs.ghost.org/installation/linux/">这里</a> 是官方给出的安装文档，当然比我这里说的要详细一点，不过也没差了。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-3">
+<h3 id="sec-3">使用</h3>
+<div class="outline-text-3" id="text-3">
+
+
+<p>
+先说博客真正要能运行起来需要的环境吧。
+</p>
+<p>
+基本上来说有两种方案吧：
+</p>
+<ol>
+<li>使用提供Ghost应用的云服务，官方给出了Bitnami、Rackspace deployments和DigitalOcean Droplet三个建议的选择。
+
+</li>
+<li>使用允许用户安装Node.js或者已经安装了Node.js的主机服务。
+</li>
+</ol>
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-4">
+<h4 id="sec-3-1">博客设置</h4>
+<div class="outline-text-4" id="text-3-1">
+
+
+<p>
+在博客的根目录后面加上 <i>ghost</i> 就可以进入到后台面板。如图所示：
+</p>
+
+
+<img src="/assets/img/2013-10-15-ghost-panel.png"/>
+
+<p>
+能够设置博客标题、描述、每页文章数等常见参数。
+</p>
+<p>
+总的来说在设置上的确非常简洁。
+</p></div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-4">
+<h4 id="sec-3-2">博客主题</h4>
+<div class="outline-text-4" id="text-3-2">
+
+<p>目前来说Ghost官方提供了12个主题可供使用，这里是<a href="http://marketplace.ghost.org/">链接</a>。
+</p>
+<p>
+主题的安装也很简单，将下载好的主题解压后放置到 \/content/themes/ 这个目录下，并重启Ghost，然后到后台面板上选择要使用的主题即可。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-4">
+<h4 id="sec-3-3">编写文章</h4>
+<div class="outline-text-4" id="text-3-3">
+
+
+<p>
+在上面的那张有关博客设置的图里，可以看到后台面板有三个标签页，分别是： content， new posst和 settings。
+</p>
+<p>
+第一个可以查看文章列表，并进行修改、删除等操作。
+</p>
+<p>
+点击第二个就可以编写文章啦。
+</p>
+<p>
+不得不说，Ghost在文章编写上做的真是太棒了。看下面这个图：
+</p>
+
+
+<img src="/assets/img/2013-10-15-writing.png"/>
+<p>
+可以右键，选择“在新标签页打开图片”看大图。
+</p>
+<p>
+正如你所见，Ghost提供这种“可视化”的编辑方式。左栏是Markdown语法的文章编辑区，右栏则可以实时预览文章显示效果，实在是太棒了。
+</p>
+<p>
+除此以外，也可以用自己喜爱的编辑器编辑md文件啦，不过既然Ghost提供了这样一种方式，相信这样做的人就会更少啦。
+</p></div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-3">
+<h3 id="sec-4">总结</h3>
+<div class="outline-text-3" id="text-4">
+
+
+<p>
+确实很不错，特别是那个文章编辑方式，实在是很吸引人，不过——不能在Github Pages上跑，对我来说，吸引力就下降了，而且，虽然刚才说那个编辑方式很吸引人，不过我可是org-mode脑残粉，更何况前两天装上了real-auto-save这个插件，再也不用自己频繁按 <b>C-x C-f</b> 了。
+</p>
+<p>
+所以说都是浮云。
+</p>
+<p>
+来，这是一个demo的展示——本地的只能截图了：
+<img src="/assets/img/2013-10-15-ghost-demo.png"/>
+可以右键，选择“在新标签页打开图片”看大图。
+</p></div>
+</div>
