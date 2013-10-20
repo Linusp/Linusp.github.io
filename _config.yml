@@ -11,6 +11,18 @@ author :
 
 production_url : http://linusp.github.io
 
+nav:
+  - text: 分类
+    url : /categories.html
+  - text: 标签
+    url : /tags.html
+  - text: 存档
+    url : /archive.html
+  - text: 链接
+    url : /link.html
+  - text: 关于
+    url : /about.html
+
 JB :
   version : 0.3.0
 
