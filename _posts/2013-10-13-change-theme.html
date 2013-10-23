@@ -8,72 +8,67 @@ tags       : Jekyll
 <p>
 今天更换了主题，其实就是jekyll-bootstrap的 <b>twitter主题</b> 。
 </p>
-
 <p>
-对于<i>Pizn</i> 设计的主题 <b>The One</b> ，我不能说不好，只是还是不太符合我的喜好，我这段时间花了大量的时间想自己写一个 <b>极致简洁</b> 的模板，比如说<a href="http://liutos.github.io">Liutos的博客</a> 这样的风格，不过web知识太过匮乏，全凭自己在<a href="http://www.w3school.com.cn/">w3school在线教程</a> 上对HTML/CSS 得到的丁点了解，而没有前端设计的理念，完全就是乱来（我自己倒是搞了个比较简单的模板出来，但是太丑了（╯‵□′）╯︵┴─┴ ）。
+对于<a href="#www.zhanxin.info">Pizn</a> 设计的主题 <b>The One</b> ，我不能说不好，只是还是不太符合我的喜好，我这段时间花了大量的时间想自己写一个 <b>极致简洁</b> 的模板，比如说<a href="http://liutos.github.io">Liutos的博客</a> 这样的风格，不过web知识太过匮乏，全凭自己在<a href="http://www.w3school.com.cn/">w3school在线教程</a> 上对HTML/CSS 得到的丁点了解，而没有前端设计的理念，完全就是乱来（我自己倒是搞了个比较简单的模板出来，但是太丑了（╯‵□′）╯︵┴─┴ ）。
 </p>
-
 <p>
-之前我试用jekyll-bootstrap时它不能处理\<sub>posts</sub>/目录下的html文件，这是我当时放弃它的主要原因——我可不想写markdown，今天一试居然可以了……我一定是记错了什么……
+之前我试用jekyll-bootstrap时它不能处理_posts/目录下的html文件，这是我当时放弃它的主要原因——我可不想写markdown，今天一试居然可以了……我一定是记错了什么……
 </p>
-
 <p>
-不过我也没有把jekyll-bootstrap全部都拿过来用，而是把twitter主题的模板直接放到了\<sub>layouts目录下，顺便也修改了一下css。</sub>
+不过我也没有把jekyll-bootstrap全部都拿过来用，而是把twitter主题的模板直接放到了_layouts目录下，顺便也修改了一下css。
 </p>
-
 <p>
 还有，jekyll-bootstrap的twitter主题有一个问题，它的模板 <b>page.html</b> 和 <b>post.html</b> 中，本应显示页面/文章 标签的地方，一直显示的是 
-</p>
-<blockquote>
-<p>
-Supporting tagline
+</p><blockquote>
+
+<p>Supporting tagline
 </p>
 </blockquote>
+
+
 <p>
 这是因为模板中的相应地方作者遗忘了一处细节，请看这段代码：
 </p>
-<div class="org-src-container">
+
 
 <pre class="src src-html">&lt;<span style="color: #ed8a0c;">div</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"page-header"</span>&gt;
   &lt;<span style="color: #ed8a0c;">h1</span>&gt;{{ page.title }} &lt;<span style="color: #ed8a0c;">small</span>&gt;<span style="color: #bebebe; background-color: #1c1c1c;">Supporting tagline</span>&lt;/<span style="color: #ed8a0c;">small</span>&gt;&lt;/<span style="color: #ed8a0c;">h1</span>&gt;
 &lt;/<span style="color: #ed8a0c;">div</span>&gt;
 </pre>
-</div>
+
 <p>
 其中 <b>small</b> 标签内部应该修改为
 {% raw %}
 {{ page.tagline }}
 {% endraw %}
 </p>
-
 <p>
 还有一个小问题是，模板的首页文件即 <b>index.md</b> 设置了一个title为 <b>Hello World</b> ，而由于 <b>default.html</b> 这个模板将页面文件的tile设置为博客页面的title，这就有一个问题了。index.md生成的index.html会渲染为博客的首页，也就是说，博客首页的标题会被设置为index.md中指定的title，按照常理，首页的页面标题应该是和博客的标题一致的。接下来就有两种情况：
-</p>
-<ol class="org-ol">
+</p><ol>
 <li>将index.md中的title设置为博客标题，但这样和导航栏中的博客标题重复了，看起来有点多余
 </li>
 <li>将index.md中的title设置为非博客标题的内容，这样就和刚才说的 <b>常理</b> 不符
 </li>
 </ol>
 
+
 <p>
 我的做法是：
-</p>
-<ol class="org-ol">
+</p><ol>
 <li>修改default.html
 
 <p>
-将以下内容
+   将以下内容
 </p>
-<div class="org-src-container">
+
 
 <pre class="src src-html">&lt;<span style="color: #ed8a0c;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">{% raw %}{{ page.title }}{% endraw %}</span>&lt;/<span style="color: #ed8a0c;">title</span>&gt;
 </pre>
-</div>
+
 <p>
-修改为：
+   修改为：
 </p>
-<div class="org-src-container">
+
 
 <pre class="src src-html"> &lt;<span style="color: #ed8a0c;">title</span>&gt;
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{% if page.title %}{% endraw %}</span>
@@ -83,22 +78,23 @@ Supporting tagline
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{% endif %}{% endraw %}</span>
 &lt;/<span style="color: #ed8a0c;">title</span>&gt;
 </pre>
-</div>
+
 </li>
 <li>修改index.md
 
-<p>
-删除其title，修改其模板为 default，在头部添加：
+<p>   
+   删除其title，修改其模板为 default，在头部添加：
 </p>
-<div class="org-src-container">
+
 
 <pre class="src src-html">&lt;<span style="color: #ed8a0c;">div</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"page-header"</span>&gt;
 &lt;<span style="color: #ed8a0c;">h1</span>&gt;&#25991;&#31456;&#21015;&#34920; &lt;<span style="color: #ed8a0c;">small</span>&gt;<span style="color: #bebebe; background-color: #1c1c1c;">{% raw %}{{ page.tagline }}{% endraw %}</span>&lt;/<span style="color: #ed8a0c;">small</span>&gt;&lt;/<span style="color: #ed8a0c;">h1</span>&gt;
 &lt;/<span style="color: #ed8a0c;">div</span>&gt;
 </pre>
-</div>
+
 </li>
 </ol>
+
 
 <p>
 要不要跟作者提提意见呢？嘿嘿
