@@ -6,7 +6,7 @@ q:before,q:after,blockquote:before,blockquote:after{content:"";}
 html{overflow-y:scroll;font-size:100%;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
 a:focus{outline:thin dotted;}
 a:hover,a:active{outline:0;}
-img {max-width:500px;width:expression_r(width>500?"500px":width+"px");overflow:hidden;
+img {max-width:650px;width:expression_r(width>650?"650px":width+"px");overflow:hidden;
 }
 article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block;}
 audio,canvas,video{display:inline-block;*display:inline;*zoom:1;}
@@ -60,8 +60,8 @@ p{font-size:15px;font-weight:normal;line-height:18px;margin-bottom:9px;}p small{
 h1,h2,h3,h4,h5,h6{font-weight:bold;color:#404040;}h1 small,h2 small,h3 small,h4 small,h5 small,h6 small{color:#bfbfbf;}
 h1{margin-bottom:18px;font-size:25px;line-height:36px;}h1 small{font-size:18px;}
 h2{font-size:20px;}h2 small{font-size:14px;}
+h1,h2{background-color: #D5E2E6}
 h3{font-size:18px;}h3 small{font-size:14px;}
-h1{background-color: #D5E2E6}
 h4{font-size:16px;}h4 small{font-size:12px;}
 h5{font-size:14px;}
 h6{font-size:13px;color:#bfbfbf;text-transform:uppercase;}
