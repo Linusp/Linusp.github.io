@@ -1,0 +1,73 @@
+---
+layout     : post
+title      : 丧心病狂:用Emacs阅读PDF文档
+categories : Emacs
+tags       : 
+       - emacs
+       - pdf
+---
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">DocViewMode</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  Emacs有个插件叫做<a href="http://www.emacswiki.org/emacs/DocViewMode">DocViewMode</a>， 为Emacs提供了对PDF、PS等格式文件的支持，其原理是将这些文件转换成png格式的图片，并在Emacs中显示。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">安装</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  从Emacs 23开始，默认就安装了DocViewMode，不过为了能够正常工作，还需要在系统中安装这两个东西：
+</p><ul>
+<li>xpdf
+</li>
+<li>ghostscript
+</li>
+</ul>
+
+
+<p>
+  安装好后，像打开常规文件那样打开PDF文件就行了。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">感受</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  怎么说呢……打开小的PDF文件还可以,比如说这个：
+</p>
+<p>
+  <img src="../../../assets/img/2013-11-06-emacs-pdf-view.png"  alt="../../../assets/img/2013-11-06-emacs-pdf-view.png" />
+</p>
+<p>
+  操作也简单，+/- 进行缩放，n/p进行翻页。
+</p>
+<p>
+  然后我丧心病狂地按了C-x C-f后输入了：
+</p>
+
+
+<pre class="example">~/Dropbox/book/lisp/ANSI_Common_Lisp.pdf
+</pre>
+
+<p>
+  然后就悲剧了……
+</p>
+<p>  
+  所以说某篇文章说的把Emacs设置成默认PDF阅读器这种事还是不要做的好。
+</p></div>
+</div>
