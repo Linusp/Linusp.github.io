@@ -1,0 +1,323 @@
+---
+layout     : post
+title      : 《ANSI Common Lisp》第二章习题
+categories : 编程
+tags       : lisp
+---
+
+<ol>
+<li>Describe what happens when the following expressions are evaluated:
+
+
+
+
+<pre class="example">(a) (+ (- 5 1) (+ 3 7))
+(b) (list 1 (+ 2 3))
+(c) (if (listp 1) (+ 1 2) (+ 3 4))
+(d) (list (and (listp 3) t) (+ 1 2))
+</pre>
+
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="example">(a) 14
+(b) (1 5)
+(c) 7
+(d) (NIL 3)
+</pre>
+
+
+</li>
+<li>Give three distinct cons expressions that return (a b c).
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(cons 'a '(b c))
+(list 'a 'b 'c)
+(append '(a) '(b c))
+</pre>
+
+
+</li>
+<li>Using <b>car</b> and <b>cdr</b>,define a function to return the fourth element of a list.
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">fourth</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (listp lst)
+    (car (cdr (cdr (cdr lst))))))
+</pre>
+
+
+</li>
+<li>Define a function that takes two arguments and returns the greater of the two.
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">greater</span> (a b)
+  (<span style="color: #cf4a44;">if</span> (equal (type-of a)
+             (type-of b))
+      (<span style="color: #cf4a44;">cond</span> ((typep a 'number) (<span style="color: #cf4a44;">if</span> (&gt; a b) a b)
+            ((typep a 'character) (<span style="color: #cf4a44;">if</span> (char&gt; a b) a b))
+            ((typep a 'string) (<span style="color: #cf4a44;">if</span> (string&gt; a b) a b))
+            (t nil)))
+      nil))
+</pre>
+
+
+</li>
+<li>What do hese functions do?
+
+<p>
+   (a)
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">enigma</span> (x)
+  (and (not (null x))
+       (or  (null (car x))
+            (enigma (cdr x)))))
+</pre>
+
+
+<p>
+   (b)
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">mystery</span> (x y)
+  (<span style="color: #cf4a44;">if</span> (null y)
+      nil
+      (<span style="color: #cf4a44;">if</span> (eql (car y) x)
+          0
+          (<span style="color: #cf4a44;">let</span> ((z (mystery x (cdr y))))
+            (and z (+ z 1))))))
+</pre>
+
+
+<p>
+   My answer:
+</p>
+<p>
+   (a) 该函数用于判断一个非空的list中是否含有 <b>NIL</b> 元素.
+</p>
+<p>
+   (b) 判断y中是否有元素和x相等(同一个对象)，若无则返回NIL，若有则返回该元素在y中的索引(以0为初始值).
+</p>
+</li>
+<li>What could occur in place of the <b>x</b> in each of the following exchanges?
+
+
+
+
+<pre class="example">(a) &gt; (car (x (cdr '(a (b c) d))))
+    B
+(b) &gt; (x 13 (/ 1 0))
+    13
+(c) &gt; (x #'list 1 nil)
+    (1)
+</pre>
+
+
+<p>
+   My answer:
+</p>
+<p>
+   (a) cdr.
+</p>
+<p>
+   (b) or.
+</p>
+<p>
+   (c) apply.
+</p>
+</li>
+<li>Using only operators introduced in this Chapter, define a function that takes a list as an argument and returns true if one of its elements is a list.
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">have-list-member</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      nil
+      (<span style="color: #cf4a44;">if</span> (listp (car lst))
+          t
+          (have-list-member (cdr lst)))))
+</pre>
+
+
+<p>
+   注：本章出现的操作符有：
+</p>
+
+
+<pre class="example">+ / - quote list cons car cdr third listp null not if and or defun &gt; eql read format let defparameter defconstant setf remove do dolist progn function apply funcall lambda typep
+</pre>
+
+
+</li>
+<li>Give iterative and recursive definitions of a function that
+
+<p>
+   (a) takes a positive integer and prints that many dots.
+</p>
+<p>
+   (b) takes a list and returns the number of times the symblo <b>a</b> occurs in it.
+</p>
+<p>
+   My answer:
+</p>
+<p>
+   (a) dot-plot
+</p>
+<ul>
+<li>Iteractive version
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-iter</span> (n)
+  (<span style="color: #cf4a44;">do</span> ((n n (- n 1)))
+      ((= n 0) 'done)
+    (format t <span style="color: #25ef29;">"."</span>)))
+</pre>
+
+</li>
+<li>Recursive version
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-rec</span> (n)
+  (<span style="color: #cf4a44;">if</span> (= n 0)
+      'done
+      (<span style="color: #cf4a44;">progn</span>
+        (format t <span style="color: #25ef29;">"."</span>)
+        (dot-plot-rec (- n 1)))))
+</pre>
+
+
+</li>
+</ul>
+
+<p>   (b) times-of-a
+</p>
+<ul>
+<li>Iteractive version
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (lst)                     <span style="color: #e81122;">;</span><span style="color: #e81122;">&#24191;&#24230;&#20248;&#20808;&#36941;&#21382;&#65292;&#24471;&#21040;lst&#30340;&#25152;&#26377;&#26641;&#21494;&#33410;&#28857;&#30340;&#21015;&#34920;</span>
+  (<span style="color: #cf4a44;">let</span> ((stack (list lst))           <span style="color: #e81122;">;</span><span style="color: #e81122;">&#36941;&#21382;&#25152;&#38656;&#26632;</span>
+        (leaves nil))                <span style="color: #e81122;">;</span><span style="color: #e81122;">&#23384;&#25918;&#26641;&#21494;&#33410;&#28857;&#30340;&#21015;&#34920;</span>
+    (<span style="color: #cf4a44;">do</span> ()
+        ((null stack) leaves)        <span style="color: #e81122;">;</span><span style="color: #e81122;">&#24403;&#26632;&#31354;&#26102;&#65292;&#36941;&#21382;&#32467;&#26463;</span>
+      (<span style="color: #cf4a44;">let</span> ((now (pop stack)))       <span style="color: #e81122;">;</span><span style="color: #e81122;">&#23558;&#26632;&#39030;&#33410;&#28857;&#20986;&#26632;</span>
+        (<span style="color: #cf4a44;">if</span> (listp now)              <span style="color: #e81122;">;</span><span style="color: #e81122;">&#33509;&#20986;&#26632;&#33410;&#28857;&#19981;&#20026;&#26641;&#21494;&#33410;&#28857;&#26102;&#65292;&#23558;&#20854;&#23376;&#26641;&#20837;&#26632;</span>
+            (<span style="color: #cf4a44;">progn</span> (push (car now) stack)
+                   (<span style="color: #cf4a44;">if</span> (not (null (cdr now)))   <span style="color: #e81122;">;</span><span style="color: #e81122;">&#36825;&#37324;&#35201;&#21028;&#26029;cdr&#26159;&#21542;&#20026;nil&#65292;&#21542;&#21017;&#23558;&#20854;&#20837;&#26632;&#21518;</span>
+                       (push (cdr now) stack))) <span style="color: #e81122;">;</span><span style="color: #e81122;">listp&#23545;&#20854;&#21028;&#26029;&#30340;&#32467;&#26524;&#20026;&#30495;&#65292;&#23548;&#33268;&#26080;&#31351;&#36882;&#24402;</span>
+            (push now leaves))))))   <span style="color: #e81122;">;</span><span style="color: #e81122;">&#33509;&#20986;&#26632;&#33410;&#28857;&#20026;&#26641;&#21494;&#33410;&#28857;&#65292;&#23558;&#20854;&#25918;&#20837;leaves&#21015;&#34920;&#20013;</span>
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">times-of-a-iter</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((leaves (bfs lst))
+        (times 0))
+    (<span style="color: #cf4a44;">dolist</span> (obj lst)
+      (<span style="color: #cf4a44;">if</span> (equal 'a obj)
+          (setf times (+ times 1))))
+    times))
+</pre>
+
+</li>
+<li>Recursive version
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">times-of-a-rec</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+       0
+      (<span style="color: #cf4a44;">let</span> ((now (car lst)))
+        (+ (<span style="color: #cf4a44;">if</span> (listp now)
+               (times-of-a-rec now)
+               (<span style="color: #cf4a44;">if</span> (equal now 'a) 1 0))
+           (times-of-a-rec (cdr lst))))))
+
+</pre>
+
+</li>
+</ul>
+
+</li>
+</ol>
+
+
+
+<ol>
+<li>A friend is trying to write a function that returns the sum of all the non-nil elements in a list. He has written two versions of this function, and neither of them work.Explain what's wrong with each, and give a correct version:
+
+<p>
+   (a)
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (remove nil lst)
+  (apply #'+ lst))
+</pre>
+
+
+<p>
+   (b)
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((x (car lst)))
+    (<span style="color: #cf4a44;">if</span> (null x)
+        (summit (cdr lst))
+        (+ x (summit (cdr lst))))))
+</pre>
+
+
+<p>
+   My answer:
+</p>
+<p>
+   (a) remove是没有副作用(side-effect)的，所以lst中的 <b>nil</b> 元素还在 lst中，正确的代码应为
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (apply #&#8216;+ (remove nil lst)))
+</pre>
+
+
+<p>
+   (b) 没有递归终止条件，正确的代码应为：
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      0
+      (<span style="color: #cf4a44;">let</span> ((x (car lst)))
+        (<span style="color: #cf4a44;">if</span> (null x)
+            (summit (cdr lst))
+            (+ x (summit (cdr lst)))))))
+</pre>
+
+</li>
+</ol>
+
