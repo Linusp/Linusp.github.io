@@ -21,15 +21,18 @@ tags       : lisp
 <p>
    My answer:
 </p>
-
-
-<pre class="example">(a) 14
-(b) (1 5)
-(c) 7
-(d) (NIL 3)
-</pre>
-
-
+<p>
+   (a) 14
+</p>
+<p>
+   (b) (1 5)
+</p>
+<p>
+   (c) 7
+</p>
+<p>
+   (d) (NIL 3)
+</p>
 </li>
 <li>Give three distinct cons expressions that return (a b c).
 
@@ -39,8 +42,8 @@ tags       : lisp
 
 
 <pre class="src src-lisp">(cons 'a '(b c))
-(list 'a 'b 'c)
-(append '(a) '(b c))
+(cons 'a (cons 'b '(c)))
+(cons 'a (cons 'b (cons 'c nil)))
 </pre>
 
 

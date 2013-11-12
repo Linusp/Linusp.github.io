@@ -1,0 +1,316 @@
+---
+layout     : post
+title      : 《ANSI Common Lisp》第三章习题
+categories : 编程
+tags       : lisp
+---
+
+<ol>
+<li>Show the following lists in box notation:
+
+
+
+
+<pre class="example">(a) (a b (c d))
+(b) (a (b (c (d))))
+(c) (((a b) c) d)
+(d) (a (b . c) . d)
+</pre>
+
+
+<p>
+   My answer:
+</p>
+<p>
+   (a) (a . (b . ((C . (D . NIL)) . NIL)))
+</p>
+<p>
+   (b) (a . ((B . ((C . ((D . NIL) . NIL)) . NIL)) . NIL))
+</p>
+<p>
+   (c) (((A . (B . NIL)) . (C . NIL)) . (D . NIL))
+</p>
+</li>
+<li>Write a version of <b>union</b> that preserves the order of the elements in the original lists:
+
+
+
+
+<pre class="example">&gt; (new-union '(a b c) '(b a d))
+(A B C D)
+</pre>
+
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-union</span> (first second)
+  (<span style="color: #cf4a44;">dolist</span> (obj second)
+    (<span style="color: #cf4a44;">if</span> (not (member obj first))
+        (append first (list obj)))))
+</pre>
+
+
+</li>
+<li>Define a function that takes a list and returns a list indicating the number of times each (eql) element appears, sorted from most common element to least common:
+
+
+
+
+<pre class="example">&gt; (occurrences '(a b a d a c d c a))
+((A . 4) (C . 2) (D . 2) (B . 1))
+</pre>
+
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">occurrence</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((result nil))
+    (<span style="color: #cf4a44;">dolist</span> (obj lst)
+      (<span style="color: #cf4a44;">if</span> (null (assoc obj result))
+          (push (cons obj 1) result)
+          (incf (cdr (assoc obj result)))
+        ))
+    (sort result #'(<span style="color: #cf4a44;">lambda</span> (a b) (<span style="color: #cf4a44;">if</span> (&gt; (cdr a) (cdr b)) t nil)))))
+</pre>
+
+
+</li>
+<li>Why does (member '(a) '((a) (b))) return nil?
+
+<p>
+   My answer:
+</p>
+<p>
+   因为每次产生cons调用时系统都会分配新的对象，所以'(a)和'((a) (b))中的第一个元素虽然具有同样的值，但却不是同一个对象，而member函数使用的判定函数是eql。
+</p>
+</li>
+<li>Suppose the function <b>pos+</b> takes a list and returns a list of each element plus its position:
+
+
+
+
+<pre class="example">&gt; (pos+ '(7 5 1 4))
+</pre>
+
+<p>
+   Define this function using (a) recursion, (b) iteration, (c) mapcar.
+</p>
+<p>
+   My answer:
+</p>
+<p>   
+   (a) Recursive version
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos) 
+  (<span style="color: #cf4a44;">if</span> (not (null lst))
+      (<span style="color: #cf4a44;">progn</span>
+        (incf (car lst) pos)
+        (rec-pos-plus (cdr lst) (1+ pos)))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos+</span> (lst)
+  (rec-pos-plus lst 0)
+  lst)
+</pre>
+
+
+<p>
+   (b) Iterative version
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">iter-pos+</span> (lst)
+  (<span style="color: #cf4a44;">do</span> ((i 0 (+ i 1)))
+      ((= i (length lst)) lst)
+    (incf (nth i lst) i)
+    ))
+</pre>
+
+
+<p>
+   (c) Version using <b>mapcar</b>
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">pos+</span> (lst)
+  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (x) (incf x (position x lst)))
+          lst))
+</pre>
+
+
+</li>
+<li>After yeas of deliiberation, a government commission has decided that lists should be represented by using the cdr to point to the first element and the car to point to the rest of the list. Define the government versions of the following functions:
+
+
+
+
+<pre class="example">(a) cons
+(b) list
+(c) length (for lists)
+(d) member (for lists; no keywords)
+</pre>
+
+
+<p>
+   My answer:
+</p>
+<p>
+   (a) cons
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">cons</span> (x y)
+  (<span style="color: #cf4a44;">let</span> ((result '(nil . nil)))
+    (setf (cdr result) x)
+    (setf (car result) y)))
+</pre>
+
+
+<p>
+   (b) list
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">list</span> (<span style="color: #ca34e2;">&amp;rest</span> arg)
+  arg)
+</pre>
+
+
+<p>
+   (c) length (for lists)
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">length</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      0
+      (+ 1 (length (car lst)))))
+</pre>
+
+
+<p>
+   (d) member (for lists; no keywords)
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">member</span> (element list)
+  (<span style="color: #cf4a44;">cond</span> ((null list) nil)
+        ((eql element (cdr list)) list)
+        (t (member element (car list)))))
+</pre>
+
+
+</li>
+<li>Modify the program in Figure 3.6 to use fewer cons cells. (Hing: Use dottedlists.)
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">n-elts</span> (elt n)
+  (<span style="color: #cf4a44;">if</span> (&gt; n 1)
+      (cons n elt)
+      elt))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compr</span> (elt n lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      (list (n-elts elt n))
+      (<span style="color: #cf4a44;">let</span> ((next (car lst)))
+        (<span style="color: #cf4a44;">if</span> (eql next elt)
+            (compr elt (+ n 1) (cdr lst))
+            (cons (n-elts elt n)
+                  (compr next 1 (cdr lst)))))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compress</span> (x)
+  (<span style="color: #cf4a44;">if</span> (consp x)
+      (compr (car x) 1 (cdr x))
+      x))
+</pre>
+
+
+</li>
+<li>Define a function that takes a list and prints it in dot natation:
+
+
+
+
+<pre class="example">&gt; (showdots '(a b c))
+(A . (B . (C . NIL)))
+NIL
+</pre>
+
+
+<p>
+   My answer:
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">showdots</span> (list)
+(<span style="color: #cf4a44;">cond</span> ((null list) nil)
+      ((consp list) (<span style="color: #cf4a44;">progn</span>
+                     (format t <span style="color: #25ef29;">"("</span>)
+                     (showdots (car list))
+                     (format t <span style="color: #25ef29;">" . "</span>)
+                     (<span style="color: #cf4a44;">if</span> (null (cdr list))
+                         (format t <span style="color: #25ef29;">"NIL"</span>)
+                         (showdots (cdr list)))
+                     (format t <span style="color: #25ef29;">")"</span>)
+                     ))
+      (t (format t <span style="color: #25ef29;">"~a"</span> list))))
+</pre>
+
+
+</li>
+<li>Write a program to find the <i>longest</i> finite path through a network represented as in Section 3.15. The network may contain cycles.
+
+<p>
+   My answer(对shortest-path的改写):
+</p>
+
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-paths</span> (path node net)
+  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (n) 
+               (<span style="color: #cf4a44;">if</span> (not (member n path)) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#21028;&#26029;&#19979;&#19968;&#23618;&#33410;&#28857;&#26159;&#21542;&#21253;&#21547;&#22312;&#36335;&#24452;&#20013;&#20197;&#21066;&#38500;&#29615;&#30340;&#24433;&#21709;</span>
+                   (cons n path)))
+          (cdr (assoc node net))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (end quene net)
+  (<span style="color: #cf4a44;">if</span> (null quene)
+      nil
+      (<span style="color: #cf4a44;">let</span> ((path (car quene)))
+        (<span style="color: #cf4a44;">let</span> ((node (car path)))
+          (<span style="color: #cf4a44;">if</span> (eql node end)
+              (reverse path)
+              (bfs end
+                   (sort (append (cdr quene) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#25490;&#24207;&#20197;&#20445;&#35777;&#26368;&#38271;&#30340;&#36335;&#24452;&#22312;&#38431;&#21015;&#26368;&#21069;&#26041;</span>
+                                 (new-paths path node net))
+                         #'&gt;
+                         <span style="color: #31d3c4;">:key</span> #'length)
+                   net))))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">longest-path</span> (start end net)
+  (bfs end (list (list start)) net))
+</pre>
+
+</li>
+</ol>
+
+
+<p>
+= =写个题比拿半生不熟的英文来记笔记还累……
+</p>
