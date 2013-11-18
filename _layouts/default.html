@@ -2,6 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    {% if page.description %}
+    <meta name="description" content="{{ page.description }}">
+    {% endif %}
+    <meta name="author" content="{{ site.author.name }}">
     <title>
       {% if page.title %}
       {{ page.title }}
@@ -9,11 +14,6 @@
       {{ site.title }}
       {% endif %}
     </title>
-    {% if page.description %}
-    <meta name="description" content="{{ page.description }}">
-    {% endif %}
-    <meta name="author" content="{{ site.author.name }}">
-
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -23,6 +23,7 @@
     <link href="/assets/css/bootstrap.css" rel="stylesheet">
     <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
     <link rel="shortcut icon" href="/assets/img/favicon.ico">
+
   </head>
 
   <body>
