@@ -8,10 +8,11 @@ tags       : shell
 <p>
 今天实现了中英文的选择，当然，并没有对可能出现的错误情况进行处理，比如说选项指明是英文而文本内容是中文……
 </p>
+
 <p>
 首先，昨天写的那个脚本有点问题，先来看一下：
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
 <span style="color: #ed8a0c;">t2s</span>() { 
@@ -21,25 +22,25 @@ tags       : shell
 <span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
 t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
 </pre>
-
+</div>
 <p>
 当文本是用空格分开时，这个脚本会出错，原因是传递给函数的参数会严格按照空格进行划分，也就是说，类似
 </p>
-
-
-<pre class="example">'how are you'
+<pre class="example">
+'how are you'
 </pre>
-
 <p>
 这样本来预期作为t2s函数的第一个参数会被分割成 how、are、you三个部分并将其作为t2s函数的 <b>三个参数</b> ，导致错误。
 </p>
+
 <p>
 正确的做法是将$1用双引号包裹起来。
 </p>
+
 <p>
 这是今天修改后的脚本代码：
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
 
@@ -76,11 +77,12 @@ t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color:
 
 t2s <span style="color: #25ef29;">"$1"</span> $<span style="color: #fefc58;">2</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
 </pre>
-
+</div>
 
 <p>
 当然了……脚本参数的处理是很直接简单的处理方式。
 </p>
+
 <p>
 另外，Google的中文语音合成效果不怎么样啊，不过其他的语音产品貌似不提供像Google这样的API，那也没办法了。
 </p>

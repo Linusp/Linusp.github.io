@@ -6,98 +6,94 @@ tags       :
 description: "对于Linux系统来说，双显卡一直都是一个很令人头疼的问题，本文提供了一种简单的办法来解决双显卡风扇狂转的问题"
 ---
 
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">问题</h2>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 问题</h2>
 <div class="outline-text-2" id="text-1">
-
-
 <p>
-  对于Linux系统来说，显卡驱动一直都是一个很头疼的问题，更别说双显卡了。但是很不幸的，我的笔记本是双显卡，更不幸的是，还是Intel核心显卡+AMD独立显卡这种及其蛋疼的组合。
+对于Linux系统来说，显卡驱动一直都是一个很头疼的问题，更别说双显卡了。但是很不幸的，我的笔记本是双显卡，更不幸的是，还是Intel核心显卡+AMD独立显卡这种及其蛋疼的组合。
 </p>
-<p>
-  在我还没有处理这个问题时，每次开机后，经常能够听到独立显卡风扇狂转的声音，但是实际上当时我并没有运行什么需要显卡进行大量计算的程序。这个问题不仅带来噪声问题（你说这声音要是一直在响，听习惯了也没什么，问题时它一会响一会不响，声音也一会大一会小），还对机器的散热带来了不好的影响。
-</p>
-<p>
-  所以要解决它！
-</p></div>
 
+<p>
+在我还没有处理这个问题时，每次开机后，经常能够听到独立显卡风扇狂转的声音，但是实际上当时我并没有运行什么需要显卡进行大量计算的程序。这个问题不仅带来噪声问题（你说这声音要是一直在响，听习惯了也没什么，问题时它一会响一会不响，声音也一会大一会小），还对机器的散热带来了不好的影响。
+</p>
+
+<p>
+所以要解决它！
+</p>
+</div>
 </div>
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">解决方案</h2>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 解决方案</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+一种办法是安装独立显卡驱动，同时要做一些处理使得系统能够在独立显卡和集成显卡之间智能切换。这种方法能够彻底解决问题，也能够发挥独立显卡的性能，但这种方法非常费力，而且不一定能够成功。
+</p>
 
+<p>
+另外一种方法是屏蔽独立显卡——说真的，我在Linux下并没有太多需要用到独立显卡的时候——当然在Windows下玩盗版大型游戏的时候就需要了。屏蔽独立显卡也有两种方式，一种是通过BIOS屏蔽，另外一种是通过系统实现软屏蔽。
+</p>
 
 <p>
-  一种办法是安装独立显卡驱动，同时要做一些处理使得系统能够在独立显卡和集成显卡之间智能切换。这种方法能够彻底解决问题，也能够发挥独立显卡的性能，但这种方法非常费力，而且不一定能够成功。
+很遗憾的是，笔记本的BIOS功能被阉割过，没有提供屏蔽独显的操作，而且BIOS进行了屏蔽的话，Windows系统同样也不能使用独立显卡了，这就不太满足期望了。所以最好的选择就是通过系统进行软屏蔽了。
 </p>
+
 <p>
-  另外一种方法是屏蔽独立显卡——说真的，我在Linux下并没有太多需要用到独立显卡的时候——当然在Windows下玩盗版大型游戏的时候就需要了。屏蔽独立显卡也有两种方式，一种是通过BIOS屏蔽，另外一种是通过系统实现软屏蔽。
+办法就是通过内核提供的 <b>vgaswitcheroo</b> 组件来关闭独立显卡的电源。
 </p>
-<p>
-  很遗憾的是，笔记本的BIOS功能被阉割过，没有提供屏蔽独显的操作，而且BIOS进行了屏蔽的话，Windows系统同样也不能使用独立显卡了，这就不太满足期望了。所以最好的选择就是通过系统进行软屏蔽了。
-</p>
-<p>
-  办法就是通过内核提供的 <b>vgaswitcheroo</b> 组件来关闭独立显卡的电源。
-</p>
-<ul>
+
+<ul class="org-ul">
 <li>首先切换到root用户（普通用户即使用sudo也不方便操作）
 </li>
 <li>查看当前双显卡使用状态
 
-<p>    
-    这一步要通过 <b>/sys/kernel/debug/vgaswitcheroo/switch</b> 这个文件来进行。
-</p>
-
-
-<pre class="example">cat /sys/kernel/debug/vgaswitcheroo/switch
-</pre>
-
 <p>
-    这步是要读出 /sys/kernel/debug/vgaswitcheroo/switch 这一文件的信息。不出意外您可能会看到类似下面（但不完全相同）的内容：
+这一步要通过 <b>/sys/kernel/debug/vgaswitcheroo/switch</b> 这个文件来进行。
 </p>
-
-
-<pre class="example">0:IGD:+:Pwr:0000:00:02.0
+<pre class="example">
+cat /sys/kernel/debug/vgaswitcheroo/switch
+</pre>
+<p>
+这步是要读出 /sys/kernel/debug/vgaswitcheroo/switch 这一文件的信息。不出意外您可能会看到类似下面（但不完全相同）的内容：
+</p>
+<pre class="example">
+0:IGD:+:Pwr:0000:00:02.0
 1:DIS: :Pwr:0000:01:00.0
 </pre>
-
 <p>
-    其中 <b>IGD</b> 表示集成显卡， <b>DIS</b> 表示独立显卡， <b>+</b> 号表示当前连接上的显卡， <b>Pwr</b> 表示正在供电（若不供电则为 <b>Off</b> ）。
-</p></li>
+其中 <b>IGD</b> 表示集成显卡， <b>DIS</b> 表示独立显卡， <b>+</b> 号表示当前连接上的显卡， <b>Pwr</b> 表示正在供电（若不供电则为 <b>Off</b> ）。
+</p>
+</li>
 <li>关闭独立显卡
 
 <p>
-    如果确实是上面所述的状态，那么执行：
+如果确实是上面所述的状态，那么执行：
 </p>
-
-
-<pre class="example">echo OFF &gt; /sys/kernel/debug/vgaswitcheroo/switch
+<pre class="example">
+echo OFF &gt; /sys/kernel/debug/vgaswitcheroo/switch
 </pre>
-
 <p>
-    关闭未连接的显卡（即独显）的电源即可，不过这种方法只是暂时的方法，一旦重启就又会听到显卡风扇狂转了。
-</p></li>
+关闭未连接的显卡（即独显）的电源即可，不过这种方法只是暂时的方法，一旦重启就又会听到显卡风扇狂转了。
+</p>
+</li>
 <li>开机关闭独立显卡
 
 <p>
-    将关闭独立显卡的命令写入系统启动时加载的脚本就能够在开机的时候关闭独立显卡的电源。如我的发行版是Linux Mint，将这三条命令写入/etc/init.d/rc.local中：
+将关闭独立显卡的命令写入系统启动时加载的脚本就能够在开机的时候关闭独立显卡的电源。如我的发行版是Linux Mint，将这三条命令写入/etc/init.d/rc.local中：
 </p>
-
-
-<pre class="example">echo ON &gt; /sys/kernel/debug/vgaswitcheroo/switch
+<pre class="example">
+echo ON &gt; /sys/kernel/debug/vgaswitcheroo/switch
 echo IGD &gt; /sys/kernel/debug/vgaswitcheroo/switch
 echo OFF &gt; /sys/kernel/debug/vgaswitcheroo/switch
 </pre>
-
 <p>
-    前两条命令是为了保证系统能够连接上集成显卡并供电。
-</p></li>
+前两条命令是为了保证系统能够连接上集成显卡并供电。
+</p>
+</li>
 </ul>
 
-
 <p>
-  实际上也可以使用本文提供的方法对集显进行屏蔽。
-</p></div>
+实际上也可以使用本文提供的方法对集显进行屏蔽。
+</p>
+</div>
 </div>

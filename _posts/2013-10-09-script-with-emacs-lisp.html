@@ -6,97 +6,95 @@ tags       : lisp
 excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程，我尝试使用elisp编写脚本来减少重复性的工作"
 ---
 
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">起因</h2>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 起因</h2>
 <div class="outline-text-2" id="text-1">
-
-
 <p>
-  我通过Github Pages有了自己的一个静态博客，并且开始正儿八经地写博客。
+我通过Github Pages有了自己的一个静态博客，并且开始正儿八经地写博客。
 </p>
+
 <p>
-  但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
+但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
 </p>
+
 <p>
-  起初是想写个shell脚本来简化步骤而已，开始写脚本后，我就想，应该把publish的步骤也通过脚本进行简化(虽然这并不是很复杂的步骤)，然后我发现shell不能做到这一点，唯一的选择是elisp。
+起初是想写个shell脚本来简化步骤而已，开始写脚本后，我就想，应该把publish的步骤也通过脚本进行简化(虽然这并不是很复杂的步骤)，然后我发现shell不能做到这一点，唯一的选择是elisp。
 </p>
 </div>
-
 </div>
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">过程</h2>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 过程</h2>
 <div class="outline-text-2" id="text-2">
+<p>
+用elisp写脚本？这事我听说过，但我没做过，也就是说我也是大姑娘上轿头一回了。
+</p>
 
+<p>
+照例google。
+</p>
 
 <p>
-  用elisp写脚本？这事我听说过，但我没做过，也就是说我也是大姑娘上轿头一回了。
+基本形式没太大问题，将shell脚本Shebang<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &#x2013;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
 </p>
+
 <p>
-  照例google。
+不过碰到了不少问题。
 </p>
-<p>
-  基本形式没太大问题，将shell脚本Shebang<sup><a class="footref" name="fnr-.2" href="#fn-.2">2</a></sup>后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &ndash;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
-</p>
-<p>
-  不过碰到了不少问题。
-</p>
-<ol>
+
+<ol class="org-ol">
 <li>之所以用elisp，就是想简化publish么，但是在elisp script里写上的
-
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(org-publish-project <span style="color: #25ef29;">"blog-linusp"</span>)
 </pre>
-
+</div>
 <p>
-     完全不起作用。细想一下应该是shell脚本没有加载我的emacs相关配置。当时真是一筹莫展啊，后来发现其实这是一件不复杂的事情，在之前加上一句
+完全不起作用。细想一下应该是shell脚本没有加载我的emacs相关配置。当时真是一筹莫展啊，后来发现其实这是一件不复杂的事情，在之前加上一句
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(load-file <span style="color: #25ef29;">"~/.emacs"</span>)
 </pre>
+</div>
+<p>
+不过这样做太凶残了，什么auto-complete、yasnippet、slime、org2blog、metablog全被加载了（╯‵□′）╯︵┴─┴ 。
+</p>
 
 <p>
-     不过这样做太凶残了，什么auto-complete、yasnippet、slime、org2blog、metablog全被加载了（╯‵□′）╯︵┴─┴ 。
+好在我有将配置文件分类的习惯，org-mode的相关配置被我写在一个名为 <b>org.el</b> 的文件里，于是加载它就OK了，不过这个文件里还有引用其他的一些emacs插件，于是也都加载了——好吧至少比之前更好是吧。
 </p>
-<p>
-     好在我有将配置文件分类的习惯，org-mode的相关配置被我写在一个名为 <b>org.el</b> 的文件里，于是加载它就OK了，不过这个文件里还有引用其他的一些emacs插件，于是也都加载了——好吧至少比之前更好是吧。
-</p></li>
+</li>
 <li>如何传递参数给脚本？shell脚本接受参数的话还是懂的怎么做的，可是elisp脚本……
 
 <p>
-     照例google，然后发现Xah Lee<sup><a class="footref" name="fnr-.3" href="#fn-.3">3</a></sup>的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
-</p></li>
+照例google，然后发现Xah Lee<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup>的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
+</p>
+</li>
 <li>运行脚本后，发现总会有一堆的Loading message，就像下面这样：
-     <img src="/assets/img/2013-10-09-loading-message.png" />
+<img src="/assets/img/2013-10-09-loading-message.png" />
 
-<p>     
-     （╯‵□′）╯︵┴─┴ 
+<p>
+（╯‵□′）╯︵┴─┴ 
 </p>
-<p>  
-     经google，该问题没有太好的解决问题，凑合吧。
-</p></li>
+
+<p>
+经google，该问题没有太好的解决问题，凑合吧。
+</p>
+</li>
 </ol>
-
-
 </div>
-
 </div>
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">成果</h2>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 成果</h2>
 <div class="outline-text-2" id="text-3">
-
-
 <p>
-  嘛，虽然代码写得比较丑陋，至少能用，功能上达到了我的预期目标，所以代码的问题，以后再说吧。
-</p>
-<p>
-  附脚本代码
+嘛，虽然代码写得比较丑陋，至少能用，功能上达到了我的预期目标，所以代码的问题，以后再说吧。
 </p>
 
+<p>
+附脚本代码
+</p>
+<div class="org-src-container">
 
 <pre class="src src-lisp">#!/usr/bin/emacs --script
 
@@ -136,24 +134,26 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 (load-file <span style="color: #25ef29;">"~/.emacs.d/myplugins/org.el"</span>)
 
 (blog (elt argv 0) (elt argv 1))
-
 </pre>
-
-
-<div id="footnotes">
-<h2 class="footnotes">&#33050;&#27880;: </h2>
-<div id="text-footnotes">
-<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> <a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
-</p>
-
-
-<p class="footnote"><sup><a class="footnum" name="fn-.2" href="#fnr-.2">2</a></sup> Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
-</p>
-
-
-<p class="footnote"><sup><a class="footnum" name="fn-.3" href="#fnr-.3">3</a></sup> Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
-</p></div>
 </div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
+Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
+</p></div>
+
 
 </div>
 </div>

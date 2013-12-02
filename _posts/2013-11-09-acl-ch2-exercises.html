@@ -5,69 +5,71 @@ categories : 编程
 tags       : lisp
 ---
 
-<ol>
+<ol class="org-ol">
 <li>Describe what happens when the following expressions are evaluated:
 
-
-
-
-<pre class="example">(a) (+ (- 5 1) (+ 3 7))
+<pre class="example">
+(a) (+ (- 5 1) (+ 3 7))
 (b) (list 1 (+ 2 3))
 (c) (if (listp 1) (+ 1 2) (+ 3 4))
 (d) (list (and (listp 3) t) (+ 1 2))
 </pre>
 
+<p>
+My answer:
+</p>
 
 <p>
-   My answer:
+(a) 14
 </p>
+
 <p>
-   (a) 14
+(b) (1 5)
 </p>
+
 <p>
-   (b) (1 5)
+(c) 7
 </p>
+
 <p>
-   (c) 7
-</p>
-<p>
-   (d) (NIL 3)
+(d) (NIL 3)
 </p>
 </li>
+
 <li>Give three distinct cons expressions that return (a b c).
 
 <p>
-   My answer:
+My answer:
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(cons 'a '(b c))
 (cons 'a (cons 'b '(c)))
 (cons 'a (cons 'b (cons 'c nil)))
 </pre>
-
-
+</div>
 </li>
+
 <li>Using <b>car</b> and <b>cdr</b>,define a function to return the fourth element of a list.
 
 <p>
-   My answer:
+My answer:
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">fourth</span> (lst)
   (<span style="color: #cf4a44;">if</span> (listp lst)
     (car (cdr (cdr (cdr lst))))))
 </pre>
-
-
+</div>
 </li>
+
 <li>Define a function that takes two arguments and returns the greater of the two.
 
 <p>
-   My answer:
+My answer:
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">greater</span> (a b)
   (<span style="color: #cf4a44;">if</span> (equal (type-of a)
@@ -78,27 +80,27 @@ tags       : lisp
             (t nil)))
       nil))
 </pre>
-
-
+</div>
 </li>
+
 <li>What do hese functions do?
 
 <p>
-   (a)
+(a)
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">enigma</span> (x)
   (and (not (null x))
        (or  (null (car x))
             (enigma (cdr x)))))
 </pre>
-
+</div>
 
 <p>
-   (b)
+(b)
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">mystery</span> (x y)
   (<span style="color: #cf4a44;">if</span> (null y)
@@ -108,24 +110,25 @@ tags       : lisp
           (<span style="color: #cf4a44;">let</span> ((z (mystery x (cdr y))))
             (and z (+ z 1))))))
 </pre>
+</div>
 
+<p>
+My answer:
+</p>
 
 <p>
-   My answer:
+(a) 该函数用于判断一个非空的list中是否含有 <b>NIL</b> 元素.
 </p>
+
 <p>
-   (a) 该函数用于判断一个非空的list中是否含有 <b>NIL</b> 元素.
-</p>
-<p>
-   (b) 判断y中是否有元素和x相等(同一个对象)，若无则返回NIL，若有则返回该元素在y中的索引(以0为初始值).
+(b) 判断y中是否有元素和x相等(同一个对象)，若无则返回NIL，若有则返回该元素在y中的索引(以0为初始值).
 </p>
 </li>
+
 <li>What could occur in place of the <b>x</b> in each of the following exchanges?
 
-
-
-
-<pre class="example">(a) &gt; (car (x (cdr '(a (b c) d))))
+<pre class="example">
+(a) &gt; (car (x (cdr '(a (b c) d))))
     B
 (b) &gt; (x 13 (/ 1 0))
     13
@@ -133,26 +136,29 @@ tags       : lisp
     (1)
 </pre>
 
+<p>
+My answer:
+</p>
 
 <p>
-   My answer:
+(a) cdr.
 </p>
+
 <p>
-   (a) cdr.
+(b) or.
 </p>
+
 <p>
-   (b) or.
-</p>
-<p>
-   (c) apply.
+(c) apply.
 </p>
 </li>
+
 <li>Using only operators introduced in this Chapter, define a function that takes a list as an argument and returns true if one of its elements is a list.
 
 <p>
-   My answer:
+My answer:
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">have-list-member</span> (lst)
   (<span style="color: #cf4a44;">if</span> (null lst)
@@ -161,47 +167,47 @@ tags       : lisp
           t
           (have-list-member (cdr lst)))))
 </pre>
-
+</div>
 
 <p>
-   注：本章出现的操作符有：
+注：本章出现的操作符有：
 </p>
-
-
-<pre class="example">+ / - quote list cons car cdr third listp null not if and or defun &gt; eql read format let defparameter defconstant setf remove do dolist progn function apply funcall lambda typep
+<pre class="example">
++ / - quote list cons car cdr third listp null not if and or defun &gt; eql read format let defparameter defconstant setf remove do dolist progn function apply funcall lambda typep
 </pre>
-
-
 </li>
+
 <li>Give iterative and recursive definitions of a function that
 
 <p>
-   (a) takes a positive integer and prints that many dots.
+(a) takes a positive integer and prints that many dots.
 </p>
+
 <p>
-   (b) takes a list and returns the number of times the symblo <b>a</b> occurs in it.
+(b) takes a list and returns the number of times the symblo <b>a</b> occurs in it.
 </p>
+
 <p>
-   My answer:
+My answer:
 </p>
+
 <p>
-   (a) dot-plot
+(a) dot-plot
 </p>
-<ul>
+
+<ul class="org-ul">
 <li>Iteractive version
-
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-iter</span> (n)
   (<span style="color: #cf4a44;">do</span> ((n n (- n 1)))
       ((= n 0) 'done)
     (format t <span style="color: #25ef29;">"."</span>)))
 </pre>
-
+</div>
 </li>
 <li>Recursive version
-
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-rec</span> (n)
   (<span style="color: #cf4a44;">if</span> (= n 0)
@@ -210,17 +216,16 @@ tags       : lisp
         (format t <span style="color: #25ef29;">"."</span>)
         (dot-plot-rec (- n 1)))))
 </pre>
-
-
+</div>
 </li>
 </ul>
-
-<p>   (b) times-of-a
+<p>
+(b) times-of-a
 </p>
-<ul>
+
+<ul class="org-ul">
 <li>Iteractive version
-
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (lst)                     <span style="color: #e81122;">;</span><span style="color: #e81122;">&#24191;&#24230;&#20248;&#20808;&#36941;&#21382;&#65292;&#24471;&#21040;lst&#30340;&#25152;&#26377;&#26641;&#21494;&#33410;&#28857;&#30340;&#21015;&#34920;</span>
   (<span style="color: #cf4a44;">let</span> ((stack (list lst))           <span style="color: #e81122;">;</span><span style="color: #e81122;">&#36941;&#21382;&#25152;&#38656;&#26632;</span>
@@ -242,11 +247,10 @@ tags       : lisp
           (setf times (+ times 1))))
     times))
 </pre>
-
+</div>
 </li>
 <li>Recursive version
-
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">times-of-a-rec</span> (lst)
   (<span style="color: #cf4a44;">if</span> (null lst)
@@ -256,35 +260,32 @@ tags       : lisp
                (times-of-a-rec now)
                (<span style="color: #cf4a44;">if</span> (equal now 'a) 1 0))
            (times-of-a-rec (cdr lst))))))
-
 </pre>
-
+</div>
 </li>
 </ul>
-
 </li>
 </ol>
 
 
-
-<ol>
+<ol class="org-ol">
 <li>A friend is trying to write a function that returns the sum of all the non-nil elements in a list. He has written two versions of this function, and neither of them work.Explain what's wrong with each, and give a correct version:
 
 <p>
-   (a)
+(a)
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
   (remove nil lst)
   (apply #'+ lst))
 </pre>
-
+</div>
 
 <p>
-   (b)
+(b)
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
   (<span style="color: #cf4a44;">let</span> ((x (car lst)))
@@ -292,25 +293,26 @@ tags       : lisp
         (summit (cdr lst))
         (+ x (summit (cdr lst))))))
 </pre>
-
+</div>
 
 <p>
-   My answer:
-</p>
-<p>
-   (a) remove是没有副作用(side-effect)的，所以lst中的 <b>nil</b> 元素还在 lst中，正确的代码应为
+My answer:
 </p>
 
+<p>
+(a) remove是没有副作用(side-effect)的，所以lst中的 <b>nil</b> 元素还在 lst中，正确的代码应为
+</p>
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
   (apply #&#8216;+ (remove nil lst)))
 </pre>
-
+</div>
 
 <p>
-   (b) 没有递归终止条件，正确的代码应为：
+(b) 没有递归终止条件，正确的代码应为：
 </p>
-
+<div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
   (<span style="color: #cf4a44;">if</span> (null lst)
@@ -320,7 +322,6 @@ tags       : lisp
             (summit (cdr lst))
             (+ x (summit (cdr lst)))))))
 </pre>
-
+</div>
 </li>
 </ol>
-

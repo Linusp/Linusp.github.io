@@ -1,0 +1,62 @@
+---
+layout     : post
+title      : org-remember从org-mode中移除
+categories : Emacs
+tags       : emacs org-mode org-remember
+description: 在org-mode 8.x中org-remember.el已经不复存在，其功能被org-capture.el替换，模板设置方式也发生了变化
+---
+
+<p>
+因为<a href="http://about.me/wlwang41">Crow</a> 的提议，我和他还有另外一个同学准备做一个开源项目，而在项目中需要使用python，因此这两天就在配置Emacs的python环境，同时把原来的Emacs配置文件整理了一下，这期间发生了不少问题。
+</p>
+
+<p>
+首先是为了使用最新的Emacs，在系统里添加了PPA下载了Damien Cassou维护的Emacs<a href="https://launchpad.net/~cassou/%2Barchive/emacs">版本</a> ，而<a href="https://github.com/fgallina/python.el">python.el</a> 在该版本Emacs下会出问题。重新从源里安装了Emacs 24后这个问题得到了解决。但因为我对配置文件的大幅度调整，导致Emacs一直提示
+</p>
+<blockquote>
+<p>
+Can't load library: org
+</p>
+</blockquote>
+
+<p>
+找不到该问题源头所在的我，尝试着删除了Emacs24自带的org，用上了8.2.1的版本，不想问题就这样解决了——唔，我还是知其然不知其所以然。
+</p>
+
+<p>
+但后来又报错，说无法加载org-remember，我在org目录下一查找，发现居然没有了 <b>org-remember.el</b> 这个文件，一时间很困惑。
+</p>
+
+<p>
+在Google上以 <b>org-remember</b> 和 <b>org-mode8.x</b> 为关键字，也只搜索到两条结果，不过这两条搜索结果告诉了我事实的真相。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/2013-12-02-search-org.png" alt="2013-12-02-search-org.png" />
+</p>
+</div>
+
+<p>
+原来org-mode 8已经不支持org-remember.el了。
+</p>
+
+<p>
+org-remember.el的功能是建立在remember.el之上的，而remember.el并不是org-mode的一部分，估计org-mode的开发人员是为了不依赖remember.el，而将org-remember.el从新版的org-mode中移除了，并以org-capture.el来替换它。
+</p>
+
+<p>
+因此，若要使用org-mode 8，相关的配置需要进行一定的更改
+</p>
+
+<p>
+我在配置文件中为 <b>org-remember</b> 设置了快捷键，因此要将那条语句中的 <i>org-remember</i> 修改为 <i>org-capture</i> 。
+</p>
+
+<p>
+其次，org-remember模板和org-capture的模板格式不一样，需要将原先org-remember的模板进行修改，对应的变量名 <i>org-remember-templates</i> 也要改为 <i>org-capture-templaes</i> 。
+</p>
+
+<p>
+org-capture的模板格式可以到<a href="http://orgmode.org/manual/Capture-templates.html#Capture-templates">这里</a> 进行详细地了解。
+</p>
