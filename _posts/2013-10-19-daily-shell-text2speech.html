@@ -10,7 +10,7 @@ tags       : shell
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #ed8a0c;">t2s</span>() { wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; }
+<pre class="src src-sh"><span style="color: #ed8a0c;">t2s</span>() { wget -q -U Mozilla -O $(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; }
 </pre>
 </div>
 
@@ -34,7 +34,7 @@ t2s是 <b>Text to Speech</b> 的缩写，也就是 <b>语音合成</b> 了，这
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>;
+<pre class="src src-sh">wget -q -U Mozilla -O $(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>;
 </pre>
 </div>
 
@@ -76,10 +76,10 @@ http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=
 
 <pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
 <span style="color: #ed8a0c;">t2s</span>() { 
-    wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
+    wget -q -U Mozilla -O $(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
 }
 
-<span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
+<span style="color: #fefc58;">FILE</span>=$(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
 t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
 </pre>
 </div>
