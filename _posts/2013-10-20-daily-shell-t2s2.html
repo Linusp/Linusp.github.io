@@ -16,10 +16,10 @@ tags       : shell
 
 <pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
 <span style="color: #ed8a0c;">t2s</span>() { 
-    wget -q -U Mozilla -O $(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
+    wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
 }
 
-<span style="color: #fefc58;">FILE</span>=$(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
+<span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
 t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
 </pre>
 </div>
@@ -50,7 +50,7 @@ t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color:
 {
     <span style="color: #fefc58;">first</span>=<span style="color: #25ef29;">"$1"</span>;
     <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">""</span>;
-    <span style="color: #fefc58;">FILE</span>=$(<span style="color: #ff00ff;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$first"</span>| cut -b 1-15).mp3;
+    <span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$first"</span>| cut -b 1-15).mp3;
 
     <span style="color: #31d3c4;">shift</span>;
 
@@ -72,7 +72,7 @@ t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color:
     <span style="color: #cf4a44;">esac</span>
     <span style="color: #cf4a44;">done</span>
 
-    wget -q -U google-chrome -O $<span style="color: #fefc58;">FILE</span> <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "$first")"</span>; 
+    wget -q -U google-chrome -O $<span style="color: #fefc58;">FILE</span> <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "$first")"</span>; 
 }
 
 t2s <span style="color: #25ef29;">"$1"</span> $<span style="color: #fefc58;">2</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
