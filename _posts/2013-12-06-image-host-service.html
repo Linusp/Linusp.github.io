@@ -1,0 +1,328 @@
+---
+layout     : post
+title      : 国内外图床及其对比
+categories : 生活
+tags       : "image hosting"
+description: 图床是对图片托管服务的一种称呼，本文对国内外的主流图床进行了一些对比
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">图床是什么</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>图床</b> 这个词来源已不可考(至少我并没有找到这个词的出处)，这个词指的一种图片托管服务(Image Hosting Services)，通常被用于进行图片的云存储和分享，也被用于博客和论坛已减轻主机存储负荷。
+</p>
+
+<p>
+一个好的图床首先应该是有外链功能的，即图片的直接分享链接，这个链接可以用在&lt;img&gt;标签内用于显示图片；其次外链要稳定而且访问速度要有保证，这两点是至关重要的；满足了前面两点后，还可以考虑上传的便捷性、外链是否允许自定义、是否有上传限制等等其他细节。
+</p>
+
+<p>
+国外的图床比较多而且成熟，当然了，国内也有比较好的图床。下面分别对国外和国内的图床做一个简单的对比。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">国外图床</h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">名称</th>
+<th scope="col" class="left">注册需要</th>
+<th scope="col" class="left">免费容量</th>
+<th scope="col" class="left">流量限制</th>
+<th scope="col" class="left">上传限制</th>
+<th scope="col" class="left">API</th>
+<th scope="col" class="left">图片/外链有效期</th>
+<th scope="col" class="left">图片格式</th>
+<th scope="col" class="left">其他</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Flickr</td>
+<td class="left">雅虎邮箱</td>
+<td class="left">1TB</td>
+<td class="left">无限制</td>
+<td class="left">&lt;200MB(单张)</td>
+<td class="left">可用，支持python</td>
+<td class="left">永久</td>
+<td class="left">JPEG/PNG/GIF(非动画)</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">Imgur</td>
+<td class="left">可不注册</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&lt;10MB,大于1MB将被压缩</td>
+<td class="left">可用，支持python</td>
+<td class="left">6月未访问则删除</td>
+<td class="left">JPEG/PNG/GIF/TIFF/BMP/PDF/XCFF</td>
+<td class="left">图片被压缩</td>
+</tr>
+
+<tr>
+<td class="left">ThumbSnap</td>
+<td class="left">不需要</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&lt;2MB(单张)</td>
+<td class="left">可用</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">Photobucket</td>
+<td class="left">需要</td>
+<td class="left">2GB</td>
+<td class="left">10GB/月</td>
+<td class="left">无限制</td>
+<td class="left">可用</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">Tinypic</td>
+<td class="left">可不注册</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">1600px(w,h)</td>
+<td class="left">plugin可用</td>
+<td class="left">90天未访问则删除</td>
+<td class="left">大部分格式</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">Postimage</td>
+<td class="left">可不注册</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">提供一段js</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">500px</td>
+<td class="left">需要</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&lt;30MB(单张)</td>
+<td class="left">可用</td>
+<td class="left">永久</td>
+<td class="left">&#xa0;</td>
+<td class="left">版权保护</td>
+</tr>
+
+<tr>
+<td class="left">Picasaweb</td>
+<td class="left">需要</td>
+<td class="left">5GB</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">可用</td>
+<td class="left">永久</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">SkyDriver</td>
+<td class="left">需要</td>
+<td class="left">7GB</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+<td class="left">不支持直接外链</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">Dropbox</td>
+<td class="left">需要</td>
+<td class="left">2GB</td>
+<td class="left">很少</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+<td class="left">流量过大会失效</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+国外的图片托管网站比较多，而且也比较成熟，服务品质有保证。如果是用作个人图床，如博客、论坛发帖，以上表格中的平台大部分都是可用的。至于SkyDriver和Dropbox不建议使用，因为这两者本来就不是专用于图片托管，将外链放到公开的地方会增大服务器的流量负荷，这对服务提供方是不利的，所以SkyDriver和Dropbox都有相应的措施。SkyDriver得到的外链并不是文件的直接链接，而是一个跳转链接，这个链接还会变化，用虽然能用，但并不能达到“图床”的目的；Dropbox则更阴险，如果外链流量大了，这个外链会直接失效。
+</p>
+
+<p>
+国外的图片托管网站有一个很大的优点是，不少网站都有非常丰富、完善的API，如Flickr、Imgur等等。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">国内图床</h2>
+<div class="outline-text-2" id="text-3">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">名称</th>
+<th scope="col" class="left">注册需要</th>
+<th scope="col" class="left">免费容量</th>
+<th scope="col" class="left">流量限制</th>
+<th scope="col" class="left">上传限制</th>
+<th scope="col" class="left">API</th>
+<th scope="col" class="left">图片/外链有效期</th>
+<th scope="col" class="left">图片格式</th>
+<th scope="col" class="left">其他</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Poco</td>
+<td class="left">需要</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">上传后被压缩</td>
+</tr>
+
+<tr>
+<td class="left">又拍云</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">可用，支持python</td>
+<td class="left">付费</td>
+<td class="left">&#xa0;</td>
+<td class="left">防盗链</td>
+</tr>
+
+<tr>
+<td class="left">盛大云</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">可用</td>
+<td class="left">付费</td>
+<td class="left">&#xa0;</td>
+<td class="left">防盗链</td>
+</tr>
+
+<tr>
+<td class="left">阿里云</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">可用</td>
+<td class="left">付费</td>
+<td class="left">&#xa0;</td>
+<td class="left">防盗链</td>
+</tr>
+
+<tr>
+<td class="left">七牛云存储</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">付费</td>
+<td class="left">可用</td>
+<td class="left">付费</td>
+<td class="left">&#xa0;</td>
+<td class="left">防盗链</td>
+</tr>
+
+<tr>
+<td class="left">六间房</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">已停止运营</td>
+</tr>
+
+<tr>
+<td class="left">百度云</td>
+<td class="left">需要</td>
+<td class="left">15GB</td>
+<td class="left">无限制</td>
+<td class="left">无限制</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">生成外链复杂</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+国内的图片托管服务，怎么说呢，因为社会环境不一样，免费的平台在整体服务质量上和国外无法相比，而且像Flickr这样的老牌网站不多，Poco算是一个，六间房也算一个(不过已经死了)。如果个人使用的话，其实还有很多网络相册类平台可以使用，比如免费的又拍相册、百度相册、网易相册、新浪微博相册等等等等，但是这些网络相册没法保证稳定的外链，而且外链的生成、提取一般也比较繁琐，有的还会带有水印。
+</p>
+
+<p>
+总而言之，国内的平台，如果需要图床，个人用途的，可选的方案很多，不过首推Poco。如果非个人用途，而是用于应用开发，为求稳定和安全，最好还是选择付费的云服务。
+</p>
+</div>
+</div>

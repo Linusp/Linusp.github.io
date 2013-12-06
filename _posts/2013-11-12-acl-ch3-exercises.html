@@ -68,9 +68,9 @@ My answer:
   (<span style="color: #cf4a44;">let</span> ((result nil))
     (<span style="color: #cf4a44;">dolist</span> (obj lst)
       (<span style="color: #cf4a44;">if</span> (null (assoc obj result))
-          (push (cons obj 1) result)
-          (incf (cdr (assoc obj result)))
-        ))
+      (push (cons obj 1) result)
+      (incf (cdr (assoc obj result)))
+    ))
     (sort result #'(<span style="color: #cf4a44;">lambda</span> (a b) (<span style="color: #cf4a44;">if</span> (&gt; (cdr a) (cdr b)) t nil)))))
 </pre>
 </div>
@@ -109,8 +109,8 @@ My answer:
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos) 
   (<span style="color: #cf4a44;">if</span> (not (null lst))
       (<span style="color: #cf4a44;">progn</span>
-        (incf (car lst) pos)
-        (rec-pos-plus (cdr lst) (1+ pos)))))
+    (incf (car lst) pos)
+    (rec-pos-plus (cdr lst) (1+ pos)))))
 
 (<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos+</span> (lst)
   (rec-pos-plus lst 0)
@@ -140,7 +140,7 @@ My answer:
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">pos+</span> (lst)
   (mapcar #'(<span style="color: #cf4a44;">lambda</span> (x) (incf x (position x lst)))
-          lst))
+      lst))
 </pre>
 </div>
 </li>
@@ -225,10 +225,10 @@ My answer:
   (<span style="color: #cf4a44;">if</span> (null lst)
       (list (n-elts elt n))
       (<span style="color: #cf4a44;">let</span> ((next (car lst)))
-        (<span style="color: #cf4a44;">if</span> (eql next elt)
-            (compr elt (+ n 1) (cdr lst))
-            (cons (n-elts elt n)
-                  (compr next 1 (cdr lst)))))))
+    (<span style="color: #cf4a44;">if</span> (eql next elt)
+        (compr elt (+ n 1) (cdr lst))
+        (cons (n-elts elt n)
+          (compr next 1 (cdr lst)))))))
 
 (<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compress</span> (x)
   (<span style="color: #cf4a44;">if</span> (consp x)
@@ -253,16 +253,16 @@ My answer:
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">showdots</span> (list)
 (<span style="color: #cf4a44;">cond</span> ((null list) nil)
-      ((consp list) (<span style="color: #cf4a44;">progn</span>
-                     (format t <span style="color: #25ef29;">"("</span>)
-                     (showdots (car list))
-                     (format t <span style="color: #25ef29;">" . "</span>)
-                     (<span style="color: #cf4a44;">if</span> (null (cdr list))
-                         (format t <span style="color: #25ef29;">"NIL"</span>)
-                         (showdots (cdr list)))
-                     (format t <span style="color: #25ef29;">")"</span>)
-                     ))
-      (t (format t <span style="color: #25ef29;">"~a"</span> list))))
+  ((consp list) (<span style="color: #cf4a44;">progn</span>
+         (format t <span style="color: #25ef29;">"("</span>)
+         (showdots (car list))
+         (format t <span style="color: #25ef29;">" . "</span>)
+         (<span style="color: #cf4a44;">if</span> (null (cdr list))
+             (format t <span style="color: #25ef29;">"NIL"</span>)
+             (showdots (cdr list)))
+         (format t <span style="color: #25ef29;">")"</span>)
+         ))
+  (t (format t <span style="color: #25ef29;">"~a"</span> list))))
 </pre>
 </div>
 </li>

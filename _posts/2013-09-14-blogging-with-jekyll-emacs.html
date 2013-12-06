@@ -416,27 +416,27 @@ tags       : Github emacs org-mode Jekyll
 <pre class="src src-lisp">(<span style="color: #cf4a44;">require</span> '<span style="color: #bebebe;">org-publish</span>)
 (setq org-publish-project-alist
       '(
-        (<span style="color: #25ef29;">"org-linusp"</span>
-         <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your org files.</span>
-         <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
-         <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"org"</span>
-         <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your Jekyll project.</span>
-         <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/Jekyll/"</span>
-         <span style="color: #31d3c4;">:recursive</span> t
-         <span style="color: #31d3c4;">:publishing-function</span> org-publish-org-to-html
-         <span style="color: #31d3c4;">:headline-levels</span> 4 
-         <span style="color: #31d3c4;">:html-extension</span> <span style="color: #25ef29;">"html"</span>
-         <span style="color: #31d3c4;">:body-only</span> t <span style="color: #e81122;">;; </span><span style="color: #e81122;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
-         )
-        (<span style="color: #25ef29;">"org-static-linusp"</span>
-         <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
-         <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"css</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">js</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">png</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">jpg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">gif</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">pdf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">mp3</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">ogg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">swf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">php"</span>
-         <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/Jekyll/"</span>
-         <span style="color: #31d3c4;">:recursive</span> t
-         <span style="color: #31d3c4;">:publishing-function</span> org-publish-attachment
-         )
-        (<span style="color: #25ef29;">"blog-linusp"</span> <span style="color: #31d3c4;">:components</span> (<span style="color: #25ef29;">"org-linusp"</span> <span style="color: #25ef29;">"org-static-linusp"</span>))
-        ))
+    (<span style="color: #25ef29;">"org-linusp"</span>
+     <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your org files.</span>
+     <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
+     <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"org"</span>
+     <span style="color: #e81122;">;; </span><span style="color: #e81122;">Path to your Jekyll project.</span>
+     <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/Jekyll/"</span>
+     <span style="color: #31d3c4;">:recursive</span> t
+     <span style="color: #31d3c4;">:publishing-function</span> org-publish-org-to-html
+     <span style="color: #31d3c4;">:headline-levels</span> 4 
+     <span style="color: #31d3c4;">:html-extension</span> <span style="color: #25ef29;">"html"</span>
+     <span style="color: #31d3c4;">:body-only</span> t <span style="color: #e81122;">;; </span><span style="color: #e81122;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
+     )
+    (<span style="color: #25ef29;">"org-static-linusp"</span>
+     <span style="color: #31d3c4;">:base-directory</span> <span style="color: #25ef29;">"~/blog/org/"</span>
+     <span style="color: #31d3c4;">:base-extension</span> <span style="color: #25ef29;">"css</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">js</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">png</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">jpg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">gif</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">pdf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">mp3</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">ogg</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">swf</span><span style="color: #25ef29; font-weight: bold;">\\</span><span style="color: #25ef29; font-weight: bold;">|</span><span style="color: #25ef29;">php"</span>
+     <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/Jekyll/"</span>
+     <span style="color: #31d3c4;">:recursive</span> t
+     <span style="color: #31d3c4;">:publishing-function</span> org-publish-attachment
+     )
+    (<span style="color: #25ef29;">"blog-linusp"</span> <span style="color: #31d3c4;">:components</span> (<span style="color: #25ef29;">"org-linusp"</span> <span style="color: #25ef29;">"org-static-linusp"</span>))
+    ))
 </pre>
 </div>
 <p>

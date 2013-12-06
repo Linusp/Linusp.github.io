@@ -56,20 +56,20 @@ t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color:
 
     <span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> <span style="color: #25ef29;">"ez"</span> arg
     <span style="color: #cf4a44;">do</span>
-        <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">arg</span><span style="color: #cf4a44;"> in</span>
-            e)
-                <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"en"</span>;
-                ;;
-            z)
-                <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"zh"</span>;
-                ;;
-            ?)
-                <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
-                <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -e : in English"</span>;
-                <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -z : in Chinese"</span>;
-                <span style="color: #cf4a44;">exit</span> 1;
-                ;;
-        <span style="color: #cf4a44;">esac</span>
+    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">arg</span><span style="color: #cf4a44;"> in</span>
+        e)
+        <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"en"</span>;
+        ;;
+        z)
+        <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"zh"</span>;
+        ;;
+        ?)
+        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
+        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -e : in English"</span>;
+        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -z : in Chinese"</span>;
+        <span style="color: #cf4a44;">exit</span> 1;
+        ;;
+    <span style="color: #cf4a44;">esac</span>
     <span style="color: #cf4a44;">done</span>
 
     wget -q -U google-chrome -O $<span style="color: #fefc58;">FILE</span> <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #ff00ff;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "$first")"</span>; 

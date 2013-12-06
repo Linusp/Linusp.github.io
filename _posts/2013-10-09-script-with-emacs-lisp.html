@@ -101,33 +101,33 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 (<span style="color: #cf4a44;">require</span> '<span style="color: #bebebe;">calendar</span>)
 (<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">blog</span> (action <span style="color: #ca34e2;">&amp;rest</span> rst)
   (<span style="color: #cf4a44;">cond</span> ((string-equal action <span style="color: #25ef29;">"post"</span>)
-         (<span style="color: #cf4a44;">if</span> (equal rst nil)
-             (print <span style="color: #25ef29;">"Please input title"</span>)
-           (<span style="color: #cf4a44;">let</span> ((post-file (concat (format-time-string <span style="color: #25ef29;">"%Y-%m-%d"</span>)
-                                     <span style="color: #25ef29;">"-"</span>
-                                     (car rst)
-                                     <span style="color: #25ef29;">".org"</span>)))
-             (<span style="color: #cf4a44;">progn</span>
-               (<span style="color: #cf4a44;">with-temp-file</span> (concat <span style="color: #25ef29;">"~/blog/org/_posts/"</span>
-                                       post-file)
-                 (insert (concat <span style="color: #25ef29;">"#+begin_html\n"</span>
-                                 <span style="color: #25ef29;">"---\n"</span>
-                                 <span style="color: #25ef29;">"layout     : post\n"</span>
-                                 <span style="color: #25ef29;">"title      : \n"</span>
-                                 <span style="color: #25ef29;">"categories : \n"</span>
-                                 <span style="color: #25ef29;">"tags       : \n"</span>
-                                 <span style="color: #25ef29;">"excerpt    : \n"</span>
-                                 <span style="color: #25ef29;">"---\n"</span>
-                                 <span style="color: #25ef29;">"#+end_html\n"</span>)))
-               (print (format <span style="color: #25ef29;">"Create post file %s in post directory"</span> post-file))
-               (shell-command (concat <span style="color: #25ef29;">"emacs "</span>
-                                      <span style="color: #25ef29;">"~/blog/org/_posts/"</span>
-                                      post-file))))))
-         ((string-equal action <span style="color: #25ef29;">"publish"</span>)
-          (<span style="color: #cf4a44;">progn</span> 
-            (org-publish-project <span style="color: #25ef29;">"blog-linusp"</span>)
-            (print <span style="color: #25ef29;">"Project has been published!"</span>)))
-        (t (print <span style="color: #25ef29;">"Action: post/publish"</span>))))
+     (<span style="color: #cf4a44;">if</span> (equal rst nil)
+         (print <span style="color: #25ef29;">"Please input title"</span>)
+       (<span style="color: #cf4a44;">let</span> ((post-file (concat (format-time-string <span style="color: #25ef29;">"%Y-%m-%d"</span>)
+                     <span style="color: #25ef29;">"-"</span>
+                     (car rst)
+                     <span style="color: #25ef29;">".org"</span>)))
+         (<span style="color: #cf4a44;">progn</span>
+           (<span style="color: #cf4a44;">with-temp-file</span> (concat <span style="color: #25ef29;">"~/blog/org/_posts/"</span>
+                       post-file)
+         (insert (concat <span style="color: #25ef29;">"#+begin_html\n"</span>
+                 <span style="color: #25ef29;">"---\n"</span>
+                 <span style="color: #25ef29;">"layout     : post\n"</span>
+                 <span style="color: #25ef29;">"title      : \n"</span>
+                 <span style="color: #25ef29;">"categories : \n"</span>
+                 <span style="color: #25ef29;">"tags       : \n"</span>
+                 <span style="color: #25ef29;">"excerpt    : \n"</span>
+                 <span style="color: #25ef29;">"---\n"</span>
+                 <span style="color: #25ef29;">"#+end_html\n"</span>)))
+           (print (format <span style="color: #25ef29;">"Create post file %s in post directory"</span> post-file))
+           (shell-command (concat <span style="color: #25ef29;">"emacs "</span>
+                      <span style="color: #25ef29;">"~/blog/org/_posts/"</span>
+                      post-file))))))
+     ((string-equal action <span style="color: #25ef29;">"publish"</span>)
+      (<span style="color: #cf4a44;">progn</span> 
+        (org-publish-project <span style="color: #25ef29;">"blog-linusp"</span>)
+        (print <span style="color: #25ef29;">"Project has been published!"</span>)))
+    (t (print <span style="color: #25ef29;">"Action: post/publish"</span>))))
 
 (load-file <span style="color: #25ef29;">"~/.emacs.d/site-lisp/xml-rpc.el"</span>)
 (load-file <span style="color: #25ef29;">"~/.emacs.d/site-lisp/wc-mode.el"</span>)
