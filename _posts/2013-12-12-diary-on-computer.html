@@ -1,0 +1,30 @@
+---
+layout     : post
+title      : 开始在电脑上写日记
+categories : 生活
+tags       : org-mode emacs
+description: 
+---
+
+<p>
+说实话，其实我还是更享受在纸上写日记的感觉。奈何现在大部分事情是在电脑上做的，通常做完就玩一会游戏睡觉，睡前经常记不起来要写日记，而每天其实都是有很多事情可以记录的。所以我想尝试在电脑上写日记，至少能保证每天都能写——我打算在org-mode里写，那么在Emacs的日程表上加上一个周期性的任务就行了。
+</p>
+
+<p>
+日记这种东西相对私密，而且写作很随意，所以我也不想发到博客上或者里其他类似的平台，暂时丢到Dropbox里吧，最近系统空间不够经常把分区搞来搞去的，只放在本地说不定就什么时候被我干掉了。
+</p>
+
+<p>
+在org-mode里写日记，我的想法是简单就好，在org-capture的模板里加了一个diary的模板:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #25ef29;">"d"</span> <span style="color: #25ef29;">"Diary"</span>
+     entry (file
+            <span style="color: #25ef29;">"~/Dropbox/org/diary.org"</span>)
+     <span style="color: #25ef29;">"* %t\n"</span>)
+</pre>
+</div>
+<p>
+需要写的时候按下 <b>C-c c</b> 然后选择 <b>d</b> 就可以了，模板也没什么内容，就是一个日期而已。
+</p>
