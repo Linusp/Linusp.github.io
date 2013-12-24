@@ -30,19 +30,3 @@ JB :
   categories_path : /categories.html
   tags_path : /tags.html
   atom_path : /atom.xml
-
-  # Settings for comments helper
-  # Set 'provider' to the comment provider you want to use.
-  # Set 'provider' to false to turn commenting off globally.
-  #
-  comments :
-    provider : disqus
-    disqus :
-      short_name : linuspb
-
-  analytics :
-    provider : google 
-    google : 
-        tracking_id : UA-44461305-1'
-  sharing :
-    provider : false
