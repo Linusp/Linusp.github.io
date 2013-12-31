@@ -1,0 +1,97 @@
+---
+layout     : post
+title      : 修改键位+使用smex，告别Emacs小指综合症
+categories : Emacs
+tags       : emacs smex
+description: "所谓“Emacs小指综合症”，是指由于长期使用Emacs导致左手小指疼痛的问题——嗯，没错，这是我下的定义——英文说法是 *Emacs Pinky Problem* 。这一问题的根源是因为Emacs的快捷键频繁使用键盘的 *ctrl* 键，而由于现在被普遍应用的 *QWERTY* 键盘布局上的 *ctrl* 键都只能用小指来按下(不过通常Emacser只使用左侧的 *ctrl* 键)，且在按下 *ctrl* 时小指的负荷很大。"
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Emacs小指综合症</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+所谓“Emacs小指综合症”，是指由于长期使用Emacs导致左手小指疼痛的问题——嗯，没错，这是我下的定义——英文说法是 <b>Emacs Pinky Problem</b> 。这一问题的根源是因为Emacs的快捷键频繁使用键盘的 <b>ctrl</b> 键，而由于现在被普遍应用的 <b>QWERTY</b> 键盘布局上的 <b>ctrl</b> 键都只能用小指来按下(不过通常Emacser只使用左侧的 <b>ctrl</b> 键)，且在按下 <b>ctrl</b> 时小指的负荷很大。
+</p>
+
+<p>
+这个问题是Emacs被诟病的几个主要问题之一，不过严格来说，这并不是Emacs的错，因为Emacs被设计时考虑的键盘布局和现在是不一样的，那个时候的 <b>esc</b> 键和 <b>ctrl</b> 键都是在比较舒服的位置的，所以这是个历史遗留问题。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">常规解决办法</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">修改键位或键盘布局</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+这种办法的核心思想是通过一些措施把 <b>ctrl</b> 键映射到物理键盘上比较好按的键位上。常见的方法是将 <b>ctrl</b> 键和 <b>caps lock</b> 键交换，在<a href="http://planet.emacsen.org/">Planet Emacsen</a> 上还提到了另外一种办法：将 <b>ctrl</b> 键和回车键交换。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">使用正确的姿势</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+在笔记本的键盘按左 <b>ctrl</b> 键尤其难受，不过在笔记本键盘上，可以通过用手掌根部按压左 <b>ctrl</b> 键来避免使左手小指受损。
+</p>
+
+<p>
+不过我并不习惯这种姿势。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">使用合理的键盘</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+使用设计更加合理的、符合人体工程学的键盘是解决这个问题的好办法。这个方法不仅能避免Emacs导致的问题，还能减轻其他因为长期使用电脑/键盘而出现的健康问题。
+</p>
+
+<p>
+当然，为了健康而投入资金是必须的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4">使用smex插件</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+smex是Emacs的一个插件，<a href="http://www.emacswiki.org/emacs/Smex">这里</a> 是相关说明。
+</p>
+
+<p>
+smex是一个"M-x"快捷键的增强工具，它能够使得在Emacs中调用各种命令更为方便，能更智能地对命令进行补全，还能根据使用者调用命令的频率来猜测用户可能会执行的命令。如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/2013-12-31-smex-use.png" alt="2013-12-31-smex-use.png" />
+</p>
+</div>
+
+<p>
+不少Emacs中的命令名字都很长，所以如果不使用smex的话，一来很多命令根本记不住，二来就算记住了输入时也要花费许多的时间——这也是为什么Emacs有如此多的快捷键的原因之一吧。
+</p>
+
+<p>
+smex的使用也很简单，下载smex并放置到Emacs的加载目录中后，在配置文件中添加这么几条语句：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(load <span style="color: #25ef29;">"~/.emacs.d/site-lisp/smex.el"</span>)
+(<span style="color: #cf4a44;">require</span> '<span style="color: #bebebe;">smex</span>)
+(smex-initialize)
+(global-set-key (kbd <span style="color: #25ef29;">"M-x"</span>) 'smex)
+(global-set-key (kbd <span style="color: #25ef29;">"M-X"</span>) 'smex-major-mode-commands)
+(global-set-key (kbd <span style="color: #25ef29;">"C-c C-c M-x"</span>) 'execute-extended-command)
+</pre>
+</div>
+
+
+<p>
+我的办法呢，就是综合键位修改和使用smex两个方案。将 <b>ctrl</b> 和 <b>caps lock</b> 交换，然后绑定一些(少量)常用的命令到快捷键上，其他大部分的命令调用则使用smex。
+</p>
+</div>
+</div>
+</div>

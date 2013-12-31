@@ -55,12 +55,12 @@ When nil, do no timestamp checking and always publish all files.
 <div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">publish-project</span> (project no-cache)
-(interactive <span style="color: #25ef29;">"sName of project: \nsNo-cache?[y/n] "</span>)
-(<span style="color: #cf4a44;">if</span> (or (string= no-cache <span style="color: #25ef29;">"y"</span>)
-        (string= no-cache <span style="color: #25ef29;">"Y"</span>))
-    (setq org-publish-use-timestamps-flag nil))
-(org-publish-project project)
-(setq org-publish-use-timestamps-flag t))
+   (interactive <span style="color: #25ef29;">"sName of project: \nsNo-cache?[y/n] "</span>)
+      (<span style="color: #cf4a44;">if</span> (or (string= no-cache <span style="color: #25ef29;">"y"</span>)
+          (string= no-cache <span style="color: #25ef29;">"Y"</span>))
+          (setq org-publish-use-timestamps-flag nil))
+   (org-publish-project project)
+   (setq org-publish-use-timestamps-flag t))
 </pre>
 </div>
 <p>
