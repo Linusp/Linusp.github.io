@@ -1,0 +1,140 @@
+---
+layout     : post
+title      : 使用ox-freemind将org-mode文档导出成思维导图
+categories : Emacs
+tags       : org-mode freemind
+description: 
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">思维导图</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+思维导图是一个很好地整理知识、表达思维的工具。因为使用Linux，我更经常使用Freemind这么一个开源的思维导图工具。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/Free_Mind.png" alt="Free_Mind.png" />
+</p>
+</div>
+
+<p>
+Freemind本身也是一款很优秀的软件，它能够将思维导图导出成html、flah、Java Applet、Open Office文档以及PNG和JPEG两种格式的图片，并且对思维导图的绘制提供的快捷键。
+</p>
+
+<p>
+<a href="http://freemind.sourceforge.net/wiki/index.php/Main_Page">这里</a> 是Freemind的官网。
+</p>
+
+<p>
+我曾经用Freemind绘制过一张Emacs的思维导图，放到了百度的emacs贴吧里，受到了一些Emacs新手的欢迎。因为那张图存在一定的错误，于是后来我决定重新画一张，而且决心要将更全面的内容表达出来。这是个非常累人的活，我断断续续用了一天时间才完成。
+</p>
+
+<p>
+老实说Freemind已经很方便了，在熟悉了相关快捷键后，能够很高效地进行思维导图的绘制。
+</p>
+
+<p>
+不过我希望能在更熟悉的环境中来做这件事情，我希望不用再去学习另外一套操作方式，而是能在org-mode中来绘制思维导图。
+</p>
+
+<p>
+我的Org版本是8.2.3c，这个版本的org-mode中提供了ox-freemind.el来满足我这个要求。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">使用ox-freemind.el</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+所有Org的核心模块都在 <b>org/lisp/</b> 目录下，但这个插件并不是Org的核心模块，它被放置在 <b>org/contrib/lisp</b> 目录下，如果您没有在Emacs配置文件中将这个路径加入加载路径，那么先做好这件事，然后在配置文件中添加：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">require</span> '<span style="color: #bebebe;">ox-freemind</span>)
+</pre>
+</div>
+<p>
+然后就可以使用 <b>org-freemind-export-to-freemind</b> 来将Org文档导出成Freemind文档了。
+</p>
+
+<p>
+如，我新建了一个文件 <i>mind.org</i> ，内容如下
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #b3b3b3;">#+TITLE:</span> <span style="color: #afeeee; font-weight: bold;">Org-mode</span>
+<span style="color: #fefc58;">** &#20889;&#25991;&#26723;</span>
+<span style="color: #fefc58;">** &#21457;&#24067;&#25104;html</span>
+<span style="color: #fefc58;">** org-bable</span>
+<span style="color: #fefc58;">** &#34920;&#26684;</span>
+</pre>
+</div>
+
+<p>
+执行 <b>org-freemind-export-to-freemind</b> 并用Freemind打开导出成图像后，得到的结果是：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/mind.png" alt="mind.png" />
+</p>
+</div>
+
+<p>
+生成的思维导图样式是在ox-freemind.el中的变量 <b>org-freemind-styles</b> 中定义的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">ox-freemind.el中的bug</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+如果您使用和我一样版本的Org-mode，那么很可能会遇到和我一样的问题。在执行 <b>org-freemind-styles</b> 后出错，出错信息为：
+</p>
+<pre class="example">
+org-freemind-export-to-freemind: Symbol's function definition is void: \,
+</pre>
+
+<p>
+最后我在Org-mode的邮件列表中找到了解决方法。原链接<a href="http://lists.gnu.org/archive/html/emacs-orgmode/2013-11/msg01095.html">在此</a>。
+</p>
+
+<p>
+出错的原因是 <b>org-freemind-export-to-freemind</b> 函数的定义中有一处错误。其原始内容为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">org-freemind-export-to-freemind</span>
+<span class="linenr">2: </span>  (<span style="color: #ca34e2;">&amp;optional</span> async subtreep visible-only body-only ext-plist)
+<span class="linenr">3: </span>    (interactive)
+<span class="linenr">4: </span>  (<span style="color: #cf4a44;">let*</span> ((extension (concat <span style="color: #25ef29;">".mm"</span> ))
+<span class="linenr">5: </span>         (file (org-export-output-file-name extension subtreep))
+<span class="linenr">6: </span>         (org-export-coding-system 'utf-8))
+<span class="linenr">7: </span>    (org-export-to-file 'freemind ,file
+<span class="linenr">8: </span>    async subtreep visible-only body-only ext-plist)))
+</pre>
+</div>
+
+<p>
+将倒数第二行中的
+</p>
+<blockquote>
+<p>
+org-export-to-file 'freemind ,file
+</p>
+</blockquote>
+<p>
+修改为
+</p>
+<blockquote>
+<p>
+org-export-to-file 'freemind file
+</p>
+</blockquote>
+<p>
+嗯，没错，作者多写了一个逗号。
+</p>
+</div>
+</div>
