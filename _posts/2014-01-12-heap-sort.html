@@ -1,0 +1,140 @@
+---
+layout     : post
+title      : 排序算法——堆排序
+categories : 算法
+tags       : 堆排序
+---
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">堆排序概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+堆排序通过建立大顶堆(或小顶堆)来进行排序，要理解这个算法，首先要明白什么是 <b>大顶堆</b> 或者 <b>小顶堆</b> 。
+</p>
+
+<p>
+这里的堆是一种数据结构，它是一棵完全二叉树(除最后一层外，其他层都是满的)，且每个节点都具有同一种特性，那就是该节点的值大于子节点的值，或者节点的值小于子节点的值，前者被称为 <b>大顶堆</b> ，后者被称为 <b>小顶堆</b> 。大顶堆的根节点的值一定是整个堆中最大的，小顶堆的根节点的值一定是堆中最小的。利用这个特性，如果要对一个数组进行升序排序，那么可以按照以下步骤进行：
+</p>
+
+<ol class="org-ol">
+<li>将数组元素视为一个堆，建立大顶堆
+</li>
+<li>将堆顶元素和堆尾元素交换，并出堆
+</li>
+<li>重复1、2步(此时已出堆的元素不再处理)，直到堆中只有一个元素
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">堆排序实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先，要从逻辑上建立对堆的相关操作，在排序中并不需要建立一棵二叉树，而是将数组“视为”二叉树即可。对于二叉树而言，最起码的，应该有取得某个节点的父节点及子节点的功能。
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">节点访问</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+用python实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">parent</span>(heap, node):
+<span class="linenr"> 2: </span>    <span style="color: #cf4a44;">if</span> node &gt; 0:
+<span class="linenr"> 3: </span>        <span style="color: #cf4a44;">return</span> (node + 1) / 2
+<span class="linenr"> 4: </span>    <span style="color: #cf4a44;">else</span>:
+<span class="linenr"> 5: </span>        <span style="color: #cf4a44;">return</span> 0
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">lchild</span>(node):
+<span class="linenr"> 8: </span>    <span style="color: #cf4a44;">return</span> 2 * node + 1
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">rchild</span>(node):
+<span class="linenr">11: </span>    <span style="color: #cf4a44;">return</span> 2 * node + 2
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">建立大顶堆</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+建立大顶堆要从最后一个具有子节点的节点上开始操作，将当前节点与其子节点中的最大值往上层交换，最终达到建立大顶堆的目的。
+</p>
+
+<p>
+用python实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">heapify</span>(heap, size):
+<span class="linenr">2: </span>    <span style="color: #fefc58;">last</span> = size / 2 - 1
+<span class="linenr">3: </span>    <span style="color: #cf4a44;">for</span> cur <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(last, -1, -1):
+<span class="linenr">4: </span>        <span style="color: #fefc58;">index</span> = cur
+<span class="linenr">5: </span>        <span style="color: #cf4a44;">if</span> heap[lchild(cur)] &gt; heap[cur]:
+<span class="linenr">6: </span>            <span style="color: #fefc58;">index</span> = lchild(cur)
+<span class="linenr">7: </span>        <span style="color: #cf4a44;">if</span> rchild(cur) &lt; size <span style="color: #cf4a44;">and</span> heap[rchild(cur)] &gt; heap[index]:
+<span class="linenr">8: </span>            <span style="color: #fefc58;">index</span> = rchild(cur)
+<span class="linenr">9: </span>        heap[cur], <span style="color: #fefc58;">heap</span>[index] = heap[index], heap[cur]
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">实现堆排序</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+根据<a href="#sec-1">堆排序概述</a>中的内容，可以大致将堆排序描述如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">hsort</span>(arr):
+<span class="linenr">2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(arr)
+<span class="linenr">3: </span>    <span style="color: #fefc58;">last</span> = size - 1
+<span class="linenr">4: </span>
+<span class="linenr">5: </span>    <span style="color: #cf4a44;">while</span> size &gt; 1:
+<span class="linenr">6: </span>        heapify(arr, size)
+<span class="linenr">7: </span>        arr[0], <span style="color: #fefc58;">arr</span>[last] = arr[last], arr[0]
+<span class="linenr">8: </span>        <span style="color: #fefc58;">last</span> = last - 1
+<span class="linenr">9: </span>        <span style="color: #fefc58;">size</span> = size - 1
+</pre>
+</div>
+
+<p>
+结合前面实现的parent、lchild、rchild、heapify几个函数，就可以实现一个完整的堆排序算法了。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">发散：TOP K问题</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+所谓的 <b>TOP K问题</b> ，是指在大规模数据处理时常遇到的一类问题，要求在海量数据中找出最大的前K个数。这个问题可以通过建立小顶堆来解决——当然了，为了效率和资源的有效利用，这类问题通常还有整体方面的架构设计等工作需要做，远不是只建立一个小顶堆就能解决的，不过这些本文不作讨论。
+</p>
+
+<p>
+通过预先读入K个数据并建立小顶堆后，再逐个读入数据，将新元素和堆顶元素进行比较，如果新元素小于堆顶元素，就丢弃；如果新元素大于堆顶元素，则用新元素替代堆顶元素，并且重新调整堆使之保持小顶堆性质。
+</p>
+
+<p>
+这样处理后，总可以保证 <b>目前</b> 读到的数据中最大的K个在小顶堆中。
+</p>
+
+<p>
+当我一开始接触到这个问题时，我幼稚地认为应该使用大顶堆，但实际上是错误的。用大顶堆可以保证堆顶元素是最大，但不能保证堆中元素是前K个最大的数。
+</p>
+
+<p>
+我误认为应该使用大顶堆的原因还有一个，那就是忽视了“海量数据”这个情境。
+</p>
+
+<p>
+对于小规模的TOP K问题，可以直接将数据进行排序，然后取出最大的K个数。但海量数据处理中，数据是不可能同时全部进入内存的。
+</p>
+</div>
+</div>
