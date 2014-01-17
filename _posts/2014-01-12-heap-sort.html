@@ -22,7 +22,9 @@ tags       : 堆排序
 </li>
 <li>将堆顶元素和堆尾元素交换，并出堆
 </li>
-<li>重复1、2步(此时已出堆的元素不再处理)，直到堆中只有一个元素
+<li>对堆进行处理，维持大顶堆性质
+</li>
+<li>重复2、3步(此时已出堆的元素不再处理)，直到堆中只有一个元素
 </li>
 </ol>
 </div>
@@ -63,23 +65,41 @@ tags       : 堆排序
 <h3 id="sec-2-2">建立大顶堆</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
-建立大顶堆要从最后一个具有子节点的节点上开始操作，将当前节点与其子节点中的最大值往上层交换，最终达到建立大顶堆的目的。
+建立大顶堆要从最后一个具有子节点的节点上开始操作，将当前节点作为一个大顶堆的堆顶，进行堆性质维持的处理。并逐步往前对该节点的兄弟节点、父节点进行同样的操作。
 </p>
+
+<p>
+首先需要实现一个堆性质维持处理函数，实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">heapify</span>(heap, root, size):
+<span class="linenr"> 2: </span>    <span style="color: #fefc58;">max_index</span> = root
+<span class="linenr"> 3: </span>    <span style="color: #fefc58;">l</span> = lchild(root)
+<span class="linenr"> 4: </span>    <span style="color: #fefc58;">r</span> = rchild(root)
+<span class="linenr"> 5: </span>    <span style="color: #cf4a44;">if</span>  l &lt; size <span style="color: #cf4a44;">and</span> heap[l] &gt; heap[max_index]:
+<span class="linenr"> 6: </span>        <span style="color: #fefc58;">max_index</span> = l
+<span class="linenr"> 7: </span>    <span style="color: #cf4a44;">elif</span> r &lt; size <span style="color: #cf4a44;">and</span> heap[r] &gt; heap[max_index]:
+<span class="linenr"> 8: </span>        <span style="color: #fefc58;">max_index</span> = r
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span>    <span style="color: #cf4a44;">if</span> root != max_index:
+<span class="linenr">11: </span>        heap[root], <span style="color: #fefc58;">heap</span>[max_index] = heap[max_index], heap[root]
+<span class="linenr">12: </span>        heapify(heap, max_index)
+<span class="linenr">13: </span>
+<span class="linenr">14: </span>    <span style="color: #cf4a44;">return</span> <span style="color: #bebebe;">None</span>
+</pre>
+</div>
 
 <p>
 用python实现如下：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">heapify</span>(heap, size):
-<span class="linenr">2: </span>    <span style="color: #fefc58;">last</span> = size / 2 - 1
-<span class="linenr">3: </span>    <span style="color: #cf4a44;">for</span> cur <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(last, -1, -1):
-<span class="linenr">4: </span>        <span style="color: #fefc58;">index</span> = cur
-<span class="linenr">5: </span>        <span style="color: #cf4a44;">if</span> heap[lchild(cur)] &gt; heap[cur]:
-<span class="linenr">6: </span>            <span style="color: #fefc58;">index</span> = lchild(cur)
-<span class="linenr">7: </span>        <span style="color: #cf4a44;">if</span> rchild(cur) &lt; size <span style="color: #cf4a44;">and</span> heap[rchild(cur)] &gt; heap[index]:
-<span class="linenr">8: </span>            <span style="color: #fefc58;">index</span> = rchild(cur)
-<span class="linenr">9: </span>        heap[cur], <span style="color: #fefc58;">heap</span>[index] = heap[index], heap[cur]
+<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">build_heap</span>(heap):
+<span class="linenr">2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(heap)
+<span class="linenr">3: </span>    <span style="color: #fefc58;">last</span> = size / 2 - 1
+<span class="linenr">4: </span>    <span style="color: #cf4a44;">for</span> cur <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(last, -1, -1):
+<span class="linenr">5: </span>        heapify(heap, cur, size)
 </pre>
 </div>
 </div>
@@ -92,20 +112,23 @@ tags       : 堆排序
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">hsort</span>(arr):
-<span class="linenr">2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(arr)
-<span class="linenr">3: </span>    <span style="color: #fefc58;">last</span> = size - 1
-<span class="linenr">4: </span>
-<span class="linenr">5: </span>    <span style="color: #cf4a44;">while</span> size &gt; 1:
-<span class="linenr">6: </span>        heapify(arr, size)
-<span class="linenr">7: </span>        arr[0], <span style="color: #fefc58;">arr</span>[last] = arr[last], arr[0]
-<span class="linenr">8: </span>        <span style="color: #fefc58;">last</span> = last - 1
-<span class="linenr">9: </span>        <span style="color: #fefc58;">size</span> = size - 1
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">hsort</span>(arr):
+<span class="linenr"> 2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(arr)
+<span class="linenr"> 3: </span>    <span style="color: #fefc58;">last</span> = size - 1
+<span class="linenr"> 4: </span>    build_heap(arr)
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span>    <span style="color: #cf4a44;">while</span> size &gt; 1:
+<span class="linenr"> 7: </span>        arr[0], <span style="color: #fefc58;">arr</span>[last] = arr[last], arr[0]
+<span class="linenr"> 8: </span>        <span style="color: #fefc58;">last</span> = last - 1
+<span class="linenr"> 9: </span>        <span style="color: #fefc58;">size</span> = size - 1
+<span class="linenr">10: </span>        heapify(arr, 0, size)
+<span class="linenr">11: </span>
+<span class="linenr">12: </span>    <span style="color: #cf4a44;">return</span> <span style="color: #bebebe;">None</span>
 </pre>
 </div>
 
 <p>
-结合前面实现的parent、lchild、rchild、heapify几个函数，就可以实现一个完整的堆排序算法了。
+结合前面实现的parent、lchild、rchild、heapify、build<sub>heap几个函数，就可以实现一个完整的堆排序算法了。</sub>
 </p>
 </div>
 </div>
