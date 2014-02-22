@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      在Github Pages博客内容中插入liquid语句示例
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>在Github Pages博客内容中插入liquid语句示例</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <p>
+由于Github Pages在后端使用jekyll来处理博客文件，对于文章内部插入的原本用来做示例的liquid语句，会被它解析而不是展示原本的内容，比如说，我在文中插入这样的示例(org-mode)：
+</p>
+<pre class="example">
+#+begin_example
+{% for post in site.posts %}
+{{ post.title }}
+{% endfor %}
+#+end_example
+</pre>
+<p>
+最后得到的内容却会是这样的：
+</p>
+<pre class="example">
+
+在Org-mode中显示特殊字符
+
+(2014年1月)月底小结
+
+排序算法——堆排序
+
+排序算法——归并排序
+
+排序算法——快速排序
+
+使用ox-freemind将org-mode文档导出成思维导图
+
+完成机器学习公开课第一部分练习
+
+修改键位+使用smex，告别Emacs小指综合症
+
+年末总结
+
+Ghost.org开启博客托管服务
+
+org-mode导出项目时发布所有文件而不只是被修改的文件
+
+开始学习一些东西
+
+开始在电脑上写日记
+
+朋友要结婚了
+
+通俗化解释GFW工作原理
+
+在Heroku上部署Tornado应用
+
+国内外图床及其对比
+
+Symbol t may not be buffer-local问题
+
+org-mode 8.x导出html时代码块不高亮问题
+
+org-remember从org-mode中移除
+
+月底小结
+
+《ANSI Common Lisp》第三章习题
+
+《ANSI Common Lisp》第二章习题
+
+丧心病狂:用Emacs阅读PDF文档
+
+在Linux系统中屏蔽独立显卡
+
+博客拆分完成
+
+伪语音合成(2)
+
+博客分拆计划
+
+伪语音合成(1)
+
+基于Node.js的博客平台Ghost试用
+
+在Github Pages博客内容中插入liquid语句示例
+
+更换博客主题
+
+论信息自由
+
+使用elisp编写脚本
+
+一年
+
+博客平台writings.io即将关闭
+
+简洁、轻便——静态博客写作方案
+
+使用Github Pages服务建立个人博客
+
+第一篇博客
+
+</pre>
+<p>
+这显然不是我们想要的，解决办法也很简单，那就是在每一个liquid语句前后用
+</p>
+<pre class="example">
+{% raw %}
+</pre>
+<p>
+和
+</p>
+<pre class="example">
+{% endraw %}
+</pre>
+<p>
+包裹起来，这样liquid模板引擎会将内部的文本作为普通文本处理而不是按照liquid语法去解析它，下面是正确的示例：
+</p>
+<pre class="example">
+#+begin_example
+{% raw %}{% for post in site.posts %}{% endraw %}
+{% raw %}{{ post.title }}{% endraw %}
+{% raw %}{% endfor%}{% endraw %}
+#+end_example
+</pre>
+<p>
+就能够得到这样正确的示例结果：
+</p>
+<pre class="example">
+{% for post in site.posts %}
+{{ post.title }}
+{% endfor %}
+</pre>
+
+<p>
+不过，还没完呢，比如说，像
+</p>
+<pre class="example">
+{% raw %}
+</pre>
+<p>
+这样的标签，又怎么在文中显示呢？用刚才说的方法是不行的，不信试试在文中直接这样写
+</p>
+<pre class="example">
+{% raw %}
+{% raw %}
+{% endraw %}
+</pre>
+<p>
+本地运行
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">jekyll build
+</pre>
+</div>
+<p>
+试试，没错，会得到一个错误。下面的写法同样会得到错误。
+</p>
+<pre class="example">
+{% raw %}
+{% endraw %}
+{% endraw %}
+</pre>
+<p>
+究其原因，应该是liquid的 <b>raw/endraw</b> 标签在匹配时按照就近原则吧——这个是我推测的。
+</p>
+
+<p>
+最后我在Stack Overflow上找到了一个<a href="http://stackoverflow.com/questions/3426182/how-to-escape-liquid-template-tags">解决方案</a>。
+</p>
+
+<p>
+像这样：
+</p>
+<pre class="example">
+{{ "{% raw " }}%}
+</pre>
+<p>
+就可以得到：
+</p>
+<pre class="example">
+{% raw %}
+</pre>
+<p>
+的显示效果。
+</p>
+
+<p>
+也就是说，把 <b>{%</b> 和 <b>%}</b> 这一对标签的开闭符号分开了，一部分用双引号括起来并用 <b>{{和}}</b> 包裹起来，另一部分则按照平常的方式书写。同样的， <b>{{</b> 和 <b>}}</b> 也可以通过这种方式来处理。本文第五个示例就是这么得到的。
+</p>
+
+<p>
+自己动手试一试吧！
+</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/10/13/change-theme.html" title="更换博客主题">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/10/15/node.js-blog-platform-ghost.html" title="基于Node.js的博客平台Ghost试用">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 10月 14日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#博客-ref">
+    		博客 <span>10</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#Jekyll-ref">Jekyll <span>5</span></a></li>
+     
+    	<li><a href="/tags.html#Liquid-ref">Liquid <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

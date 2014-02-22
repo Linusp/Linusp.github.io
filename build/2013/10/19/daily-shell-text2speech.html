@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      伪语音合成(1)
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>伪语音合成(1)</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <p>
+今天在<a href="http://www.commandlinefu.com/commands/browse">commandlinefu.com</a> 上面看到一个函数的定义，挺有意思的，来看一下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #ed8a0c;">t2s</span>() { wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; }
+</pre>
+</div>
+
+<p>
+下面注明了： 
+</p>
+<pre class="example">
+Usage: t2s 'how are you?'
+</pre>
+
+<p>
+这个函数很有意思，首先看这个函数的名字：t2s。
+</p>
+
+<p>
+t2s是 <b>Text to Speech</b> 的缩写，也就是 <b>语音合成</b> 了，这个函数的功能正是语音合成，即将传入t2s函数的参数——文本，转换为语音。
+</p>
+
+<p>
+再看看函数体：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>;
+</pre>
+</div>
+
+<p>
+没什么太复杂的东西，就是一条wget命令，不过其参数稍微复杂。
+</p>
+
+<p>
+<b>-q</b> 选项是让wget以 <b>quiet</b> 模式运行， <b>-U</b> 指定浏览器（我也不知道为什么要指定，试了一下，不加的话结果会是错的……）， <b>-O</b> 指定下载下来的文件名。
+</p>
+
+<p>
+<b>-O</b> 选项的参数是一条shell命令的输出结果和 <b>.mp3</b> 这个后缀名的连接起来的结果：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">tr <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15
+</pre>
+</div>
+
+<p>
+这条命令将函数t2s的第一个参数中的空格替换成下划线 <b>_</b> ，然后最多取15个字符。
+</p>
+
+<p>
+重点是后面那个网络地址：
+</p>
+<pre class="example">
+http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=
+</pre>
+<p>
+这个是Google翻译的TTS的web api，通过它可以直接获取Google翻译界面的文本朗读功能对应的mp3文件。上面这个api要在后面加上要朗读的单词才是完整的——若有多个单词，则以 <b>+</b> 号连接。
+</p>
+
+<p>
+然后我根据这个函数写了一个小脚本：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
+<span style="color: #ed8a0c;">t2s</span>() { 
+    wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
+}
+
+<span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
+t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
+</pre>
+</div>
+
+<p>
+我这里用了play命令来直接在终端中播放音频文件——play命令是sox工具包里的一个命令，要正确播放，还要安装mp3格式支持：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install libsox-fmt-mp3
+</pre>
+</div>
+
+<p>
+之所以标题是 <b>伪语音合成</b> ，就是因为我这里只是单纯地下载了对应的音频文件进行播放而已……真正的语音合成的工作都是Google做的。
+</p>
+
+<p>
+另外，这个脚本里的t2s函数只对英文语句起作用，所以下一步我想写一个功能更丰富的脚本，能处理中英文。
+</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/10/15/node.js-blog-platform-ghost.html" title="基于Node.js的博客平台Ghost试用">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/10/20/blog-plan.html" title="博客分拆计划">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 10月 19日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#编程-ref">
+    		编程 <span>5</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#shell-ref">shell <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

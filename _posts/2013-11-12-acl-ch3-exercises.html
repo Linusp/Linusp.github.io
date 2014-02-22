@@ -106,7 +106,7 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos) 
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos)<span style="color: #a07f41; background-color: #073642;"> </span>
   (<span style="color: #cf4a44;">if</span> (not (null lst))
       (<span style="color: #cf4a44;">progn</span>
     (incf (car lst) pos)
@@ -275,7 +275,7 @@ My answer(对shortest-path的改写):
 <div class="org-src-container">
 
 <pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-paths</span> (path node net)
-  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (n) 
+  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (n)<span style="color: #a07f41; background-color: #073642;"> </span>
                (<span style="color: #cf4a44;">if</span> (not (member n path)) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#21028;&#26029;&#19979;&#19968;&#23618;&#33410;&#28857;&#26159;&#21542;&#21253;&#21547;&#22312;&#36335;&#24452;&#20013;&#20197;&#21066;&#38500;&#29615;&#30340;&#24433;&#21709;</span>
                    (cons n path)))
           (cdr (assoc node net))))

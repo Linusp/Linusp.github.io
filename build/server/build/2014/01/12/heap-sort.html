@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      排序算法——堆排序
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>排序算法——堆排序</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">堆排序概述</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+堆排序通过建立大顶堆(或小顶堆)来进行排序，要理解这个算法，首先要明白什么是 <b>大顶堆</b> 或者 <b>小顶堆</b> 。
+</p>
+
+<p>
+这里的堆是一种数据结构，它是一棵完全二叉树(除最后一层外，其他层都是满的)，且每个节点都具有同一种特性，那就是该节点的值大于子节点的值，或者节点的值小于子节点的值，前者被称为 <b>大顶堆</b> ，后者被称为 <b>小顶堆</b> 。大顶堆的根节点的值一定是整个堆中最大的，小顶堆的根节点的值一定是堆中最小的。利用这个特性，如果要对一个数组进行升序排序，那么可以按照以下步骤进行：
+</p>
+
+<ol class="org-ol">
+<li>将数组元素视为一个堆，建立大顶堆
+</li>
+<li>将堆顶元素和堆尾元素交换，并出堆
+</li>
+<li>对堆进行处理，维持大顶堆性质
+</li>
+<li>重复2、3步(此时已出堆的元素不再处理)，直到堆中只有一个元素
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">堆排序实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先，要从逻辑上建立对堆的相关操作，在排序中并不需要建立一棵二叉树，而是将数组“视为”二叉树即可。对于二叉树而言，最起码的，应该有取得某个节点的父节点及子节点的功能。
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">节点访问</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+用python实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">parent</span>(heap, node):
+<span class="linenr"> 2: </span>    <span style="color: #cf4a44;">if</span> node &gt; 0:
+<span class="linenr"> 3: </span>        <span style="color: #cf4a44;">return</span> (node + 1) / 2
+<span class="linenr"> 4: </span>    <span style="color: #cf4a44;">else</span>:
+<span class="linenr"> 5: </span>        <span style="color: #cf4a44;">return</span> 0
+<span class="linenr"> 6: </span>
+<span class="linenr"> 7: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">lchild</span>(node):
+<span class="linenr"> 8: </span>    <span style="color: #cf4a44;">return</span> 2 * node + 1
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">rchild</span>(node):
+<span class="linenr">11: </span>    <span style="color: #cf4a44;">return</span> 2 * node + 2
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">建立大顶堆</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+建立大顶堆要从最后一个具有子节点的节点上开始操作，将当前节点作为一个大顶堆的堆顶，进行堆性质维持的处理。并逐步往前对该节点的兄弟节点、父节点进行同样的操作。
+</p>
+
+<p>
+首先需要实现一个堆性质维持处理函数，实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">heapify</span>(heap, root, size):
+<span class="linenr"> 2: </span>    <span style="color: #fefc58;">max_index</span> = root
+<span class="linenr"> 3: </span>    <span style="color: #fefc58;">l</span> = lchild(root)
+<span class="linenr"> 4: </span>    <span style="color: #fefc58;">r</span> = rchild(root)
+<span class="linenr"> 5: </span>    <span style="color: #cf4a44;">if</span>  l &lt; size <span style="color: #cf4a44;">and</span> heap[l] &gt; heap[max_index]:
+<span class="linenr"> 6: </span>        <span style="color: #fefc58;">max_index</span> = l
+<span class="linenr"> 7: </span>    <span style="color: #cf4a44;">elif</span> r &lt; size <span style="color: #cf4a44;">and</span> heap[r] &gt; heap[max_index]:
+<span class="linenr"> 8: </span>        <span style="color: #fefc58;">max_index</span> = r
+<span class="linenr"> 9: </span>
+<span class="linenr">10: </span>    <span style="color: #cf4a44;">if</span> root != max_index:
+<span class="linenr">11: </span>        heap[root], <span style="color: #fefc58;">heap</span>[max_index] = heap[max_index], heap[root]
+<span class="linenr">12: </span>        heapify(heap, max_index)
+<span class="linenr">13: </span>
+<span class="linenr">14: </span>    <span style="color: #cf4a44;">return</span> <span style="color: #bebebe;">None</span>
+</pre>
+</div>
+
+<p>
+用python实现如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">build_heap</span>(heap):
+<span class="linenr">2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(heap)
+<span class="linenr">3: </span>    <span style="color: #fefc58;">last</span> = size / 2 - 1
+<span class="linenr">4: </span>    <span style="color: #cf4a44;">for</span> cur <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(last, -1, -1):
+<span class="linenr">5: </span>        heapify(heap, cur, size)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">实现堆排序</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+根据<a href="#sec-1">堆排序概述</a>中的内容，可以大致将堆排序描述如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">hsort</span>(arr):
+<span class="linenr"> 2: </span>    <span style="color: #fefc58;">size</span> = <span style="color: #31d3c4;">len</span>(arr)
+<span class="linenr"> 3: </span>    <span style="color: #fefc58;">last</span> = size - 1
+<span class="linenr"> 4: </span>    build_heap(arr)
+<span class="linenr"> 5: </span>
+<span class="linenr"> 6: </span>    <span style="color: #cf4a44;">while</span> size &gt; 1:
+<span class="linenr"> 7: </span>        arr[0], <span style="color: #fefc58;">arr</span>[last] = arr[last], arr[0]
+<span class="linenr"> 8: </span>        <span style="color: #fefc58;">last</span> = last - 1
+<span class="linenr"> 9: </span>        <span style="color: #fefc58;">size</span> = size - 1
+<span class="linenr">10: </span>        heapify(arr, 0, size)
+<span class="linenr">11: </span>
+<span class="linenr">12: </span>    <span style="color: #cf4a44;">return</span> <span style="color: #bebebe;">None</span>
+</pre>
+</div>
+
+<p>
+结合前面实现的parent、lchild、rchild、heapify、build_heap几个函数，就可以实现一个完整的堆排序算法了。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">发散：TOP K问题</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+所谓的 <b>TOP K问题</b> ，是指在大规模数据处理时常遇到的一类问题，要求在海量数据中找出最大的前K个数。这个问题可以通过建立小顶堆来解决——当然了，为了效率和资源的有效利用，这类问题通常还有整体方面的架构设计等工作需要做，远不是只建立一个小顶堆就能解决的，不过这些本文不作讨论。
+</p>
+
+<p>
+通过预先读入K个数据并建立小顶堆后，再逐个读入数据，将新元素和堆顶元素进行比较，如果新元素小于堆顶元素，就丢弃；如果新元素大于堆顶元素，则用新元素替代堆顶元素，并且重新调整堆使之保持小顶堆性质。
+</p>
+
+<p>
+这样处理后，总可以保证 <b>目前</b> 读到的数据中最大的K个在小顶堆中。
+</p>
+
+<p>
+当我一开始接触到这个问题时，我幼稚地认为应该使用大顶堆，但实际上是错误的。用大顶堆可以保证堆顶元素是最大，但不能保证堆中元素是前K个最大的数。
+</p>
+
+<p>
+我误认为应该使用大顶堆的原因还有一个，那就是忽视了“海量数据”这个情境。
+</p>
+
+<p>
+对于小规模的TOP K问题，可以直接将数据进行排序，然后取出最大的K个数。但海量数据处理中，数据是不可能同时全部进入内存的。
+</p>
+</div>
+</div>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2014/01/11/merge-sort.html" title="排序算法——归并排序">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2014/01/31/january-of-2014.html" title="(2014年1月)月底小结">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2014年 01月 12日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#算法-ref">
+    		算法 <span>3</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#堆排序-ref">堆排序 <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

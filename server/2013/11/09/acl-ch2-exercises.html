@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      《ANSI Common Lisp》第二章习题
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>《ANSI Common Lisp》第二章习题</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <ol class="org-ol">
+<li>Describe what happens when the following expressions are evaluated:
+
+<pre class="example">
+(a) (+ (- 5 1) (+ 3 7))
+(b) (list 1 (+ 2 3))
+(c) (if (listp 1) (+ 1 2) (+ 3 4))
+(d) (list (and (listp 3) t) (+ 1 2))
+</pre>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) 14
+</p>
+
+<p>
+(b) (1 5)
+</p>
+
+<p>
+(c) 7
+</p>
+
+<p>
+(d) (NIL 3)
+</p>
+</li>
+
+<li>Give three distinct cons expressions that return (a b c).
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(cons 'a '(b c))
+(cons 'a (cons 'b '(c)))
+(cons 'a (cons 'b (cons 'c nil)))
+</pre>
+</div>
+</li>
+
+<li>Using <b>car</b> and <b>cdr</b>,define a function to return the fourth element of a list.
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">fourth</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (listp lst)
+    (car (cdr (cdr (cdr lst))))))
+</pre>
+</div>
+</li>
+
+<li>Define a function that takes two arguments and returns the greater of the two.
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">greater</span> (a b)
+  (<span style="color: #cf4a44;">if</span> (equal (type-of a)
+             (type-of b))
+      (<span style="color: #cf4a44;">cond</span> ((typep a 'number) (<span style="color: #cf4a44;">if</span> (&gt; a b) a b)
+            ((typep a 'character) (<span style="color: #cf4a44;">if</span> (char&gt; a b) a b))
+            ((typep a 'string) (<span style="color: #cf4a44;">if</span> (string&gt; a b) a b))
+            (t nil)))
+      nil))
+</pre>
+</div>
+</li>
+
+<li>What do hese functions do?
+
+<p>
+(a)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">enigma</span> (x)
+  (and (not (null x))
+       (or  (null (car x))
+            (enigma (cdr x)))))
+</pre>
+</div>
+
+<p>
+(b)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">mystery</span> (x y)
+  (<span style="color: #cf4a44;">if</span> (null y)
+      nil
+      (<span style="color: #cf4a44;">if</span> (eql (car y) x)
+          0
+          (<span style="color: #cf4a44;">let</span> ((z (mystery x (cdr y))))
+            (and z (+ z 1))))))
+</pre>
+</div>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) 该函数用于判断一个非空的list中是否含有 <b>NIL</b> 元素.
+</p>
+
+<p>
+(b) 判断y中是否有元素和x相等(同一个对象)，若无则返回NIL，若有则返回该元素在y中的索引(以0为初始值).
+</p>
+</li>
+
+<li>What could occur in place of the <b>x</b> in each of the following exchanges?
+
+<pre class="example">
+(a) &gt; (car (x (cdr '(a (b c) d))))
+    B
+(b) &gt; (x 13 (/ 1 0))
+    13
+(c) &gt; (x #'list 1 nil)
+    (1)
+</pre>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) cdr.
+</p>
+
+<p>
+(b) or.
+</p>
+
+<p>
+(c) apply.
+</p>
+</li>
+
+<li>Using only operators introduced in this Chapter, define a function that takes a list as an argument and returns true if one of its elements is a list.
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">have-list-member</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      nil
+      (<span style="color: #cf4a44;">if</span> (listp (car lst))
+          t
+          (have-list-member (cdr lst)))))
+</pre>
+</div>
+
+<p>
+注：本章出现的操作符有：
+</p>
+<pre class="example">
++ / - quote list cons car cdr third listp null not if and or defun &gt; eql read format let defparameter defconstant setf remove do dolist progn function apply funcall lambda typep
+</pre>
+</li>
+
+<li>Give iterative and recursive definitions of a function that
+
+<p>
+(a) takes a positive integer and prints that many dots.
+</p>
+
+<p>
+(b) takes a list and returns the number of times the symblo <b>a</b> occurs in it.
+</p>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) dot-plot
+</p>
+
+<ul class="org-ul">
+<li>Iteractive version
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-iter</span> (n)
+  (<span style="color: #cf4a44;">do</span> ((n n (- n 1)))
+      ((= n 0) 'done)
+    (format t <span style="color: #25ef29;">"."</span>)))
+</pre>
+</div>
+</li>
+<li>Recursive version
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">dot-plot-rec</span> (n)
+  (<span style="color: #cf4a44;">if</span> (= n 0)
+      'done
+      (<span style="color: #cf4a44;">progn</span>
+        (format t <span style="color: #25ef29;">"."</span>)
+        (dot-plot-rec (- n 1)))))
+</pre>
+</div>
+</li>
+</ul>
+<p>
+(b) times-of-a
+</p>
+
+<ul class="org-ul">
+<li>Iteractive version
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (lst)                     <span style="color: #e81122;">;</span><span style="color: #e81122;">&#24191;&#24230;&#20248;&#20808;&#36941;&#21382;&#65292;&#24471;&#21040;lst&#30340;&#25152;&#26377;&#26641;&#21494;&#33410;&#28857;&#30340;&#21015;&#34920;</span>
+  (<span style="color: #cf4a44;">let</span> ((stack (list lst))           <span style="color: #e81122;">;</span><span style="color: #e81122;">&#36941;&#21382;&#25152;&#38656;&#26632;</span>
+        (leaves nil))                <span style="color: #e81122;">;</span><span style="color: #e81122;">&#23384;&#25918;&#26641;&#21494;&#33410;&#28857;&#30340;&#21015;&#34920;</span>
+    (<span style="color: #cf4a44;">do</span> ()
+        ((null stack) leaves)        <span style="color: #e81122;">;</span><span style="color: #e81122;">&#24403;&#26632;&#31354;&#26102;&#65292;&#36941;&#21382;&#32467;&#26463;</span>
+      (<span style="color: #cf4a44;">let</span> ((now (pop stack)))       <span style="color: #e81122;">;</span><span style="color: #e81122;">&#23558;&#26632;&#39030;&#33410;&#28857;&#20986;&#26632;</span>
+        (<span style="color: #cf4a44;">if</span> (listp now)              <span style="color: #e81122;">;</span><span style="color: #e81122;">&#33509;&#20986;&#26632;&#33410;&#28857;&#19981;&#20026;&#26641;&#21494;&#33410;&#28857;&#26102;&#65292;&#23558;&#20854;&#23376;&#26641;&#20837;&#26632;</span>
+            (<span style="color: #cf4a44;">progn</span> (push (car now) stack)
+                   (<span style="color: #cf4a44;">if</span> (not (null (cdr now)))   <span style="color: #e81122;">;</span><span style="color: #e81122;">&#36825;&#37324;&#35201;&#21028;&#26029;cdr&#26159;&#21542;&#20026;nil&#65292;&#21542;&#21017;&#23558;&#20854;&#20837;&#26632;&#21518;</span>
+                       (push (cdr now) stack))) <span style="color: #e81122;">;</span><span style="color: #e81122;">listp&#23545;&#20854;&#21028;&#26029;&#30340;&#32467;&#26524;&#20026;&#30495;&#65292;&#23548;&#33268;&#26080;&#31351;&#36882;&#24402;</span>
+            (push now leaves))))))   <span style="color: #e81122;">;</span><span style="color: #e81122;">&#33509;&#20986;&#26632;&#33410;&#28857;&#20026;&#26641;&#21494;&#33410;&#28857;&#65292;&#23558;&#20854;&#25918;&#20837;leaves&#21015;&#34920;&#20013;</span>
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">times-of-a-iter</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((leaves (bfs lst))
+        (times 0))
+    (<span style="color: #cf4a44;">dolist</span> (obj lst)
+      (<span style="color: #cf4a44;">if</span> (equal 'a obj)
+          (setf times (+ times 1))))
+    times))
+</pre>
+</div>
+</li>
+<li>Recursive version
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">times-of-a-rec</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+       0
+      (<span style="color: #cf4a44;">let</span> ((now (car lst)))
+        (+ (<span style="color: #cf4a44;">if</span> (listp now)
+               (times-of-a-rec now)
+               (<span style="color: #cf4a44;">if</span> (equal now 'a) 1 0))
+           (times-of-a-rec (cdr lst))))))
+</pre>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+
+
+<ol class="org-ol">
+<li>A friend is trying to write a function that returns the sum of all the non-nil elements in a list. He has written two versions of this function, and neither of them work.Explain what's wrong with each, and give a correct version:
+
+<p>
+(a)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (remove nil lst)
+  (apply #'+ lst))
+</pre>
+</div>
+
+<p>
+(b)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((x (car lst)))
+    (<span style="color: #cf4a44;">if</span> (null x)
+        (summit (cdr lst))
+        (+ x (summit (cdr lst))))))
+</pre>
+</div>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) remove是没有副作用(side-effect)的，所以lst中的 <b>nil</b> 元素还在 lst中，正确的代码应为
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (apply #&#8216;+ (remove nil lst)))
+</pre>
+</div>
+
+<p>
+(b) 没有递归终止条件，正确的代码应为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">summit</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      0
+      (<span style="color: #cf4a44;">let</span> ((x (car lst)))
+        (<span style="color: #cf4a44;">if</span> (null x)
+            (summit (cdr lst))
+            (+ x (summit (cdr lst)))))))
+</pre>
+</div>
+</li>
+</ol>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/11/06/emacs-pdf.html" title="丧心病狂:用Emacs阅读PDF文档">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/11/12/acl-ch3-exercises.html" title="《ANSI Common Lisp》第三章习题">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 11月 09日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#编程-ref">
+    		编程 <span>5</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#lisp-ref">lisp <span>3</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

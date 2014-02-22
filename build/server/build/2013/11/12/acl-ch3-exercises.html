@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      《ANSI Common Lisp》第三章习题
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>《ANSI Common Lisp》第三章习题</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <ol class="org-ol">
+<li>Show the following lists in box notation:
+
+<pre class="example">
+(a) (a b (c d))
+(b) (a (b (c (d))))
+(c) (((a b) c) d)
+(d) (a (b . c) . d)
+</pre>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) (a . (b . ((C . (D . NIL)) . NIL)))
+</p>
+
+<p>
+(b) (a . ((B . ((C . ((D . NIL) . NIL)) . NIL)) . NIL))
+</p>
+
+<p>
+(c) (((A . (B . NIL)) . (C . NIL)) . (D . NIL))
+</p>
+</li>
+
+<li>Write a version of <b>union</b> that preserves the order of the elements in the original lists:
+
+<pre class="example">
+&gt; (new-union '(a b c) '(b a d))
+(A B C D)
+</pre>
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-union</span> (first second)
+  (<span style="color: #cf4a44;">dolist</span> (obj second)
+    (<span style="color: #cf4a44;">if</span> (not (member obj first))
+        (append first (list obj)))))
+</pre>
+</div>
+</li>
+
+<li>Define a function that takes a list and returns a list indicating the number of times each (eql) element appears, sorted from most common element to least common:
+
+<pre class="example">
+&gt; (occurrences '(a b a d a c d c a))
+((A . 4) (C . 2) (D . 2) (B . 1))
+</pre>
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">occurrence</span> (lst)
+  (<span style="color: #cf4a44;">let</span> ((result nil))
+    (<span style="color: #cf4a44;">dolist</span> (obj lst)
+      (<span style="color: #cf4a44;">if</span> (null (assoc obj result))
+      (push (cons obj 1) result)
+      (incf (cdr (assoc obj result)))
+    ))
+    (sort result #'(<span style="color: #cf4a44;">lambda</span> (a b) (<span style="color: #cf4a44;">if</span> (&gt; (cdr a) (cdr b)) t nil)))))
+</pre>
+</div>
+</li>
+
+<li>Why does (member '(a) '((a) (b))) return nil?
+
+<p>
+My answer:
+</p>
+
+<p>
+因为每次产生cons调用时系统都会分配新的对象，所以'(a)和'((a) (b))中的第一个元素虽然具有同样的值，但却不是同一个对象，而member函数使用的判定函数是eql。
+</p>
+</li>
+
+<li>Suppose the function <b>pos+</b> takes a list and returns a list of each element plus its position:
+
+<pre class="example">
+&gt; (pos+ '(7 5 1 4))
+</pre>
+<p>
+Define this function using (a) recursion, (b) iteration, (c) mapcar.
+</p>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) Recursive version
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos)<span style="color: #a07f41; background-color: #073642;"> </span>
+  (<span style="color: #cf4a44;">if</span> (not (null lst))
+      (<span style="color: #cf4a44;">progn</span>
+    (incf (car lst) pos)
+    (rec-pos-plus (cdr lst) (1+ pos)))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos+</span> (lst)
+  (rec-pos-plus lst 0)
+  lst)
+</pre>
+</div>
+
+<p>
+(b) Iterative version
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">iter-pos+</span> (lst)
+  (<span style="color: #cf4a44;">do</span> ((i 0 (+ i 1)))
+      ((= i (length lst)) lst)
+    (incf (nth i lst) i)
+    ))
+</pre>
+</div>
+
+<p>
+(c) Version using <b>mapcar</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">pos+</span> (lst)
+  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (x) (incf x (position x lst)))
+      lst))
+</pre>
+</div>
+</li>
+
+<li>After yeas of deliiberation, a government commission has decided that lists should be represented by using the cdr to point to the first element and the car to point to the rest of the list. Define the government versions of the following functions:
+
+<pre class="example">
+(a) cons
+(b) list
+(c) length (for lists)
+(d) member (for lists; no keywords)
+</pre>
+
+<p>
+My answer:
+</p>
+
+<p>
+(a) cons
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">cons</span> (x y)
+  (<span style="color: #cf4a44;">let</span> ((result '(nil . nil)))
+    (setf (cdr result) x)
+    (setf (car result) y)))
+</pre>
+</div>
+
+<p>
+(b) list
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">list</span> (<span style="color: #ca34e2;">&amp;rest</span> arg)
+  arg)
+</pre>
+</div>
+
+<p>
+(c) length (for lists)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">length</span> (lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      0
+      (+ 1 (length (car lst)))))
+</pre>
+</div>
+
+<p>
+(d) member (for lists; no keywords)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">member</span> (element list)
+  (<span style="color: #cf4a44;">cond</span> ((null list) nil)
+        ((eql element (cdr list)) list)
+        (t (member element (car list)))))
+</pre>
+</div>
+</li>
+
+<li>Modify the program in Figure 3.6 to use fewer cons cells. (Hing: Use dottedlists.)
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">n-elts</span> (elt n)
+  (<span style="color: #cf4a44;">if</span> (&gt; n 1)
+      (cons n elt)
+      elt))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compr</span> (elt n lst)
+  (<span style="color: #cf4a44;">if</span> (null lst)
+      (list (n-elts elt n))
+      (<span style="color: #cf4a44;">let</span> ((next (car lst)))
+    (<span style="color: #cf4a44;">if</span> (eql next elt)
+        (compr elt (+ n 1) (cdr lst))
+        (cons (n-elts elt n)
+          (compr next 1 (cdr lst)))))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compress</span> (x)
+  (<span style="color: #cf4a44;">if</span> (consp x)
+      (compr (car x) 1 (cdr x))
+      x))
+</pre>
+</div>
+</li>
+
+<li>Define a function that takes a list and prints it in dot natation:
+
+<pre class="example">
+&gt; (showdots '(a b c))
+(A . (B . (C . NIL)))
+NIL
+</pre>
+
+<p>
+My answer:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">showdots</span> (list)
+(<span style="color: #cf4a44;">cond</span> ((null list) nil)
+  ((consp list) (<span style="color: #cf4a44;">progn</span>
+         (format t <span style="color: #25ef29;">"("</span>)
+         (showdots (car list))
+         (format t <span style="color: #25ef29;">" . "</span>)
+         (<span style="color: #cf4a44;">if</span> (null (cdr list))
+             (format t <span style="color: #25ef29;">"NIL"</span>)
+             (showdots (cdr list)))
+         (format t <span style="color: #25ef29;">")"</span>)
+         ))
+  (t (format t <span style="color: #25ef29;">"~a"</span> list))))
+</pre>
+</div>
+</li>
+
+<li>Write a program to find the <i>longest</i> finite path through a network represented as in Section 3.15. The network may contain cycles.
+
+<p>
+My answer(对shortest-path的改写):
+</p>
+<div class="org-src-container">
+
+<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-paths</span> (path node net)
+  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (n)<span style="color: #a07f41; background-color: #073642;"> </span>
+               (<span style="color: #cf4a44;">if</span> (not (member n path)) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#21028;&#26029;&#19979;&#19968;&#23618;&#33410;&#28857;&#26159;&#21542;&#21253;&#21547;&#22312;&#36335;&#24452;&#20013;&#20197;&#21066;&#38500;&#29615;&#30340;&#24433;&#21709;</span>
+                   (cons n path)))
+          (cdr (assoc node net))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (end quene net)
+  (<span style="color: #cf4a44;">if</span> (null quene)
+      nil
+      (<span style="color: #cf4a44;">let</span> ((path (car quene)))
+        (<span style="color: #cf4a44;">let</span> ((node (car path)))
+          (<span style="color: #cf4a44;">if</span> (eql node end)
+              (reverse path)
+              (bfs end
+                   (sort (append (cdr quene) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#25490;&#24207;&#20197;&#20445;&#35777;&#26368;&#38271;&#30340;&#36335;&#24452;&#22312;&#38431;&#21015;&#26368;&#21069;&#26041;</span>
+                                 (new-paths path node net))
+                         #'&gt;
+                         <span style="color: #31d3c4;">:key</span> #'length)
+                   net))))))
+
+(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">longest-path</span> (start end net)
+  (bfs end (list (list start)) net))
+</pre>
+</div>
+</li>
+</ol>
+
+<p>
+= =写个题比拿半生不熟的英文来记笔记还累……
+</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/11/09/acl-ch2-exercises.html" title="《ANSI Common Lisp》第二章习题">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/11/27/month-log.html" title="月底小结">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 11月 12日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#编程-ref">
+    		编程 <span>5</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#lisp-ref">lisp <span>3</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

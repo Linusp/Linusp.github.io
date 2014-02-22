@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="description" content="在org-mode 8.x中org-remember.el已经不复存在，其功能被org-capture.el替换，模板设置方式也发生了变化">
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      org-remember从org-mode中移除
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>org-remember从org-mode中移除</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <p>
+因为<a href="http://about.me/wlwang41">Crow</a> 的提议，我和他还有另外一个同学准备做一个开源项目，而在项目中需要使用python，因此这两天就在配置Emacs的python环境，同时把原来的Emacs配置文件整理了一下，这期间发生了不少问题。
+</p>
+
+<p>
+首先是为了使用最新的Emacs，在系统里添加了PPA下载了Damien Cassou维护的Emacs<a href="https://launchpad.net/~cassou/%2Barchive/emacs">版本</a> ，而<a href="https://github.com/fgallina/python.el">python.el</a> 在该版本Emacs下会出问题。重新从源里安装了Emacs 24后这个问题得到了解决。但因为我对配置文件的大幅度调整，导致Emacs一直提示
+</p>
+<blockquote>
+<p>
+Can't load library: org
+</p>
+</blockquote>
+
+<p>
+找不到该问题源头所在的我，尝试着删除了Emacs24自带的org，用上了8.2.1的版本，不想问题就这样解决了——唔，我还是知其然不知其所以然。
+</p>
+
+<p>
+但后来又报错，说无法加载org-remember，我在org目录下一查找，发现居然没有了 <b>org-remember.el</b> 这个文件，一时间很困惑。
+</p>
+
+<p>
+在Google上以 <b>org-remember</b> 和 <b>org-mode8.x</b> 为关键字，也只搜索到两条结果，不过这两条搜索结果告诉了我事实的真相。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/2013-12-02-search-org.png" alt="2013-12-02-search-org.png" />
+</p>
+</div>
+
+<p>
+原来org-mode 8已经不支持org-remember.el了。
+</p>
+
+<p>
+org-remember.el的功能是建立在remember.el之上的，而remember.el并不是org-mode的一部分，估计org-mode的开发人员是为了不依赖remember.el，而将org-remember.el从新版的org-mode中移除了，并以org-capture.el来替换它。
+</p>
+
+<p>
+因此，若要使用org-mode 8，相关的配置需要进行一定的更改
+</p>
+
+<p>
+我在配置文件中为 <b>org-remember</b> 设置了快捷键，因此要将那条语句中的 <i>org-remember</i> 修改为 <i>org-capture</i> 。
+</p>
+
+<p>
+其次，org-remember模板和org-capture的模板格式不一样，需要将原先org-remember的模板进行修改，对应的变量名 <i>org-remember-templates</i> 也要改为 <i>org-capture-templaes</i> 。
+</p>
+
+<p>
+org-capture的模板格式可以到<a href="http://orgmode.org/manual/Capture-templates.html#Capture-templates">这里</a> 进行详细地了解。
+</p>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/11/27/month-log.html" title="月底小结">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/12/02/org8.x-export-source-code.html" title="org-mode 8.x导出html时代码块不高亮问题">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 12月 02日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#Emacs-ref">
+    		Emacs <span>4</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#emacs-ref">emacs <span>7</span></a></li>
+     
+    	<li><a href="/tags.html#org-mode-ref">org-mode <span>7</span></a></li>
+     
+    	<li><a href="/tags.html#org-remember-ref">org-remember <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>

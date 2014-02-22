@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="SzhNnSrJlB" />
+    
+    <meta name="author" content="Linusp">
+    <title>
+      
+      基于Node.js的博客平台Ghost试用
+      
+    </title>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+    <link rel="alternate" type="application/ato+xml" title="Linusp's Blog RSS Feed" href="/atom.xml" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+    <script type="text/javascript">
+      <!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+    /*]]>*///-->
+    </script>
+  </head>
+
+  <body>
+
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="/index.html">Linusp's Blog</a>
+          <ul class="nav">
+	    
+	    
+	    
+	    <li><a href="/categories.html">分类</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/tags.html">标签</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/archive.html">存档</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/link.html">链接</a></li>
+	    
+	    
+	    
+	    
+	    <li><a href="/about.html">关于</a></li>
+	    
+	    
+	    <li><a href="/atom.xml" target="_blank">Feed</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>基于Node.js的博客平台Ghost试用</h1>
+</div>
+
+<div class="row">
+  <div class="span10">
+    <div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Ghost是什么</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Ghost是一个基于Node.js的博客平台，于昨日(2013/10/14)正式在Github上发布。
+</p>
+
+<p>
+Ghost源于John O'Nolan的想法——交互设计师John O'Nolan是WordPress UI组的核心成员。大概一年前，他有感于WordPress越来越脱离博客平台的初衷，变为一个CMS，决定开发新一代的博客平台。
+</p>
+
+<p>
+4月29日，项目在KickStarter上募集资金，轰动一时。最后在一个月内筹得近20万英镑。
+</p>
+
+<p>
+在Ghost正式发布前就已经有非常多的人在盼望着它出来了。
+</p>
+
+<p>
+一位网友是这么评价Ghost的
+</p>
+<blockquote>
+<p>
+简单简洁, 响应式设计, 支持完全自定义, 免费, 专注博客
+</p>
+</blockquote>
+
+<p>
+我的消息比较滞后，今天才得知这个东西——这还是Gmail里收到了Ghost团队的邮件才知道的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">本地安装</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Ghost的本地安装非常简单。这里以linux平台为例（我才懒得在windows下折腾呢）
+</p>
+</div>
+<div id="outline-container-sec-2-0-1" class="outline-4">
+<h4 id="sec-2-0-1">安装Node.js</h4>
+<div class="outline-text-4" id="text-2-0-1">
+<p>
+到<a href="http://nodejs.org">Node.js的官方网站</a> 上下载Node.js并安装，源码包和二进制包都有，这里就不多嘴了。
+</p>
+
+<p>
+确认是否安装了Node.js，在终端里运行：
+</p>
+<pre class="example">
+node -v
+</pre>
+<p>
+和
+</p>
+<pre class="example">
+npm -v
+</pre>
+<p>
+看看，如果有显示版本信息就说明安装好了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-0-2" class="outline-4">
+<h4 id="sec-2-0-2">安装并运行Ghost</h4>
+<div class="outline-text-4" id="text-2-0-2">
+<p>
+不得不说安装真的是非常简单，先到<a href="http://ghost.org">Ghost的官网</a> 上下载Ghost并解压到本地目录，进入到目录下后执行
+</p>
+<pre class="example">
+npm install --production
+</pre>
+<p>
+就OK了。
+</p>
+
+<p>
+安装好后就可以执行
+</p>
+<pre class="example">
+npm start
+</pre>
+<p>
+在本地的2368端口运行Ghost了。
+</p>
+
+<p>
+<a href="http://docs.ghost.org/installation/linux/">这里</a> 是官方给出的安装文档，当然比我这里说的要详细一点，不过也没差了。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">使用</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+先说博客真正要能运行起来需要的环境吧。
+</p>
+
+<p>
+基本上来说有两种方案吧：
+</p>
+
+<ol class="org-ol">
+<li>使用提供Ghost应用的云服务，官方给出了Bitnami、Rackspace deployments和DigitalOcean Droplet三个建议的选择。
+</li>
+
+<li>使用允许用户安装Node.js或者已经安装了Node.js的主机服务。
+</li>
+</ol>
+</div>
+
+<div id="outline-container-sec-3-0-1" class="outline-4">
+<h4 id="sec-3-0-1">博客设置</h4>
+<div class="outline-text-4" id="text-3-0-1">
+<p>
+在博客的根目录后面加上 <i>ghost</i> 就可以进入到后台面板。如图所示：
+</p>
+
+<img src="/assets/img/2013-10-15-ghost-panel.png"/>
+
+<p>
+能够设置博客标题、描述、每页文章数等常见参数。
+</p>
+
+<p>
+总的来说在设置上的确非常简洁。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-0-2" class="outline-4">
+<h4 id="sec-3-0-2">博客主题</h4>
+<div class="outline-text-4" id="text-3-0-2">
+<p>
+目前来说Ghost官方提供了12个主题可供使用，这里是<a href="http://marketplace.ghost.org/">链接</a>。
+</p>
+
+<p>
+主题的安装也很简单，将下载好的主题解压后放置到/content/themes/这个目录下，并重启Ghost，然后到后台面板上选择要使用的主题即可。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-0-3" class="outline-4">
+<h4 id="sec-3-0-3">编写文章</h4>
+<div class="outline-text-4" id="text-3-0-3">
+<p>
+在上面的那张有关博客设置的图里，可以看到后台面板有三个标签页，分别是： content， new posst和 settings。
+</p>
+
+<p>
+第一个可以查看文章列表，并进行修改、删除等操作。
+</p>
+
+<p>
+点击第二个就可以编写文章啦。
+</p>
+
+<p>
+不得不说，Ghost在文章编写上做的真是太棒了。看下面这个图：
+</p>
+
+<img src="/assets/img/2013-10-15-writing.png"/>
+<p>
+可以右键，选择“在新标签页打开图片”看大图。
+</p>
+
+<p>
+正如你所见，Ghost提供这种“可视化”的编辑方式。左栏是Markdown语法的文章编辑区，右栏则可以实时预览文章显示效果，实在是太棒了。
+</p>
+
+<p>
+除此以外，也可以用自己喜爱的编辑器编辑md文件啦，不过既然Ghost提供了这样一种方式，相信这样做的人就会更少啦。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">总结</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+确实很不错，特别是那个文章编辑方式，实在是很吸引人，不过——不能在Github Pages上跑，对我来说，吸引力就下降了，而且，虽然刚才说那个编辑方式很吸引人，不过我可是org-mode脑残粉，更何况前两天装上了real-auto-save这个插件，再也不用自己频繁按 <b>C-x C-f</b> 了。
+</p>
+
+<p>
+所以说都是浮云。
+</p>
+
+<p>
+来，这是一个demo的展示——本地的只能截图了：
+</p>
+<img src="/assets/img/2013-10-15-ghost-demo.png"/>
+</p>
+
+<p>
+可以右键，选择“在新标签页打开图片”看大图。
+</p>
+</div>
+</div>
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/2013/10/14/liquid-in-post.html" title="在Github Pages博客内容中插入liquid语句示例">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/2013/10/19/daily-shell-text2speech.html" title="伪语音合成(1)">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+    <div class="ds-thread"></div>
+    <script type="text/javascript">
+      var duoshuoQuery = {short_name:"linuspb"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = 'http://static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		|| document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+    </script>
+    <!-- Duoshuo Comment END -->
+  </div>
+  
+  <div class="span4">
+    <h4>发布日期</h4>
+    <div class="date"><span>2013年 10月 15日</span></div>
+
+  
+    <h4>类别</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/categories.html#博客-ref">
+    		博客 <span>10</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <h4>标签</h4>
+    <ul class="tag_box">
+    
+    
+
+
+  
+     
+    	<li><a href="/tags.html#Node.js-ref">Node.js <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Ghost-ref">Ghost <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#Markdown-ref">Markdown <span>2</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+  </div>
+</div>
+
+      </div>
+
+      <footer>
+        <p>
+	  Powered by <a href="http://jekyllrb.com" target="_blank">Jekyll</a>
+	  and <a href="http://pages.github.com" target="_blank">Github Pages</a> | 
+	  &copy; Linusp 2013
+        </p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-44461305-1', 'linusp.github.io');
+      ga('send', 'pageview');
+    </script>
+  </body>
+</html>
