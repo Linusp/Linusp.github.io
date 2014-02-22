@@ -89,7 +89,7 @@ $$e^{i\pi} + 1 = 0$$
 </pre>
 </div>
 <p>
-这条语句会使项目在发布时去除默认模板中包含的一些js片段，这是需要注意的地方。
+这条语句会使项目在发布时去除默认模板中包含的一些js片段，这是需要注意的地方。如果需要在项目发布中也启用数学符号/公式显示的功能，最好将这个选项打开，或者自定义也可以(但应该包含上面所示的js片段)
 </p>
 </div>
 </div>
@@ -115,8 +115,13 @@ org-toggle-pretty-entities
 
 <p>
 效果如下：
-<img src="../../../assets/img/org-pretty-entities.gif" alt="org-pretty-entities.gif" />
 </p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-pretty-entities.gif" alt="org-pretty-entities.gif" />
+</p>
+</div>
 
 <p>
 不过效果并不是非常好，和Texmacs还有区别。对于单个的特殊字符如希腊字母，效果时可以的，但对于一些复杂的数学公式，比如
@@ -127,14 +132,19 @@ org-toggle-pretty-entities
 </pre>
 </div>
 <p>
-理想的显示效果应该时：
+理想的显示效果应该是：
 $$J(\theta) = \frac{1}{2m}\sum_{i=1}^{m}(\theta^{T}X_{i} - Y_{i})^2$$
 </p>
 
 <p>
 但它的实际显示效果却是：
-<img src="../../../assets/img/actually-pretty-entities.png" alt="actually-pretty-entities.png" />
 </p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/actually-pretty-entities.png" alt="actually-pretty-entities.png" />
+</p>
+</div>
 
 <p>
 可以看出org-mode的这个功能中对特殊字符的解析和Latex的语法并不一致，至于是否存在解决办法，这个就有待以后讨论吧。
