@@ -1,0 +1,1276 @@
+---
+layout     : post
+title      : C语言字符串操作
+categories : 编程
+tags       : C语言 字符串
+description:
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">string.h</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+其实在C语言的标准库中，也有非常丰富的字符串操作函数。当然了，由于C语言中 <b>字符串</b> 并不是基本数据类型，也没有 <b>类</b> 这个概念，相对来说操作上可能没有Python/Java之类的语言方便。不过了解一下C语言中的字符串操作还是有意义的。
+</p>
+
+<p>
+C语言中的字符串操作函数在 <b>string.h</b> 中，不过要了解都有什么函数，阅读string.h并不是什么好的方式。如果是在Unix/Linux系统下，只要执行：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">man string
+</pre>
+</div>
+<p>
+就可以了解都有哪些字符串操作函数了，如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/string_manual.png" alt="string_manual.png" />
+</p>
+</div>
+
+<p>
+其中一些常用的函数及其大致功能如下(具体细节后面再细说)：
+</p>
+<ul class="org-ul">
+<li>字符串拷贝
+
+<p>
+stcpy, strncpy
+</p>
+</li>
+<li>字符串比较
+
+<p>
+strcmp, strncmp, strcasecmp, strncasecmp
+</p>
+</li>
+<li>字符串连接
+
+<p>
+strcat, strncat
+</p>
+</li>
+<li>字符查找
+
+<p>
+strchr, strrchr, strchrnul, strpbrk
+</p>
+</li>
+<li>建立字符串副本
+
+<p>
+strdup, strndup, strdupa, strndupa
+</p>
+</li>
+<li>字符串分割
+
+<p>
+strsep, strtok, strtok_r
+</p>
+</li>
+<li>字符串匹配
+
+<p>
+strstr
+</p>
+</li>
+</ul>
+
+
+<p>
+下面根据功能的不同来展示各个函数的用法。这里我会用一些实例来进行示范，同时，其结果由org-babel对代码块求值得到。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">字符串拷贝(strcpy, strncpy)</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">strcpy</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strcpy</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>);
+</pre>
+</div>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = {0};
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"abcde"</span>;
+
+    <span style="color: #cf4a44;">strcpy</span>(dest, src);
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, dest);
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+abcde
+</pre>
+
+<p>
+strcpy()函数会将源字符串中的结束符('\0')也拷贝到目的字符串中。
+</p>
+
+<p>
+注意，strcpy()可能会导致溢出。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">strncpy</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strncpy</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+</pre>
+</div>
+
+<p>
+该函数从源字符串中拷贝n个字符到目的字符串；如果源字符串长度不足，则用 <b>NULL</b> 填充，以保证将n个字符写入目的字符串中；如果源字符串中前n个字符不包含字符串结束符，函数不会为目的字符串添加上结束符。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[7] = {0};
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"abcde"</span>;
+
+    dest[5] = <span style="color: #25ef29;">'A'</span>;
+    <span style="color: #cf4a44;">strncpy</span>(dest, src, 5);
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, dest);
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+abcdeA
+</pre>
+
+<p>
+所以如果有需要，应该在拷贝后自己在目的字符串尾部添加结束符。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">字符串比较(strcmp, strncmp, strcasecmp, strncasecmp)</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">strcmp</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">strcmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>);
+</pre>
+</div>
+<p>
+如果s1小于s2，函数返回一个负数；如果s1等于s2，函数返回0；否则返回一个正数。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcef"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s3</span> = <span style="color: #25ef29;">"ad"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s2, <span style="color: #cf4a44;">strcmp</span>(s1, s2));
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s3, <span style="color: #cf4a44;">strcmp</span>(s1, s3));
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s2, s3, <span style="color: #cf4a44;">strcmp</span>(s2, s3));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+compare(abcde, abcef) -&gt; -1
+compare(abcde, ad) -&gt; -2
+compare(abcef, ad) -&gt; -2
+</pre>
+
+<p>
+从这个结果可以发现，strcmp()是根据字典序来对字符串进行比较的。进一步的，还可以发现strcmp()的返回值是比较过程中最后一次比较时两个字符的值的差，如比较"abcde"和"abcef"，有：
+</p>
+<pre class="example">
+a - a = 0
+b - b = 0
+c - c = 0
+d - e = -1 #按字典序，大小已分，不再比较
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">strncmp</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">strncmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+</pre>
+</div>
+
+<p>
+和strcmp()的区别是，strncmp()只对s1和s2的前n个字节进行比较。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcfg"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s3</span> = <span style="color: #25ef29;">"abd"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s, 4) -&gt; %d\n"</span>, s1, s2, <span style="color: #cf4a44;">strncmp</span>(s1, s2, 4));
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s, 2) -&gt; %d\n"</span>, s1, s3, <span style="color: #cf4a44;">strncmp</span>(s1, s3, 2));
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s, 3) -&gt; %d\n"</span>, s2, s3, <span style="color: #cf4a44;">strncmp</span>(s2, s3, 3));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+compare(abcde, abcfg, 4) -&gt; -2
+compare(abcde, abd, 2) -&gt; 0
+compare(abcfg, abd, 3) -&gt; -1
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3">strcasecmp</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">strcasecmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>);
+</pre>
+</div>
+
+<p>
+strcasecmp()也是用来比较字符串的，和strcmp()有两点区别：
+</p>
+<ol class="org-ol">
+<li>使用strcasecmp()应该包含 <b>strings.h</b> 而不是 <b>string.h</b>
+</li>
+<li>strcasecmp()在比较时不区分大小写
+</li>
+</ol>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;strings.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"AbcdE"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcdE"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s) with case -&gt; %d\n"</span>, s1, s2, <span style="color: #cf4a44;">strcmp</span>(s1, s2));
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"compare(%s, %s) ignore case -&gt; %d\n"</span>, s1, s2, <span style="color: #cf4a44;">strcasecmp</span>(s1, s2));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+compare(AbcdE, abcdE) with case -&gt; -32
+compare(AbcdE, abcdE) ignore case -&gt; 0
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4">strncasecmp</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+strncasecmp()之于strcasecmp()就如strncmp()之于strcmp()，不再赘述。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">字符串连接(strcat, strncat)</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">strcat</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strcat</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>);
+</pre>
+</div>
+
+<p>
+strcat()首先会覆盖掉目的字符串的结束符，然后把源字符串的内容追加到后面，并在最后添加结束符。如果目的字符串缓冲区长度不够，将导致溢出。
+</p>
+
+<p>
+strcat()在操作完成后，返回目的字符串的首地址，这样可以方便地进行链式操作。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = <span style="color: #25ef29;">"hello "</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"world!"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strcat</span>(dest, src));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+hello world!
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2">strncat</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strncat</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+</pre>
+</div>
+
+<p>
+strncat()将最多n个字节的内容追加到目的字符串尾部，并且会在追加后添加终止符号。
+</p>
+
+<p>
+同strcat()一样，它返回目的字符串的首地址。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = <span style="color: #25ef29;">"hello "</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"world!lkjsdljsd"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strncat</span>(dest, src, 6));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+hello world!
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">字符查找(strchr, strrchr, strchrnul, strpbrk)</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1">strchr</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strchr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+</pre>
+</div>
+
+<p>
+strchr()返回一个字符指针，指向指定字符在指定字符串中第一次出现的位置。如果在指定字符串中没有找到指定字符，则返回 <b>NULL</b> 。该函数的第二个参数按理来说应当是一个字符，不过标准库中确实是int类型。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"hello world!"</span>;
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'l'</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strchr</span>(s, c));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+llo world!
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2">strrchr</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strrchr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+</pre>
+</div>
+
+<p>
+strrchr()和strchr()类似，但它返回的是指定字符在指定字符串中最后一次出现的位置。如果未找到，同样返回 <b>NULL</b> 。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"hello world!"</span>;
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'l'</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strrchr</span>(s, c));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+ld!
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-5-3" class="outline-3">
+<h3 id="sec-5-3">strchrnul</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strchrnul</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+</pre>
+</div>
+
+<p>
+strchrnul()的功能和strchr()只有细微的区别，那就是，当没有找到指定字符时，strchrnul()不返回 <b>NULL</b> ，而是返回字符串结束符的位置。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'m'</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%p, %p\n"</span>, s, <span style="color: #cf4a44;">strchrnul</span>(s, c));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+0x40065c, 0x400661
+</pre>
+
+<p>
+这里由于strchrnul()的特性，没办法通过打印字符串来了解strchrnul()的操作，不过观察这两个指针的值，会发现：
+</p>
+<pre class="example">
+0x400661 - 0x40065c = 0x5
+</pre>
+<p>
+而字符串s的第六个元素(从0开始，5即第六个)，正好是结束符。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-5-4" class="outline-3">
+<h3 id="sec-5-4">strpbrk</h3>
+<div class="outline-text-3" id="text-5-4">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strpbrk</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">accept</span>);
+</pre>
+</div>
+
+<p>
+strpbrk()和strchr()的区别在于，strchr()是从字符串里搜索 <b>一个字符</b> ，而strpbrk()则是在字符串里搜索 <b>一个字符集中的字符</b> ，看第二个参数就明白了。strpbrk()遍历字符串，如果发现某个字符在指定的 <b>字符集</b> 中，则立即返回指向该字符的指针。如果最后没有找到任何在指定字符集中的字符，则返回 <b>NULL</b> 。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"Hello World!"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">accept</span> = <span style="color: #25ef29;">"Wo"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strpbrk</span>(s, accept));
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+o World!
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">字符串分割(strtok, strtok_r, strsep)</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1">strtok</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strtok</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>);
+</pre>
+</div>
+
+<p>
+strtok()根据第二个参数指定的分隔符(可能存在多个不同的分隔符)将指定字符串分割成多个子串。通过多次调用strtok()，可以依次获得字符串的多个子串的首地址。要注意的是，除了第一次调用时将待分割字符串作为第一个参数，后续的调用要将第一个参数置为 <b>NULL</b> 。当字符串已经无法再分割时，strtok()返回 <b>NULL</b> 。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[1024] = <span style="color: #25ef29;">"abc;lsdk:lskdj,;slsj"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">";:,"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span> = <span style="color: #cf4a44;">strlen</span>(s);
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
+
+    result = <span style="color: #cf4a44;">strtok</span>(s, delm);
+    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"Source:%s, Sub:%s\n"</span>, s, result);
+        result = <span style="color: #cf4a44;">strtok</span>(<span style="color: #bebebe;">NULL</span>, delm);
+    }
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+Source:abc Sub:abc
+Source:abc Sub:lsdk
+Source:abc Sub:lskdj
+Source:abc Sub:slsj
+</pre>
+
+<p>
+除了上面说过的strtok()的用法外，还要注意的是，作为待分割的字符串，它必须是 <b>可更改的</b> 。否则虽然可以通过编译，但运行会出错。要理解这个现象，首先要了解strtok()的内部机制。
+</p>
+
+<p>
+了解其机制，没必要去寻找其实现源代码，只要对它的操作过程进行剖析就知道了。先看下面的代码：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"To be or not to be"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" ,."</span>;         <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#20998;&#38548;&#31526;&#65306;&#31354;&#26684; </span><span style="color: #e81122;">*/</span>
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0, <span style="color: #fefc58;">len</span> = <span style="color: #cf4a44;">strlen</span>(s);
+
+    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#30340;&#23383;&#31526; </span><span style="color: #e81122;">*/</span>
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%c "</span>, s[i]);
+    }
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"\n"</span>);
+
+
+    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#23383;&#31526;&#30340;&#25968;&#20540; </span><span style="color: #e81122;">*/</span>
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%d "</span>, (<span style="color: #ca34e2;">int</span>)s[i]);
+    }
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"\n"</span>);
+
+    result = <span style="color: #cf4a44;">strtok</span>(s, delm);
+    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {    <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35266;&#23519;s&#20013;&#23383;&#31526;&#25968;&#20540;&#30340;&#21464;&#21270; </span><span style="color: #e81122;">*/</span>
+
+        <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) {
+            <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%d "</span>, (<span style="color: #ca34e2;">int</span>)s[i]);
+        }
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"\n"</span>);
+
+        result = <span style="color: #cf4a44;">strtok</span>(<span style="color: #bebebe;">NULL</span>, delm);
+    }
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="right">T</td>
+<td class="right">o</td>
+<td class="right">&#xa0;</td>
+<td class="right">b</td>
+<td class="right">e</td>
+<td class="right">&#xa0;</td>
+<td class="right">o</td>
+<td class="right">r</td>
+<td class="right">&#xa0;</td>
+<td class="right">n</td>
+<td class="right">o</td>
+<td class="right">t</td>
+<td class="right">&#xa0;</td>
+<td class="right">t</td>
+<td class="right">o</td>
+<td class="right">&#xa0;</td>
+<td class="right">b</td>
+<td class="right">e</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">32</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">32</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">32</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">32</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">32</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">32</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">0</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">32</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">32</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">0</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">0</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">32</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">0</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">0</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">0</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">32</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">0</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">0</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">0</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+
+<tr>
+<td class="right">84</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+<td class="right">0</td>
+<td class="right">111</td>
+<td class="right">114</td>
+<td class="right">0</td>
+<td class="right">110</td>
+<td class="right">111</td>
+<td class="right">116</td>
+<td class="right">0</td>
+<td class="right">116</td>
+<td class="right">111</td>
+<td class="right">0</td>
+<td class="right">98</td>
+<td class="right">101</td>
+</tr>
+</tbody>
+</table>
+<p>
+可以看到，s中的分隔符，逐次地被置为'\0'即字符串结束符。这就是strtok()分割字符串的内部原理了。而strtok()返回的指针，其实就是s中各个子串的起始位置了。如果s指向的内容是无法被修改的，那么strtok()自然也就无法将原先的分隔符置为字符结束符了。
+</p>
+
+<p>
+当然了，由于源字符串会被修改，在实际中，如果需要，可以用strdup()来建立一个源字符串的副本。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2">strtok_r</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strtok_r</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>, <span style="color: #ca34e2;">char</span> **<span style="color: #fefc58;">saveptr</span>);
+</pre>
+</div>
+
+<p>
+strtok_r()是Linux下的strtok()的可重入版本(线程安全版本)，它比strtok()多了一个参数 <b>saveptr</b> ，这个参数用于在分割字符串时保存上下文。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"Hello world"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" "</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>, *<span style="color: #fefc58;">ptr</span> = <span style="color: #bebebe;">NULL</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"Source:%p\n"</span>, s);
+    result = <span style="color: #cf4a44;">strtok_r</span>(s, delm, &amp;ptr);
+    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"Result:%p\t"</span>, result);
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"Saveptr:%p\n"</span>, ptr);
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"---%s\t"</span>, result);
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"---%s\n"</span>, ptr);
+
+        result = <span style="color: #cf4a44;">strtok_r</span>(<span style="color: #bebebe;">NULL</span>, delm, &amp;ptr);
+    }
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+Source:0x7fff180f3de0
+Result:0x7fff180f3de0 Saveptr:0x7fff180f3de6
+---Hello              ---world
+Result:0x7fff180f3de6 Saveptr:0x7fff180f3deb
+---world              ---
+</pre>
+<p>
+可以看到，saveptr这个指针在每次调用strtok_r()后就指向了未分割的部分的首地址。相对地，strtok()则是在内部有一个静态缓冲区，通过这个静态缓冲区来记录未处理的起始位置，所以strtok()不是线程安全的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-6-3" class="outline-3">
+<h3 id="sec-6-3">strsep</h3>
+<div class="outline-text-3" id="text-6-3">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strsep</span>(<span style="color: #ca34e2;">char</span> **<span style="color: #fefc58;">stringp</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>);
+</pre>
+</div>
+
+<p>
+strsep()同样是字符串分割函数，它和strtok()的不同之处在于，它会直接修改待分割的指针的值，让它始终指向未处理部分的起始位置。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"To be or not to be"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">source</span> = s;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" "</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
+
+    <span style="color: #cf4a44;">while</span> (source != <span style="color: #bebebe;">NULL</span>) {
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"Source:%s | "</span>, source);
+        result = <span style="color: #cf4a44;">strsep</span>(&amp;source, delm);
+        <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"result:%s\n"</span>, result);
+    }
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+Source:To be or not to be | result:To
+Source:be or not to be | result:be
+Source:or not to be | result: or
+Source:not to be | result: not
+Source:to be | result: to
+Source:be | result: be
+</pre>
+
+<p>
+因为和strtok()的这个不同之处，strsep不需要区分第一次调用后后续的连续调用，可以用统一的操作来对字符串进行分割。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">字符串匹配(strstr)</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strstr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">haystack</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">needle</span>);
+</pre>
+</div>
+
+<p>
+strstr()返回字符串needle在字符串haystack中第一次出现的位置；如果没有匹配，则返回 <b>NULL</b> 。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"To be or not to be."</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">p</span> = <span style="color: #25ef29;">"be"</span>;
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, <span style="color: #cf4a44;">strstr</span>(s, p));
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+be or not to be.
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8">字符串副本创建(strdup, strndup, strdupa, strndupa)</h2>
+<div class="outline-text-2" id="text-8">
+</div><div id="outline-container-sec-8-1" class="outline-3">
+<h3 id="sec-8-1">strdup</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strdup</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>);
+</pre>
+</div>
+
+<p>
+strdup()调用malloc()分配一块内存并将字符串s的内容拷贝进去，产生s的副本。要注意的是，在最后应该调用free()来释放副本。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dup</span> = <span style="color: #cf4a44;">strdup</span>(s);
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, dup);
+    <span style="color: #cf4a44;">free</span>(dup);
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+abcde
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-8-2" class="outline-3">
+<h3 id="sec-8-2">strndup</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strndup</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+</pre>
+</div>
+
+<p>
+strndup()和strdup()类似，但最多只拷贝s的前n个字节。如果s的长度大于n，还会在副本后添加终止符。
+</p>
+
+<p>
+示例：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dup</span> = <span style="color: #cf4a44;">strndup</span>(s, 4);
+
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, dup);
+
+    <span style="color: #cf4a44;">free</span>(dup);
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+结果：
+</p>
+<pre class="example">
+abcd
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-8-3" class="outline-3">
+<h3 id="sec-8-3">strdupa</h3>
+<div class="outline-text-3" id="text-8-3">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strdupa</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>);
+</pre>
+</div>
+
+<p>
+strdupa()和strdup()类似，但在分配内存时，它使用alloca()而不是malloc()。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-8-4" class="outline-3">
+<h3 id="sec-8-4">strndupa</h3>
+<div class="outline-text-3" id="text-8-4">
+<p>
+函数原型：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #cf4a44;">strndupa</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+</pre>
+</div>
+
+<p>
+strndupa()之于strdupa()就如strndup()之于strdup()，不再赘述。
+</p>
+</div>
+</div>
+</div>
