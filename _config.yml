@@ -2,6 +2,8 @@ permalink: /:year/:month/:day/:title.html
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 pygments: true
 
+markdown: kramdown
+
 title : Linusp's Blog
 author :
   name : Linusp
