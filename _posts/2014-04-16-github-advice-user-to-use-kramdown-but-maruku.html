@@ -1,0 +1,58 @@
+---
+layout     : post
+title      : Github建议将Pages Site的Markdown解析器替换为Kramdown
+categories : 博客
+tags       :
+- Github
+- Github Pages
+- Markdown
+- Kramdown
+- Maruku
+description: 
+---
+
+<p>
+4月15日，Github向用户发出邮件，建议使用Github Pages服务的用户，应当将使用Github Pages服务搭建的站点的Markdown文件解析器替换成 <b>Kramdown</b> ——在此之前，应该有不少用户是使用 <b>Maruku</b> 的，而据Github的邮件， <b>Maruku</b> 已经过时。
+</p>
+
+<p>
+以下为Github邮件内容：
+</p>
+<blockquote>
+<p>
+The page build completed successfully, but returned the following warning:
+</p>
+
+<p>
+Your site is using Maruku, the default Markdown interpreter. Maruku is now obsolete and may cause builds to fail for sites with invalid Markdown or HTML. See <a href="https://help.github.com/articles/migrating-your-pages-site-from-maruku">https://help.github.com/articles/migrating-your-pages-site-from-maruku</a> for more information on upgrading to a newer Markdown interpreter.
+</p>
+</blockquote>
+
+<p>
+在2013年10月，Maruku的作者Benjamin Hollis在 <a href="http://benhollis.net/blog/2013/10/20/maruku-is-obsolete/">Maruku is obsolete</a> 一文中说道：
+</p>
+<blockquote>
+<p>
+All of the things I wanted to do in Maruku for 1.0.0 were in fact already done in Kramdown – better code organization, better modularity and extensibility, good documentation, a better parser, and improved performance
+</p>
+</blockquote>
+<p>
+并且在Kramdown 1.0.0发布后，Benjamin Hollis自己也转向了使用Kramdown。从Github上的Commits记录来看，Maruku也已经有三个月没有任何更新了。所以说，嗯，Github说，是时候换个更好的Markdown解析器了，不然有可能你的网站可能会在解析的时候发生问题。
+</p>
+
+<p>
+修改方法也很简单，在_config.yml这个文件里进行修改，将：
+</p>
+<pre class="example">
+markdown: maruku
+</pre>
+<p>
+替换成：
+</p>
+<pre class="example">
+markdown: kramdown
+</pre>
+
+<p>
+一开始我收到邮件，有点诧异，因为我的文章都是用org-mode编写然后发布成html，所以我就没在_config.yml里设置Markdown解析器，查了一下，原来Maruku是Jekyll默认的Markdown解析器。所以你如果和我一样，保险起见，在_config.yml里显式地指定解析器为Kramdown吧。
+</p>
