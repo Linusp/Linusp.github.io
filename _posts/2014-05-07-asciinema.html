@@ -1,0 +1,144 @@
+---
+layout     : post
+title      : "asciinema: 便捷的终端录制与分享工具"
+categories : linux
+tags       :
+- asciinema
+- python
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">asciinema简介</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="https://asciinema.org">Asciinema</a> 是一款便捷的终端录制与分享工具，五一假期和两个朋友在五道口的咖啡厅喝咖啡聊天的时候，<a href="http://wlwang41.github.io">乌鸦</a> 把这个工具分享给了我，这是一个非常赞的玩意，当然要进行分享了。
+</p>
+
+<p>
+下面是它在网站上对自己的介绍：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/asciinema.png" alt="asciinema.png" />
+</p>
+</div>
+
+<p>
+它有以下几个特性：
+</p>
+
+<ol class="org-ol">
+<li>操作简单，分享便捷
+
+<p>
+要开始录制，运行：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">asciinema rec
+</pre>
+</div>
+<p>
+即可，当要结束录制时，输入 <b>exit</b> 或者在终端中按下 <b>&lt;ctrl-d&gt;</b> 就可以。在结束时，它会提示 ”是否上传“ ，选择是后它会上传记录，并且返回一个 <b>URL</b> ，通过这个 <b>URL</b> ，可以非常方便的进行分享。
+</p>
+
+<p>
+当然了，和 <b>ttyrec</b> 或者 <b>screen</b> 相比，也是各有优劣， <b>ttyrec</b> 是会生成一个文件，用 <b>ttyplay</b> 可以播放它，在没有网络的情况下 <b>ttyrec</b> 会更好一些。而在同一台主机上， <b>screen</b> 那就是首选了。
+</p>
+
+<p>
+但现在的人们基本上都处在网络环境中，所以使用 <b>asciineme</b> 还是很方便的。
+</p>
+</li>
+
+<li>自由拷贝
+
+<p>
+在播放记录时，可以自由地拷贝正在播放的记录中的命令，这一点上 <b>ttyrec</b> 和 <b>screen</b> 是无法相比的。
+</p>
+
+<p>
+当你在观看别人的记录时，如果有一些非常炫酷的命令，当然会心痒难耐想要自己亲手试一试，这个时候这个特性实在是不要太赞！
+</p>
+</li>
+
+<li>网页嵌入
+
+<p>
+对于产生的记录，可以方便地嵌入到网页中，方法是在记录播放页面，在记录的右下方有一个 <b>Embed</b> 字样的链接，点击一下，会弹出一个小框，显示出能嵌入到网页中的一行 html 代码，如下所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/embed.png" alt="embed.png" />
+</p>
+</div>
+
+<p>
+下面是我的一个简单的录制：
+</p>
+<p>This is some text.</p>
+<script type="text/javascript" src="https://asciinema.org/a/9415.js" id="asciicast-9415" async></script>
+<p>This is some other text.</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">安装与使用</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+虽然 <b>Asciinema</b> 的安装与使用在其网站上都说得很清楚了，不过还是总结一下吧。
+</p>
+
+<ol class="org-ol">
+<li>安装
+
+<p>
+<b>Asciinema</b> 是用 python编写的工具，可以用 <b>pip</b> 安装，如果机器上没有 <b>pip</b> ，请先安装，用各自发行版的包管理器即可安装。然后执行
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo pip install --upgrade asciinema
+</pre>
+</div>
+</li>
+
+<li>录制
+
+<p>
+咦，好像之前说过了？那就不再说了。
+</p>
+</li>
+
+<li>帐号连接
+
+<p>
+在 <b>Asciinema</b> 的网站上，可以用自己的邮箱进行登录，同时，可以在本地通过运行：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">asciinema auth
+</pre>
+</div>
+<p>
+来和帐号进行连接，这样你录制并上传的终端记录会被保存在你的帐号下面
+</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">录制！分享！社交！</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+由于 <b>Asciinema</b> 将用户录制的终端记录上传并在网站上展示，同时还提供了和帐号连接的功能，所以也就成了一个非常好的社交平台，大家在上面展示自己的炫酷技巧，也不断地发现别人的与众不同，实在是非常之赞。
+</p>
+
+<p>
+还等什么，我已经用上了 :)
+</p>
+</div>
+</div>
