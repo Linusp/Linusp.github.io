@@ -12,9 +12,11 @@ description:
 最近在为公司一个项目的一个模块写API，在API基本完成后，我写了几个demo把各种情况测试了一下。通过简单测试后，一时兴起，用valgrind进行了一下内存检查，真是不看不知道，一看吓一跳。
 </p>
 
-<p>
-<a href="../../../assets/img/mem-leak.jgp">../../../assets/img/mem-leak.jgp</a>
+
+<div class="figure">
+<p><img src="../../../assets/img/mem-leak.jpg" alt="mem-leak.jpg" />
 </p>
+</div>
 
 <p>
 当时为了更快地看到结果，只拿了一个小的音频文件来进行处理，大概就几百个KB吧，然后内存泄漏的量就达到了3,481,396个字节！
