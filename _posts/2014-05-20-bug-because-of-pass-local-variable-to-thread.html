@@ -1,0 +1,220 @@
+---
+layout     : post
+title      : 将局部变量地址作为线程函数参数导致bug
+categories : 编程
+tags       :
+- pthread
+- c
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">问题</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+在测试自己写的一个使用了多线程的API时，我发现有时候会出现一些预期之外的结果。
+</p>
+
+<p>
+首先，这个API的实现中涉及多线程的部分大致是这样的：
+</p>
+<ol class="org-ol">
+<li>有一个全局初始化函数，循环创建多个线程，并将每个线程和一个线程号绑定(在pthread_create中作为第四个参数传入)
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">Init</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">thread_num</span>) {
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">ret</span> = 0;
+
+    <span style="color: #ca34e2;">pthread_t</span> *<span style="color: #fefc58;">thread_list</span> = (<span style="color: #ca34e2;">pthread_t</span> *)calloc(thread_num, <span style="color: #cf4a44;">sizeof</span>(pthread_t));
+
+    <span style="color: #ca34e2;">pthread_attr_t</span> <span style="color: #fefc58;">a</span>;
+    pthread_attr_init(&amp;a);
+    pthread_attr_setdetachstate(&amp;a, PTHREAD_CREATE_DETACHED);
+
+    <span style="color: #cf4a44;">for</span> (<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0; i &lt; thread_num; ++i) {
+        ret = pthread_create(thread_list + i, &amp;a, thread_func, (<span style="color: #ca34e2;">void</span> *)&amp;i);
+
+        <span style="color: #cf4a44;">if</span>(ret != 0) {
+            <span style="color: #cf4a44;">return</span> ret;
+        }
+    }
+
+    <span style="color: #cf4a44;">return</span> ret;
+}
+</pre>
+</div>
+</li>
+<li>不同的线程根据绑定的线程号不断查看一个全局变量数组中对应的表示任务状态的元素，当检测到状态为 <b>READY</b> 时就执行一些任务
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #cf4a44;">struct</span> <span style="color: #ca34e2;">Task</span>{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">status</span>;
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">other</span>
+};
+
+<span style="color: #ca34e2;">Task</span> <span style="color: #fefc58;">tasks</span>[MAX_TASK_NUM];
+
+<span style="color: #ca34e2;">void</span> *<span style="color: #ed8a0c;">thread_func</span>(<span style="color: #ca34e2;">void</span> *<span style="color: #fefc58;">thread_id</span>)
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = *((<span style="color: #ca34e2;">int</span> *)thread_id);
+
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">status</span> = 0;
+
+    <span style="color: #cf4a44;">do</span> {
+        status = tasks[i].status;
+        <span style="color: #cf4a44;">if</span> (status == READY) {
+
+            <span style="color: #e81122;">// </span><span style="color: #e81122;">do something</span>
+
+            tasks[i].status = DONE;
+        }
+        <span style="color: #cf4a44;">else</span> {
+            sleep(1);
+        }
+    }<span style="color: #cf4a44;">while</span> (status != QUIT);
+}
+</pre>
+</div>
+</li>
+<li>一个模块初始化函数，用来初始化处理模块，这个处理模块会做一些预处理，然后通过线程来进行最后的操作，这个初始化函数接受一个线程号作为参数
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #cf4a44;">struct</span> <span style="color: #ca34e2;">Env</span>{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">thread_id</span>;
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">other</span>
+};
+
+<span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">Prepare</span>(<span style="color: #ca34e2;">Env</span> *<span style="color: #fefc58;">env</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">thread_id</span>)
+{
+    env-&gt;thread_id = thread_id;
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">other</span>
+}
+</pre>
+</div>
+</li>
+<li>一个模块处理函数，在初始化一些环境、进行一些预处理后，将对应线程的状态置为 <b>READY</b> ，然后等待直到对应线程处理完毕
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">Run</span>(<span style="color: #ca34e2;">Env</span> *<span style="color: #fefc58;">env</span>)
+{
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">do preprocessing</span>
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = env-&gt;thread_id;
+    tasks[i].status = READY;
+
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">status</span>;
+    <span style="color: #cf4a44;">do</span> {
+        sleep(1);
+        status = tasks[i].status;
+    } <span style="color: #cf4a44;">while</span> (status != DONE);
+}
+</pre>
+</div>
+</li>
+</ol>
+
+
+<p>
+我遇到的问题就是，在将第 <b>i</b> 个线程对应的状态置为 <b>READY</b> 后，线程函数并没有进行相应的操作(偶尔)。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">加锁</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+一开始，我并没有对全局变量的读写进行加锁，因此怀疑是处理函数中对状态成员变量的修改没有成功。于是我将所有对全局变量数组中状态成员的读写操作都加了锁，但是问题仍然存在。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">取消编译器优化</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+考虑到对全局数组的状态成员的读、写操作有部分是在循环中进行的，因此怀疑gcc在编译器时对程序进行了优化，于是用 <b>volatile</b> 修饰了状态成员
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #cf4a44;">struct</span> <span style="color: #ca34e2;">Task</span>{
+    <span style="color: #cf4a44;">volatile</span> <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">status</span>;
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">other</span>
+};
+</pre>
+</div>
+
+<p>
+然而这个方法仍然无效。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">局部变量，循环变量</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+和项目组组长讨论后，他也表示暂时没发现这个问题的根源，不过他建议我将 <b>线程函数</b> 访问的 <b>全局数组元素的地址</b> 与 <b>处理函数</b> 中访问的 <b>全局数组元素的地址</b> 打印出来对比一下。我听从了组长的建议，这样做了，然后果然发现了问题。
+</p>
+
+<p>
+在出错时，这两个地址是不一样的。随后，我将 <b>thread_func</b> 函数与 <b>Run</b> 函数中的变量 <b>i</b> 的值打印出来，发现在出错的情况下，这两个值不相等。静下心来思考了一会后，我发现了问题的根源所在，即全局初始化函数 <b>Init</b> 中创建线程这一段:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #cf4a44;">for</span> (<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0; i &lt; thread_num; ++i) {
+    ret = pthread_create(thread_list + i, &amp;a, thread_func, (<span style="color: #ca34e2;">void</span> *)&amp;i);
+
+    <span style="color: #cf4a44;">if</span>(ret != 0) {
+        <span style="color: #cf4a44;">return</span> ret;
+    }
+}
+</pre>
+</div>
+<p>
+<b>pthread_create</b> 函数接受的第四个参数是作为线程函数 <b>thread_func</b> 的参数的，而在这里，我将既是 <b>局部变量</b> 也是 <b>循环变量</b> 的 <b>i</b> 的 <b>地址值</b> 作为 <b>pthread_create</b> 函数的第四个参数。
+</p>
+
+<p>
+在测试时，为了方便，在执行 <b>Init</b> 函数时，我只让它创建了一个线程，即对函数：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">Init</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">thread_num</span>);
+</pre>
+</div>
+<p>
+传入的 <b>thread_num</b> 参数的值为 <b>1</b> 。
+</p>
+
+<p>
+首先，作为循环变量， <b>Init</b> 中的变量 <b>i</b> 在循环结束时值为 <b>1</b> ，而在 <b>Run</b> 函数中，表示线程号的变量 <b>i</b> 的值则为 <b>0</b> 。
+</p>
+
+<p>
+其次，主线程与子线程之间运行的先后次序是不确定的。
+</p>
+
+<p>
+最后， <b>Init</b> 函数中的变量 <b>i</b> 是局部变量，在 <b>Init</b> 函数执行完后，其对应地址的值是不能保证的。
+</p>
+
+<p>
+总之这样的做法是大错特错的。在我将上述循环创建线程的代码段修改为如下内容后，本文所述的问题得到了彻底的解决：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #cf4a44;">for</span> (<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0; i &lt; thread_num; ++i) {
+    tasks[i].thread_id = i;
+    ret = pthread_create(thread_list + i, &amp;a, thread_func, (<span style="color: #ca34e2;">void</span> *)&amp;(tasks[i].thread_id));
+
+    <span style="color: #cf4a44;">if</span>(ret != 0) {
+        <span style="color: #cf4a44;">return</span> ret;
+    }
+}
+</pre>
+</div>
+<p>
+注意，这里的 <b>thread_id</b> 是在 <b>Task</b> 结构中新添加的 <b>int</b> 类型成员
+</p>
+</div>
+</div>
