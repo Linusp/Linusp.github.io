@@ -1,0 +1,242 @@
+---
+layout     : post
+title      : 参数类型不一致导致extern "C"不起作用
+categories : 编程
+tags       : "C/C++", nm
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">extern "C": 指示编译器以C形式进行链接</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+某些时候，我们需要将一些C++的库封装成C风格的接口供外部使用，所谓“C风格”的接口，是指该接口的参数、返回值中不包含类、作用域等C++的元素，但其实现中是可以有的。比如说，我们有一个类 <b>Wav</b> ，用来处理wave文件
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _WAV_H_
+<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_WAV_H_</span>
+
+<span style="color: #cf4a44;">class</span> <span style="color: #ca34e2;">Wav</span>
+{
+<span style="color: #cf4a44;">public</span>:
+    <span style="color: #ed8a0c;">Wav</span>();
+    <span style="color: #ed8a0c;">Wav</span>(<span style="color: #ca34e2;">string</span> <span style="color: #fefc58;">wav_file</span>);
+    <span style="color: #cf4a44;">virtual</span> ~<span style="color: #ed8a0c;">Wav</span>();
+    <span style="color: #ca34e2;">bool</span> <span style="color: #ed8a0c;">load_wav</span>(<span style="color: #ca34e2;">string</span> <span style="color: #fefc58;">wav_file</span>);
+    <span style="color: #cf4a44;">private</span>:
+    <span style="color: #ca34e2;">short</span> *<span style="color: #fefc58;">data</span>;
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">sampel_rate</span>;
+};
+
+<span style="color: #31d3c4;">#endif</span> <span style="color: #e81122;">/* </span><span style="color: #e81122;">_WAV_H_ */</span>
+</pre>
+</div>
+
+<p>
+然后我们需要利用这个类实现几个音频处理接口，提供给 <b>C程序</b> 使用，由于C语言中是没有“类”这个特性的，我们不能直接用C语言去实现这些接口，这个时候就要用到extern "C"了.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _WAVPROC_H_
+<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_WAVPROC_H_</span>
+
+<span style="color: #31d3c4;">#ifdef</span> __cplusplus
+<span style="color: #cf4a44;">extern</span> <span style="color: #25ef29;">"C"</span>{
+<span style="color: #31d3c4;">#endif</span>
+    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">read_wav</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">wav_file</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">denoise</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">cutscene</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">feature_extract</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">feature</span>);
+<span style="color: #31d3c4;">#ifdef</span> __cplusplus
+}
+<span style="color: #31d3c4;">#endif</span>
+
+<span style="color: #31d3c4;">#endif</span> <span style="color: #e81122;">/* </span><span style="color: #e81122;">_WAVPROC_H_ </span><span style="color: #e81122;">*/</span>
+</pre>
+</div>
+
+<p>
+然后在"wavproc.cpp"中实现这些接口，此时在"wavproc.cpp"中是可以使用上面定义的类以及其他C++语言的特性的。实现以后以静态库/动态库的形式提供接口，对于使用接口的C程序来说，只需要
+</p>
+<ol class="org-ol">
+<li>wavproc.h
+</li>
+<li>对应的静态库/动态库，如: libwavproc.a
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">nm: 查看目标文件中的符号是C形式还是C++形式</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+nm是一个查看目标文件中符号列表的工具，其具体使用这里不会详谈，只讲一下用nm来判断使用extern "C"是否起作用。举个栗子，对下面这个函数：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">"fs.h"</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fs</span> = 0;
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">do something</span>
+    <span style="color: #cf4a44;">return</span> fs;
+}
+</pre>
+</div>
+<p>
+以上内容在"fs.cpp"中，其对应的头文件为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _FS_H_
+<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_FS_H_</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+
+<span style="color: #31d3c4;">#endif</span>
+</pre>
+</div>
+<p>
+用g++将"fs.cpp"编译成目标文件后，用nm查看其中的符号信息：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">nm ~/test/cppcode/fs.o
+</pre>
+</div>
+
+<p>
+得到的输出是：
+</p>
+<pre class="example">
+0000000000000000 T _Z9file_sizePKc
+</pre>
+
+<p>
+我们在"fs.c"中实现同样一个函数
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">"fs.h"</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fs</span> = 0;
+    <span style="color: #e81122;">/* </span><span style="color: #e81122;">do something </span><span style="color: #e81122;">*/</span>
+    <span style="color: #cf4a44;">return</span> fs;
+}
+</pre>
+</div>
+<p>
+其对应的头文件与"fs.cpp"的头文件一样。然后用gcc将"fs.c"编译为目标文件后，同样用nm查看符号信息:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">nm ~/test/ccode/fs.o
+</pre>
+</div>
+
+<p>
+得到结果为：
+</p>
+<pre class="example">
+0000000000000000 T file_size
+</pre>
+
+<p>
+可以看到，同样一个函数，在C++程序和C程序中，被编译后产生的符号类型是不一样的。C++为了支持重载，在编译的时候会对函数符号添加前缀和后缀，后缀是参数列表的缩写，用来区分重载；而C编译器则不会对函数符号添加其他信息。
+</p>
+
+<p>
+当我们需要将某些用C++实现的接口提供给C程序使用时，要在其头文件(接口定义)中用extern "C"来告诉编译器，按C的形式导出符号表——这个是之前提到过的，现在我们对"fs.cpp"的头文件"fs.h"进行这样的处理:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _FS_H_
+<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_FS_H_</span>
+
+<span style="color: #31d3c4;">#ifdef</span> __cpulsplus
+<span style="color: #cf4a44;">extern</span> <span style="color: #25ef29;">"C"</span>{
+<span style="color: #31d3c4;">#endif</span>
+
+    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+
+<span style="color: #31d3c4;">#ifdef</span> __cplusplus
+}
+<span style="color: #31d3c4;">#endif</span>
+
+<span style="color: #31d3c4;">#endif</span>
+</pre>
+</div>
+<p>
+然后用g++将"fs.cpp"编译为目标文件，并使用nm查看符号信息：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">nm ~/test/cppcode/fs.o
+</pre>
+</div>
+
+<p>
+得到的结果为：
+</p>
+<pre class="example">
+0000000000000000 T file_size
+</pre>
+<p>
+可以看到，这次得到的符号类型是C形式的符号了，是可以被C程序所使用的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">"undefined reference": 诡异的错误</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+好了，终于到了标题提到的内容了。
+</p>
+
+<p>
+事情是这样的，我负责的一个项目A是C++实现的，然后需要将其中的一些功能以接口的形式提供给另外一个项目B使用——项目B是C实现的。那么，理所当然的，我为项目A编写API时，要用extern "C"去处理头文件。在实现好接口后，我以静态库的方式将接口提供给了项目B，然而在编译项目B时，总是报错：
+</p>
+
+<pre class="example">
+undeined reference: xxxx
+</pre>
+
+<p>
+意即有一个函数是未定义的引用，而该函数是项目A的API中提供的接口函数中的一个。我折腾了近一天时间，始终无法找到这个问题的原因所在——这个时候我还不知道使用nm来进行检查的方法。无奈之下向老大请教，老大遂用nm查了一下提供的静态库，发现导出的符号还是C++形式的，但诡异的是，同一个头文件中提供的若干个函数，只有这一个的符号还是C++形式的，而其他的都被导出成C形式的符号了。
+</p>
+
+<p>
+老大也很迷惑，不过他说：先别怀疑编译器，应该还是有什么细节上处理不当。
+</p>
+
+<p>
+果然，后来经过几番检查，发现是由于头文件中函数的参数类型和实现中函数的参数类型不一致导致了这个问题，在头文件中，该函数为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">InitDiarizationSpace</span>(<span style="color: #ca34e2;">Dia</span> *<span style="color: #fefc58;">env</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+</pre>
+</div>
+<p>
+而在实现中，该函数为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">InitDiarizationSpace</span>(<span style="color: #ca34e2;">Dia</span> *<span style="color: #fefc58;">env</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>) {
+    <span style="color: #e81122;">// </span><span style="color: #e81122;">...</span>
+}
+</pre>
+</div>
+
+<p>
+&#x2026;&#x2026;
+</p>
+
+<p>
+对此我表示很羞愧。
+</p>
+</div>
+</div>
