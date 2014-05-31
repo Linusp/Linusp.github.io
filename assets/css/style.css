@@ -26,9 +26,9 @@ body {
 }
 
 /* add by Linusp */
-.span10 p {text-indent: 2em;}
-.span10 li {margin-left: 2em;}
-.span10 li p{text-indent: 0;}
+/* .span10 p {text-indent: 2em;} */
+/* .span10 li {margin-left: 2em;} */
+/* .span10 li p{text-indent: 0;} */
 
 /* Page header tweaks */
 .page-header {
