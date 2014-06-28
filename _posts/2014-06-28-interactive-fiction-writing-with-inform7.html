@@ -1,0 +1,240 @@
+---
+layout     : post
+title      : 使用Inform创作交互式小说
+categories : IF
+tags       :
+- interactive fiction
+- Inform
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">什么是交互式小说(Interactive Fiction, IF)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+维基百科上对 <b>IF</b> 的简介是：
+</p>
+<blockquote>
+<p>
+Interactive fiction, often abbreviated IF, is software simulating environments in which players use text commands to control characters and influence the environment. Works in this form can be understood as literary narratives and as video games.In common usage, the term refers to text adventures, a type of adventure game where the entire interface can be "text-only"
+</p>
+</blockquote>
+
+<p>
+我就不翻译了。对于 <b>IF</b> ，也有人称之为“交互式小说游戏”，日本的一些GAL Game，也被认为是这一类别的游戏。还有上世纪，在《传奇》等图形化网络游戏在国内兴起前的MUD也是这一类的作品——当然，MUD并非起源于中国，MUD最初是1978年出现在英国的一个文本界面联机游戏英文名称Multi-User Dungeon缩写，其后出现的类似系统沿用相同的缩写名，但赋予不同的全名，如"Multi-User Dialogue"。
+</p>
+
+<p>
+对于现在的大部分游戏玩家而言，MUD可能是从未听过的名词，当年大受欢迎的《北大侠客行》，大概也只有经历过那个年代的人，以及我这样对IF感兴趣的人有所了解了。
+</p>
+
+<p>
+对于GAL Game，我也玩过一点，比如《沙耶之歌》:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/saya.jpg" alt="saya.jpg" />
+</p>
+</div>
+
+<p>
+(话说沙耶真的算GAL么……)
+</p>
+
+<p>
+当时受我班长影响，玩过几款GAL，不过就沙耶印象深刻一点……
+</p>
+
+<p>
+<b>IF</b> 的历史我就不多说了，毕竟我也不太清楚。
+</p>
+
+<p>
+除了MUD和GAL，现在的Unix/Linux系统上也还有一些 <b>IF</b> 存在，比如 <b>adventure</b> ，这款游戏在任何一个Linux发行版上应该都可以获取到，这个游戏在《Hackers: Heroes of the Computer Revolution》一书中也被提到。
+</p>
+
+<p>
+在 <b>IF</b> 中，通常可以用 <b>go</b> 指令来移动，用 <b>take</b> 或 <b>get</b> 来获取物品，用 <b>look</b> 来查看周围环境。 <b>IF</b> 的魅力在于，世界的面貌除了靠作者的描写，还需要玩家用自己的记忆和联想使其丰富，它玩起来更不方便，但更有代入感。以下是我玩 <b>adventure</b> 时的的一个记录：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/adventure.gif" alt="adventure.gif" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Inform</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="http://inform7.com/">Inform</a> 又是什么呢？
+</p>
+<blockquote>
+<p>
+Inform is a design system for interactive fiction based on natural language. It is a radical reinvention of the way interactive fiction is designed, guided by contemporary work in semantics and by the practical experience of some of the world's best-known writers of IF.
+</p>
+</blockquote>
+<p>
+没错，Inform是一个用于创作 <b>IF</b> 的系统，它的一个优点是可以自然语言、在一定的规则约束下，进行 <b>IF</b> 的创作。今天我初步体验了一下，感觉很不错，可惜只支持英文，等以后有空去研究一下它的实现吧。
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">下载 &amp; 安装</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+以Linux下的操作为例，就我个人体验而言，其安装比较简单，没有什么复杂的依赖，所以其他系统上的安装应该也差不多。
+</p>
+
+<p>
+首先到Inform的<a href="http://inform7.com/">官网</a> 上下载，选择对应发行版的软件包安装即可。要注意的是，I7_6L02_Linux_all.tar.gz 这个软件包是命令行下的，如果需要图形界面，应该安装其后的以'gnome'开头的软件包。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">项目创建</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+在菜单中点击后，会出现以下界面询问是创建新的项目还是打开已有的项目：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-startup.png" alt="inform-startup.png" />
+</p>
+</div>
+
+<p>
+选 'Start a new project' 开始一个新的项目，然后会出现以下提示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-project-type.png" alt="inform-project-type.png" />
+</p>
+</div>
+
+<p>
+选择 'new story'，然后选择项目目录，以及设定故事名称和作者名:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-project-set.png" alt="inform-project-set.png" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-project-set2.png" alt="inform-project-set2.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">开始创作</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+完成上述操作后，项目已经建立，接下来就是进行正式的创作了，以下是主界面的样式：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-project-main.png" alt="inform-project-main.png" />
+</p>
+</div>
+
+<p>
+左侧是创作区域，所谓的“创作”，就是在这里进行写作了；右侧是文档区，可以在里面查阅 <b>IF</b> 创作的一些规则。
+</p>
+
+<p>
+首先呢，故事要有一个发生的地方，姑且是一个房间好了，开始的时候不妨格局小一点。然后在房间里放一个箱子，里面放一把大宝剑吧！于是，我写下这个：
+</p>
+
+<pre class="example">
+Magi is a room.
+
+The box is in the Magi. The box is a container. The box contains a sword.
+</pre>
+
+<p>
+然后，有了地点，还要有主角是吧：
+</p>
+
+<pre class="example">
+player is in the Magi.
+</pre>
+
+<p>
+给主角戴个高帽子：
+</p>
+<pre class="example">
+player wears a top hat.
+</pre>
+
+<p>
+有了场景和主角，那么肯定要有情节了，先来个简单的吧，设想一下，既然房间里有大宝剑，在设定上，这肯定是送给主角的装备，所以主角会去拿嘛，既然主角会去拿，那么设定一下，在主角获取大宝剑的时候，发生一些事情：
+</p>
+
+<pre class="example">
+Before taking the sword:
+     if the player is wearing the hat:
+    	 now the hat is in the box;
+    	 say "As you stoop down, your hat falls into the crate."
+
+After taking the sword:
+ say "The sword was ever owned by a hero in history."
+</pre>
+
+<p>
+好了，基本完成了。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4">编译 &amp; 运行</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+创作完成后，点击界面上的运行按钮进行编译:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-compile.gif" alt="inform-compile.gif" />
+</p>
+</div>
+
+<p>
+如果没有报错，那就可以运行了：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/inform-run.gif" alt="inform-run.gif" />
+</p>
+</div>
+
+<p>
+看见没？Wow!
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">后记</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+我对 <b>IF</b> 的兴趣，是从阅读了《Hackers: Heroes of the Computer Revolution》后产生的。虽然在此之前，对MUD以及GAL都有一定了解，但实在没太大兴趣。实际上，在阅读了《Hackers》后，也就是稍微玩了一下 adventure ，并没有产生"啊，我也想做一个这样的游戏"后的想法，直到后来自己构想的小说世界逐渐完善、丰富，渐渐的又有些奇怪的想法，于是开始想能不能将这些奇奇怪怪的想法通过 <b>IF</b> 展现出来。
+</p>
+
+<p>
+Inform是个很棒的工具，不过对我来说，它并不能实现我需要的全部功能，有些功能，终究要我自己去实现。不过没关系，通过Inform，我可以先熟悉 <b>IF</b> 的创作方式。
+</p>
+
+<p>
+另外，关于Inform的使用，其实有很多的内容，幸运的是，它也有丰富的文档。我会继续学习，并且将自己的心得分享出来。
+</p>
+</div>
+</div>
