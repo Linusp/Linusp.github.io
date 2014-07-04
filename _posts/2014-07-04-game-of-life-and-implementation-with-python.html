@@ -1,0 +1,247 @@
+---
+layout     : post
+title      : 生命游戏(Game of Life)及其Python实现
+categories : 编程
+tags       :
+- 'Game of Life'
+- Python
+- Tkinter
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">生命游戏(The Game of Life)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://en.wikipedia.org/wiki/Conway%2527s_Game_of_Life">生命游戏</a> 是数学家<a href="http://en.wikipedia.org/wiki/John_Horton_Conway">John Horton Conway</a> 发明的一个"零玩家游戏"，因此也被称为"Conway's Game of Life"。实际上它并非是一个游戏，其本质为一个元胞自动机(cellular automaton)。生命游戏由一个无限二维平面以及被定义在这个平面上的几条简单规则组成，一般来说，这个无限二维平面是由无限个相同大小的方形网格组成的，定义于其上的规则有：
+</p>
+
+<ol class="org-ol">
+<li>每个网格称为cell
+</li>
+<li>每个cell有两种状态，alive和dead，分别用两种不同的颜色来表示
+</li>
+<li>每个cell的状态变化受其周围8个cell影响
+</li>
+<li>如果一个活的(alive)cell，其周围的活的cell数量少于2——即为0或1，则这个cell将死去(dead)
+</li>
+<li>如果一个活的cell，其周围的活的cell数量超过3——即为4至8，则这个cell将死去
+</li>
+<li>如果一个活的cell，其周围的活的cell数量为2或3，则它继续存活
+</li>
+<li>如果一个死的cell，其周围的活的cell数量为3，则它成为活的cell，否则仍然为死的cell
+</li>
+</ol>
+
+
+<p>
+前面三条规则定义了"世界"的表示，后面四条规则定义了"世界"的变化规律。在这几条简单的规则下，生命游戏产生了难以想象的复杂、有规律的图像。
+</p>
+
+<p>
+首先来看看一些简单的、经典的模式(pattern):
+</p>
+
+<ol class="org-ol">
+<li>滑翔机(Glider)
+
+<img src="http://upload.wikimedia.org/wikipedia/commons/7/7e/GameOfLife_Glider_Animation.gif" />
+
+<p>
+这个模式里的图案在不断变化时，形似一个在不断运行的滑翔机，因而得名。
+</p>
+</li>
+
+<li>滑翔机枪(Gosper Glider Gun)
+
+<img src="http://upload.wikimedia.org/wikipedia/commons/e/e5/Gospers_glider_gun.gif" />
+
+<p>
+滑翔机枪可以源源不断地制造出滑翔机。最初John Horton Conway悬赏50美金希望有人创造出滑翔机枪，MIT的黑客<a href="http://en.wikipedia.org/wiki/Bill_Gosper">Bill Gosper</a>尝试了上百种可能，最后率先发现了这个模式并得到了奖金，这个模式也因此冠以Gosper的名字。
+</p>
+</li>
+</ol>
+
+
+<p>
+然后来看一些复杂的模式：
+</p>
+
+<ol class="org-ol">
+<li>旅行者(Weekender)
+
+<img src="http://www.conwaylife.com/w/images/f/f5/Weekender_small.gif" />
+</li>
+
+<li>蜘蛛(Spider)
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gol-spider.gif" alt="gol-spider.gif" />
+</p>
+</div>
+</li>
+</ol>
+
+
+<p>
+生命游戏是Conway对<a href="http://en.wikipedia.org/wiki/John_von_Neumann">John von Neumann</a>提出的"可自我复制的机器"产生兴趣后创作出来的，并于1970年10月在《科学美国人》(Scientific American)上发表。从理论上来说，生命游戏与通用图灵机(<a href="http://en.wikipedia.org/wiki/Universal_Turing_machine">Universal Turing Machine</a>)是等价的。由于生命游戏的"可进化性"，在其发表后，就吸引了大批的人，时至今日，也仍然有不少人热衷于收集各种不同的模式，Unix/Linux系统上也还有生命游戏的实现，编辑器Emacs中也内置了一个生命游戏实现。
+</p>
+
+<p>
+此外，生命游戏中还展现出了"涌现(<a href="http://en.wikipedia.org/wiki/Emergence">Emergence</a>)"和"自组织(<a href="http://en.wikipedia.org/wiki/Self-organization">Self-organization</a>)"现象，甚至还催生出了人工生命(<a href="http://en.wikipedia.org/wiki/Artificial_life">Artificial Life</a>)这一领域。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Python实现</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+就生命游戏的规则而言，实现它是不需要多少工作量的，麻烦的是怎么通过图形来表现出来。最后我用Tkinter实现了一个简单的生命游戏，可以用鼠标点击的方式来设定初始模式，也可以通过下拉列表选择内置的模式，同时提供将自定义模式保存的功能。
+</p>
+
+<p>
+为了保持代码逻辑上的，我将状态更新的逻辑封装到了一个类里：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #cf4a44;">class</span> <span style="color: #ca34e2;">GOL</span>():
+    <span style="color: #25ef29;">"""Status manager of GOL(Game of Life).</span>
+
+<span style="color: #25ef29;">    Each world in game of life is a set of cells, and status of</span>
+<span style="color: #25ef29;">    every cell should be alive or dead. Status changes from gen</span>
+<span style="color: #25ef29;">    -eration to generation.</span>
+<span style="color: #25ef29;">    """</span>
+    <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">__init__</span>(<span style="color: #cf4a44;">self</span>, row = 0, col = 0):
+        <span style="color: #25ef29;">"""Init size and status of world."""</span>
+        <span style="color: #cf4a44;">self</span>.row = row
+        <span style="color: #cf4a44;">self</span>.col = col
+        <span style="color: #cf4a44;">self</span>.now = {}
+        <span style="color: #cf4a44;">self</span>.next = {}
+        <span style="color: #cf4a44;">self</span>.init_status([])
+
+    <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">init_status</span>(<span style="color: #cf4a44;">self</span>, init_cells):
+        <span style="color: #25ef29;">"""Set status of world.</span>
+
+<span style="color: #25ef29;">        if the begining status given is not empty, then use them</span>
+<span style="color: #25ef29;">        to initialize the world.</span>
+
+<span style="color: #25ef29;">        Args:</span>
+<span style="color: #25ef29;">          init_cells: begining status given. It's a tow-dimensional</span>
+<span style="color: #25ef29;">                      array. Becase its size maybe smaller than the</span>
+<span style="color: #25ef29;">                      world, we should be map each coordinate to the</span>
+<span style="color: #25ef29;">                      center area of world.</span>
+<span style="color: #25ef29;">        """</span>
+        <span style="color: #e81122;"># code is hiden</span>
+
+    <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">update</span>(<span style="color: #cf4a44;">self</span>):
+        <span style="color: #25ef29;">"""Update status of world by status before.</span>
+
+<span style="color: #25ef29;">        For each cell in world, do these things:</span>
+<span style="color: #25ef29;">        1. look and find how many alive neighbors around,each cell</span>
+<span style="color: #25ef29;">        have eight neighbors</span>
+<span style="color: #25ef29;">        2. update status of cell according the number of its alive</span>
+<span style="color: #25ef29;">           neighbors. The following are the rules</span>
+<span style="color: #25ef29;">           + if cell is alive, and number of neighbors is too small</span>
+<span style="color: #25ef29;">             (less than 2) or too too much(more than 3), this cell</span>
+<span style="color: #25ef29;">             will die, or it will be keep alive</span>
+<span style="color: #25ef29;">          + if cell is dead, and number of neighbors is three, then</span>
+<span style="color: #25ef29;">            cell will be alive</span>
+<span style="color: #25ef29;">        """</span>
+        <span style="color: #e81122;"># code is hiden</span>
+
+    <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">neighbors</span>(<span style="color: #cf4a44;">self</span>, row, col):
+        <span style="color: #25ef29;">"""Compute number of alive neighbors around a cell."""</span>
+        <span style="color: #e81122;"># code is hiden</span>
+</pre>
+</div>
+<p>
+在这个类里，通过两个分别代表当前状态与将来状态的dict来进行状态的更新。在开始实现时犯了一个错误，就是在方法update()中，计算完self.next后，进行了一个错误的操作：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.next
+</pre>
+</div>
+<p>
+结果导致这两个类成员变量称为了同一个对象的引用，修改其中一者，另一者也发生改变，最后导致结果不正确。最后update()方法如下所示：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">update</span>(<span style="color: #cf4a44;">self</span>):
+  <span style="color: #25ef29;">"""Update status of world by status before.</span>
+
+<span style="color: #25ef29;">  For each cell in world, do these things:</span>
+<span style="color: #25ef29;">  1. look and find how many alive neighbors around,each cell</span>
+<span style="color: #25ef29;">     have eight neighbors</span>
+<span style="color: #25ef29;">  2. update status of cell according the number of its alive</span>
+<span style="color: #25ef29;">     neighbors. The following are the rules</span>
+<span style="color: #25ef29;">     + if cell is alive, and number of neighbors is too small</span>
+<span style="color: #25ef29;">       (less than 2) or too too much(more than 3), this cell</span>
+<span style="color: #25ef29;">       will die, or it will be keep alive</span>
+<span style="color: #25ef29;">     + if cell is dead, and number of neighbors is three, then</span>
+<span style="color: #25ef29;">       cell will be alive</span>
+<span style="color: #25ef29;">  """</span>
+  <span style="color: #cf4a44;">self</span>.next = <span style="color: #cf4a44;">self</span>.now.copy()
+  <span style="color: #cf4a44;">for</span> crow <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(<span style="color: #cf4a44;">self</span>.row):
+      <span style="color: #cf4a44;">for</span> ccol <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(<span style="color: #cf4a44;">self</span>.col):
+          around = <span style="color: #cf4a44;">self</span>.neighbors(crow, ccol)
+          <span style="color: #cf4a44;">if</span> (around &lt; 2 <span style="color: #cf4a44;">or</span> around &gt; 3):
+              <span style="color: #cf4a44;">self</span>.next[crow, ccol] = <span style="color: #cf4a44;">False</span>
+
+          <span style="color: #cf4a44;">elif</span> ((<span style="color: #cf4a44;">not</span> <span style="color: #cf4a44;">self</span>.now[crow, ccol]) <span style="color: #cf4a44;">and</span>
+                around == 3):
+              <span style="color: #cf4a44;">self</span>.next[crow, ccol] = <span style="color: #cf4a44;">True</span>
+
+  <span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.next.copy()
+</pre>
+</div>
+
+<p>
+图形前端的实现大致如下：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #cf4a44;">class</span> <span style="color: #ca34e2;">ShowGOL</span>(tk.Tk):
+    <span style="color: #25ef29;">"""Diasplay the Game of Life</span>
+
+<span style="color: #25ef29;">    Use Tkinter to draw the world of cells and the changes in</span>
+<span style="color: #25ef29;">    the world.</span>
+<span style="color: #25ef29;">    """</span>
+    <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">__init__</span>(<span style="color: #cf4a44;">self</span>, *args, **kwargs):
+        <span style="color: #25ef29;">"""Init resource and world"""</span>
+        <span style="color: #e81122;"># init resource</span>
+        tk.Tk.__init__(<span style="color: #cf4a44;">self</span>, *args, **kwargs)
+        <span style="color: #cf4a44;">self</span>.setup_members()    <span style="color: #e81122;"># initialize class members</span>
+        <span style="color: #cf4a44;">self</span>.setup_window()     <span style="color: #e81122;"># root window</span>
+        <span style="color: #cf4a44;">self</span>.setup_toolbar()    <span style="color: #e81122;"># tool bar</span>
+        <span style="color: #cf4a44;">self</span>.setup_canvas()     <span style="color: #e81122;"># canvas to draw world</span>
+
+        <span style="color: #e81122;"># init world</span>
+        <span style="color: #cf4a44;">self</span>.create_world()
+
+        <span style="color: #e81122;"># make world alive</span>
+        <span style="color: #cf4a44;">self</span>.after(5, <span style="color: #cf4a44;">lambda</span>: <span style="color: #cf4a44;">self</span>.life(5))
+</pre>
+</div>
+<p>
+另外一些类方法就不列出来了，无非是绘图啊、事件响应啊什么的。代码我放到了Github上，如果需要，可以到<a href="https://github.com/linusp/pygol/">这里</a> 查看，或在本地执行：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">git clone git@github.com:Linusp/pygol
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">后记</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+老实说，我也算是生命游戏的忠实粉丝了——嗯，我不太喜欢"粉丝"这个词，不过姑且就这么用吧。以前也用ncurses库实现过一个简单的终端版本，也实现过兰顿蚂蚁(<a href="http://en.wikipedia.org/wiki/Langton's_ant">Langton's Ant</a>)这个同为元胞自动机的例子。当然，要说我的实现，都是很简陋的，比如说生命游戏，在网上有非常多的相关实现，Linux下有一个名为gtklife的软件，内置了很多的模式，其中不乏一些复杂、绚丽的模式，这款软件也是被我列为Linux上必装的软件之一。
+</p>
+
+<p>
+现在虽然实现了图形化的生命游戏，但我不想止步于此。目前用的是Python的Tkinter库，这个库上手简单，但功能有限。所以我会继续完善这个生命游戏实现的！
+</p>
+</div>
+</div>
