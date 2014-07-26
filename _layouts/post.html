@@ -30,18 +30,18 @@ layout: default
     <div class="ds-thread"></div>
     <script type="text/javascript">
       var duoshuoQuery = {short_name:"linuspb"};
-	(function() {
-		var ds = document.createElement('script');
-		ds.type = 'text/javascript';ds.async = true;
-		ds.src = 'http://static.duoshuo.com/embed.js';
-		ds.charset = 'UTF-8';
-		(document.getElementsByTagName('head')[0] 
-		|| document.getElementsByTagName('body')[0]).appendChild(ds);
-	})();
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = 'http://static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
     </script>
     <!-- Duoshuo Comment END -->
   </div>
-  
+
   <div class="span4">
     <h4>发布日期</h4>
     <div class="date"><span>{{ page.date | date: "%Y年 %m月 %d日" }}</span></div>
@@ -52,7 +52,7 @@ layout: default
     {% assign categories_list = page.categories %}
     {% include JB/categories_list %}
     </ul>
-  {% endunless %}  
+  {% endunless %}
 
   {% unless page.tags == empty %}
     <h4>标签</h4>
@@ -60,6 +60,6 @@ layout: default
     {% assign tags_list = page.tags %}
     {% include JB/tags_list %}
     </ul>
-  {% endunless %}  
+  {% endunless %}
   </div>
 </div>

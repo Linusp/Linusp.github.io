@@ -1,0 +1,92 @@
+---
+layout     : post
+title      : 在Gnome-Shell中关闭Hot-Corner
+categories : Linux
+tags       :
+- Linux
+- Gnome Shell
+- Hot Corner
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">烦人的Hot Corner</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+在Gnome Shell这个桌面环境中，存在一个叫做"Hot Corner"的特性。默认的位置是屏幕左上角，当鼠标移到那里的时候就会弹出一个界面，如下所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/hot-corner.png" alt="hot-corner.png" />
+</p>
+</div>
+
+<p>
+而如图所示，我的面板是放在顶端的，左上角的位置正好是菜单的位置，所以经常发生这种事情：我将鼠标移动到左上角想打开菜单，结果却弹出来这么一个界面。
+</p>
+
+<p>
+因为位置非常接近，每次想打开菜单，我都得小心翼翼，但经常还是会点到Hot Corner上。非常烦躁。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/computer-crack.jpg" alt="computer-crack.jpg" />
+</p>
+</div>
+
+<p>
+所以下定决心要干掉它。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">系统设置：失败</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+系统设置里压根就没设置这个东西的选项！Linux Mint的桌面环境 <a href="http://cinnamon.linuxmint.com/">Cinnamon</a> 就是从Gnome Shell中衍生出来的，然后在其设置中就提供了对Hot Corner的设置。在Google上搜索"hot corner gnome shell"，出来的结果全都是抱怨这个功能不方便和寻找关闭Hot Corner的帖子。真不知道Gnome Shell的开发团队在想什么……
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Gnome Shell 扩展：失败</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+到<a href="https://extensions.gnome.org/">Gnome Shell扩展网站</a> 上下载了<a href="https://extensions.gnome.org/extension/118/no-topleft-hot-corner/">No Topleft Hot Corner</a> 这个扩展，然后在gnome-tweak-tool中启用了它。
+</p>
+
+<p>
+然后还是没效果。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/holy-shit.jpg" alt="holy-shit.jpg" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">改代码吧混蛋</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Hot Corner的实现是在 /usr/share/gnome-shell/js/ui/layout.js 中实现的，要关闭Hot Corner，只需要对下面的部分代码做出修改：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-javascript"><span style="color: #bebebe;">this</span>._corner = <span style="color: #cf4a44;">new</span> <span style="color: #ca34e2;">Clutter.Rectangle</span>({ name: <span style="color: #25ef29;">'hot-corner'</span>,
+                                       width: 1,
+                                       height: 1,
+                                       opacity: 0,
+                                       reactive: <span style="color: #bebebe;">true</span> });
+</pre>
+</div>
+<p>
+将最后的 "reactive" 的值修改为 "false" ，就OK了。
+</p>
+
+<p>
+搞定！没了烦人的东西真是开心啊……
+</p>
+</div>
+</div>
