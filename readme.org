@@ -1,0 +1,87 @@
+* Linusp's Blog
+
+** 简介
+
+   这是我在Github上搭建的静态博客的所有源代码。该博客用来记录个人生活点滴以及一些学习、工作的心得。
+
+   至于本人，目前是一个C++程序员，从事语音识别工作。热衷人工智能技术，并希望将来能在这个领域有所作为。闲暇时间，偶尔也写点小说，如果有兴趣，可以前往这里：
+
+   [[http://linusp.site44.com][Linusp's Novels]]
+
+   此外，我在这里：
+
+   [[http://linusp.gitcafe.com][Linup's Notes]]
+
+   记录了我对各个工具(Emacs、Octave、Latex)的使用笔记，编程语言(C/C++、Lisp、Python)的笔记，以及学习计算机科学(包括人工智能)时的笔记。
+
+** 写作流程
+
+   本人的这个博客，使用的是Jekyll，不过这里的"使用Jekyll"仅仅是指Jekyll的结构和模板，实际上我在本地对博客的写作和管理是使用Emacs + git。目前我的写作+发布流程是这样的：
+   1. 打开Emacs
+   2. C-c p 调用自定义函数，询问标题，这里的标题是生成文件用的，并不是文章的真正标题。该函数会用当前日期与这个输入连接起来作为文件名。例如，今天是2014年9月10日，我给的输入是：
+      #+BEGIN_EXAMPLE
+      first-blog-with-org-mode
+      #+END_EXAMPLE
+      将会在我设定的目录下生成 2014-09-10-first-blog-with-org-mode.org 这个文件，然后在Emacs中打开它。
+   3. 撰写文章
+   4. C-x p 调用自定义函数将写好的org-mode导出成html文件，放置到jekyll目录的_posts目录下
+   5. 打开终端，切换到jekyll目录下
+   6. 执行
+      #+BEGIN_SRC sh
+      git add . && git commit -m 'new post'
+      git push origin master
+      #+END_SRC
+      将更改提交到github
+
+** How to
+
+   搭建博客与设置Emacs环境的内容可以参照我的这篇文章： [[http://linusp.github.io/2013/09/14/blogging-with-jekyll-emacs.html][使用Github Pages服务建立个人博客]]。
+
+   以下是我的相关自定义函数
+   1. 新建文章并进行写作
+
+      #+BEGIN_SRC emacs-lisp
+      ;; Write Blog
+      (defvar post-dir "~/Dropbox/org/blog/_posts/")
+      (defun blog-post (title)
+        (interactive "sEnter title: ")
+        (let ((post-file (concat post-dir
+                                 (format-time-string "%Y-%m-%d")
+                                 "-"
+                                 title
+                                 ".org")))
+          (progn
+            (switch-to-buffer (find-file-noselect post-file))
+            (insert (concat "#+startup: showall\n"
+                            "#+options: toc:nil\n"
+                            "#+begin_html\n"
+                            "---\n"
+                            "layout     : post\n"
+                            "title      : \n"
+                            "categories : \n"
+                            "tags       : \n"
+                            "description: \n"
+                            "---\n"
+                            "#+end_html\n"))))
+        )
+      (define-key global-map "\C-cp" 'blog-post)
+      #+END_SRC
+   2. 导出org文件为html
+
+      #+BEGIN_SRC emacs-lisp
+      (defun publish-project (project no-cache)
+        (interactive "sName of project: \nsNo-cache?[y/n] ")
+        (if (or (string= no-cache "y")
+                (string= no-cache "Y"))
+            (setq org-publish-use-timestamps-flag nil))
+        (org-publish-project project)
+        (setq org-publish-use-timestamps-flag t))
+      (define-key global-map "\C-xp" 'publish-project)
+      #+END_SRC
+      实际上我的所有文章的源文件都是处在同一个目录中并作为一个org project来管理，org-mode中内置的函数：
+      #+BEGIN_EXAMPLE
+      org-publish-project
+      #+END_EXAMPLE
+      能将整个project按照设置导出成html。上面这个自定义函数的实现主要是两个目的：
+      + 开头我提到的其他两个网站，也是通过org-mode来进行写作和管理的，其源文件也是分别被组织在一起作为一个项目，这个自定义函数可以让我选择publish哪一个project
+      + org-publish-project在publish某个project时，会判断文件是否修改过，如果没有，则不会publish该文件。而当我在Emacs的配置文件对project的设置进行了修改后，虽然源文件没有改动，但有必要重新publish成html
