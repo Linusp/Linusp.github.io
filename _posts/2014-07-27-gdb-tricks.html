@@ -1,0 +1,228 @@
+---
+layout     : post
+title      : GDB调试技巧
+categories : 编程
+tags       :
+- GDB
+- C/C++
+---
+
+<p>
+以下是这几个月工作以来所学习到的GDB调试技巧，虽然并不全面，但我认为还是比较使用的一些东西。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">bt/backtrace</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这条命令可以在程序出错时打印出函数调用栈，方便追踪问题发生的所在。对于代码结构比较复杂的项目，这条命令是非常有用的，所以这条命令也是必须掌握的了。
+</p>
+
+<p>
+比如对于下面这个程序:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">read_int</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">fp</span>)
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = 0;
+    <span style="color: #cf4a44;">fscanf</span>(fp, <span style="color: #25ef29;">"%d"</span>, &amp;a);
+    <span style="color: #cf4a44;">return</span> a;
+}
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span> = <span style="color: #cf4a44;">fopen</span>(argv[1], <span style="color: #25ef29;">"r"</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = <span style="color: #cf4a44;">read_int</span>(file);
+    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"read %d\n"</span>, a);
+    <span style="color: #cf4a44;">fclose</span>(file);
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+该程序没有检查文件是否打开成功，便进行读文件操作，在文件打开失败的时候，将会发生段错误。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/sf-test.png" alt="sf-test.png" />
+</p>
+</div>
+
+<p>
+这个时候就可以用backtrace/bt 命令来发现是哪里出了问题：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-backtrace.png" alt="gdb-backtrace.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">打印数组内容</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在GDB中，如果在数组的定义所在的函数内查看数组内容，直接调用print命令即可，如，对下面的代码：
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+
+<span style="color: #ca34e2;">void</span> <span style="color: #cf4a44;">add_one</span>(<span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
+    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) {
+        arr[i] = arr[i] + 1;
+    }
+}
+
+<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+{
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span>[] = {1, 2, 3, 4, 5, 6, 7};
+
+    <span style="color: #cf4a44;">add_one</span>(a, 7);
+
+    <span style="color: #cf4a44;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+在函数调用
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C"><span style="color: #cf4a44;">add_one</span>(a, 7);
+</pre>
+</div>
+
+<p>
+前执行"p a"，得到的结果如下：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-print-array.png" alt="gdb-print-array.png" />
+</p>
+</div>
+
+<p>
+但如果step进入函数 <b>add_one</b> ，执行"print arr"，得到的却是这个结果了：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-print-array2.png" alt="gdb-print-array2.png" />
+</p>
+</div>
+
+<p>
+这是因为在函数 <b>add_one</b> 中，数组的指针 <b>a</b> 作为参数传入后退化为了普通指针了，这个时候如果要我们手动一个一个打印来查看，那无疑是很痛苦的。但在GDB中有查看这样的连续内存数据的方法，而且有多种，如下：
+</p>
+
+<ol class="org-ol">
+<li>print *arr@7 / p *arr@7
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-print-array3.png" alt="gdb-print-array3.png" />
+</p>
+</div>
+
+<p>
+不管指针指向的内存中存储的是基本类型的数据还是自定义的类型，这个方法都适用。
+</p>
+</li>
+
+<li>print (int <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>)*arr / p (int <sup><a id="fnr.1.100" name="fnr.1.100" class="footref" href="#fn.1">1</a></sup>)*arr
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-print-array4.png" alt="gdb-print-array4.png" />
+</p>
+</div>
+
+<p>
+同上，但在操作上要麻烦一点。
+</p>
+</li>
+
+<li>x/7dw arr
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb-print-array5.png" alt="gdb-print-array5.png" />
+</p>
+</div>
+
+<p>
+<b>x</b> 是GDB中用来检查内存的命令，其使用方法是：
+</p>
+<pre class="example">
+x/nfu addr
+</pre>
+<p>
+其中 <b>n</b> 表示要重复打印的次数，默认值为1;*f* 表示输出的格式，支持 x(十六进制)、d(十进制)、 u(无符号整型)、 o(八进制)、t(二进制)、a(地址值)、c(字符型)、f(浮点型)、s(字符串)这几种格式，默认使用 <b>x</b> ;u表示每个输出的宽度，可以选择b(1字节)、h(2字节)、w(4字节)和g(8字节)，默认为4字节(w)。
+</p>
+
+<p>
+不过对于自定义的复杂类型，这个方法并不好用。
+</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">设置源代码目录</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+有时候存在这样的情况，程序运行的机器和源代码所在的机器不是同一台机器，假如程序崩溃了，因为没有源代码，也只能大致知道是在什么地方出错了，但却没有办法详查。当然，这种情况下，一个很笨的办法是，把整个项目代码拿过来，配置好编译环境，然后用编译好的程序替换原来的程序，再进行调试。
+</p>
+
+<p>
+但是这样实在是很麻烦。
+</p>
+
+<p>
+我们是可以这样的，首先定位问题发生的代码范围(涉及到哪些源文件)，并把这些涉及的源文件拷贝过来，然后在GDB调试时指定源代码目录就OK了。
+</p>
+
+<p>
+指定源代码目录有两种方式：
+</p>
+<ol class="org-ol">
+<li>在启动时使用 <b>-d</b> 选项设置
+</li>
+<li>在启动后使用 <b>directory</b> 命令设置
+</li>
+</ol>
+
+
+<p>
+当然了，最后说一下，像这种跨机器的调试，最好是在运行机器上设置好能生成core文件，否则要重现问题可能要花费一番功夫。打开core dump的方法是执行：
+</p>
+<pre class="example">
+ulimit -c unlimited
+</pre>
+<p>
+当然，在shell中执行这个只是会暂时生效，如果需要在登录的时候生效，应该把这条语句写到 .bashrc 这个文件中去。
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>DEFINITION NOT FOUND.</p></div>
+
+
+</div>
+</div>
