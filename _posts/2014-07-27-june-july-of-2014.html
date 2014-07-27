@@ -1,0 +1,324 @@
+---
+layout     : post
+title      : (2014年6月&7月)小结
+categories : 生活
+tags       :
+---
+
+<p>
+六月的总结没有写，这次作一个工作以来的大的总结吧。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">工作日志分析</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+工作以来，我每天都会将工作中遇到的问题、所做的事情记录在本子上，现在第四个本子已经用完一半了。现在日记虽然不能坚持写了，但工作日志也反映了工作日时我一天的经历。说到这里，我觉得我急切需要搞一张大桌子放到房间里，有时候其实很想写写东西的，但是桌子上堆满了东西，根本伸展不开，特别别扭。
+</p>
+
+<ul class="org-ul">
+<li>第一本工作日志(2014/04-14 - 2014/05/16)
+
+<p>
+这一个月主要是在阅读原有项目代码、学习理解相关原理，以及进行初步的API设计工作。
+</p>
+
+<p>
+相关原理方面，主要是MFCC、GMM、BIC、HMM这几个知识点。但其实没太在这方面花多少功夫，因为大部分的时间都花费在阅读理解原项目代码和API涉及工作上了。
+</p>
+
+<p>
+原先的代码写得很糟糕，于是在阅读代码和设计API上进展缓慢，这个过程也感觉很痛苦——现在项目已经由我重构了，虽然我不认为自己写的代码有多漂亮，但比原先的代码好我是有自信的。
+</p>
+
+<p>
+在这段时间的最后一周，确定了API的设计，由于涉及多线程，将API分为了三部分：
+</p>
+
+<ol class="org-ol">
+<li>资源初始化与销毁
+
+<p>
+初始化一些全局资源，比如模型和一些全局参数。这些全局资源在后面只会被线程读取而不会进行改变。同时在此处根据传入的参数预先创建若干个线程，每个线程将会在后面进行实际的处理操作。其实在API要接入的引擎中已经实现了线程池，此处之所以还要创建线程，是因为后续处理需要调用一个外部java包工具，因为是使用 <b>system</b> 函数来调用的，而 <b>system</b> 实际上会产生一个子进程，由于引擎为了保证内存使用稳定在一开始的时候会预分配比较大的内存，不通过线程，而是直接调用的话，会产生很大的内存开销。
+</p>
+
+<p>
+当然，这个主意并不是我想出来的，而是我的项目组组长的主意。现在已经弃用了那个java包，完全使用C++实现了，所以这个设计后来也废除了。
+</p>
+
+<p>
+对应的，在程序结束时会有资源的销毁处理。
+</p>
+</li>
+
+<li>线程自有资源的初始化与销毁
+</li>
+
+<li>实际处理API
+</li>
+</ol>
+</li>
+
+<li>第二本工作日志(2014/05/19 - 2014/06/18)
+
+<p>
+五月底原先负责项目的人离开了公司，所以我开始放心大胆地进行修改，后来实际上已经废弃了原有项目代码(但仍然是调用java包的模式)，只保留了我实现的部分。这一段时间主要是将API接入引擎，整理错误率计算工具并进行批量测试，并在测试结果上进行参数调整。
+</p>
+
+<p>
+以下是这段时间在编程上所犯的错误及次数统计
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">错误</th>
+<th scope="col" class="right">次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">循环(线程/loop)处理中，一次处理完后未重置相关变量</td>
+<td class="right">4</td>
+</tr>
+
+<tr>
+<td class="left">使用未初始化的变量</td>
+<td class="right">3</td>
+</tr>
+
+<tr>
+<td class="left">使用错误的变量</td>
+<td class="right">2</td>
+</tr>
+
+<tr>
+<td class="left">拼写错误</td>
+<td class="right">2</td>
+</tr>
+
+<tr>
+<td class="left">读文件错误</td>
+<td class="right">2</td>
+</tr>
+
+<tr>
+<td class="left">在外部使用局部变量(通过指针)</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">命名空间、函数签错误名导致"函数未定义"</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">访问数组未检测下标是否合法</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">读文件是未检测文件是否打开成功</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">未关闭文件</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">未判断函数返回值，前一步处理失败仍继续进行</td>
+<td class="right">1</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">总错误次数</td>
+<td class="right">19</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+平均下来，大概每天犯一个错误。
+</p>
+
+<p>
+整理错误率计算工具也是花费了我不少功夫，在这个过程中对Shell脚本的编写更加地熟悉了。
+</p>
+</li>
+
+<li>第三、四本工作日志(2014/06/19 - 2014/07/25)
+
+<p>
+这段时间开始，就彻底废弃了调用java包的模式，使用<a href="http://kaldi.sourceforge.net/">kaldi</a> 来重构了整个项目，并且重新设计了API——API改动倒是不大，只是改动了一下参数类型、数目而已。然后在此基础上进行批量测试和结果分析，奈何错误率太高，在分析其原因上花费了接近两周时间——最后发现除了算法实现上有问题，还有我在编程上犯了一个细节错误，当时真想打死自己……
+</p>
+
+<p>
+这段时间依然在编程上犯了不少错误，统计如下：
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">错误</th>
+<th scope="col" class="right">次数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">使用错误的变量</td>
+<td class="right">4</td>
+</tr>
+
+<tr>
+<td class="left">使用未初始化的变量</td>
+<td class="right">3</td>
+</tr>
+
+<tr>
+<td class="left">访问NULL指针</td>
+<td class="right">3</td>
+</tr>
+
+<tr>
+<td class="left">访问数组时未检测下标是否合法</td>
+<td class="right">3</td>
+</tr>
+
+<tr>
+<td class="left">循环处理中，一次处理完后未重置相关变量</td>
+<td class="right">2</td>
+</tr>
+
+<tr>
+<td class="left">读文件是未检测文件是否打开成功</td>
+<td class="right">2</td>
+</tr>
+
+<tr>
+<td class="left">前置声明类型但定义了该类型的非引用、指针成员</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">单链表插入实现错误</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">在不应该读取文件时读取了文件</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">类型转换错误(35.67 * 100 -&gt; 35.66)</td>
+<td class="right">1</td>
+</tr>
+
+<tr>
+<td class="left">'delete' memory allocated by 'calloc'</td>
+<td class="right">1</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">总错误次数</td>
+<td class="right">22</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">编程以外的工作总结</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先，这个月已经转正啦，工资稍微多一点了，不过还是不多。
+</p>
+
+<p>
+和组内的同事已经算是很熟悉了，面对新入职的同事说"我也是新来的"时会被其他同事吐槽说你已经旧了。前段时间还把公司配的电脑重装了系统，出于兼容性考虑还是装了Ubuntu，换上<a href="http://cinnamon.linuxmint.com/">Cinnamon</a> 桌面环境，得了空闲的时候全屏跑着<a href="http://www.asty.org/cmatrix/">cmatrix</a> (如下图所示)装逼，午餐的时候和同事谈论各种时事话题，每天的日子，按部就班，平平淡淡，就是这样。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/cmatrix.gif" alt="cmatrix.gif" />
+</p>
+</div>
+
+<p>
+不过在相关技能上的学习还是太懈怠了，所以要加油！
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">工作以外的生活</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+6月和7月在学习上比较懈怠，下了班都不想看专业性书籍，要么看看小说，要么就是搓几把炉石。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/heart-stone.jpg" alt="heart-stone.jpg" />
+</p>
+</div>
+
+<p>
+Magi还是在构想当中，毕竟要达到设想中的水平，还有一些我没有掌握的技术需要学习。不过倒是学习了Inform 7这个制作Interactive Fiction的工具，算是预热吧。
+</p>
+
+<p>
+此外还参与到了朋友的两个小项目中，提了几次pull request。
+</p>
+
+<p>
+其他就没什么啦，周末宅着也就是打游戏或者看书，或者出去玩。出去玩的话一般都是找北京的朋友，不过有一周回到武汉参加了一次同学聚会。
+</p>
+
+<p>
+大致就是这样了
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">阅读与写作</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+读完了以下几本书：
+</p>
+<ol class="org-ol">
+<li><a href="http://book.douban.com/subject/6860890/">《黑客:计算机革命的英雄》</a>
+</li>
+<li><a href="http://book.douban.com/subject/24882304/">《地海巫师》</a>
+</li>
+<li><a href="http://book.douban.com/subject/3033223/">《地海故事集》</a>
+</li>
+<li><a href="http://book.douban.com/subject/25742768/">《地海孤儿》</a>
+</li>
+</ol>
+
+
+<p>
+至于写作嘛……好像没写什么……
+</p>
+</div>
+</div>
