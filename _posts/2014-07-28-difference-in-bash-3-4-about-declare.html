@@ -1,0 +1,67 @@
+---
+layout     : post
+title      : Bash 3.x 与 Bash 4.x中declare命令的区别
+categories : Linux
+tags       :
+- Bash
+- declare
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">问题</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+今天下午的时候，测试的妹子说我写的脚本出了问题，跑过去一看，出错提示是：
+</p>
+<pre class="example">
+declare: -A: invalid option
+</pre>
+<p>
+我写的脚本里有两处使用
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #31d3c4;">declare</span> -A
+</pre>
+</div>
+<p>
+分别定义了一个<a href="http://www.gnu.org/software/bash/manual/html_node/Arrays.html">关联数组</a>。
+</p>
+
+<p>
+一开始很诧异，这你的'declare'和我的'declare'还能不一样了？尝试了一下，还确实是不一样，妹子机器上的'declare'命令压根就没有'-A'这个选项。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Bash 版本</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+'declare' 是 Bash内建的命令，既然两台机器上的'declare'不一样，那应该Bash也会不一样吧？抱着这样的心理，分别看了下两台机器的Bash版本。
+</p>
+
+<p>
+果然，出问题的机器上，Bash版本是3.x，而我的机器上的Bash版本是4.x。在网上搜了一下相关信息，才知道关联数组是在Bash 4.x中才支持的。这就是问题的原因了。
+</p>
+
+<p>
+也懒得继续用关联数组了，毕竟要适配不同的Bash版本，工作量还是略大。反正两个关联数组是用来存中间结果的，于是索性写到两个临时文件里去了，稍微多做了一点处理就OK了。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">后记</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+这么短的博客难道不是在凑数吗？
+</p>
+
+<p>
+真没有啊！
+</p>
+
+<p>
+<span class="underline">(:3」∠)</span>
+</p>
+</div>
+</div>
