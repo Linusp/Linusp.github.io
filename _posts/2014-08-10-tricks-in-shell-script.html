@@ -1,0 +1,298 @@
+---
+layout     : post
+title      : 编写Shell脚本时的一些小技巧
+categories : 编程
+tags       :
+- Shell
+- readlink
+- sed
+- grep
+- awk
+---
+
+<p>
+自工作以来，写了不少脚本，有自己临时需要而写的，也有给测试妹子编写的工具。在这个过程中，碰到了许多问题，当然也就学习到了很多啦。有些零零碎碎的细节，花大篇幅讲有点没必要，就整合在这篇文章里吧。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">使用特殊变量</h2>
+<div class="outline-text-2" id="text-1">
+<ol class="org-ol">
+<li>$#
+
+<p>
+$#表示当前参数列表的长度，对需要参数的Shell函数，这个变量同样有效
+</p>
+</li>
+
+<li>$*与$@
+
+<p>
+这两个都包含了当前所有参数，但当用 <b>双引号将这两个特殊变量括起来</b> 后，它们之间会产生差异。
+</p>
+
+<p>
+编写一个简单的脚本spe_arg.sh，内容如下:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
+
+<span style="color: #cf4a44;">function</span> <span style="color: #ed8a0c;">arg_num</span>(){
+    <span style="color: #31d3c4;">echo</span> $<span style="color: #fefc58;">#</span>, $<span style="color: #fefc58;">1</span>
+}
+
+arg_num <span style="color: #25ef29;">"$*"</span>
+</pre>
+</div>
+
+<p>
+执行它，随便给点参数:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">./spe_arg.sh a b c d
+</pre>
+</div>
+
+<p>
+得到的结果是:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/spe_arg-1.png" alt="spe_arg-1.png" />
+</p>
+</div>
+
+<p>
+而将脚本中的$*替换成$@后，得到的结果是:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/spe_arg-2.png" alt="spe_arg-2.png" />
+</p>
+</div>
+</li>
+
+<li>$$
+
+<p>
+这表示当前的进程号。我经常将其用于生成临时文件，由于每个脚本运行后，其进程号都是唯一的，可以保证不会和其他脚本产生的临时文件发生冲突。
+</p>
+</li>
+
+<li>$?
+
+<p>
+上一条命令的返回值，为0则表示上一条命令正常执行，否则就是出错了。通过这个值可以方便地进行错误处理。
+</p>
+</li>
+
+<li>$0
+
+<p>
+表示当前脚本的名字
+</p>
+</li>
+
+<li>$1, $2, &#x2026; $9
+
+<p>
+分别表示第1个、第2个&#x2026;第9个参数
+</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">条件表达式</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在Shell脚本中，有三种条件表达式的形式:
+</p>
+<ol class="org-ol">
+<li>一对中括号括起来的条件表达式，如
+<pre class="example">
+[ 0 -gt 1 ]
+</pre>
+
+<p>
+使用这种方式，在进行字符串比较时，用于比较的运算符"&lt;"和"&gt;"必须转义，即必须表示为"\&lt;"和"\&gt;"。
+</p>
+</li>
+<li>用一对双中括号括起来的条件表达式，如
+<pre class="example">
+[[ 0 -gt 1 ]]
+</pre>
+<p>
+使用这种方式时，字符串比较的运算符不需要转义。因此，应该尽量使用这种方式而不是第一种。
+</p>
+
+<p>
+另外，无论是第一种方式还是第二种方式， <b>条件表达式前后一定都要有至少一个空格</b> ，即下面这样的是非法的:
+</p>
+<pre class="example">
+[0 -gt 1]
+[0 -gt 1 ]
+[ 0 -gt 1]
+</pre>
+</li>
+<li>用一对双括号括起来的条件表达式，如
+<pre class="example">
+(())
+</pre>
+<p>
+这种方式用于算术比较，写在其中的条件表达式应该按照类似C语言的风格来表示，即不需要遵循上面两种方法的限制，也不需要使用dollar符($)来表示变量的值。
+</p>
+
+<p>
+当然，双括号不只用于条件表达式，还可以在其中进行四则运算，for循环也可以使用它。
+</p>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">变量使用</h2>
+<div class="outline-text-2" id="text-3">
+<ol class="org-ol">
+<li>局部变量
+
+<p>
+在函数中，应该尽量将使用到的变量定义为局部变量，以下做法可以达到该目的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #31d3c4;">local</span> <span style="color: #fefc58;">var</span>=<span style="color: #25ef29;">""</span>
+</pre>
+</div>
+</li>
+
+<li>$var与${var}
+
+<p>
+在可能产生歧义的地方，应该使用后一种方式。所谓的歧义，可能这个词我用得不太准确，还是举个例子来描述一下吧。
+</p>
+
+<p>
+以前阵子我写的一个脚本为例，当时我定义了一个循环计数变量，命名为"i"，然后在每一次循环时，根据其值创建一些文件，大致是下面这个样子
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">i</span>=0
+<span style="color: #cf4a44;">for</span> i<span style="color: #cf4a44;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #cf4a44;">do</span>
+    <span style="color: #fefc58;">now_file</span>=$<span style="color: #fefc58;">ROOT_PATH</span>/$<span style="color: #fefc58;">i_wavlist</span>
+    &gt; $<span style="color: #fefc58;">now_file</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+<p>
+我的本意是产生诸如"1_wavlist"、"2_wavlist"这样的文件，但没注意下划线也是变量名合法字符这个事实。所以这样才是正确的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">i</span>=0
+<span style="color: #cf4a44;">for</span> i<span style="color: #cf4a44;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #cf4a44;">do</span>
+    <span style="color: #fefc58;">now_file</span>=$<span style="color: #fefc58;">ROOT_PATH</span>/${<span style="color: #fefc58;">i</span>}_wavlist
+    &gt; $<span style="color: #fefc58;">now_file</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+</li>
+<li>在sed/grep/awk中使用Shell变量
+
+<p>
+sed和grep可以一起说，因为是同样的问题。在sed/grep的表达式中使用Shell变量，如果想得到期望的结果，应该用双引号而不是单引号将表达式括起来。这是因为在Shell中，双引号是 <b>弱引用(Weak Quotes)</b> ，而单引号是 <b>强引用(Strong Quotes)</b> ，在一对单引号中的内容，会作为字符串内容原原本本地输出，也就是说，Shell的取值操作符dollar符($)在一对单引号中，也是被视为一个普通字符的。
+</p>
+
+<p>
+不仅仅是取值操作符，像转义符(\)、反引号符(`)等特殊字符，在一对单引号中，其特殊意义会统统失效。
+</p>
+
+<p>
+awk中的情况与前面两者类似，但又有所不同。由于awk的表达式中也用dollar符($)来取awk处理时每个域(field)的值，所以在awk中使用Shell变量，必须要区分开Shell变量与awk变量。
+</p>
+
+<p>
+第一种方法是通过"-v"选项定义一个awk变量并将Shell变量赋值给它，如下:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">awk -v <span style="color: #fefc58;">var</span>=<span style="color: #25ef29;">"$shell_var"</span> <span style="color: #25ef29;">'{print var}'</span> a.txt
+</pre>
+</div>
+
+<p>
+第二种方法是用双引号来将awk的表达式括起来，但要注意的是，当用双引号括起awk表达式时，像"$1"这样的都会被认为是在获取Shell变量的值，即在awk处理这串表达式前，Shell会将所有以dollar符开头的东西按照Shell中取值规则取值，然后替换成这个值，于是本来想让awk打印第一个域(field)的意图就会落空。
+</p>
+
+<p>
+解决这个问题的方法是用转义符将不是使用Shell变量的地方转义，如下:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">awk <span style="color: #25ef29;">"{print \$1, $shell_var}"</span> a.txt
+</pre>
+</div>
+
+<p>
+第三种办法是通过额外的引用来达到目的，如下所示:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">awk <span style="color: #25ef29;">'{print $1, "'</span>$<span style="color: #fefc58;">shell_var</span><span style="color: #25ef29;">'"}'</span> a.txt
+</pre>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">处理文件</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+文本处理这里就不说了，只是说一下处理文件时的一些小细节。
+</p>
+
+<ol class="org-ol">
+<li>文件属性判断
+
+<p>
+条件表达式中，'-e'用于判断文件是否存在，'-d'用于判断是否是一个目录，'-s'用于判断文件是否存在但内容为空。这三个都是我比较常用的。
+</p>
+</li>
+
+<li>获取文件绝对路径
+
+<p>
+在一些情景下，我们需要获得文件的绝对路径，比较蠢的办法是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $<span style="color: #fefc58;">file</span>)
+<span style="color: #fefc58;">full_dir</span>=$(<span style="color: #fa8072;">cd</span> $<span style="color: #fefc58;">dir</span> &amp;&amp; <span style="color: #31d3c4;">pwd</span>)
+</pre>
+</div>
+
+<p>
+但其实还有更好的办法，那就是使用'readlink'这个命令:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $(<span style="color: #fa8072;">readlink</span> -f $<span style="color: #fefc58;">file</span>))
+</pre>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">后记</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+暂时先这样吧，以后还有东西，会继续更新本文。
+</p>
+</div>
+</div>

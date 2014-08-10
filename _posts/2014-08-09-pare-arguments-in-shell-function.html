@@ -1,0 +1,499 @@
+---
+layout     : post
+title      : Shell脚本中参数处理方法
+categories : 编程
+tags       :
+- Shell
+- shift
+- getopts
+- getopt
+---
+
+<p>
+在Shell脚本中处理命令行参数，可以使用getopts/getopt来进行——当然，手工解析也是可以的。
+</p>
+
+<p>
+下面通过一个特定的情景来讲一下这三种参数处理方法。
+</p>
+
+<p>
+这两天写了一个安全删除的脚本，原理就是将指定的文件移动到某个特定的目录下并保存其原始路径信息，这和在Windows下以及在Linux的桌面环境下"将文件移动到回收站"的意义是一样的。就拿这个来做例子吧。
+</p>
+
+<p>
+在这个脚本中，有五个选项，分别代表五种动作:
+</p>
+<ol class="org-ol">
+<li>-d : 将文件移动到回收站，该选项后需要指定一个文件或目录名
+</li>
+<li>-l : 列出被移动到回收站的文件及其id，该选项不需要值
+</li>
+<li>-b : 恢复被移动到回收站的文件，该选项需要指定一个文件对应的id
+</li>
+<li>-c : 清空回收站，该选项不需要值
+</li>
+<li>-h : 打印帮助信息
+</li>
+</ol>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">手工解析</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+所谓的手工解析，就是取到参数后手工一个一个解析了，以下是手工解析上述情景参数的过程:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #cf4a44;">while</span> [ $<span style="color: #fefc58;">#</span> -gt 0 ];<span style="color: #cf4a44;">do</span>
+    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">1</span><span style="color: #cf4a44;"> in</span>
+        -d)
+            <span style="color: #31d3c4;">shift</span>
+            <span style="color: #fefc58;">file_to_trash</span>=$<span style="color: #fefc58;">1</span>
+            trash $<span style="color: #fefc58;">file_to_trash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">trash is a function</span>
+            ;;
+        -l)
+            print_trashed_file  <span style="color: #e81122;"># </span><span style="color: #e81122;">print_trashed_file is a function</span>
+            ;;
+        -b)
+            <span style="color: #31d3c4;">shift</span>
+            <span style="color: #fefc58;">file_to_untrash</span>=$<span style="color: #fefc58;">1</span>
+            untrash $<span style="color: #fefc58;">file_to_untrash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">untrash is a function</span>
+            ;;
+        -c)
+            clean_all           <span style="color: #e81122;"># </span><span style="color: #e81122;">clean all is a function</span>
+            ;;
+        -h)
+            usage
+            <span style="color: #cf4a44;">exit</span> 0
+            ;;
+        <span style="color: #25ef29;">\?</span>)
+            usage
+            <span style="color: #cf4a44;">exit</span> 1
+            ;;
+    <span style="color: #cf4a44;">esac</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+
+<p>
+这里用到了'shift'这个命令，这个命令的作用是将参数列表以空格为分隔符左移一个单位，或者可以理解为将第一个参数给去掉了，比如获取的命令行参数为:
+</p>
+<pre class="example">
+-d hello.txt
+</pre>
+<p>
+在执行了'shift'后，命令行参数就变成了
+</p>
+<pre class="example">
+hello.txt
+</pre>
+
+<p>
+这样，在使用了shift后，我们每次都只要去看参数列表中的第一个就行了。当然，其实不用'shift'也是可以的，比如说这样:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">i</span>=1
+<span style="color: #cf4a44;">while</span> [ $<span style="color: #fefc58;">i</span> -le $<span style="color: #fefc58;">#</span> ];<span style="color: #cf4a44;">do</span>
+    <span style="color: #cf4a44;">case</span> ${<span style="color: #fefc58;">!</span>i} <span style="color: #cf4a44;">in</span>
+        -d)
+            <span style="color: #fefc58;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #fefc58;">i</span> + 1)
+            <span style="color: #fefc58;">file_to_trash</span>=${<span style="color: #fefc58;">!</span>i}
+            trash $<span style="color: #fefc58;">file_to_trash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">trash is a function</span>
+            ;;
+        -l)
+            print_trashed_file  <span style="color: #e81122;"># </span><span style="color: #e81122;">print_trashed_file is a function</span>
+            ;;
+        -b)
+            <span style="color: #fefc58;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #fefc58;">i</span> + 1)
+            <span style="color: #fefc58;">file_to_untrash</span>=${<span style="color: #fefc58;">!</span>i}
+            untrash $<span style="color: #fefc58;">file_to_untrash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">untrash is a function</span>
+            ;;
+        -c)
+            clean_all           <span style="color: #e81122;"># </span><span style="color: #e81122;">clean all is a function</span>
+            ;;
+        -h)
+            usage
+            <span style="color: #cf4a44;">exit</span> 0
+            ;;
+        <span style="color: #25ef29;">\?</span>)
+            usage
+            <span style="color: #cf4a44;">exit</span> 1
+            ;;
+    <span style="color: #cf4a44;">esac</span>
+    <span style="color: #fefc58;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #fefc58;">i</span> + 1)
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+
+<p>
+对比可以发现使用'shift'会稍微方便一点。
+</p>
+
+<p>
+当然，上面的处理没有进行参数检查，这些检查应该要防止这些错误情况:参数个数为0、完全冲突的"动作"一起出现、选项需要值但未给值。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">getopts</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+'getopts'是POSIX Shell中内置的一个命令，其使用方法是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #31d3c4;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt; &lt;arguments&gt;
+</pre>
+</div>
+
+<p>
+下面是在Shell中使用该命令的一个示例:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/getopts.gif" alt="getopts.gif" />
+</p>
+</div>
+
+<p>
+本质上来说，'getopts'的处理和我们手工处理是差不多的，它不过是提供了更便利的方式而已。它的使用方式非常简单明了，其形式为:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt;
+    <span style="color: #cf4a44;">case</span> $&lt;optvar&gt;<span style="color: #cf4a44;"> in</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">...</span>
+    <span style="color: #cf4a44;">esac</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+<p>
+其中&lt;opt_string&gt;是要处理的选项的一个集合，每个选项在其中用不包含连字符'-'的字母来表示，每个代表选项的字母前后可以有一个冒号，前面有冒号表示当处理该选项出错时不输出'getopts'自身产生的错误信息，这方便我们自己编写对应的错误处理方法;后面的冒号表示这个选项需要一个值。对于我们这个"安全删除"的例子，这个&lt;opt_string应该是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">d:lb:ch
+</pre>
+</div>
+<p>
+冒号的归属的话，先到先得吧，大概是这样。
+</p>
+
+<p>
+在使用'getopts'时，有两个特殊的变量，它们是 <b>OPTIND</b> 和 <b>OPTARG</b> ，前者表示当前参数在参数列表中的位置——相当于手工解析第二种方法中那个自定义的变量 <b>i</b> ，其值初始时为1， 会在每次取了选项以及其值(如果有的话)后更新; <b>OPTARG</b> 则是在选项需要值时，存储这个选项对应的值。这样，我们这个例子用'getopts'就可以写成:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> d:lb:ch OPT;<span style="color: #cf4a44;">do</span>
+    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">OPT</span><span style="color: #cf4a44;"> in</span>
+        d)
+            <span style="color: #fefc58;">file_to_trash</span>=$<span style="color: #fefc58;">OPTARG</span>
+            trash $<span style="color: #fefc58;">file_to_trash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">trash is a function</span>
+            ;;
+        l)
+            print_trashed_file  <span style="color: #e81122;"># </span><span style="color: #e81122;">print_trashed_file is a function</span>
+            ;;
+        b)
+            <span style="color: #fefc58;">file_to_untrash</span>=$<span style="color: #fefc58;">OPTARG</span>
+            untrash $<span style="color: #fefc58;">file_to_untrash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">untrash is a function</span>
+            ;;
+        c)
+            clean_all           <span style="color: #e81122;"># </span><span style="color: #e81122;">clean all is a function</span>
+            ;;
+        h)
+            usage
+            <span style="color: #cf4a44;">exit</span> 0
+            ;;
+        <span style="color: #25ef29;">\?</span>)
+            usage
+            <span style="color: #cf4a44;">exit</span> 1
+            ;;
+    <span style="color: #cf4a44;">esac</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+
+<p>
+对比可以看到，相比手工解析的第一种办法，又更为简洁一点了。不过需要注意的是，'getopts'会从第一个参数开始，只按照&lt;opt_string&gt;指定的形式来寻找并解析参数，如果给出的实际命令行参数与其所描述的参数形式不符，则会出错中止。
+</p>
+
+<p>
+比如说，对于上面的例子，假设这个脚本已经完全写好了，脚本名为 <b>trash.sh</b> ，其参数处理就是上面这样，那么如果我在终端里执行:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script">./trash.sh a -b hello.txt
+</pre>
+</div>
+<p>
+开始那个多余的参数'a'将会导致'getopts'在解析到选项'-b'前就出错终止。所以呢，像使用'getopts'这样的方法，其自由度不如手工解析，如果要保证脚本在任何情况下都能正确解析参数，它需要多做一点——当然啦，上面这个愚蠢的错误使用情况还是比较少出现的啦，反正我现在写的脚本里压根没考虑这样的情况。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">getopt</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+'getopt'与'getopts'类似，不过'getopts'只能处理短选项，'getopt'则能处理短选项和长选项。所谓的短选项就是类似下面这样的选项:
+</p>
+<pre class="example">
+-a
+</pre>
+
+<p>
+而下面这样的则是长选项
+</p>
+<pre class="example">
+--action=delete
+</pre>
+
+<p>
+当然，事无绝对，通过一些技巧，用'getopts'处理长选项也是可能的。这里先说一下如何用'getopt'来处理参数吧。
+</p>
+
+<p>
+需要事先说明的一点是，'getopt'不是Shell内建的命令，而是'util-linux'这个软件包提供的功能，它不是POSIX标准的一部分，所以也有人<a href="http://mywiki.wooledge.org/BashFAQ/035#getopts">建议不使用'getopt'</a>。
+</p>
+
+<p>
+首先将之前说到的五种动作对应的短选项扩展一下，以便讲解'getopt'的使用:
+</p>
+<ol class="org-ol">
+<li>-d/&#x2013;delete : 将文件移动到回收站，该选项后需要指定一个文件或目录名
+</li>
+<li>-l/&#x2013;list : 列出被移动到回收站的文件及其id，该选项不需要值
+</li>
+<li>-b/&#x2013;back : 恢复被移动到回收站的文件，该选项需要指定一个文件对应的id
+</li>
+<li>-c/&#x2013;clear : 清空回收站，该选项不需要值
+</li>
+<li>-h/&#x2013;help : 打印帮助信息
+</li>
+</ol>
+
+
+<p>
+'getopt'既能处理短选项也能处理长选项，短选项通过参数 <b>-o</b> 指定，长选项通过参数 <b>-l</b> 指定。同'getopts'一样，它一次也只解析一个选项，所以也需要循环处理，不过与'getopts'不同的是，'getopt'没有使用 <b>OPTIND</b> 和 <b>OPTARG</b> 这两个变量，所以我们还得手动对参数进行'shift'，对需要值的选项，也得手动去取出值。
+</p>
+
+<p>
+下面是在Shell中使用'getopt'的一个示例:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/getopt.gif" alt="getopt.gif" />
+</p>
+</div>
+
+<p>
+可以看到，'getopt'将参数中以下形式的内容:
+</p>
+<pre class="example">
+--longopt=argument
+</pre>
+<p>
+在返回结果中替换成下面这样的形式:
+</p>
+<pre class="example">
+--longopt argument
+</pre>
+<p>
+这样就可以通过循环和'shift'来进行处理了，不过在脚本中，'shift'命令是对命令行参数起作用的，即特殊变量"$@"，而我们在脚本中只能将'getopt'的返回结果作为字符串存储到一个变量中。为了让'shift'起作用，通常还要使用'set'命令来将变量的值赋给"$@"这个特殊变量。
+</p>
+
+<p>
+真是有够麻烦的……算了，下面再集中吐槽吧……
+</p>
+
+<p>
+然后，在设置好短选项和长选项后，在将实际的参数传给'getopt'时，要在实际参数前加上一个两个连字符 <b>--</b> ，而'getopt'会将这两个连字符放到返回结果的最后面，在处理时可以将这两个连字符视为结束标志。
+</p>
+
+<p>
+以下是针对本文假设的情景，使用'getopt'解析参数的流程:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">arg</span>=$(<span style="color: #fa8072;">getopt</span> -o d:lb:ch -l delete:,list,back:,clear,help -- $<span style="color: #fefc58;">@</span>)
+
+<span style="color: #31d3c4;">set</span> -- <span style="color: #25ef29;">"$arg"</span>
+
+<span style="color: #cf4a44;">while</span> true
+<span style="color: #cf4a44;">do</span>
+    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">1</span><span style="color: #cf4a44;"> in</span>
+        -d|--delete)
+            <span style="color: #fefc58;">file_to_trash</span>=$<span style="color: #fefc58;">2</span>
+            trash $<span style="color: #fefc58;">file_to_trash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">trash is a function</span>
+            <span style="color: #31d3c4;">shift</span> 2
+            ;;
+        -l|--list)
+            print_trashed_file  <span style="color: #e81122;"># </span><span style="color: #e81122;">print_trashed_file is a function</span>
+            <span style="color: #31d3c4;">shift</span>
+            ;;
+        -b|--back)
+            <span style="color: #fefc58;">file_to_untrash</span>=$<span style="color: #fefc58;">2</span>
+            untrash $<span style="color: #fefc58;">file_to_untrash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">untrash is a function</span>
+            <span style="color: #31d3c4;">shift</span>
+            ;;
+        -c|--clear)
+            clean_all           <span style="color: #e81122;"># </span><span style="color: #e81122;">clean all is a function</span>
+            <span style="color: #31d3c4;">shift</span>
+            ;;
+        -h|--help)
+            usage
+            <span style="color: #cf4a44;">exit</span> 0
+            ;;
+        --)
+            <span style="color: #31d3c4;">shift</span>
+            <span style="color: #cf4a44;">break</span>
+            ;;
+    <span style="color: #cf4a44;">esac</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+
+<p>
+然而，知道了'getopt'的使用及其原理后，自然而然地可以发现，我可以不用去管这个结束标志，用"$#"这个表示参数个数的特殊变量，同样可以控制参数解析的流程，这完全和手工解析是同一个道理。我甚至可以将'getopt'的返回结果存储到一个数组里，直接循环处理这个数组，而不用使用'set'命令了。
+</p>
+
+<p>
+好了，吐槽时间。
+</p>
+
+<p>
+我之前写脚本都是用的'getopts'，一来我用不上长选项，二来'getopts'的使用足够简单。在写本文之前，我倒是知道'getopt'可以处理长选项，但没仔细了解过。这两天了解了一下，觉得还是别用'getopt'的好，理由如下:
+</p>
+
+<ol class="org-ol">
+<li>'getopt'不是Shell内建命令，跨平台使用时可能会出现问题；
+</li>
+<li>只是将'&#x2013;longopt=val'这样的参数形式替换成了'&#x2013;longopt val'，但因此增加了许多复杂性，比如使用了'set'命令，在使用'set'命令时还要考虑'getopt'的返回结果中有无Shell命令，有的话应该使用'eval'命令来消除可能导致的错误
+<pre class="example">
+eval set -- "$arg"
+</pre>
+</li>
+<li>调用完还要进行与手工解析类似的工作，相比手工解析，并没有多大优势；
+</li>
+<li>真的需要长选项吗？我觉得短选项就足够了
+</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">getopts处理长选项</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+既然不建议使用'getopt'，那么怎么处理长选项呢？自然是有办法的。
+</p>
+
+<p>
+为了方便讲解，这里假设一个简单的情景吧，在这个情景里，我们只需要处理两个可能的选项
+</p>
+<ol class="org-ol">
+<li>-f/&#x2013;file: 设置文件名，该选项需要值
+</li>
+<li>-h/&#x2013;help: 打印帮助信息，该选项不需要值
+</li>
+</ol>
+
+
+<p>
+用'getopts'处理这种情况，可以这么做:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #fefc58;">filename</span>=<span style="color: #25ef29;">""</span>
+<span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> f:h-: opt;<span style="color: #cf4a44;">do</span>
+    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">opt</span><span style="color: #cf4a44;"> in</span>
+        -)
+            <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">OPTARG</span><span style="color: #cf4a44;"> in</span>
+                <span style="color: #31d3c4;">help</span>)
+                    usage
+                    <span style="color: #cf4a44;">exit</span> 0
+                    ;;
+                <span style="color: #fefc58;">file</span>=*)
+                    <span style="color: #fefc58;">filename</span>=${<span style="color: #fefc58;">OPTARG</span>#*=}
+                    ;;
+            <span style="color: #cf4a44;">esac</span>
+        f)
+            <span style="color: #fefc58;">filename</span>=$<span style="color: #fefc58;">OPTARG</span>
+            ;;
+        h)
+            usage
+            <span style="color: #cf4a44;">exit</span> 0
+            ;;
+        <span style="color: #25ef29;">\?</span>)
+            usage
+            <span style="color: #cf4a44;">exit</span> 1
+            ;;
+    <span style="color: #cf4a44;">esac</span>
+<span style="color: #cf4a44;">done</span>
+</pre>
+</div>
+
+<p>
+当然，也许并不比手工解析简洁多少，但用起来肯定是比'getopt'要舒服的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">在函数中解析参数</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+有时候，我们也许想把参数解析的工作放到函数中去做，比如说定义了一个'main'函数然后在'main'函数中封装整个流程处理逻辑。又或者像我一样，写了几个小小的工具函数，放到了Bash的配置文件 <b>.bashrc</b> 中，参数解析的工作必须得在函数中做。
+</p>
+
+<p>
+手工解析是能想到的最直接的办法，简单可行。
+</p>
+
+<p>
+不过假如我们想用'getopts'来处理呢？动手尝试后，你会发现直接在函数中使用'getopts'是会出错的。要在函数中使用'getopts'，必须在这个函数中使用'getopts'前，将 <b>OPTIND</b> 这个被'getopts'使用的特殊变量设置为函数局部变量，像这样:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-shell-script"><span style="color: #cf4a44;">function</span> <span style="color: #ed8a0c;">main</span>() {
+
+    <span style="color: #31d3c4;">local</span> OPTIND
+
+    <span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> d:lb:ch OPT;<span style="color: #cf4a44;">do</span>
+       <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">OPT</span><span style="color: #cf4a44;"> in</span>
+           d)
+               <span style="color: #fefc58;">file_to_trash</span>=$<span style="color: #fefc58;">OPTARG</span>
+               trash $<span style="color: #fefc58;">file_to_trash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">trash is a function</span>
+               ;;
+           l)
+               print_trashed_file  <span style="color: #e81122;"># </span><span style="color: #e81122;">print_trashed_file is a function</span>
+               ;;
+           b)
+               <span style="color: #fefc58;">file_to_untrash</span>=$<span style="color: #fefc58;">OPTARG</span>
+               untrash $<span style="color: #fefc58;">file_to_untrash</span> <span style="color: #e81122;"># </span><span style="color: #e81122;">untrash is a function</span>
+               ;;
+           c)
+               clean_all           <span style="color: #e81122;"># </span><span style="color: #e81122;">clean all is a function</span>
+               ;;
+           h)
+               usage
+               <span style="color: #cf4a44;">exit</span> 0
+               ;;
+           <span style="color: #25ef29;">\?</span>)
+               usage
+               <span style="color: #cf4a44;">exit</span> 1
+               ;;
+       <span style="color: #cf4a44;">esac</span>
+    <span style="color: #cf4a44;">done</span>
+}
+
+main $<span style="color: #fefc58;">@</span>
+</pre>
+</div>
+
+<p>
+就是这样啦!
+</p>
+</div>
+</div>
