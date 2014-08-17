@@ -1,0 +1,205 @@
+---
+layout     : post
+title      : "使用Inform7创作互动式小说:世界的雏形"
+categories : IF
+tags       :
+- IF
+- Inform
+---
+
+<p>
+如果对Inform7是什么还有疑问，请看我的前一篇文章: <a href="http://linusp.github.io/2014/06/28/interactive-fiction-writing-with-inform7.html">使用Inform创作交互式小说</a>。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">概念说明</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+在Inform7中，关于"世界"，也就是故事所发生的"地方"，存在两个比较重要的相关的对象。一个是区域(reqion)，另一个是场地(room).
+</p>
+
+<p>
+对于"场地"，Inform7为何用'room'这样一个词表示，我是不知道啦，一开始还比较疑惑呢，以为它就是表示一个"房间"，后来随着逐渐的学习，才发现它要表示的应该是"场地"才对——之前考虑过使用"场景"这个词，后来发现在Inform7中，还有专门表示"场景"的对象，除了地点外，一个场景还包含了某个开始和结束时刻，所以这里用"场景"来表示'room'是不合适的。
+</p>
+
+<p>
+以下是相关的一些概念:
+</p>
+
+<ul class="org-ul">
+<li>场地(room)
+
+<p>
+表示 <b>具体</b> 的某个可见的地点，是 <b>主角</b> 移动时的最小单位。
+</p>
+</li>
+
+<li>描述(description)
+
+<p>
+对场地、区域以及物品的描述，用英文双引号("")括起来，作为对这些对象的描述，会在游戏进行时作为展示给玩家的信息。
+</p>
+</li>
+
+<li>场地连接(connection)
+
+<p>
+通过类似"A的东方是B"这样的语句可以创建A和B之间的连接，产生一条联通A和B的路径。通过这些连接，可以将众多的"场地"连接起来，构成一个完整的"世界"。孤立的、无法到达的场地是毫无意义的。
+</p>
+</li>
+
+<li>区域(region)
+
+<p>
+区域通常是 <b>若干个场地的集合</b> ，通过将一些场地聚合在一起，可以在之上定义普适于这些场景的一些规则。
+</p>
+</li>
+</ul>
+
+
+<p>
+下面就通过实际的例子来讲解这些概念的实际使用吧。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">开始前的设定</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+首先，就以我的学校<a href="http://www.hust.edu.cn/">华中科技大学</a>作为参考来进行世界的设定吧。简单起见，就使用沁苑、西十二教学楼以及其中一个教室N206这三个地点作为具体的场地吧。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">创建场地</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+首先，创建"沁苑"这个场地吧:
+</p>
+<pre class="example">
+Qinyuan is a room. "Qinyuan is a quiet place. Students of the Faculty of Computer Science and Technology live here. There is a east-west direction road called Bauhinia Road. Go along this road and you'll arrive at The West Twelfth Teaching Building."
+</pre>
+
+<p>
+后面用双引号括起的就是场地的描述。
+</p>
+
+<p>
+需要注意的是，在Inform7中，一个完整的语句最好都以表结束的标点结束，如句号(.)、问号(?)或感叹号(!)，像这样定义场地或其他事物时，是以句号结尾的。
+</p>
+
+<p>
+创建场地除了明确地用'is a room'声明，还可以通过下面这样的方式隐性地创建:
+</p>
+<pre class="example">
+The West Twelfth Teaching Building is west of Qinyuan. "There is a statue of Lao tze in front of The West Twelfth Teaching Building. A arrow on the ground says 'Go N206'."
+</pre>
+
+<p>
+在创建场景时，可以用的表示方向的词有: north, south, west, east, northeast, northwest, southeast, southwest, above, below, inside, outside.
+</p>
+
+<p>
+比如说，教室N206是在西十二教学楼内部，就需要使用inside:
+</p>
+<pre class="example">
+Classroom N206 is a room. "Classroom N206 is a normal classroom, it can hold 100 students."
+
+Inside from The West Twelfth Teaching Building is Classroom N206.
+</pre>
+<p>
+在这里，'from'这个词很重要，它表示这个语句是将两个场地连接起来，而不是在一个场地内创建一个物品。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">双向连接与单向连接</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+在刚才，我们创建了一个连接，在'Qinyuan'和'The West Twelfth Teaching Building'之间产生了一条路径。对于这条语句:
+</p>
+<pre class="example">
+The West Twelfth Teaching Building is west of Qinyuan.
+</pre>
+<p>
+Inform7会确切地知道在'Qinyuan'这个场地中，向西可以到达'The West Twelfth Teaching Building'，同时会推测，认为'The West Twelfth Teaching Building'向东可以到达'Qinyuan'。
+</p>
+
+<p>
+如果要创建一条单向连接，如让'The West Twelfth Teaching Building'不能到达'Qinyuan'，可以这样设置:
+</p>
+<pre class="example">
+East of The West Twelfth Teaching Building is nowhere.
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">创建区域</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+区域的创建和场地的创建差不多:
+</p>
+<pre class="example">
+The Huazhong University of Science and Technology is a region. Qinyuan, the West Twelfth Teaching building, Classroom N206 are in a region called the Huazhong University of Science and Technology.
+</pre>
+
+<p>
+区域允许嵌套，但前提是被包含的区域必须被完全包含，即它不能有包含它的区域所没有的"场地"。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">名字缩写</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+像这两个名字都太长了，不方便输入:
+</p>
+<pre class="example">
+The West Twelfth Teaching Building
+
+The Huazhong University of Science and Technology
+</pre>
+<p>
+虽然在IF中可以简单地使用表示方向的词来进行移动，但使用'go'命令并跟随具体的场地名也是一种移动方式，应该考虑到这个，而在Inform7中，像'go'这样带参数的命令，只会解析其参数中的前9个字符，像上面这两个名字显然有点太长。
+</p>
+
+<p>
+通过'understand'命令可以指定缩写:
+</p>
+<pre class="example">
+Understand "HUST" as  The Huazhong University of Science and Technology. Understand "C12" The West Twelfth Teaching Building.
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">一图胜千言</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+上图:
+</p>
+
+<p>
+源文本:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/i7-eg-source.png" alt="i7-eg-source.png" />
+</p>
+</div>
+
+<p>
+实际运行:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/i7-eg-run.gif" alt="i7-eg-run.gif" />
+</p>
+</div>
+
+<p>
+讲的比较简单，实际上各个环节都还有大量的细节，我也还在学习中。
+</p>
+</div>
+</div>
