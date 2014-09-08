@@ -26,19 +26,19 @@ tags       :
 
 <pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">read_int</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">fp</span>)
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_int</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">fp</span>)
 {
     <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = 0;
-    <span style="color: #cf4a44;">fscanf</span>(fp, <span style="color: #25ef29;">"%d"</span>, &amp;a);
+    fscanf(fp, <span style="color: #25ef29;">"%d"</span>, &amp;a);
     <span style="color: #cf4a44;">return</span> a;
 }
 
-<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
 {
-    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span> = <span style="color: #cf4a44;">fopen</span>(argv[1], <span style="color: #25ef29;">"r"</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = <span style="color: #cf4a44;">read_int</span>(file);
-    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"read %d\n"</span>, a);
-    <span style="color: #cf4a44;">fclose</span>(file);
+    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span> = fopen(argv[1], <span style="color: #25ef29;">"r"</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = read_int(file);
+    printf(<span style="color: #25ef29;">"read %d\n"</span>, a);
+    fclose(file);
     <span style="color: #cf4a44;">return</span> 0;
 }
 </pre>
@@ -76,7 +76,7 @@ tags       :
 
 <pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
 
-<span style="color: #ca34e2;">void</span> <span style="color: #cf4a44;">add_one</span>(<span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">add_one</span>(<span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
 {
     <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
     <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) {
@@ -84,11 +84,11 @@ tags       :
     }
 }
 
-<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
 {
     <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span>[] = {1, 2, 3, 4, 5, 6, 7};
 
-    <span style="color: #cf4a44;">add_one</span>(a, 7);
+    add_one(a, 7);
 
     <span style="color: #cf4a44;">return</span> 0;
 }
@@ -100,7 +100,7 @@ tags       :
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #cf4a44;">add_one</span>(a, 7);
+<pre class="src src-C">add_one(a, 7);
 </pre>
 </div>
 
