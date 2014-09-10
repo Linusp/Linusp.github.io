@@ -45,10 +45,10 @@ tags       :
 <span style="color: #31d3c4;">#ifdef</span> __cplusplus
 <span style="color: #cf4a44;">extern</span> <span style="color: #25ef29;">"C"</span>{
 <span style="color: #31d3c4;">#endif</span>
-    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">read_wav</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">wav_file</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">denoise</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">cutscene</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">feature_extract</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">feature</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_wav</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">wav_file</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">denoise</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">cutscene</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
+    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">feature_extract</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">feature</span>);
 <span style="color: #31d3c4;">#ifdef</span> __cplusplus
 }
 <span style="color: #31d3c4;">#endif</span>
@@ -122,7 +122,7 @@ nm是一个查看目标文件中符号列表的工具，其具体使用这里不
 
 <pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">"fs.h"</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
+<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
 {
     <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fs</span> = 0;
     <span style="color: #e81122;">/* </span><span style="color: #e81122;">do something </span><span style="color: #e81122;">*/</span>

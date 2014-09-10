@@ -213,24 +213,24 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 <span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
 <span class="linenr"> 3: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;time.h&gt;</span>
 <span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">rand_file</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">num</span>)
+<span class="linenr"> 5: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">rand_file</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">num</span>)
 <span class="linenr"> 6: </span>{
 <span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
 <span class="linenr"> 8: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">now</span>;
-<span class="linenr"> 9: </span>    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">f</span> = <span style="color: #cf4a44;">fopen</span>(file, <span style="color: #25ef29;">"w"</span>);
+<span class="linenr"> 9: </span>    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">f</span> = fopen(file, <span style="color: #25ef29;">"w"</span>);
 <span class="linenr">10: </span>
 <span class="linenr">11: </span>    <span style="color: #cf4a44;">if</span> (f == <span style="color: #bebebe;">NULL</span>) {
-<span class="linenr">12: </span>        <span style="color: #cf4a44;">perror</span>(<span style="color: #25ef29;">"fopen"</span>);
+<span class="linenr">12: </span>        perror(<span style="color: #25ef29;">"fopen"</span>);
 <span class="linenr">13: </span>        <span style="color: #cf4a44;">return</span> 0;
 <span class="linenr">14: </span>    }
 <span class="linenr">15: </span>
 <span class="linenr">16: </span>    <span style="color: #cf4a44;">for</span> (; i &lt; num; ++i) {
-<span class="linenr">17: </span>        <span style="color: #cf4a44;">srand</span>((<span style="color: #ca34e2;">int</span>)<span style="color: #cf4a44;">time</span>(0));
-<span class="linenr">18: </span>        now = <span style="color: #cf4a44;">rand</span>();
-<span class="linenr">19: </span>        <span style="color: #cf4a44;">fprintf</span>(f, <span style="color: #25ef29;">"%d "</span>, now);
+<span class="linenr">17: </span>        srand((<span style="color: #ca34e2;">int</span>)time(0));
+<span class="linenr">18: </span>        now = rand();
+<span class="linenr">19: </span>        fprintf(f, <span style="color: #25ef29;">"%d "</span>, now);
 <span class="linenr">20: </span>    }
 <span class="linenr">21: </span>
-<span class="linenr">22: </span>    <span style="color: #cf4a44;">fclose</span>(f);
+<span class="linenr">22: </span>    fclose(f);
 <span class="linenr">23: </span>    <span style="color: #cf4a44;">return</span> num;
 <span class="linenr">24: </span>}
 </pre>
@@ -244,12 +244,12 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 <pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
 <span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">read_to_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_to_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
 <span class="linenr"> 5: </span>{
 <span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
 <span class="linenr"> 7: </span>    <span style="color: #cf4a44;">if</span> (file != <span style="color: #bebebe;">NULL</span>) {
-<span class="linenr"> 8: </span>        <span style="color: #cf4a44;">for</span> (; !<span style="color: #cf4a44;">feof</span>(file) &amp;&amp; i &lt; len; ++i) {
-<span class="linenr"> 9: </span>            <span style="color: #cf4a44;">fscanf</span>(file, <span style="color: #25ef29;">"%d"</span>, arr + i);
+<span class="linenr"> 8: </span>        <span style="color: #cf4a44;">for</span> (; !feof(file) &amp;&amp; i &lt; len; ++i) {
+<span class="linenr"> 9: </span>            fscanf(file, <span style="color: #25ef29;">"%d"</span>, arr + i);
 <span class="linenr">10: </span>        }
 <span class="linenr">11: </span>        <span style="color: #cf4a44;">return</span> i;
 <span class="linenr">12: </span>    }
@@ -257,12 +257,12 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 <span class="linenr">14: </span>        <span style="color: #cf4a44;">return</span> 0;
 <span class="linenr">15: </span>}
 <span class="linenr">16: </span>
-<span class="linenr">17: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">write_from_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span class="linenr">17: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">write_from_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
 <span class="linenr">18: </span>{
 <span class="linenr">19: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
 <span class="linenr">20: </span>    <span style="color: #cf4a44;">if</span> (file != <span style="color: #bebebe;">NULL</span>) {
 <span class="linenr">21: </span>        <span style="color: #cf4a44;">for</span> ( ; i &lt; len; ++i) {
-<span class="linenr">22: </span>            <span style="color: #cf4a44;">fprintf</span>(file, <span style="color: #25ef29;">"%d "</span>, arr[i]);
+<span class="linenr">22: </span>            fprintf(file, <span style="color: #25ef29;">"%d "</span>, arr[i]);
 <span class="linenr">23: </span>        }
 <span class="linenr">24: </span>
 <span class="linenr">25: </span>        <span style="color: #cf4a44;">return</span> i;
@@ -285,16 +285,16 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 
 <pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #ca34e2;">void</span> <span style="color: #cf4a44;">merge</span>(<span style="color: #ca34e2;">File</span> *<span style="color: #fefc58;">out</span>, <span style="color: #ca34e2;">File</span> **<span style="color: #fefc58;">flist</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fnum</span>)
+<span class="linenr"> 3: </span><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">merge</span>(<span style="color: #ca34e2;">File</span> *<span style="color: #fefc58;">out</span>, <span style="color: #ca34e2;">File</span> **<span style="color: #fefc58;">flist</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fnum</span>)
 <span class="linenr"> 4: </span>{
 <span class="linenr"> 5: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
 <span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">now</span> = 0;                <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#29992;&#20110;&#20445;&#23384;&#24403;&#21069;&#26368;&#23567;&#30340;&#20540; </span><span style="color: #e81122;">*/</span>
-<span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">fstaus</span> = (<span style="color: #ca34e2;">int</span> *)<span style="color: #cf4a44;">calloc</span>(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>)); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#25991;&#20214;&#29366;&#24577; </span><span style="color: #e81122;">*/</span>
-<span class="linenr"> 8: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">farr</span> =(<span style="color: #ca34e2;">int</span> *)<span style="color: #cf4a44;">calloc</span>(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>));    <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#20174;&#21508;&#20010;&#25991;&#20214;&#20013;&#21462;&#20986;&#30340;&#25968; </span><span style="color: #e81122;">*/</span>
+<span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">fstaus</span> = (<span style="color: #ca34e2;">int</span> *)calloc(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>)); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#25991;&#20214;&#29366;&#24577; </span><span style="color: #e81122;">*/</span>
+<span class="linenr"> 8: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">farr</span> =(<span style="color: #ca34e2;">int</span> *)calloc(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>));    <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#20174;&#21508;&#20010;&#25991;&#20214;&#20013;&#21462;&#20986;&#30340;&#25968; </span><span style="color: #e81122;">*/</span>
 <span class="linenr"> 9: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">min</span> = 0;                <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#24403;&#21069;&#20540;&#26368;&#23567;&#30340;&#25991;&#20214;&#32034;&#24341; </span><span style="color: #e81122;">*/</span>
 <span class="linenr">10: </span>
 <span class="linenr">11: </span>    <span style="color: #cf4a44;">for</span> (; i &lt; fnum; ++i) {     <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#26816;&#26597;&#21508;&#20010;&#25991;&#20214;&#25351;&#38024;&#30340;&#29366;&#24577; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">12: </span>        <span style="color: #cf4a44;">if</span> (<span style="color: #cf4a44;">feof</span>(<span style="color: #cf4a44;">fscanf</span>(flist[i], <span style="color: #25ef29;">"%d"</span>, farr + i))) {
+<span class="linenr">12: </span>        <span style="color: #cf4a44;">if</span> (feof(fscanf(flist[i], <span style="color: #25ef29;">"%d"</span>, farr + i))) {
 <span class="linenr">13: </span>            fstatus[i] = 0;
 <span class="linenr">14: </span>        }
 <span class="linenr">15: </span>        <span style="color: #cf4a44;">else</span> {
@@ -316,16 +316,16 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 <span class="linenr">31: </span>            }
 <span class="linenr">32: </span>        }
 <span class="linenr">33: </span>
-<span class="linenr">34: </span>        <span style="color: #cf4a44;">fprintf</span>(out, <span style="color: #25ef29;">"%d "</span>, now); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#23558;&#26368;&#23567;&#20540;&#20889;&#20837;&#36755;&#20986;&#25991;&#20214; </span><span style="color: #e81122;">*/</span>
+<span class="linenr">34: </span>        fprintf(out, <span style="color: #25ef29;">"%d "</span>, now); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#23558;&#26368;&#23567;&#20540;&#20889;&#20837;&#36755;&#20986;&#25991;&#20214; </span><span style="color: #e81122;">*/</span>
 <span class="linenr">35: </span>
 <span class="linenr">36: </span>        <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35835;&#21462;&#35813;&#25991;&#20214;&#19979;&#19968;&#20010;&#25968;&#65292;&#24182;&#26816;&#26597;&#26159;&#21542;&#35835;&#23436; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">37: </span>        <span style="color: #cf4a44;">if</span> (<span style="color: #cf4a44;">feof</span>(<span style="color: #cf4a44;">fscanf</span>(flist[min], <span style="color: #25ef29;">"%d"</span>, farr + min))) {
+<span class="linenr">37: </span>        <span style="color: #cf4a44;">if</span> (feof(fscanf(flist[min], <span style="color: #25ef29;">"%d"</span>, farr + min))) {
 <span class="linenr">38: </span>            fstatus[min] = 0;
 <span class="linenr">39: </span>        }
 <span class="linenr">40: </span>    }
 <span class="linenr">41: </span>
-<span class="linenr">42: </span>    <span style="color: #cf4a44;">free</span>(farr);                 <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#37322;&#25918;&#20869;&#23384; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">43: </span>    <span style="color: #cf4a44;">free</span>(fstatus);
+<span class="linenr">42: </span>    free(farr);                 <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#37322;&#25918;&#20869;&#23384; </span><span style="color: #e81122;">*/</span>
+<span class="linenr">43: </span>    free(fstatus);
 <span class="linenr">44: </span>}
 </pre>
 </div>

@@ -14,7 +14,7 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 </p>
 
 <p>
-但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
+但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter[1]。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
 </p>
 
 <p>
@@ -34,7 +34,7 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 </p>
 
 <p>
-基本形式没太大问题，将shell脚本Shebang<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &#x2013;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
+基本形式没太大问题，将shell脚本Shebang[2]后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &#x2013;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
 </p>
 
 <p>
@@ -67,7 +67,7 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 <li>如何传递参数给脚本？shell脚本接受参数的话还是懂的怎么做的，可是elisp脚本……
 
 <p>
-照例google，然后发现Xah Lee<sup><a id="fnr.3" name="fnr.3" class="footref" href="#fn.3">3</a></sup>的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
+照例google，然后发现Xah Lee[3]的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
 </p>
 </li>
 <li>运行脚本后，发现总会有一堆的Loading message，就像下面这样：
@@ -136,24 +136,15 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 (blog (elt argv 0) (elt argv 1))
 </pre>
 </div>
-</div>
-</div>
-<div id="footnotes">
-<h2 class="footnotes">&#33050;&#27880;: </h2>
-<div id="text-footnotes">
 
-<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
-<a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
-</p></div>
-
-<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
-Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
-</p></div>
-
-<div class="footdef"><sup><a id="fn.3" name="fn.3" class="footnum" href="#fnr.3">3</a></sup> <p class="footpara">
-Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
-</p></div>
-
-
+<p>
+[1] <a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
+</p>
+<p>
+[2] Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
+</p>
+<p>
+[3] Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
+</p>
 </div>
 </div>

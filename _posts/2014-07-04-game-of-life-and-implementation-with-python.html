@@ -116,7 +116,7 @@ tags       :
         <span style="color: #cf4a44;">self</span>.row = row
         <span style="color: #cf4a44;">self</span>.col = col
         <span style="color: #cf4a44;">self</span>.now = {}
-        <span style="color: #cf4a44;">self</span>.next = {}
+        <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span> = {}
         <span style="color: #cf4a44;">self</span>.init_status([])
 
     <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">init_status</span>(<span style="color: #cf4a44;">self</span>, init_cells):
@@ -131,7 +131,7 @@ tags       :
 <span style="color: #25ef29;">                      world, we should be map each coordinate to the</span>
 <span style="color: #25ef29;">                      center area of world.</span>
 <span style="color: #25ef29;">        """</span>
-        <span style="color: #e81122;"># code is hiden</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">code is hiden</span>
 
     <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">update</span>(<span style="color: #cf4a44;">self</span>):
         <span style="color: #25ef29;">"""Update status of world by status before.</span>
@@ -147,11 +147,11 @@ tags       :
 <span style="color: #25ef29;">          + if cell is dead, and number of neighbors is three, then</span>
 <span style="color: #25ef29;">            cell will be alive</span>
 <span style="color: #25ef29;">        """</span>
-        <span style="color: #e81122;"># code is hiden</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">code is hiden</span>
 
     <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">neighbors</span>(<span style="color: #cf4a44;">self</span>, row, col):
         <span style="color: #25ef29;">"""Compute number of alive neighbors around a cell."""</span>
-        <span style="color: #e81122;"># code is hiden</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">code is hiden</span>
 </pre>
 </div>
 <p>
@@ -159,7 +159,7 @@ tags       :
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.next
+<pre class="src src-python"><span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span>
 </pre>
 </div>
 <p>
@@ -181,18 +181,18 @@ tags       :
 <span style="color: #25ef29;">     + if cell is dead, and number of neighbors is three, then</span>
 <span style="color: #25ef29;">       cell will be alive</span>
 <span style="color: #25ef29;">  """</span>
-  <span style="color: #cf4a44;">self</span>.next = <span style="color: #cf4a44;">self</span>.now.copy()
+  <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span> = <span style="color: #cf4a44;">self</span>.now.copy()
   <span style="color: #cf4a44;">for</span> crow <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(<span style="color: #cf4a44;">self</span>.row):
       <span style="color: #cf4a44;">for</span> ccol <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(<span style="color: #cf4a44;">self</span>.col):
-          around = <span style="color: #cf4a44;">self</span>.neighbors(crow, ccol)
+          <span style="color: #fefc58;">around</span> = <span style="color: #cf4a44;">self</span>.neighbors(crow, ccol)
           <span style="color: #cf4a44;">if</span> (around &lt; 2 <span style="color: #cf4a44;">or</span> around &gt; 3):
-              <span style="color: #cf4a44;">self</span>.next[crow, ccol] = <span style="color: #cf4a44;">False</span>
+              <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span>[crow, ccol] = <span style="color: #bebebe;">False</span>
 
           <span style="color: #cf4a44;">elif</span> ((<span style="color: #cf4a44;">not</span> <span style="color: #cf4a44;">self</span>.now[crow, ccol]) <span style="color: #cf4a44;">and</span>
                 around == 3):
-              <span style="color: #cf4a44;">self</span>.next[crow, ccol] = <span style="color: #cf4a44;">True</span>
+              <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span>[crow, ccol] = <span style="color: #bebebe;">True</span>
 
-  <span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.next.copy()
+  <span style="color: #cf4a44;">self</span>.now = <span style="color: #cf4a44;">self</span>.<span style="color: #31d3c4;">next</span>.copy()
 </pre>
 </div>
 
@@ -209,17 +209,17 @@ tags       :
 <span style="color: #25ef29;">    """</span>
     <span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">__init__</span>(<span style="color: #cf4a44;">self</span>, *args, **kwargs):
         <span style="color: #25ef29;">"""Init resource and world"""</span>
-        <span style="color: #e81122;"># init resource</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">init resource</span>
         tk.Tk.__init__(<span style="color: #cf4a44;">self</span>, *args, **kwargs)
-        <span style="color: #cf4a44;">self</span>.setup_members()    <span style="color: #e81122;"># initialize class members</span>
-        <span style="color: #cf4a44;">self</span>.setup_window()     <span style="color: #e81122;"># root window</span>
-        <span style="color: #cf4a44;">self</span>.setup_toolbar()    <span style="color: #e81122;"># tool bar</span>
-        <span style="color: #cf4a44;">self</span>.setup_canvas()     <span style="color: #e81122;"># canvas to draw world</span>
+        <span style="color: #cf4a44;">self</span>.setup_members()    <span style="color: #e81122;"># </span><span style="color: #e81122;">initialize class members</span>
+        <span style="color: #cf4a44;">self</span>.setup_window()     <span style="color: #e81122;"># </span><span style="color: #e81122;">root window</span>
+        <span style="color: #cf4a44;">self</span>.setup_toolbar()    <span style="color: #e81122;"># </span><span style="color: #e81122;">tool bar</span>
+        <span style="color: #cf4a44;">self</span>.setup_canvas()     <span style="color: #e81122;"># </span><span style="color: #e81122;">canvas to draw world</span>
 
-        <span style="color: #e81122;"># init world</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">init world</span>
         <span style="color: #cf4a44;">self</span>.create_world()
 
-        <span style="color: #e81122;"># make world alive</span>
+        <span style="color: #e81122;"># </span><span style="color: #e81122;">make world alive</span>
         <span style="color: #cf4a44;">self</span>.after(5, <span style="color: #cf4a44;">lambda</span>: <span style="color: #cf4a44;">self</span>.life(5))
 </pre>
 </div>

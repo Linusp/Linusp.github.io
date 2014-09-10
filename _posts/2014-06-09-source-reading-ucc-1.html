@@ -41,46 +41,46 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
 {
     <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span>;
 
     <span style="color: #cf4a44;">if</span> (argc &lt;= 1)
     {
-        <span style="color: #cf4a44;">ShowHelp</span>();
-        <span style="color: #cf4a44;">exit</span>(0);
+        ShowHelp();
+        exit(0);
     }
 
     Option.oftype = EXE_FILE;
-    <span style="color: #cf4a44;">SetupToolChain</span>();
-    Command = <span style="color: #cf4a44;">Alloc</span>((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
+    SetupToolChain();
+    Command = Alloc((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
     Command[0] = <span style="color: #bebebe;">NULL</span>;
 
-    i = <span style="color: #cf4a44;">ParseCmdLine</span>(--argc, ++argv);
+    i = ParseCmdLine(--argc, ++argv);
     <span style="color: #cf4a44;">for</span> (; i &lt; argc; ++i)
     {
         <span style="color: #cf4a44;">if</span> (argv[i][0] == <span style="color: #25ef29;">'-'</span>)
         {
-            Option.linput = <span style="color: #cf4a44;">ListAppend</span>(Option.linput, argv[i]);
+            Option.linput = ListAppend(Option.linput, argv[i]);
         }
         <span style="color: #cf4a44;">else</span>
         {
-            <span style="color: #cf4a44;">AddFile</span>(argv[i]);
+            AddFile(argv[i]);
         }
     }
 
     <span style="color: #cf4a44;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
     {
-        <span style="color: #cf4a44;">if</span> (<span style="color: #cf4a44;">InvokeProgram</span>(i) != 0)
+        <span style="color: #cf4a44;">if</span> (InvokeProgram(i) != 0)
         {
-            <span style="color: #cf4a44;">RemoveFiles</span>();
-            <span style="color: #cf4a44;">fprintf</span>(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
-            <span style="color: #cf4a44;">PrintCommand</span>();
+            RemoveFiles();
+            fprintf(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
+            PrintCommand();
             <span style="color: #cf4a44;">return</span> -1;
         }
     }
 
-    <span style="color: #cf4a44;">RemoveFiles</span>();
+    RemoveFiles();
     <span style="color: #cf4a44;">return</span> 0;
 }
 </pre>
@@ -108,8 +108,8 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 
 <pre class="src src-C"><span style="color: #cf4a44;">if</span> (argc &lt;= 1)
 {
-    <span style="color: #cf4a44;">ShowHelp</span>();
-    <span style="color: #cf4a44;">exit</span>(0);
+    ShowHelp();
+    exit(0);
 }
 </pre>
 </div>
@@ -124,8 +124,8 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 <div class="org-src-container">
 
 <pre class="src src-C">Option.oftype = EXE_FILE;
-<span style="color: #cf4a44;">SetupToolChain</span>();
-Command = <span style="color: #cf4a44;">Alloc</span>((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
+SetupToolChain();
+Command = Alloc((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
 Command[0] = <span style="color: #bebebe;">NULL</span>;
 </pre>
 </div>
@@ -147,16 +147,16 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 <div class="outline-text-3" id="text-2-3">
 <div class="org-src-container">
 
-<pre class="src src-C">i = <span style="color: #cf4a44;">ParseCmdLine</span>(--argc, ++argv);
+<pre class="src src-C">i = ParseCmdLine(--argc, ++argv);
 <span style="color: #cf4a44;">for</span> (; i &lt; argc; ++i)
 {
     <span style="color: #cf4a44;">if</span> (argv[i][0] == <span style="color: #25ef29;">'-'</span>)
     {
-        Option.linput = <span style="color: #cf4a44;">ListAppend</span>(Option.linput, argv[i]);
+        Option.linput = ListAppend(Option.linput, argv[i]);
     }
     <span style="color: #cf4a44;">else</span>
     {
-        <span style="color: #cf4a44;">AddFile</span>(argv[i]);
+        AddFile(argv[i]);
     }
 }
 </pre>
@@ -173,11 +173,11 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 
 <pre class="src src-C"><span style="color: #cf4a44;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
 {
-    <span style="color: #cf4a44;">if</span> (<span style="color: #cf4a44;">InvokeProgram</span>(i) != 0)
+    <span style="color: #cf4a44;">if</span> (InvokeProgram(i) != 0)
     {
-        <span style="color: #cf4a44;">RemoveFiles</span>();
-        <span style="color: #cf4a44;">fprintf</span>(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
-        <span style="color: #cf4a44;">PrintCommand</span>();
+        RemoveFiles();
+        fprintf(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
+        PrintCommand();
         <span style="color: #cf4a44;">return</span> -1;
     }
 }
@@ -190,12 +190,12 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 
 <pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">ret</span> = 0;
 <span style="color: #e81122;">/* </span><span style="color: #e81122;">do some thing </span><span style="color: #e81122;">*/</span>
-ret = <span style="color: #cf4a44;">Preproc</span>();
+ret = Preproc();
 <span style="color: #cf4a44;">if</span> (ret &lt; 0) {                  <span style="color: #e81122;">/* </span><span style="color: #e81122;">error </span><span style="color: #e81122;">*/</span>
     <span style="color: #cf4a44;">return</span> ret;
 }
 
-ret = <span style="color: #cf4a44;">Lexana</span>();
+ret = Lexana();
 <span style="color: #cf4a44;">if</span> (ret &lt; 0) {                  <span style="color: #e81122;">/* </span><span style="color: #e81122;">error </span><span style="color: #e81122;">*/</span>
     <span style="color: #cf4a44;">return</span> ret;
 };

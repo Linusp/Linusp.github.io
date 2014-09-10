@@ -176,12 +176,12 @@ tags       : 快速排序
 <pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
 <span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">del_char</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">del</span>)
+<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">del_char</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">del</span>)
 <span class="linenr"> 5: </span>{
 <span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">cur</span> = -1;
 <span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">index</span> = 0;
 <span class="linenr"> 8: </span>    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">temp</span> = <span style="color: #25ef29;">'\0'</span>;
-<span class="linenr"> 9: </span>    <span style="color: #cf4a44;">for</span> (; index &lt; <span style="color: #cf4a44;">strlen</span>(str); ++index) {
+<span class="linenr"> 9: </span>    <span style="color: #cf4a44;">for</span> (; index &lt; strlen(str); ++index) {
 <span class="linenr">10: </span>        <span style="color: #cf4a44;">if</span> (str[index] != del) {
 <span class="linenr">11: </span>            ++cur;
 <span class="linenr">12: </span>            temp = str[cur];
@@ -194,11 +194,11 @@ tags       : 快速排序
 <span class="linenr">19: </span>    <span style="color: #cf4a44;">return</span> cur;
 <span class="linenr">20: </span>}
 <span class="linenr">21: </span>
-<span class="linenr">22: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>()
+<span class="linenr">22: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>()
 <span class="linenr">23: </span>{
 <span class="linenr">24: </span>    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[] = <span style="color: #25ef29;">"abcdaaaaab"</span>;
-<span class="linenr">25: </span>    <span style="color: #cf4a44;">del_char</span>(s, <span style="color: #25ef29;">'a'</span>);
-<span class="linenr">26: </span>    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, s);
+<span class="linenr">25: </span>    del_char(s, <span style="color: #25ef29;">'a'</span>);
+<span class="linenr">26: </span>    printf(<span style="color: #25ef29;">"%s\n"</span>, s);
 <span class="linenr">27: </span>    <span style="color: #cf4a44;">return</span> 0;
 <span class="linenr">28: </span>}
 </pre>
@@ -222,14 +222,14 @@ bcdb
 <pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
 <span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">del_dup</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>)
+<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">del_dup</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>)
 <span class="linenr"> 5: </span>{
 <span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">cur</span> = 0;
 <span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">index</span> = 1;
 <span class="linenr"> 8: </span>    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">temp</span> = <span style="color: #25ef29;">'\0'</span>;
 <span class="linenr"> 9: </span>    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">last</span> = str[0];
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>    <span style="color: #cf4a44;">for</span> (; index &lt; <span style="color: #cf4a44;">strlen</span>(str); ++index) {
+<span class="linenr">11: </span>    <span style="color: #cf4a44;">for</span> (; index &lt; strlen(str); ++index) {
 <span class="linenr">12: </span>        <span style="color: #cf4a44;">if</span> (str[index] != last) {
 <span class="linenr">13: </span>            ++cur;
 <span class="linenr">14: </span>            temp = str[cur];
@@ -242,11 +242,11 @@ bcdb
 <span class="linenr">21: </span>    str[cur] = <span style="color: #25ef29;">'\0'</span>;
 <span class="linenr">22: </span>}
 <span class="linenr">23: </span>
-<span class="linenr">24: </span><span style="color: #ca34e2;">int</span> <span style="color: #cf4a44;">main</span>()
+<span class="linenr">24: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>()
 <span class="linenr">25: </span>{
 <span class="linenr">26: </span>    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[] = <span style="color: #25ef29;">"aabbccdd"</span>;
-<span class="linenr">27: </span>    <span style="color: #cf4a44;">del_dup</span>(s);
-<span class="linenr">28: </span>    <span style="color: #cf4a44;">printf</span>(<span style="color: #25ef29;">"%s\n"</span>, s);
+<span class="linenr">27: </span>    del_dup(s);
+<span class="linenr">28: </span>    printf(<span style="color: #25ef29;">"%s\n"</span>, s);
 <span class="linenr">29: </span>    <span style="color: #cf4a44;">return</span> 0;
 <span class="linenr">30: </span>}
 </pre>
