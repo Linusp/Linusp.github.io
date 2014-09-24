@@ -18,7 +18,7 @@ nav:
     url : /categories.html
   - text: 标签
     url : /tags.html
-  - text: 存档
+  - text: 归档
     url : /archive.html
   - text: IF
     url : /if.html
