@@ -222,7 +222,7 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 -- _posts             &#25991;&#31456;&#23384;&#25918;&#30446;&#24405;
    -- 2013-09-08-test.md
    -- 2013-09-08-test.html
-   -- &lt;other posts&gt;                         
+   -- &lt;other posts&gt;
 -- assets/            &#20854;&#20182;&#21338;&#23458;&#25991;&#20214;&#23384;&#25918;&#30446;&#24405;&#65292;&#22914;css&#65292;&#22270;&#29255;&#65292;js&#25991;&#20214;&#65292;&#30446;&#24405;&#32467;&#26500;&#20165;&#20026;
                       &#31034;&#20363;&#65292;&#21487;&#26681;&#25454;&#20010;&#20154;&#24847;&#24895;&#33258;&#34892;&#35774;&#32622;
    -- css
@@ -245,7 +245,7 @@ Jekyll-Bootstrap和Octopress是两个基于Jekyll的博客框架，使用它们�
 <blockquote>
 <p>
 {% raw %}
-{{ site.url }} 
+{{ site.url }}
 {% endraw %}
 {% raw %}
 {{ for post in site.posts }}
@@ -299,7 +299,7 @@ feed:             /atom.xml
 author:
     name:         &#21457;&#26465;&#20820;&#23376;
     email:        linusp1024@gmail.com
-    description:  "&#21464;&#25104;&#20820;&#23376;&#30340;&#38738;&#34521;"
+    description:  <span style="color: #25ef29;">"&#21464;&#25104;&#20820;&#23376;&#30340;&#38738;&#34521;"</span>
 
 follow:
     email:        linusp1024@gmail.com
@@ -318,7 +318,7 @@ theme:            blue
 
 disqus:           linuspb
 
-copyright:        &#169; 2013 
+copyright:        &#169; 2013
 test:             ok
 </pre>
 </div>
@@ -424,7 +424,7 @@ tags       : Github emacs org-mode Jekyll
      <span style="color: #31d3c4;">:publishing-directory</span> <span style="color: #25ef29;">"~/blog/Jekyll/"</span>
      <span style="color: #31d3c4;">:recursive</span> t
      <span style="color: #31d3c4;">:publishing-function</span> org-publish-org-to-html
-     <span style="color: #31d3c4;">:headline-levels</span> 4<span style="color: #a07f41; background-color: #073642;"> </span>
+     <span style="color: #31d3c4;">:headline-levels</span> 4
      <span style="color: #31d3c4;">:html-extension</span> <span style="color: #25ef29;">"html"</span>
      <span style="color: #31d3c4;">:body-only</span> t <span style="color: #e81122;">;; </span><span style="color: #e81122;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
      )
@@ -451,15 +451,15 @@ tags       : Github emacs org-mode Jekyll
 目前还存在以下问题：
 </p>
 <ul class="org-ul">
-<li><del>在emacs中使用 <b>#+begin\_src</b> 插入的代码块背景色太浅导致有些部分看不清.</del> （解决办法：修改css文件中pre的背景色为深色）
+<li><del>在emacs中使用 <b>#+begin_src</b> 插入的代码块背景色太浅导致有些部分看不清.</del> （解决办法：修改css文件中pre的背景色为深色）
 </li>
-<li><del>在emacs中使用 <b>#+begin\_quote</b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.</del>
+<li><del>在emacs中使用 <b>#+begin_quote</b> 插入的引用行间距很大而且有下划线，应该是博客主题 <b>The One</b> 的css导致的.</del>
 </li>
-<li><del>在emacs中引用liquid语法的语句会被Jekyll解析而不能正确显示.</del> 
+<li><del>在emacs中引用liquid语法的语句会被Jekyll解析而不能正确显示.</del>
 </li>
 <li><del>分类页面和标签页面还存在问题</del> （如果您想使用本博客模板的话，建议使用<i>初始模板</i>）.
 </li>
-<li><del>首页显示了每篇文章的全部内容，应当改成显示文章概要以处理像本文这样内容较多的文章.</del> 
+<li><del>首页显示了每篇文章的全部内容，应当改成显示文章概要以处理像本文这样内容较多的文章.</del>
 </li>
 </ul>
 
