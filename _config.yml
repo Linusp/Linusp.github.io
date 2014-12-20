@@ -26,6 +26,8 @@ nav:
     url : /link.html
   - text: 关于
     url : /about.html
+  - text: 简历
+    url : /zresum/index.html
 
 JB :
   version : 0.3.0
