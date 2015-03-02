@@ -1,0 +1,120 @@
+---
+layout     : post
+title      : Python触发按键事件
+categories : 编程
+tags       :
+- Python
+- xautomation
+- PyUserInput
+description:
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">缘起</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+最近想尝试做一个简单的命令控制系统，关于命令控制方面的技术暂且不说，这个我也还在调研、学习，估计进度会很慢——我将问题分解后，发现有一些无关语音技术的小问题是可以优先去解决的，比如音频的录制，还有就是本篇所说的按键触发。
+</p>
+
+<p>
+按键的捕获这个是很容易做的事情，很容易想到 Python 众多的 GUI 库必然都会包含这一功能，但按键触发的 Python 库找了一圈也没找到几个。最后还是在 StackOverflow 上找到了可靠的答案。也就是说，本文也不过是一些已有信息的组织和加工而已——事实上我写的大部分博客都属于此列吧。
+</p>
+
+<p>
+按键触发最终必然涉及到底层系统调用，对于这些底层的东西，我不太关心，我只是想达到效果而已。所以我也是对我觉得好用的库进行实践说明了。鉴于我的开发环境是 Linux，我只会对适用于 Linux 的或者跨平台的库进行说明。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">适用于Linux的方法</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在 Linux 的 X 环境(即桌面环境)上，可以通过 <b>xautomation</b> 软件包中的 <b>xte</b> 工具来触发按键、鼠标点击等事件，在 Linux 系统上通过软件包管理系统直接安装即可。其效果如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/xte.gif" alt="xte.gif" />
+</p>
+</div>
+
+<p>
+在 Linux 上的办法就是在 Python 中通过子进程来调用 xte ，以达到效果。下面是一个简短的示例代码:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/usr/bin/env python</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #b294bb;">from</span> subprocess <span style="color: #b294bb;">import</span> Popen, PIPE
+
+<span style="color: #de935f;">emacs_save_sequence</span> = <span style="color: #b5bd68;">'''keydown Control_L</span>
+<span style="color: #b5bd68;">key x</span>
+<span style="color: #b5bd68;">key s</span>
+<span style="color: #b5bd68;">keyup Control_L</span>
+<span style="color: #b5bd68;">'''</span>
+<span style="color: #b294bb;">def</span> <span style="color: #81a2be;">keypress</span>(sequence):
+    <span style="color: #de935f;">p</span> = Popen([<span style="color: #b5bd68;">'xte'</span>], stdin=PIPE)
+    p.communicate(<span style="color: #8abeb7;">input</span>=sequence)
+
+keypress(emacs_save_sequence)
+</pre>
+</div>
+
+<p>
+上述代码触发的是 Emacs 的保存快捷键"C-x C-s"。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">适用于Windows的方法</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+在Windows系统上可以通过<a href="https://pypi.python.org/pypi/pyHook"> pyHook </a>来进行按键触发，限于环境，就不作展开了。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">跨平台的方法</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<a href="https://github.com/SavinaRoja/PyUserInput">PyUserInput </a>这个 Python 库能够在 Linux 、Mac 和 Windows 三个系统上使用，考虑跨平台的工具的话可以使用它。
+</p>
+
+<p>
+它的使用也很简单，对于按键事件来说，是通过一个 PyKeyboard 对象来进行的，通过三种不同的方法来触发不同的事件
+</p>
+<ul class="org-ul">
+<li>press_key: 按下
+</li>
+<li>release_key: 松开
+</li>
+<li>tap_key: 敲击
+</li>
+</ul>
+
+<p>
+当然，它还提供了如 type_string 这样的方法来进行字符串的输入。
+</p>
+
+<p>
+下面是用 PyUserInput 写的触发 Emacs 的保存快捷键 "C-x C-s"的示例代码:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/usr/bin/env python</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
+
+<span style="color: #b294bb;">from</span> pykeyboard <span style="color: #b294bb;">import</span> PyKeyboard
+
+<span style="color: #de935f;">k</span> = PyKeyboard()
+
+k.press_key(k.control_l_key)
+k.tap_key(<span style="color: #b5bd68;">'x'</span>)
+k.tap_key(<span style="color: #b5bd68;">'s'</span>)
+k.release_key(k.control_l_key)
+</pre>
+</div>
+</div>
+</div>
