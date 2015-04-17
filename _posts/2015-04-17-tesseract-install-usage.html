@@ -1,0 +1,200 @@
+---
+layout     : post
+title      : "Tesseract:安装与命令行使用"
+categories : 编程
+tags       :
+- Tesseract
+- OCR
+description: "Tesseract是一款被广泛使用的开源 OCR 工具，本文将对其进行简单的介绍"
+---
+
+<p>
+<a href="https://code.google.com/p/tesseract-ocr/">Tesseract</a> 是一款被广泛使用的开源 OCR 工具，本文将对其进行简单的介绍.
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">简介</h2>
+<div class="outline-text-2" id="text-1">
+
+<div class="figure">
+<p><img src="../../../assets/img/tesseract.gif" alt="tesseract.gif" align="right" />
+</p>
+</div>
+
+<p>
+Tesseract(/'tesərækt/) 这个词的意思是"超立方体"，指的是几何学里的四维标准方体，又称"正八胞体"。右图是一个正八胞体绕着两个四维空间中互相正交的平面进行双旋转时的透视投影。不过这里要讲的，是一款以其命名的开源 OCR(Optical Character Recognition, 光学字符识别) 软件。
+</p>
+
+<p>
+所谓 OCR 是图像识别领域中的一个子领域，该领域专注于对图片中的文字信息进行识别并转换成能被常规文本编辑器编辑的文本。
+</p>
+
+<p>
+Tesseract 已经有 30 年历史，开始它是惠普实验室的一款专利软件，然后在 2005 年开源，自 2006 年后由 Google 赞助进行后续的开发和维护。
+</p>
+
+<p>
+在 1995 年 Tesseract 曾是世界前三的 OCR 引擎，而且在现在的免费 OCR 引擎中，其识别精度也仍然是出类拔萃的。因为其免费与较好的效果，许多的个人开发者以及一些较小的团队在使用着 Tesseract ，诸如验证码识别、车牌号识别等应用中，不难见到 Tesseract 的身影。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">获取,安装与配置</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">Linux</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+主流的 Linux 发行版都可以通过包管理器来安装 Tesseract，以 Debian 及其衍生版为例:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install tesseract-ocr
+</pre>
+</div>
+
+<p>
+如果想用 Tesseract 对图像进行识别，还需要对应的语言文件。所谓的语言文件是 Tesseract 识别某种语言的文字图像时需要的一些资源，这些东西也可以通过包管理器获取。比如我们需要识别英语和简体中文，那么:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install tesseract-ocr-eng tesseract-ocr-chi-sim
+</pre>
+</div>
+
+<p>
+当然了，这是通过包管理器的方式进行安装，如果需要，还可以通过编译安装的方式来构建最新版的 Tesseract.
+</p>
+
+<p>
+Tesseract 的项目托管在 Google Code 上，在<a href="https://code.google.com/p/tesseract-ocr/downloads/list">下载页面</a>可以自己选择需要的版本，假如我们需要安装 tesseract-ocr-3.02.02.tar.gz 这个版本:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">wget https://tesseract-ocr.googlecode.com/files/tesseract-ocr-3.02.02.tar.gz
+tar xzvf tesseract-ocr-3.02.02.tar.gz
+</pre>
+</div>
+
+<p>
+Tesseract 的编译需要 automake, autoconf, libtool 支持，所以这几个工具得装上:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install autoconf automake libtool
+</pre>
+</div>
+
+<p>
+当然了, Tesseract 还依赖一些图像库:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install ligjpeg62-dev libtiff4-dev libpng12-dev libleptonica-dev
+</pre>
+</div>
+
+<p>
+<b>注意: 以上安装的包的名称可能在不同发行版上略有不同</b>
+</p>
+
+<p>
+需要注意的是，<a href="http://www.leptonica.org/">Leptonica</a> 是 Tesseract 的一个比较重要的依赖，而且不同版本的 Tesseract 对 Leptonica 的版本要求也不一样，需要留意包管理器所安装的 Leptonica 版本是否满足要求，如果不满足要求，最好还是下载 Leptonica 的源代码编译安装。
+</p>
+
+<ul class="org-ul">
+<li>Tesseract 3.01: Leptonica 版本不低于 1.67
+</li>
+<li>Tesseract 3.02: Leptonica 版本不低于 1.69
+</li>
+<li>Tesseract 3.03: Leptonica 版本不低于 1.70
+</li>
+</ul>
+
+<p>
+解决依赖后按常规方法编译安装即可:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">./configure
+make
+sudo make install
+sudo ldconfig
+</pre>
+</div>
+
+<p>
+在 3.03 及以上版本中，用于训练产生语言文件的工具需要单独编译和安装:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">make training
+sudo make training-install
+</pre>
+</div>
+
+<p>
+建议在执行 ./configure 时加上参数 &#x2013;prefix=xxx 来指定安装路径，这样以后要卸载会方便一些——当然如果这样做的话在安装完后需要做一些额外的工作，包括:
+</p>
+<ul class="org-ul">
+<li>添加 Tesseract 的可执行程序路径到环境变量 PATH 中
+</li>
+<li>在 /usr/include 目录或者 /usr/local/include 目录下建立 Tesseract 安装目录下 include/tesseract 的符号链接
+</li>
+<li>在 /usr/lib 目录或者 /usr/local/lib 目录下建立 Tesseract 安装目录下的 lib 目录下的静态链接库、动态链接库的符号链接
+</li>
+</ul>
+
+<p>
+安装完成后，无论是通过包管理器安装的还是通过编译源代码安装的，建立都配置一下 TESSDATA_PREFIX 这个环境变量。在这个环境变量未设置的情况下，Tesseract 将会在安装目录中的 share/tessdata 这个目录下去寻找、加载语言文件，这本身当然没什么问题。
+</p>
+
+<p>
+问题在于当我们想添加新的语言文件时，会遇到一些麻烦——程序一般都是安装的系统目录中，也就是说，我们需要提升权限才能将语言文件放到正确的地方。假如是在公司的服务器上进行相关的操作，普通用户一般都是没有 sudo 权限的。将语言文件放置在用户目录中可以解决这个问题，方法是在 .bashrc (假设您使用 bash 作为日常的 shell)中设置
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">export</span> <span style="color: #de935f;">TESSDATA_PREFIX</span>=$<span style="color: #de935f;">HOME</span>/
+</pre>
+</div>
+<p>
+如上设置时，将语言文件放在 ~/tessdata/ 下面即可。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">Windows</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<div class="figure">
+<p><img src="../../../assets/img/tesseract-install.png" alt="tesseract-install.png" align="right" />
+</p>
+</div>
+
+<p>
+Windows 上的安装也很简单，下载对应的安装程序，双击运行，按照提示进行即可。
+</p>
+
+<p>
+注意在 "Language data" 那个选项里，默认是只勾选了英文的，如果需要进行其他语言的识别，记得勾选对应的语言。
+</p>
+
+<p>
+再一个是，如果需要进行相应的开发工作，建立把 "Tesseract development files" 这个选项也勾选。
+</p>
+
+<p>
+安装后将 Tesseract 所在的目录加入环境变量 PATH 中。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">命令行使用</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+(待续)
+</p>
+</div>
+</div>
