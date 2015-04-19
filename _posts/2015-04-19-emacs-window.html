@@ -1,0 +1,215 @@
+---
+layout     : post
+title      : Emacs中的窗口操作
+categories : Emacs
+tags       :
+- Emacs
+- Window
+description:
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">窗口</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这里的窗口并不是指桌面环境中的窗口，而是指 Emacs 中的显示单元。在 Emacs 中，显示一个缓冲区内容的区域，就被称为 "窗口"。
+</p>
+
+<p>
+一个窗口中只能显示一个缓冲区，而一个缓冲区是可以显示在多个窗口中的。出于一些需要，我们可能在使用 Emacs 的时候将整个 Emacs 显示区域分割成多个窗口，本文就将对这种情形下对窗口的常用操作做简要介绍。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">窗口的新增</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+新增窗口是通过对当前窗口的分割来产生的，分割有两种方式:
+</p>
+<ul class="org-ul">
+<li>C-x 2: 将当前窗口分割为上下两个，如下图所示
+
+
+<div class="figure">
+<p><img src="../../../assets/img/emacs-window-split-hor.gif" alt="emacs-window-split-hor.gif" />
+</p>
+</div>
+</li>
+
+<li>C-x 3: 将当前窗口分割为左右两个，如下图所示
+
+
+<div class="figure">
+<p><img src="../../../assets/img/emacs-window-split-ver.gif" alt="emacs-window-split-ver.gif" />
+</p>
+</div>
+</li>
+</ul>
+
+
+<p>
+分割后的子窗口都想显示被分割的窗口当时显示的缓冲区，如果想要在分割后切换到另外一个缓冲区，以下我编写的方法可以作为参考:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #969896; font-style: italic;">;; </span><span style="color: #969896; font-style: italic;">&#23558;&#24403;&#21069;&#31383;&#21475;&#20998;&#21106;&#20026;&#19978;&#19979;&#20004;&#20010;&#65292;&#24182;&#20999;&#25442;&#21040;&#21478;&#22806;&#19968;&#20010; buffer</span>
+(<span style="color: #b294bb;">defun</span> <span style="color: #81a2be;">split-window-new-buffer</span> ()
+  (interactive)
+  (split-window-below)
+  (call-interactively 'switch-to-buffer))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">窗口的删除</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+窗口的删除有三个可用的快捷键，分别是:
+</p>
+<ul class="org-ul">
+<li>C-x 0: 删除当前窗口
+</li>
+<li>C-x 1: 删除当前窗口外的其他窗口
+</li>
+<li>C-x 4 0: 删除当前窗口，并关闭其中显示的缓冲区
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">窗口的切换</h2>
+<div class="outline-text-2" id="text-4">
+</div><div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">默认的方法</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Emacs 中提供了 C-x o(字母) 这个快捷键来在窗口间循环移动，方向大致是顺时针方向。分割的窗口数稍微一多的话，这么一个快捷键肯定是不够的。
+</p>
+
+<p>
+事实上 C-x o 是调用了 other-window 这个内建方法，通过 C-h f 可以知道这个方法的原型是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(other-window COUNT <span style="color: #f0c674;">&amp;optional</span> ALL-FRAMES)
+</pre>
+</div>
+
+<p>
+它的参数里我们要关心的是 COUNT 这个参数，这个参数可以取三种值:
+</p>
+<ul class="org-ul">
+<li>为正整数: 顺时针前进指定数目的窗口
+</li>
+<li>等于0: 原地不动
+</li>
+<li>为负整数: 逆时针前进指定数目(COUNT的绝对值)的窗口
+</li>
+</ul>
+
+<p>
+所以我们可以很自然地写出一个 "切换到上一个窗口" 的方法来:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #b294bb;">defun</span> <span style="color: #81a2be;">prev-window</span> ()
+  (interactive)
+  (other-window -1))
+</pre>
+</div>
+
+<p>
+然后可以按自己的需要绑定到指定的快捷键上，以 C-x p 为例:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #b5bd68;">"C-x p"</span>) 'prev-window)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2">windmove package</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Emacs 中其实还内置了更为简易的切换方法，可以向当前窗口指定方向的邻近窗口切换，不过并未给这些方法提供默认的快捷键绑定。
+</p>
+
+<p>
+共有四个方法，它们在 windmove 这个包中被定义和实现:
+</p>
+<ul class="org-ul">
+<li>windmove-up
+</li>
+<li>windmove-down
+</li>
+<li>windmove-right
+</li>
+<li>windmove-left
+</li>
+</ul>
+
+<p>
+功能的话看它们的名称就看得出来，我想就不用多解释了。
+</p>
+
+<p>
+我们可以自己来进行绑定，或者也可以使用默认的设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(windmove-default-keybindings)
+</pre>
+</div>
+<p>
+在配置文件中添加上面这句后，我们将可以使用 Shift+方向键 的方式来进行窗口切换。为求方便一般还会在其后跟上以下这句:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq windmove-wrap-around t)
+</pre>
+</div>
+<p>
+这一条语句的作用是让 windmove 在边缘的窗口也能正常运作。举个例子，当前窗口已经是最左端的窗口了，如果使用 Shift+left ，将仍会停留在当前窗口——因为已经到边缘了，左边没有窗口可供选择。但在添加了上面这句后，Shift+left 将会跳到最右边的窗口中。垂直方向上的窗口切换同理。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">窗口布局的保存与恢复</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Emacs 中已经内置了窗口布局的保存与恢复功能，通过在配置文件中添加下列语句就可以启用布局保存功能:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(desktop-save-mode 1)
+</pre>
+</div>
+<p>
+初次启用的时候会询问是否保存 "desktop" ，这个时候需要选择保存位置，布局一般会保存为名为 .emacs.desktop 的文件。
+</p>
+
+<p>
+desktop-save-mode 不仅会保存窗口布局，还会保存每个窗口中打开了什么缓冲区，每个缓冲区中的光标位于哪一行这些非常游泳的信息，所以还是非常方便的。
+</p>
+
+<p>
+不过虽然保存了 desktop 文件，Emacs 启动的时候却不会去主动加载它，一种办法是在配置文件里定义一个变量保存 desktop 文件所在的目录，然后在启动的时候就加载它:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq desktop-dir <span style="color: #b5bd68;">"~/Dropbox/doc/"</span>)
+(desktop-read desktop-dir)
+</pre>
+</div>
+
+<p>
+不过上面这样的设置是不够完美的，假如我们不带任何参数启动 Emacs ，当然是没什么问题，但如果我们是用 Emacs 打开某个文件，这样做明显是不合理的。
+</p>
+</div>
+</div>
