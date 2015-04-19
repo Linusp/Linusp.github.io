@@ -166,15 +166,15 @@ sudo make training-install
 <div id="outline-container-sec-2-2" class="outline-3">
 <h3 id="sec-2-2">Windows</h3>
 <div class="outline-text-3" id="text-2-2">
-
-<div class="figure">
-<p><img src="../../../assets/img/tesseract-install.png" alt="tesseract-install.png" align="right" />
-</p>
-</div>
-
 <p>
 Windows 上的安装也很简单，下载对应的安装程序，双击运行，按照提示进行即可。
 </p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/tesseract-install.png" alt="tesseract-install.png" />
+</p>
+</div>
 
 <p>
 注意在 "Language data" 那个选项里，默认是只勾选了英文的，如果需要进行其他语言的识别，记得勾选对应的语言。
@@ -185,7 +185,7 @@ Windows 上的安装也很简单，下载对应的安装程序，双击运行，
 </p>
 
 <p>
-安装后将 Tesseract 所在的目录加入环境变量 PATH 中。
+安装完成后如无异常，会将安装目录添加到环境变量 PATH 中，这样就可以在 cmd 中直接运行程序了——Tesseract 并没有提供图形界面的工具，只能在命令行中使用，当然了，我们可以自己编写 GUI 应用程序来调用它，这个准备后面再讲。
 </p>
 </div>
 </div>
@@ -194,7 +194,108 @@ Windows 上的安装也很简单，下载对应的安装程序，双击运行，
 <h2 id="sec-3">命令行使用</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-(待续)
+这里只简单讲一下 Tesseract 识别图像的基本用法，关于训练和开发将另开新篇来专门讲述。
+</p>
+
+<p>
+由于 Tesseract 只提供命令行工具，这里讲到的用法对 Linux 和 Windows 平台都适用。
+</p>
+
+<p>
+首先可以通过 "&#x2013;list-langs" 来查看有哪些可用的 "语言" ，如果之前的 TESSDATA_PREFIX 环境变量没有设置错，将会看到这样的输出:
+</p>
+<pre class="example">
+bash &gt; tesseract --list-langs
+List of available languages (17):
+math
+chi
+chi_sim
+eng
+</pre>
+
+<p>
+这里的 "eng" 和 "chi_sim" 是 Tesseract 提供的英文和简体中文的语言文件，而其他的几个则是我自己训练得到的。
+</p>
+
+<p>
+另外要说明的是，这里的 "语言文件" 的本质是包含了某种 "自然语言" 的文字的特征等辅助识别的一些资源，但像 chi_sim 这个中文简体里也包含了英文字母与阿拉伯数字的资源。而我们也可以为了特定的用途而去训练产生对应的资源，这里的 "math" 是用于识别简单数学表达式的一个资源，并不是说有一种叫做 "math" 的语言。
+</p>
+
+<p>
+如果发现以上命令的输出为空，那应该去检查一下 TESSDATA_PREFIX 这个环境变量。在这个环境变量无误且 "语言文件" 存在的情况下，假设我们有一张名为 paper.png 的图片，则通过以下命令对图片进行识别，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract paper.png paper -l chi_sim
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>第一个参数是待识别的图像的文件名
+</li>
+<li>第二个参数用于指定输出，如果希望直接输出而不是保存到文件，那么就使用 stdout，否则这个参数将会作为保存结果的文件的前缀
+</li>
+<li>-l chi_sim 这个应该很好理解，就是用来指定使用哪个 "语言文件"，如果是使用 英文(eng) ，这个参数可以不加，因为默认就是使用英文的 "语言文件" 来进行识别
+</li>
+</ul>
+
+<p>
+以上命令如不出错，结果将会保存到 paper.txt 这个文本文件中。
+</p>
+
+<p>
+此外 Tesseract 还提供非常丰富的可选参数来对识别过程进行调整，可用的参数及其默认值可以通过以下命令进行查看:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract --print-parameters
+</pre>
+</div>
+
+<p>
+参数的使用有两种:
+</p>
+<ul class="org-ul">
+<li>使用 -c 选项来设定单项参数的值，比如:
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract paper.png paper -l chi_sim -c <span style="color: #de935f;">language_model_ngram_on</span>=1
+</pre>
+</div>
+
+<p>
+允许使用多个 -c 选项来设置多个参数的值。
+</p>
+</li>
+<li>将多项参数设置写入文件，然后在识别时使用该文件，比如:
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract paper.png paper -l chi_sim tess.conf
+</pre>
+</div>
+
+<p>
+需要注意的是，如果使用配置文件，用作参数的配置文件名要放在最后面——这里也支持多个配置文件，但它们必须要在最后面。假如我有两个配置文件 tess_1.conf 和 tess_2.conf，那么这样是正确的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract paper.png paper -l chi_sim tess_1.conf tess_2.conf
+</pre>
+</div>
+
+<p>
+而这样则是错误的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract paper.png paper tess_1.conf -l chi_sim tess_2.conf
+</pre>
+</div>
+</li>
+</ul>
+
+<p>
+至于 Tesseract 那些参数各有什么含义，官方没有提供任何文档来进行解释，这里有一个<a href="http://www.sk-spell.sk.cx/tesseract-ocr-parameters-in-302-version">链接</a>提供了部分参数的用处说明，应该是阅读了 Tesseract 源代码后得到的结论。
 </p>
 </div>
 </div>
