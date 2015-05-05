@@ -1,0 +1,339 @@
+---
+layout     : post
+title      : "Tesseract: 训练"
+categories : 编程
+tags       :
+- Tesseract
+- OCR
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">资源文件</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+在<a href="http://linusp.github.io/2015/04/17/tesseract-install-usage.html">上一篇文章</a>中已经讲述了 Tesseract 的基本使用，同时也提到， Tesseract 在识别是需要使用存储在磁盘上的 "语言文件" —— 为不产生歧义，这里简单以 "资源文件" 称呼它。在 Windows 系统上，这些资源文件可以在安装目录下的 tessdata 目录下找到；在 Linux 系统上，这些资源文件通常是在 /usr/share/tesseract-ocr/tessdata 目录下。按照 Tesseract 的约定，这些资源文件以 "traineddata" 作为后缀，除去后缀的部分则是该资源文件的 "名称" ，在使用 Tesseract 命令行工具或者 API 时，就通过这个名称来引用需要的资源文件。比如我们要用英语的资源文件来识别一张图像，通常会这么写:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract input.png output -l eng
+</pre>
+</div>
+
+<p>
+上述命令将会引用 eng.traineddata 这个资源文件。在 API 使用中同理。
+</p>
+
+<p>
+除了默认的路径， Tesseract 还会在环境变量 TESSDATA_PREFIX 指定的目录中的 tessdata 目录下寻找资源文件 —— 事实上在 Windows 系统中，安装系统就是把该环境变量的值设置成了 Tesseract 的安装目录。这方便我们管理我们自己生成的资源文件。
+</p>
+
+<p>
+如果系统中没有资源文件，或者没有需要的资源文件，该如何获取呢?一种办法是到 Tesseract 的<a href="https://code.google.com/p/tesseract-ocr/downloads/list">下载页面</a>去下载，在 "Summary+Labels" 一栏标注中有 "language data" 的就是了。对于 Linux 系统，可以直接从软件仓库中安装，以 Debian 为例，假如我们需要安装繁体中文的资源文件，可以执行
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install tesseract-ocr-chi-tra
+</pre>
+</div>
+
+<p>
+如果不知道需要的资源文件在安装时用什么名称，可以使用 aptitude 进行搜索，在描述字段会有说明。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">aptitude search tesseract-ocr-
+</pre>
+</div>
+
+<p>
+存储位置与获取方式讲完了，如果是一个有足够好奇心的人，肯定会想了解一下这个资源文件里有什么内容 —— 哈，说得就是我自己啦!当然啦，我也是后面才知道怎么去查看的。
+</p>
+
+<p>
+Tesseract 提供了工具来将一个资源文件打开，这个工具叫做 combine_tessdata ，它的更常用的功能是将训练过程中产生的各种资源打包到一起产生一个 Tesseract 可用的资源文件。以 eng.traineddata 为例，我们可以这样来解开它
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">combine_tessdata -u /usr/share/tesseract-ocr/tessdata/eng.traineddata english/eng
+</pre>
+</div>
+
+<p>
+上述命令将会把 eng.traineddata 解开并将结果保存到 english 目录下，所有结果文件都会以 eng 作为前缀。需要注意的是，这里如果 english 这个目录不存在，是会出错的。下面是我在我的系统上的一次实际操作:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/tessdata-extract.png" alt="tessdata-extract.png" />
+</p>
+</div>
+
+<p>
+可以看到，这个资源文件里包含了很多东西，这些文件各自的意义为:
+</p>
+<ul class="org-ul">
+<li>config: 配置文件
+</li>
+<li>unicharset: 字符集文件，所谓 "字符集" 即是所有可被识别的字符的集合
+</li>
+<li>unicharambigs: 识别歧义修正文件
+</li>
+<li>inttemp: 每个字符的 "原型" ，或者是 "标准型" ，当然啦，这里面其实是包含了字符的各种特征，并不是一个标准的 "字符图像"
+</li>
+<li>pffmtable: 指明了每个字符的特征数量
+</li>
+<li>normproto: 项目网站上的说法是 "normalization sensitivity prototypes" ，不知道怎么翻译合适
+</li>
+<li>以 dawg 结尾的文件: 有向非循环词图(Directed Acyclic Word Graph, DAWG)文件，用来增强、调整识别过程
+</li>
+<li>cube-unicharset, cube-word-dawg: 用于 Tesseract 内部名为 CUBE 的识别引擎，无资料，不详
+</li>
+<li>shapetable: 同样是个不知道如何翻译的家伙，反正项目网站上说这个文件已经不需要使用(但还是得有这个文件)，就不纠结了
+</li>
+</ul>
+
+<p>
+对于这些文件，我们可以用 combine_tessdata 将其重新打包起来:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">cd</span> english
+combine_tessdata eng
+</pre>
+</div>
+<p>
+上述命令会在该目录下寻找前缀为 eng 的必要文件，然后打包成 eng.traineddata。这些文件里面有一些是资源文件的必须成分，有一些则是锦上添花的成分。读者可以试试进入到这些文件所在的目录，尝试去掉其中一些然后进行打包操作。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">资源文件的训练</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+如果刚才按照建议进行过了尝试，应该能发现哪些是必要的文件，它们是:
+</p>
+<ul class="org-ul">
+<li>unicharset
+</li>
+<li>inttemp
+</li>
+<li>pffmtable
+</li>
+<li>normproto
+</li>
+<li>shapetable
+</li>
+</ul>
+
+<p>
+训练的过程就是为了从训练数据中产生这些东西。
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">数据准备</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+首先要准备好训练用的文本数据，根据不同的应用场景，对文本数据的要求会不一样。这些文本数据有两个用途:
+</p>
+<ol class="org-ol">
+<li>用以产生字符集
+</li>
+<li>用以产生语言模型
+</li>
+</ol>
+
+<p>
+产生字符集好理解，数据文件应尽量涵盖可能出现的字 —— 不过字符集越大，在使用生成的资源文件进行识别时时间消耗也会越大，所以应该根据实际情况进行折衷处理，比如说汉语的识别，一般来说涵盖了国标一级常用汉字(3755个)就已经足够了。
+</p>
+
+<p>
+除了字符集尽量涵盖可能出现的字外，我们也希望训练用的数据中的文字组合能尽量贴合真实场景，我们可以用这些数据来产生语言模型信息添加到最后的资源文件中。之前例子中的 DAWG 文件中就承载了这些信息。不过比较遗憾的是，对于中文训练，我目前知道的只是添加高频词表(freq-dawg)与词表(word-dawg)，如何添加 ngram 信息目前毫无头绪。将简体中文资源文件 chi_sim.traieddata 解开后里面有一个名为 chi_sim.fixed-length-dawgs 的文件，从项目网站上来看，应该是与 ngram 信息对应的文件，但该文件无法解开，项目网站上对这个文件也是语焉不详。 <b>如果有对这个问题的解决办法，请不吝赐教。</b>
+</p>
+
+<p>
+所以这一步要做的事情有两个:
+</p>
+<ol class="org-ol">
+<li>数据清洗，这个和自然语言处理里的清洗是一样的
+</li>
+<li>字符集提取，简单来说，排序、去重即可
+</li>
+</ol>
+
+<p>
+其中清洗后的数据用来提取语言模型信息，去重后的字符集数据用来进行训练。
+</p>
+
+<p>
+项目网站上说到，每个字在训练用的数据文件中一般应该有 10 个样本，低频字也至少要有 5 个，高频的应该在 20 个以上。不过就我目前进行的中文训练情况来看，每个字一个样本得到的结果也没有明显的差异，读者可以自行试验。
+</p>
+
+<p>
+需要注意的是，在生成图像时可能存在一部分字符要用某个字体来表示，而另一部分字符要用另外一个字体来表示 —— 比如汉字通常用宋体而英文可能用 Time News Roman ，这种情况下建议将数据分割成开来。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">图像与BOX文件生成</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+有了数据文件后，我们需要用这些数据文件中的文字来生成图像，用这些图像去进行训练。在 3.03 后， Tesseract 已经提供了相应的工具 text2image，使用方法为:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">text2image  --text=chinese.txt --outputbase=chinese.sun.exp0 --font=<span style="color: #b5bd68;">"SimSun"</span> --fonts_dir=./fonts/
+</pre>
+</div>
+
+<p>
+上述命令以 chinese.txt 作为输入，字体使用宋体，将图像输出为 chinese.sun.exp0.tif。同时还会输出一个名为 chinse.sun.exp0.box 的 BOX 文件，里面会对应每一个文字在图像中的位置信息。
+</p>
+
+<p>
+同一个数据文件，可以应用不同的字体产生不同的图像，字体越多，产生的资源文件所能支持的实际情况也就越多，但建议还是按照实际应用情况来添加字体支持。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">字符集文件与字体信息文件生成</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+提取 Tesseract 能读取、处理的字符集文件，使用 unicharset_extractor 命令:
+</p>
+
+<p>
+unicharset_extractor  chinses.box  english.box
+</p>
+
+<p>
+该命令以上一步输出的 BOX 文件作为输入，实际使用时，应将本次训练时的所有 BOX 文件作为输入。该命令的输出是名为 <b>unicharset</b> 的文件。
+</p>
+
+<p>
+此外，在后续步骤中需要字体属性文件，该文件的名称应为 <b>font_properties</b> ，该文件中每一行表示一种字体的信息，其格式为:
+</p>
+
+<pre class="example">
+&lt;font name&gt; &lt;italic?&gt; &lt;bold?&gt; &lt;fixed?&gt; &lt;serif?&gt; &lt;fraktur?&gt;
+</pre>
+
+<p>
+第一个字段为字体名称，名称中不能有空格，名称可以任意，但建议尽量贴近字体在操作系统上的名称，后面五个字段分别表示:
+</p>
+<ul class="org-ul">
+<li>该字体是否有斜体
+</li>
+<li>该字体是否有粗体
+</li>
+<li>该字体是否有无衬线体
+</li>
+<li>该字体是否有衬线体
+</li>
+<li>该字体是否有哥特体
+</li>
+</ul>
+
+<p>
+比如宋体是有衬线体的，对应的，它在 font_properties 这个文件中的内容应为:
+</p>
+<pre class="example">
+SimSun 1 1 0 1 0
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4">特征文件生成</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+特征文件的生成使用 tesseract 命令:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">tesseract chinese.sun.exp0.tif chinese.sun.exp0 nobatch box.train
+</pre>
+</div>
+
+<p>
+上述命令将生成名为 chinese.sun.exp0.tr 的特征文件。对每一张生成的 TIFF 图像，都要进行该步骤以生成特征文件。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5">聚集</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+上一步的特征文件生成后，需要将同样文字的不同字体的特征聚集到一起来产生该文字的一个 <b>原型</b> ，这一步需要执行三个命令:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">shape_clustering -F font_properties -U unicharset  *.tr
+</pre>
+</div>
+
+<p>
+这一步将会生成一个名为 <b>shapetable</b> 的文件。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">mftraining -F font_properties -U unicharset -O banker.unicharset *.tr
+</pre>
+</div>
+
+<p>
+这一步将会生成一个名为 <b>inttemp</b> 的文件和一个名为 <b>pffmtable</b> 的文件。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">cntrainint *.tr
+</pre>
+</div>
+
+<p>
+这一步将会生成一个名为 <b>normproto</b> 的文件。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6">[可选]添加配置文件、歧义修正文件、DAWG文件</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+略(后面补上)
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7">打包</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+在上述步骤都完成后，将要打包入资源文件的那些文件加上一个统一的前缀，该前缀即是待生成的资源文件的名称，这里假定我们要生成 chi.traineddata 这样一个资源文件，那么我们的可能操作就是:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">mv unicharset chi.unicharset
+mv shapetable chi.shapetable
+mv inttemp chi.inttemp
+mv pffmtable chi.pffmtable
+mv normproto chi.normproto
+
+combine_tessdata chi
+</pre>
+</div>
+
+<p>
+至此，训练过程结束。
+</p>
+</div>
+</div>
+</div>

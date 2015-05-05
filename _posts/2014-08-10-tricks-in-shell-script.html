@@ -36,13 +36,13 @@ $#表示当前参数列表的长度，对需要参数的Shell函数，这个变�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
+<pre class="src src-shell-script"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/bin/</span><span style="color: #b294bb;">bash</span>
 
-<span style="color: #cf4a44;">function</span> <span style="color: #ed8a0c;">arg_num</span>(){
-    <span style="color: #31d3c4;">echo</span> $<span style="color: #fefc58;">#</span>, $<span style="color: #fefc58;">1</span>
+<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">arg_num</span>(){
+    <span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">#</span>, $<span style="color: #de935f;">1</span>
 }
 
-arg_num <span style="color: #25ef29;">"$*"</span>
+arg_num <span style="color: #b5bd68;">"$*"</span>
 </pre>
 </div>
 
@@ -165,7 +165,7 @@ arg_num <span style="color: #25ef29;">"$*"</span>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #31d3c4;">local</span> <span style="color: #fefc58;">var</span>=<span style="color: #25ef29;">""</span>
+<pre class="src src-shell-script"><span style="color: #8abeb7;">local</span> <span style="color: #de935f;">var</span>=<span style="color: #b5bd68;">""</span>
 </pre>
 </div>
 </li>
@@ -181,11 +181,11 @@ arg_num <span style="color: #25ef29;">"$*"</span>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #fefc58;">i</span>=0
-<span style="color: #cf4a44;">for</span> i<span style="color: #cf4a44;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #cf4a44;">do</span>
-    <span style="color: #fefc58;">now_file</span>=$<span style="color: #fefc58;">ROOT_PATH</span>/$<span style="color: #fefc58;">i_wavlist</span>
-    &gt; $<span style="color: #fefc58;">now_file</span>
-<span style="color: #cf4a44;">done</span>
+<pre class="src src-shell-script"><span style="color: #de935f;">i</span>=0
+<span style="color: #b294bb;">for</span> i<span style="color: #b294bb;"> in</span> $(<span style="color: #b294bb;">seq</span> 1 3);<span style="color: #b294bb;">do</span>
+    <span style="color: #de935f;">now_file</span>=$<span style="color: #de935f;">ROOT_PATH</span>/$<span style="color: #de935f;">i_wavlist</span>
+    &gt; $<span style="color: #de935f;">now_file</span>
+<span style="color: #b294bb;">done</span>
 </pre>
 </div>
 <p>
@@ -193,11 +193,11 @@ arg_num <span style="color: #25ef29;">"$*"</span>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #fefc58;">i</span>=0
-<span style="color: #cf4a44;">for</span> i<span style="color: #cf4a44;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #cf4a44;">do</span>
-    <span style="color: #fefc58;">now_file</span>=$<span style="color: #fefc58;">ROOT_PATH</span>/${<span style="color: #fefc58;">i</span>}_wavlist
-    &gt; $<span style="color: #fefc58;">now_file</span>
-<span style="color: #cf4a44;">done</span>
+<pre class="src src-shell-script"><span style="color: #de935f;">i</span>=0
+<span style="color: #b294bb;">for</span> i<span style="color: #b294bb;"> in</span> $(<span style="color: #b294bb;">seq</span> 1 3);<span style="color: #b294bb;">do</span>
+    <span style="color: #de935f;">now_file</span>=$<span style="color: #de935f;">ROOT_PATH</span>/${<span style="color: #de935f;">i</span>}_wavlist
+    &gt; $<span style="color: #de935f;">now_file</span>
+<span style="color: #b294bb;">done</span>
 </pre>
 </div>
 </li>
@@ -220,7 +220,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk -v <span style="color: #fefc58;">var</span>=<span style="color: #25ef29;">"$shell_var"</span> <span style="color: #25ef29;">'{print var}'</span> a.txt
+<pre class="src src-shell-script">awk -v <span style="color: #de935f;">var</span>=<span style="color: #b5bd68;">"$shell_var"</span> <span style="color: #b5bd68;">'{print var}'</span> a.txt
 </pre>
 </div>
 
@@ -233,7 +233,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk <span style="color: #25ef29;">"{print \$1, $shell_var}"</span> a.txt
+<pre class="src src-shell-script">awk <span style="color: #b5bd68;">"{print \$1, $shell_var}"</span> a.txt
 </pre>
 </div>
 
@@ -242,7 +242,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk <span style="color: #25ef29;">'{print $1, "'</span>$<span style="color: #fefc58;">shell_var</span><span style="color: #25ef29;">'"}'</span> a.txt
+<pre class="src src-shell-script">awk <span style="color: #b5bd68;">'{print $1, "'</span>$<span style="color: #de935f;">shell_var</span><span style="color: #b5bd68;">'"}'</span> a.txt
 </pre>
 </div>
 </li>
@@ -271,8 +271,8 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #fefc58;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $<span style="color: #fefc58;">file</span>)
-<span style="color: #fefc58;">full_dir</span>=$(<span style="color: #fa8072;">cd</span> $<span style="color: #fefc58;">dir</span> &amp;&amp; <span style="color: #31d3c4;">pwd</span>)
+<pre class="src src-shell-script"><span style="color: #de935f;">dir</span>=$(<span style="color: #b294bb;">dirname</span> $<span style="color: #de935f;">file</span>)
+<span style="color: #de935f;">full_dir</span>=$(<span style="color: #b294bb;">cd</span> $<span style="color: #de935f;">dir</span> &amp;&amp; <span style="color: #8abeb7;">pwd</span>)
 </pre>
 </div>
 
@@ -281,7 +281,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #fefc58;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $(<span style="color: #fa8072;">readlink</span> -f $<span style="color: #fefc58;">file</span>))
+<pre class="src src-shell-script"><span style="color: #de935f;">dir</span>=$(<span style="color: #b294bb;">dirname</span> $(<span style="color: #b294bb;">readlink</span> -f $<span style="color: #de935f;">file</span>))
 </pre>
 </div>
 </li>
