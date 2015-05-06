@@ -1,0 +1,302 @@
+---
+layout     : post
+title      : "Tesseract源代码阅读:单链表 ELIST"
+categories : 编程
+tags       :
+- Tesseract
+- OCR
+- 单链表
+---
+
+<p>
+因为工作以及个人兴趣原因，已经阅读了一段时间 Tesseract 的源代码了(Tesseract 的介绍见<a href="http://linusp.github.io/2015/04/17/tesseract-install-usage.html">我的另一篇文章</a>)。从这篇文章开始，会不定期地将阅读笔记整理好发布出来。
+</p>
+
+<p>
+ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中有不少不同类型的单链表类都继承自 ELIST ，因此了解 ELIST 的具体实现是很有必要的。
+</p>
+
+<p>
+虽然这里先提到 ELIST ，但实际上这个单链表由三个类组成，它们分别是:
+</p>
+
+<ul class="org-ul">
+<li>ELIST_LINK: 链表节点
+</li>
+<li>ELIST: 链表，保存了链表头节点
+</li>
+<li>ELIST_ITERATOR: 封装了对链表的具体操作
+</li>
+</ul>
+
+<p>
+这三个类都定义于 ccutil/elst.h 中
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">ELIST_LINK</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+该类的定义为:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST_LINK</span>
+{
+    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST_ITERATOR</span>;
+    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST</span>;
+
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">next</span>;
+
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #de935f;">ELIST_LINK</span>() {
+        next = <span style="color: #8abeb7;">NULL</span>;
+    }
+
+    <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">constructor</span>
+    <span style="color: #de935f;">ELIST_LINK</span>(                 <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">copy constructor</span>
+        <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">ELIST_LINK</span> &amp;) {   <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">dont copy link</span>
+        next = <span style="color: #8abeb7;">NULL</span>;
+    }
+
+    <span style="color: #f0c674;">void</span> <span style="color: #b294bb;">operator</span><span style="color: #de935f;">=</span> (            <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">dont copy links</span>
+        <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">ELIST_LINK</span> &amp;) {
+        next = <span style="color: #8abeb7;">NULL</span>;
+    }
+};
+</pre>
+</div>
+
+<p>
+这个类实际被作为链表的 "节点"。
+</p>
+
+<p>
+可以看到，这个类的定义异常简单，数据成员只有一个同类型的指针，也没有定义除构造方法外的其他方法。而且在拷贝构造函数和赋值运算符重载中，直接忽略了传入的参数，从注释里也能明白，作者是将 "拷贝" 这个行为直接禁止了 —— 如果不显式定义拷贝构造函数的话，编译器会生成一个默认的拷贝构造函数，里面还是会进行拷贝操作的，赋值运算符重载同理。
+</p>
+
+<p>
+不过令人疑惑的是，为什么这个 "节点" 类型里没有保存节点数据的成员呢?这个待会再说，不妨先保留着疑问吧。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">ELIST</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+该类的定义如下(出于简洁考虑，这里没有列出它内部的一些方法):
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST</span>
+{
+    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST_ITERATOR</span>;
+
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">last</span>;           <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">End of list</span>
+    <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">(points to head)</span>
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">First</span>() {       <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">return first</span>
+        <span style="color: #b294bb;">return</span> last ? last-&gt;next : <span style="color: #8abeb7;">NULL</span>;
+    }
+
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #de935f;">ELIST</span>() {
+        last = <span style="color: #8abeb7;">NULL</span>;
+    }
+
+    <span style="color: #f0c674;">bool</span> <span style="color: #de935f;">empty</span>() <span style="color: #b294bb;">const</span> {
+        <span style="color: #b294bb;">return</span> <span style="color: #b5bd68;">!</span>last;
+    }
+
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">......</span>
+};
+</pre>
+</div>
+
+<p>
+正如之前所说，ELIST 中记录了链表的头节点，同时还定义、实现了一些链表层面的操作方法。
+</p>
+
+<p>
+令人比较在意的是，ELIST 中表示头节点的成员的名称为 "last" ，而且名为 "First" 的私有方法也是返回这个头节点的 <b>下一个节点</b> ，脱离上下文来看的话，可能会觉得别扭。不过其实 ELIST 实现的是一个单向循环链表，这里的 "last" 确实是指向了最后一个节点，而这最后一个节点又指向了第一个节点。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">ELIST_ITERATOR</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+顾名思义，该类是 ELIST 类的 "迭代器" ，可以用来对 ELIST 进行遍历操作。该类的定义为:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST_ITERATOR</span> {
+    <span style="color: #b294bb;">friend</span> <span style="color: #f0c674;">void</span> <span style="color: #8abeb7;">ELIST</span>::<span style="color: #de935f;">assign_to_sublist</span>(<span style="color: #f0c674;">ELIST_ITERATOR</span> *, <span style="color: #f0c674;">ELIST_ITERATOR</span> *);
+
+    <span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list</span>;
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">prev</span>;
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">current</span>;
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">next</span>;
+
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">&#20854;&#20182;&#25104;&#21592;</span>
+
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #de935f;">ELIST_ITERATOR</span>() {
+        list = <span style="color: #8abeb7;">NULL</span>;
+    }
+
+    <span style="color: #de935f;">ELIST_ITERATOR</span>(<span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list_to_iterate</span>);
+
+    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">set_to_list</span>(<span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list_to_iterate</span>);
+
+    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">add_after_then_move</span>(<span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">new_link</span>);
+
+    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">add_after_stay_put</span>(<span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">new_link</span>);
+
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">forward</span>();
+
+    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">extract</span>();
+
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">&#20854;&#20182;&#26041;&#27861;</span>
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">实际单链表的实现方法</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+刚才提到，在表示节点的类型 ELIST_LINK 中其实是没有表示节点数据的成员的，如果直接使用，肯定是没有意义的 —— 实际上 Tesseract 中确实也没有哪儿直接就使用 ELIST 了。Tesseract 中通过多重继承来解决了这个问题。
+</p>
+
+<p>
+比如说我们希望我们的节点中保存一个点的坐标，那么我们可以先定义一个 Point 类:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">Point</span>
+{
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #81a2be;">Point</span>(): _x(0), <span style="color: #81a2be;">_y</span>(0) {}
+    <span style="color: #81a2be;">Point</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">x</span>, <span style="color: #f0c674;">int</span> <span style="color: #de935f;">y</span>): _x(x), <span style="color: #f0c674;">_y</span>(<span style="color: #de935f;">y</span>) {}
+    ~<span style="color: #81a2be;">Point</span>();
+
+<span style="color: #b294bb;">private</span>:
+    <span style="color: #f0c674;">int</span> <span style="color: #de935f;">_x</span>;
+    <span style="color: #f0c674;">int</span> <span style="color: #de935f;">_y</span>;
+};
+</pre>
+</div>
+
+<p>
+然后定义节点类 POINT:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">POINT</span>: <span style="color: #b294bb;">public</span> <span style="color: #f0c674;">ELIST_LINK</span>, <span style="color: #b294bb;">public</span> <span style="color: #f0c674;">Point</span>
+{
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #81a2be;">POINT</span>();
+    ~<span style="color: #81a2be;">POINT</span>();
+};
+</pre>
+</div>
+
+<p>
+然后依次定义 POINT_LIST(继承 ELIST) 和 POINT_IT(继承 ELIST_ITERATOR)。
+</p>
+
+<p>
+在 Tesseract 中提供了两个宏来直接产生 POINT_LIST 类和 POINT_IT 类的定义与实现，这两个宏分别是:
+</p>
+<ul class="org-ul">
+<li>ELISTIZEH
+</li>
+<li>ELISTIZE
+</li>
+</ul>
+
+<p>
+第一个宏用来产生 POINT_LIST 和 POINT_IT 的定义，第二个宏用来产生实现，其用法是(仍以 POINT 为例):
+</p>
+<ul class="org-ul">
+<li>在 point.h 中类 POINT 的定义之后，添加以下语句:
+
+<div class="org-src-container">
+
+<pre class="src src-C++">ELISTIZEH(POINT)
+</pre>
+</div>
+</li>
+
+<li>在 point.cpp 中，添加以下语句:
+
+<div class="org-src-container">
+
+<pre class="src src-C++">ELISTIZE(POINT)
+</pre>
+</div>
+</li>
+</ul>
+
+<p>
+这两个宏也是在 ccutil/elst.h 中定义的。这种用宏来展开类定义和实现的做法，在代码编写上确实很方便，但是阅读起来真的是好头疼，刚开始了解这个单链表的时候，我为了找 BLOCK_LIST (继承自 ELIST 的单链表类)的定义头疼地要死，代码里找不着，Google 也搜索不到答案，着实费了一番功夫。
+</p>
+
+<p>
+由于 Tesseract 的这个设计把链表的操作与对节点数据的操作分离开来了，所以虽然没使用多态机制，这一套设计依然工作良好。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">Tesseract 中实际被使用的单链表类</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+之前说过，Tesseract 中有不少不同类型的单链表都是从 ELIST 继承的，由于对 ELIST 的继承都是在宏展开后进行的，从代码里是找不到这些类的定义的，不过链表节点却是要手动去定义、实现的，所以查看那些继承了 ELIST_LINK 类的类就可以知道了。从 <a href="http://tesseract-ocr.repairfaq.org/classELIST__LINK.html">Tesseract 的 API Refrence</a> 可以得知有 20 个类继承自 ELIST_LINK，它们是:
+</p>
+
+<ul class="org-ul">
+<li>ASSOC
+</li>
+<li>BLOB_CHOICE
+</li>
+<li>BLOCK_RES
+</li>
+<li>C_BLOB
+</li>
+<li>C_OUTLINE_FRAG
+</li>
+<li>CHAR_SAMPLE
+</li>
+<li>CHAR_SAMPLES
+</li>
+<li>FPSEGPT
+</li>
+<li>FRAGMENT
+</li>
+<li>ICOORDELT
+</li>
+<li>MENU_L
+</li>
+<li>OUTLINE_FRAG
+</li>
+<li>PBLOB
+</li>
+<li>PIXROW
+</li>
+<li>REGION_OCC
+</li>
+<li>ROW
+</li>
+<li>ROW_RES
+</li>
+<li>SORTED_FLOAT
+</li>
+<li>WERD
+</li>
+<li>WERD_RES
+</li>
+</ul>
+</div>
+</div>
