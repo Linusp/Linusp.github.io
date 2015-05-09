@@ -1,0 +1,92 @@
+---
+layout     : post
+title      : "编译安装启动器 Synapse"
+categories :
+- Linux
+tags       :
+- Synapse
+---
+
+<p>
+Synapse 是一个类似 Gnome-Do 的语义型启动器(sementic launcher)，只要输入部分字符就可以匹配相应的文件或程序，能够有效地提高工作效率 —— 特别是对于 Emacs/Vim 用户来说
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/synapse.png" alt="synapse.png" />
+</p>
+</div>
+
+<p>
+网上能找到关于该软件的更多介绍以及安装方法，不过大都是介绍如何通过 PPA 来安装，我不太喜欢这种方式，加上 Debian 因为 Synapse 的不稳定而把它移出了软件仓库，所以我只有选择编译安装了。所以本文只是一篇水文啦，在这里简单地把自己编译过程里遇到的坑分享出来，如果有人也编译安装的话，希望能有所帮助。
+</p>
+
+<p>
+源代码下载链接<a href="https://launchpad.net/synapse-project/0.3/0.2.99.1/%2Bdownload/synapse-0.2.99.1.tar.xz">在此</a>。
+</p>
+
+<p>
+Synapse 的依赖有:
+</p>
+<ul class="org-ul">
+<li>libnotify-dev
+</li>
+<li>libjson-glib-dev
+</li>
+<li>libkeybinder-3.0-dev
+</li>
+<li>libgee-0.8-dev
+</li>
+<li>libzeitgeist-2.0-dev
+</li>
+<li>valac
+</li>
+</ul>
+
+<p>
+前面 lib 开头的是 Synapse 依赖的库，从软件仓库安装即可，另外 Synapse 还依赖 gtk 的几个库，但是没记录下来，所以不记得对应的库的名称了。不过这些依赖都在源代码包中的 configure 这个脚本里面写了。在 Synapse 0.2.99.1 (我用的版本) 中，configure 中的依赖列表是这样的:
+</p>
+
+<ul class="org-ul">
+<li>glib-2.0
+</li>
+<li>gdk-x11-3.0
+</li>
+<li>gtk+-3.0
+</li>
+<li>gio-2.0
+</li>
+<li>gio-unix-2.0
+</li>
+<li>gobject-2.0
+</li>
+<li>gthread-2.0
+</li>
+<li>gee-0.8
+</li>
+<li>json-glib-1.0
+</li>
+<li>keybinder-3.0
+</li>
+<li>libnotify
+</li>
+</ul>
+
+<p>
+除了这些库依赖外，由于 Synapse 是 Vala 语言编写的，还需要安装 Vala 编译器 valac。
+</p>
+
+<p>
+在完成以上依赖安装后，就可以进行 Synapse 的编译安装了:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">./configure --prefix=/opt/synapse
+make
+make install
+</pre>
+</div>
+
+<p>
+Done!
+</p>
