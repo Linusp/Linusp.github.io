@@ -1,0 +1,136 @@
+---
+layout     : post
+title      : "Tesseract源代码阅读:字符串 STRING"
+categories :
+- 编程
+tags       :
+- Tesseract
+- OCR
+- 字符产
+description:
+---
+
+<p>
+STRING 类是 Tesseract 中自定义的字符串类，封装了一些字符串操作，该类定义于 ccutil/strngs.h 中，同样的，不知道出于什么目的，其设计让人一开始摸不着头脑。
+</p>
+
+<p>
+按理来说，如果要实现一个字符串类，那么其内部应该要有一个保存字符串内容的数据成员，这个 STRING 类确实有数据成员，不过其类型是内部定义的一个结构 STRING_HEADER:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">TESS_API</span> <span style="color: #de935f;">STRING</span> {
+<span style="color: #b294bb;">public</span>:
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">....</span>
+
+<span style="color: #b294bb;">private</span>:
+    <span style="color: #b294bb;">typedef</span> <span style="color: #b294bb;">struct</span> <span style="color: #f0c674;">STRING_HEADER</span> {
+        <span style="color: #f0c674;">int</span> <span style="color: #de935f;">capacity_</span>;
+
+        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">used_ is how much of the capacity is currently being used,</span>
+        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">including a '\0' terminator.</span>
+        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">if used_ is 0 then string is NULL(not even the '\0')</span>
+        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">else if used_ &gt; 0 then it is strlen() + 1 (because it includes '\0')</span>
+        <span style="color: #b294bb;">mutable</span> <span style="color: #f0c674;">int</span> <span style="color: #de935f;">used_</span>;
+    } <span style="color: #f0c674;">STRING_HEADER</span>;
+
+    <span style="color: #f0c674;">STRING_HEADER</span> *<span style="color: #de935f;">data_</span>;
+
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">....</span>
+};
+</pre>
+</div>
+
+<p>
+可以看到这个数据成员中并没有保存字符串内容的部分。
+</p>
+
+<p>
+STRING 类中有两个方法，返回的是一个 <b>const char *</b> 类型的值，这两个方法的名称为 <b>string()</b> 和 <b>c_str()</b> ，从这两点上来看，可以认为这两个方法是将 STRING 类内部存储的字符串内容转换为 <b>const char *</b> 类型返回了出来，那么可以从这两个方法去入手来发掘这个类的秘密。
+</p>
+
+<p>
+这两个方法的实现都很简单:
+</p>
+<ul class="org-ul">
+<li>string() 方法
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">string</span>() <span style="color: #b294bb;">const</span> {
+    <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">STRING_HEADER</span>* <span style="color: #de935f;">header</span> = GetHeader();
+    <span style="color: #b294bb;">if</span> (header-&gt;used_ == 0)
+        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">NULL</span>;
+
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">mark header length unreliable because tesseract might</span>
+    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">cast away the const and mutate the string directly.</span>
+    header-&gt;used_ = -1;
+    <span style="color: #b294bb;">return</span> GetCStr();
+}
+</pre>
+</div>
+</li>
+
+<li>c_str()
+
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">c_str</span>() <span style="color: #b294bb;">const</span> {
+    <span style="color: #b294bb;">return</span> string();
+}
+</pre>
+</div>
+</li>
+</ul>
+
+
+<p>
+c_str() 方法是 string() 方法的别名，而 string() 方法中返回的结果是 GetCStr() 这个方法的结果，顺藤摸瓜找到这个方法，发现它的实现如下:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #b294bb;">inline</span> <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #81a2be;">GetCStr</span>() <span style="color: #b294bb;">const</span> {
+    <span style="color: #b294bb;">return</span> ((<span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span> *)data_) + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER);
+};
+</pre>
+</div>
+
+<p>
+也就是说，STRING 类把字符串内容放在了 data_ 后面的那个地址空间上，不过这段空间是匿名的，只能通过上面这样的方式进行访问。
+</p>
+
+<p>
+到底是出于何种考虑进行这样的设计，我也无从得之，但我个人是对这个设计不太赞同的。要说有什么优点，就是在进行内存分配时少了一步操作 —— 在 STRING::AllocData 中是这样进行内存分配的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++"><span style="color: #f0c674;">char</span> *<span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">AllocData</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">used</span>, <span style="color: #f0c674;">int</span> <span style="color: #de935f;">capacity</span>) {
+    data_ = (<span style="color: #f0c674;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER));
+
+    <span style="color: #f0c674;">STRING_HEADER</span> *<span style="color: #de935f;">header</span> = GetHeader();
+    header-&gt;capacity_ = capacity;
+    header-&gt;used_ = used;
+
+    <span style="color: #b294bb;">return</span> GetCStr();
+}
+</pre>
+</div>
+
+<p>
+另外，上面这个方法里的 GetHeader() 方法返回的就是 data_ ，直接这样我想也是可以的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-C++">data_ = (<span style="color: #f0c674;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER));
+
+data_-&gt;capacity_ = capacity;
+data_-&gt;used_ = used;
+
+<span style="color: #b294bb;">return</span> GetCStr();
+</pre>
+</div>
+
+<p>
+在 STRING 类封装的方法里，大部分在 C/C++ 中已有对应的字符串操作。
+</p>
