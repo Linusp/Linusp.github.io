@@ -1,0 +1,459 @@
+---
+layout     : post
+title      : "百度 OCR API 的使用以及与 Tesseract 的简单对比"
+categories : 编程
+tags       :
+- OCR
+- 百度
+- APIStore
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">百度 OCR API 初探</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+近日得知百度在其 <a href="http://apistore.baidu.com/">APIStore</a> 上开放了 <a href="https://zh.wikipedia.org/wiki/%25E5%2585%2589%25E5%25AD%25A6%25E5%25AD%2597%25E7%25AC%25A6%25E8%25AF%2586%25E5%2588%25AB">OCR</a> 的 API，目前以 <a href="http://apistore.baidu.com/apiworks/readyapiprefecture.html">即用API</a> 的形式试运行，所谓 "即用" 指可立即调用、无需注册付费，但也加上了有使用次数这么一个限制。
+</p>
+
+<p>
+目前该 API 的文档很少，不过接口和参数都在其 <a href="http://apistore.baidu.com/apiworks/servicedetail/146.html">API页面</a> 进行了说明，要用起来还是没有问题的。下面是接口的信息
+</p>
+<ul class="org-ul">
+<li>接口地址: <a href="http://apis.baidu.com/apistore/idlocr/ocr">http://apis.baidu.com/apistore/idlocr/ocr</a>
+</li>
+<li>请求方法: POST
+</li>
+</ul>
+
+<p>
+相关的参数则有
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">参数名</th>
+<th scope="col" class="left">类型</th>
+<th scope="col" class="left">必填</th>
+<th scope="col" class="left">参数位置</th>
+<th scope="col" class="left">描述</th>
+<th scope="col" class="left">可用值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">fromdevice</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">来源设备</td>
+<td class="left">android, iPhone, pc</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">clientip</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">客户端出口ip</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">detecttype</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">OCR服务类型</td>
+<td class="left">LocateRecognize, Recognize</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">Locate, SingleCharRecognize</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">languagetype</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">待检测的文字类型</td>
+<td class="left">CHN_ENG, ENG, JAP, KOR</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">imagetype</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">图片资源类型</td>
+<td class="left">1: 经过BASE64处理的字符串</td>
+</tr>
+
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+<td class="left">2: 图片源文件</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">image</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">bodyParam</td>
+<td class="left">图片资源,300K以下</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">apikey</td>
+<td class="left">string</td>
+<td class="left">yes</td>
+<td class="left">header</td>
+<td class="left">API 密钥</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+返回的结果会是一个 JSON 字符串，如下所示:
+</p>
+<pre class="example">
+{
+    "errNum": 0,
+    "errMsg": "success",
+    "querySign": "3845925467,2370020290",
+    "retData": [
+        {
+            "rect": {
+                "left": "0",
+                "top": "0",
+                "width": "33",
+                "height": "31"
+            },
+            "word": "  8"
+        }
+    ]
+}
+</pre>
+
+<p>
+各字段的意义如下:
+</p>
+<ul class="org-ul">
+<li>errNum
+
+<p>
+标识处理是否成功, 0: 表示成功, 其它值, 表示失败。在 <a href="http://apistore.baidu.com/apiworks/servicedetail/146.html">API页面</a> 上可以查看更详细的错误码列表。
+</p>
+</li>
+<li>errMsg
+
+<p>
+错误类型说明，当服务调用成功时为字符串 'success'
+</p>
+</li>
+<li>querySign
+
+<p>
+本次请求用户传递原图或rl的唯一标示, 方便定位问题
+</p>
+</li>
+<li>retData
+
+<p>
+返回内容集合
+</p>
+</li>
+<li>rect
+
+<p>
+该行文字所在的矩形区域的信息
+</p>
+</li>
+<li>word
+
+<p>
+该行所识别出的文字
+</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">用 Python 调用百度 OCR API</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在 API 页面上倒是提供了 Python 的调用示例，不过个人感觉比较丑，居然还在使用 urllib !我们完全可以用 requests 来做这些事情，下面是我写的一个方法:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
+<span style="color: #b294bb;">import</span> requests
+
+<span style="color: #de935f;">URL</span> = <span style="color: #b5bd68;">'http://apis.baidu.com/apistore/idlocr/ocr'</span>
+<span style="color: #de935f;">LANG_LIST</span> = [<span style="color: #b5bd68;">'CHN_ENG'</span>, <span style="color: #b5bd68;">'ENG'</span>, <span style="color: #b5bd68;">'JAP'</span>, <span style="color: #b5bd68;">'KOR'</span>]
+
+
+<span style="color: #b294bb;">def</span> <span style="color: #81a2be;">ocr</span>(picture, lang=<span style="color: #b5bd68;">'CHN_ENG'</span>):
+    <span style="color: #b5bd68;">"""Recognize a picture and return the text on it.</span>
+
+<span style="color: #b5bd68;">    picture could be a local picture or url of picture on web.</span>
+
+<span style="color: #b5bd68;">    lang should be one of CHN_ENG, ENG, JAP, KOR</span>
+<span style="color: #b5bd68;">    """</span>
+    <span style="color: #de935f;">data</span> = {}
+    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'fromdevice'</span>] = <span style="color: #b5bd68;">"pc"</span>
+    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'clientip'</span>] = <span style="color: #b5bd68;">'10.10.10.0'</span>
+    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'detecttype'</span>] = <span style="color: #b5bd68;">'Recognize'</span>
+    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'imagetype'</span>] = <span style="color: #b5bd68;">"2"</span>
+
+    <span style="color: #b294bb;">if</span> lang <span style="color: #b294bb;">not</span> <span style="color: #b294bb;">in</span> LANG_LIST:
+        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">None</span>
+    <span style="color: #b294bb;">else</span>:
+        <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'languagetype'</span>] = lang
+
+    <span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">&#27492;&#22788;&#24212;&#20351;&#29992;&#33258;&#24049;&#30340; API key</span>
+    <span style="color: #de935f;">header</span> = {<span style="color: #b5bd68;">"apikey"</span>: <span style="color: #b5bd68;">"your api key"</span>}
+
+    <span style="color: #de935f;">image_file</span> = <span style="color: #8abeb7;">None</span>
+    <span style="color: #b294bb;">try</span>:
+        <span style="color: #b294bb;">if</span> picture.startswith(<span style="color: #b5bd68;">'http://'</span>) <span style="color: #b294bb;">or</span> picture.startswith(<span style="color: #b5bd68;">'https://'</span>):
+            <span style="color: #de935f;">image_file</span> = requests.get(picture).content
+        <span style="color: #b294bb;">else</span>:
+            <span style="color: #de935f;">image_file</span> = <span style="color: #8abeb7;">open</span>(picture, <span style="color: #b5bd68;">'rb'</span>).read()
+    <span style="color: #b294bb;">except</span> <span style="color: #f0c674;">Exception</span>:
+        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'picture %s is invalid'</span> % picture)
+
+    <span style="color: #de935f;">resp</span> = requests.post(URL, headers=header, data=data, files={<span style="color: #b5bd68;">"image"</span>: (<span style="color: #b5bd68;">"baidu.jpg"</span>, image_file)})
+
+    <span style="color: #de935f;">resp</span> = resp.json()
+
+    <span style="color: #b294bb;">if</span> resp <span style="color: #b294bb;">is</span> <span style="color: #b294bb;">not</span> <span style="color: #8abeb7;">None</span>:
+        <span style="color: #b294bb;">if</span>  <span style="color: #8abeb7;">int</span>(resp.get(<span style="color: #b5bd68;">'errNum'</span>)) != 0:
+            <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(reps.get(<span style="color: #b5bd68;">'errMsg'</span>))
+        <span style="color: #b294bb;">else</span>:
+            <span style="color: #b294bb;">return</span> resp.get(<span style="color: #b5bd68;">'retData'</span>)[0].get(<span style="color: #b5bd68;">'word'</span>)
+    <span style="color: #b294bb;">else</span>:
+        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">None</span>
+</pre>
+</div>
+
+<p>
+需要注意的是，虽然 API 页面上说图片目前仅支持 jpg 格式，但实际上对图片格式的检查很有可能是通过检查文件名的后缀来进行的，所以通过将 "imagetype" 设置为 2 并将图片以 jpg 作为后缀名进行上传来绕过这个限制。
+</p>
+
+<p>
+然后拿一张图片来看看!好，就是下面这张了:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_002.jpg" alt="ocr_test_002.jpg" />
+</p>
+</div>
+
+<p>
+识别结果如下:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_002_result.png" alt="ocr_test_002_result.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">与 Tesseract 的简单对比</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+要比较全面、客观地对比出两个不同的产品的性能是需要大量的数据和详尽地设计的，这里只是根据我个人对 OCR 系统的认识，使用了少量的数据进行的对比，至于两者孰优孰劣请读者自行试验再下结论。
+</p>
+
+<p>
+图一:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_001.jpg" alt="ocr_test_001.jpg" />
+</p>
+</div>
+
+<p>
+百度 OCR API 识别结果:
+</p>
+<pre class="example">
+   讨论代数方程r+积—劲—1=0在(—”0)内实根的情况
+</pre>
+
+<p>
+Tesseract 识别结果:
+</p>
+<pre class="example">
+   讨论代数方程娱+4筹－3χ－l=O在 (－∞,O〉 内实根的情况₋
+</pre>
+
+<p>
+图二:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_002.jpg" alt="ocr_test_002.jpg" />
+</p>
+</div>
+
+<p>
+百度 OCR API 识别结果:
+</p>
+<pre class="example">
+L(理)已知:是虚数单位.则(―1―D《2―D=一一一一f》    A―3+iB―1―3  C―3+3D―1―1
+</pre>
+
+<p>
+Tesseract 识别结果：
+</p>
+<pre class="example">
+L₍₋₎已概ᵢ量ᵦ效单位。口(—₁针)(２₋E,＝ ⋯烟～₋ (
+A₋₋₃+ᵢ BL－{•S宜
+
+ C.－3+3i D·一l震拿
+
+罐震 ,△、an．△ᵅ＝₂₋！₋₃—?又₋T＝xf —$⩽ᵣ⩽玉 ₋l S校 r＝ —
+</pre>
+
+<p>
+图三:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_003.jpg" alt="ocr_test_003.jpg" />
+</p>
+</div>
+
+<p>
+百度 OCR API 识别结果:
+</p>
+<pre class="example">
+   新课标全国)在一组样本数据(Xl,y)G,y)%不全相等的散点图中,若所有样本点ki,y4+|上,则这组样本数据的样本相关系数为0      Boc.号
+</pre>
+
+<p>
+Tesseract 识别结果：
+</p>
+<pre class="example">
+!新课标全国)在岗组样本数据Uh趴汕懒h…
+蘑. 不全相等)的散点图中，若所有样本点牺酬
+
+L篆+I 上,则这组样本数据的样本相关系数为 o
+
+1
+B.0 时
+</pre>
+
+
+<p>
+图四:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_004.jpg" alt="ocr_test_004.jpg" />
+</p>
+</div>
+
+<p>
+百度 OCR API 识别结果:
+</p>
+<pre class="example">
+11分)如图271日.在△A风中,∠C=45·现妹10.高AD=8.矩形EFPQ的一边吐在风边上,1
+</pre>
+
+<p>
+Tesseract 识别结果：
+</p>
+<pre class="example">
+.’⁻．∴ 、,〉 、、．罐’∣【
+
+
+
+
+r\∪【川 '′ ∣⋃.／L 、∥('中．
+"pQ的
+</pre>
+
+
+<p>
+图五:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ocr_test_005.jpg" alt="ocr_test_005.jpg" />
+</p>
+</div>
+
+<p>
+百度 OCR API 识别结果:
+</p>
+<pre class="example">
+B
+</pre>
+
+<p>
+Tesseract 识别结果：
+</p>
+<pre class="example">
+乐散说, 你是找的全部
+你是耕掌希宁触-都余
+但找的主命宁
+猪漆能装有你
+
+就傅
+她环东能玻节玻引才
+A美未能表有童气
+大她东能装有四兔
+</pre>
+
+<p>
+从以上这些对比，我得到以下一些 <b>不一定客观</b> 的结论:
+</p>
+<ol class="org-ol">
+<li></li>
+</ol>
+</div>
+</div>
