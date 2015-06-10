@@ -81,16 +81,7 @@ tags       :
 <td class="left">yes</td>
 <td class="left">bodyParam</td>
 <td class="left">OCR服务类型</td>
-<td class="left">LocateRecognize, Recognize</td>
-</tr>
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">Locate, SingleCharRecognize</td>
+<td class="left">LocateRecognize, Recognize, Locate, SingleCharRecognize</td>
 </tr>
 </tbody>
 <tbody>
@@ -453,7 +444,12 @@ A美未能表有童气
 从以上这些对比，我得到以下一些 <b>不一定客观</b> 的结论:
 </p>
 <ol class="org-ol">
-<li></li>
+<li>百度的 OCR 系统对噪声、模糊等有较强的抗干扰性，这一点上要优于 Tesseract
+</li>
+<li>百度的 OCR 系统没有进行布局分析，但 Tesseract 在布局分析上做得比较好
+</li>
+<li>百度的 OCR 系统 <b>可能</b> 对 <b>黑底白字</b> 的图像识别不好
+</li>
 </ol>
 </div>
 </div>
