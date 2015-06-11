@@ -221,7 +221,7 @@ tags       :
     <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'imagetype'</span>] = <span style="color: #b5bd68;">"2"</span>
 
     <span style="color: #b294bb;">if</span> lang <span style="color: #b294bb;">not</span> <span style="color: #b294bb;">in</span> LANG_LIST:
-        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">None</span>
+        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'invalid language: %s'</span> % lang)
     <span style="color: #b294bb;">else</span>:
         <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'languagetype'</span>] = lang
 
@@ -235,13 +235,12 @@ tags       :
         <span style="color: #b294bb;">else</span>:
             <span style="color: #de935f;">image_file</span> = <span style="color: #8abeb7;">open</span>(picture, <span style="color: #b5bd68;">'rb'</span>).read()
     <span style="color: #b294bb;">except</span> <span style="color: #f0c674;">Exception</span>:
-        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'picture %s is invalid'</span> % picture)
+        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'invalid picture: %s'</span> % picture)
 
     <span style="color: #de935f;">resp</span> = requests.post(URL, headers=header, data=data, files={<span style="color: #b5bd68;">"image"</span>: (<span style="color: #b5bd68;">"baidu.jpg"</span>, image_file)})
 
-    <span style="color: #de935f;">resp</span> = resp.json()
-
     <span style="color: #b294bb;">if</span> resp <span style="color: #b294bb;">is</span> <span style="color: #b294bb;">not</span> <span style="color: #8abeb7;">None</span>:
+        <span style="color: #de935f;">resp</span> = resp.json()
         <span style="color: #b294bb;">if</span>  <span style="color: #8abeb7;">int</span>(resp.get(<span style="color: #b5bd68;">'errNum'</span>)) != 0:
             <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(reps.get(<span style="color: #b5bd68;">'errMsg'</span>))
         <span style="color: #b294bb;">else</span>:
