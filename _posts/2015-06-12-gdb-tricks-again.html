@@ -1,0 +1,102 @@
+---
+layout     : post
+title      : GDB调试技巧(续)
+categories : 编程
+tags       :
+- GDB
+- C/C++
+---
+
+<p>
+以下是这段时间阅读 Tesseract 源代码时所学习并实践过的一些 GDB 调试技巧，和 <a href="http://linusp.github.io/2014/07/27/gdb-tricks.html">前一篇</a> 一样，我也认为这些是比较实用的(虽然对别人来说未必)。
+</p>
+
+<p>
+另外，我觉得阅读源代码的话，最好的办法莫过于进行调试，深入其内部的处理流程 —— 当然如果作者有提供完善的文档的话可以省下很多的精力。
+</p>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">设置环境变量</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+这个其实倒和 GDB 本身没多大关系，一般来说在 shell 里启动 GDB 的话，是能够正常使用用户的环境变量的，不过作为一个 Emacser ，我更喜欢在 Emacs 里用 gud-gdb 来进行调试，Emacs 会为 GDB 提供一个更易用的用户界面，但问题是这种情况下自己设置的一些环境变量都没有被读取。
+</p>
+
+<p>
+在调试 Tesseract 的时候，程序要使用一个外部的环境变量 TESSDATA_PREFIX ，于是就出现问题了。
+</p>
+
+<p>
+解决这个问题的方法是用 <b>set</b> 命令在 GDB 里设置环境变量:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">set</span> environment <span style="color: #de935f;">TESSDATA_PREFIX</span>=/home/linusp/data/tessdata
+</pre>
+</div>
+
+<p>
+当然了 set 命令还可以用来设置、修改变量的值，是非常有用的。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">修改、设置程序中的变量</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+有两种办法，一种是使用 <b>set</b> 命令，另外一种是使用 <b>print</b> 命令。
+</p>
+
+<p>
+set 命令:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">set</span> variable <span style="color: #de935f;">i</span>=0
+</pre>
+</div>
+<p>
+或者先得到待设置的变量的地址(用 print 命令)，然后根据地址来修改值:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">set</span> *((int *) 0xbfbb0000) = 20
+</pre>
+</div>
+
+<p>
+print 命令:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">print <span style="color: #de935f;">i</span>=0
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">查看变量的类型</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+使用 <b>whatis</b> 命令可以得到变量的类型，如果变量的类型是一个复合类型而非 C/C++ 的基础类型，则可以通过 <b>ptype</b> 命令来查看该类型的定义。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gdb_show_type.png" alt="gdb_show_type.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">调用函数</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+在调试的时候可以通过 <b>call</b> 命令来调用一些函数。在调试 Tesseract 时，它使用的图像库 Leptonica 提供了一个显示图像的函数 pixDisplay ，让我能够用 call 命令来调用它查看每一步处理结束后图像变成了什么样子，实在是帮了大忙了。
+</p>
+
+<p>
+除了辅助调试外，不妨将思维发散一下，用 call 命令可以调用函数，而 print 命令则能执行一些非函数调用的普通语句(不过控制语句无法被执行)，结合这两者我们就有了一个几乎是交互式的 C/C++ 运行环境了。
+</p>
+</div>
+</div>
