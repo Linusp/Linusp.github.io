@@ -1,0 +1,162 @@
+---
+layout     : post
+title      : Shell 中的随机数生成方法
+categories : 编程
+tags       :
+- Shell
+- 随机数
+- Linux
+description:
+---
+
+
+<p>
+昨天写了个脚本，用 <a href="http://www.imagemagick.org/script/index.php">ImageMagick</a> 生成单个字符的图片，并随机为其附加模糊、噪声、旋转、扭曲等效果，这个脚本生成的图片是准备用来测试 DNN 的。目前来看的话，用 ImageMagick 生成的图片并不完全理想 —— 不过还能凑合着用。总之，为了生成尽量多尽量丰富的样本，我希望各种效果的作用程度是随机的，而且应用哪些效果也是随机的。毫无疑问这里是需要使用随机数的了。
+</p>
+
+<p>
+当然了，本文提到的“随机数”实质上都是伪随机数，毕竟计算机只能模拟这一过程。
+</p>
+
+<p>
+最后我选择的是使用 <a href="http://www.gnu.org/software/coreutils/manual/html_node/shuf-invocation.html#shuf-invocation">shuf</a> 这个工具，不过在解决这个问题的过程中也总结了不止一种办法，在这里分享一下。
+</p>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">$RANDOM</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+照 <a href="http://www.tldp.org/LDP/abs/html/randomvar.html">这里</a> 讲， RANDOM 是 Bash 的一个内建函数(而不是常量)，会返回一个在区间 [0, 32767] 内的整数。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">4230</span>
+</pre>
+</div>
+
+<p>
+使用这个方法时，可以通过设置相同的 seed 来得到相同的随机数，当然也可以反过来用不同的 seed 来产生不同的随机数。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #de935f;">RANDOM</span>=10
+<span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">4230</span>
+</pre>
+</div>
+
+<p>
+设置相同的 seed 后，可以观察到连续使用 $RANDOM 生成的随机数序列都是一样的。实际情况中我们可能希望生成的“随机数”尽量的不同，我们可以将时间转换为数字来设置 seed:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_with_time</span>{} {
+    <span style="color: #de935f;">RANDOM</span>=$(<span style="color: #b294bb;">date</span> +%s)
+    <span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
+}
+</pre>
+</div>
+
+<p>
+不过需要注意的是，由于这里 date 命令的输出是精确到秒，seed 的值在 1 秒内是不变的，产生的随机数值也会相同。而在不设置 seed 的情况下，RANDOM 的输出在 1 秒内是会变化的，这里只是为了说明而举个例子而已。
+</p>
+
+<p>
+如果需要产生特定范围内的随机数，可以这么写:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
+<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span>() {
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
+    <span style="color: #8abeb7;">echo</span> $((RANDOM % ($<span style="color: #de935f;">end</span> - $<span style="color: #de935f;">beg</span>) + $<span style="color: #de935f;">beg</span>))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">/dev/random</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+/dev/random 是 Linux 上的一个字符设备，里面会源源不断地产生随机数，只要进行读取就行了。一般来说，用 od 命令即可:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">od -An -N2 -i /dev/random
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">13176</span>
+</pre>
+</div>
+<p>
+这里的 <code>-N2</code> 指定要读取的字节数， <code>-i</code> 则是指定输入。
+</p>
+
+<p>
+若要产生特定范围内的随机数，则和使用 $RANDOM 的方法类似:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
+<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span>() {
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
+    <span style="color: #8abeb7;">echo</span> $(($(<span style="color: #b294bb;">od</span> -An -N2 -i /dev/random) % ($<span style="color: #de935f;">end</span> - $<span style="color: #de935f;">beg</span>) + $<span style="color: #de935f;">beg</span>))
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">seq + sort</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+<p>
+sort 命令有一个 <code>-R</code> 选项，可以根据随机 hash 排序，那么我们就可以用 seq 命令先生成一个整数序列，然后用 sort 的 <code>-R</code> 选项处理取其中一行即可。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
+<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span> {
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
+    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
+    seq $<span style="color: #de935f;">beg</span> $<span style="color: #de935f;">end</span> | sort -R | head -n1
+}
+</pre>
+</div>
+
+<p>
+值得注意的是，使用这种方法时，要求的值域可以包含负数区域，而之前的两种方法则要进行不同的处理。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">shuf</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+<p>
+shuf 和 <code>sort -R</code> 的作用类似，用来根据输入生成随机序列:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
+<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span> {
+    shuf -i $<span style="color: #de935f;">1</span>-$<span style="color: #de935f;">2</span> -n1
+}
+</pre>
+</div>
+
+<p>
+在各种方法中，使用 shuf 命令是最简洁的，因此就选择了这种方法。
+</p>
+</div>
+</div>

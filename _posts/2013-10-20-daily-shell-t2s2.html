@@ -2,7 +2,7 @@
 layout     : post
 title      : 伪语音合成(2)
 categories : 编程
-tags       : shell
+tags       : Shell
 ---
 
 <p>
@@ -14,13 +14,13 @@ tags       : shell
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
-<span style="color: #ed8a0c;">t2s</span>() { 
-    wget -q -U Mozilla -O $(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #fefc58;">1</span><span style="color: #25ef29;">")"</span>; 
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/bin/</span><span style="color: #b294bb;">bash</span>
+<span style="color: #81a2be;">t2s</span>() {
+    wget -q -U Mozilla -O $(<span style="color: #b294bb;">tr</span> <span style="color: #b5bd68;">' '</span> _ &lt;&lt;&lt; <span style="color: #b5bd68;">"$1"</span>| cut -b 1-15).mp3 <span style="color: #b5bd68;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=en&amp;q=$(</span><span style="color: #b294bb;">tr</span><span style="color: #b5bd68;"> ' ' + &lt;&lt;&lt; "</span>$<span style="color: #de935f;">1</span><span style="color: #b5bd68;">")"</span>;
 }
 
-<span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$1"</span> | cut -b 1-15).mp3;
-t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
+<span style="color: #de935f;">FILE</span>=$(<span style="color: #b294bb;">tr</span> <span style="color: #b5bd68;">' '</span> _ &lt;&lt;&lt; <span style="color: #b5bd68;">"$1"</span> | cut -b 1-15).mp3;
+t2s $<span style="color: #de935f;">1</span> &amp;&amp; play $<span style="color: #de935f;">FILE</span> -q &amp;&amp; rm $<span style="color: #de935f;">FILE</span>
 </pre>
 </div>
 <p>
@@ -42,40 +42,40 @@ t2s $<span style="color: #fefc58;">1</span> &amp;&amp; play $<span style="color:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #e81122;">#</span><span style="color: #e81122;">!/bin/</span><span style="color: #cf4a44;">bash</span>
+<pre class="src src-sh"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/bin/</span><span style="color: #b294bb;">bash</span>
 
-<span style="color: #fefc58;">FILE</span>=<span style="color: #25ef29;">""</span>
+<span style="color: #de935f;">FILE</span>=<span style="color: #b5bd68;">""</span>
 
-<span style="color: #ed8a0c;">t2s</span>() 
+<span style="color: #81a2be;">t2s</span>()
 {
-    <span style="color: #fefc58;">first</span>=<span style="color: #25ef29;">"$1"</span>;
-    <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">""</span>;
-    <span style="color: #fefc58;">FILE</span>=$(<span style="color: #fa8072;">tr</span> <span style="color: #25ef29;">' '</span> _ &lt;&lt;&lt; <span style="color: #25ef29;">"$first"</span>| cut -b 1-15).mp3;
+    <span style="color: #de935f;">first</span>=<span style="color: #b5bd68;">"$1"</span>;
+    <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">""</span>;
+    <span style="color: #de935f;">FILE</span>=$(<span style="color: #b294bb;">tr</span> <span style="color: #b5bd68;">' '</span> _ &lt;&lt;&lt; <span style="color: #b5bd68;">"$first"</span>| cut -b 1-15).mp3;
 
-    <span style="color: #31d3c4;">shift</span>;
+    <span style="color: #8abeb7;">shift</span>;
 
-    <span style="color: #cf4a44;">while </span><span style="color: #31d3c4;">getopts</span> <span style="color: #25ef29;">"ez"</span> arg
-    <span style="color: #cf4a44;">do</span>
-    <span style="color: #cf4a44;">case</span> $<span style="color: #fefc58;">arg</span><span style="color: #cf4a44;"> in</span>
+    <span style="color: #b294bb;">while </span><span style="color: #8abeb7;">getopts</span> <span style="color: #b5bd68;">"ez"</span> arg
+    <span style="color: #b294bb;">do</span>
+    <span style="color: #b294bb;">case</span> $<span style="color: #de935f;">arg</span><span style="color: #b294bb;"> in</span>
         e)
-        <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"en"</span>;
+        <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"en"</span>;
         ;;
         z)
-        <span style="color: #fefc58;">lang</span>=<span style="color: #25ef29;">"zh"</span>;
+        <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"zh"</span>;
         ;;
         ?)
-        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
-        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -e : in English"</span>;
-        <span style="color: #31d3c4;">echo</span> <span style="color: #25ef29;">"   -z : in Chinese"</span>;
-        <span style="color: #cf4a44;">exit</span> 1;
+        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
+        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -e : in English"</span>;
+        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -z : in Chinese"</span>;
+        <span style="color: #b294bb;">exit</span> 1;
         ;;
-    <span style="color: #cf4a44;">esac</span>
-    <span style="color: #cf4a44;">done</span>
+    <span style="color: #b294bb;">esac</span>
+    <span style="color: #b294bb;">done</span>
 
-    wget -q -U google-chrome -O $<span style="color: #fefc58;">FILE</span> <span style="color: #25ef29;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #fa8072;">tr</span><span style="color: #25ef29;"> ' ' + &lt;&lt;&lt; "$first")"</span>; 
+    wget -q -U google-chrome -O $<span style="color: #de935f;">FILE</span> <span style="color: #b5bd68;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #b294bb;">tr</span><span style="color: #b5bd68;"> ' ' + &lt;&lt;&lt; "$first")"</span>;
 }
 
-t2s <span style="color: #25ef29;">"$1"</span> $<span style="color: #fefc58;">2</span> &amp;&amp; play $<span style="color: #fefc58;">FILE</span> -q &amp;&amp; rm $<span style="color: #fefc58;">FILE</span>
+t2s <span style="color: #b5bd68;">"$1"</span> $<span style="color: #de935f;">2</span> &amp;&amp; play $<span style="color: #de935f;">FILE</span> -q &amp;&amp; rm $<span style="color: #de935f;">FILE</span>
 </pre>
 </div>
 
