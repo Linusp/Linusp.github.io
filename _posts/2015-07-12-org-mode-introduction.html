@@ -1,0 +1,483 @@
+---
+layout     : post
+title      : "强大的Org mode(1):简单介绍与基本使用"
+categories : Emacs
+tags       :
+- org-mode
+description:
+---
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+
+<div class="figure">
+<p><img src="../../../assets/img/org-main.jpg" alt="org-main.jpg" width="40%" align="right" />
+</p>
+</div>
+
+<p>
+<b>Org mode</b> 是 Emacs 的一个插件，能为 Emacs 用户提供一个强大的纯文本编辑环境，下面是 Org mode 官网上对自己的介绍:
+</p>
+<blockquote>
+<p>
+Org mode is for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
+</p>
+</blockquote>
+
+<p>
+Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikipedia.org/wiki/ReStructuredText">RST</a>、 <a href="https://zh.wikipedia.org/wiki/Markdown">Markdown</a> 类似，不过要比这两者拥有更为强大的功能和特性，是众多 Emacs 用户重度依赖的一个插件，对我个人来说也是构成日常工作、生活必不可少的重要工具。正如它的自我介绍所言， Org mode 与 RST 、 Markdown 相比，除了作为编辑环境以外，还可以进行任务管理、项目规划、笔记收集整理等各种操作 —— 事实上由于 Org mode 作为 Emacs 的插件，构建在 emacs lisp 语言之上，也使得它具备了无与伦比的可扩展性，但同时由于有统一的开发团队进行维护，而使得其语法规则没有因为强大的可扩展性而导致不同方言的泛滥，而 Markdown 就没有避免这个问题。
+</p>
+
+<p>
+需要说明的是，作为一个标记语言， Org mode 的基本语法规则其实是很简单的，但它同时还提供了大量的“功能”使得其变得异常强大，但这些功能都是构建在基本的语法规则之上的。对于初学者来说，Org mode 能够很快地上手，而在上手后又还有非常丰富的内容可待探索。
+</p>
+
+<p>
+以下是Org mode的几大特性:
+</p>
+<ul class="org-ul">
+<li>基于大纲的编辑(outline-based editing)</li>
+<li>灵活强大的任务管理(planning)</li>
+<li>任务计时及统计(clocking)</li>
+<li>日程管理(agendas)</li>
+<li>快速捕获(capture)</li>
+<li>功能丰富的表格操作(tables)</li>
+<li>导出到多种外部格式(exporting)</li>
+<li>文学编程(working with source code)</li>
+<li>移动端支持(with your mobile phone)</li>
+</ul>
+
+<p>
+右图是Org mode官网上的一张示例图，对上述一些特性(outline-based editing, planning, agendas)进行了展示。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">安装与基础设置</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+自 Emacs 22 后，Emacs 都自带了可用的 Org mode，在 Emacs 中，Org mode 作为一个 major mode，在用 Emacs 打开(或新建)后缀为 "org" 的文件时即会启用，如果您的 Emacs 在打开 org 文件时没有启用 org-mode 这个 major mode，可以在配置文件中加入:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-to-list 'auto-mode-alist  '(<span style="color: #b5bd68;">"\\.org\\'"</span> . org-mode))
+</pre>
+</div>
+
+<p>
+另外 Org mode 在默认情况下不开启自动折行，这将导致一行文字的长度超出屏幕范围时，行会继续往右延伸而导致部分内容不可见(因在屏幕范围外而无法看见)，要开启自动折行，应在配置中进行设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq truncate-lines nil)
+</pre>
+</div>
+<p>
+除此以外，基本上就不用进行其他设置了(至少基本功能的使用是不需要的)。
+</p>
+
+<p>
+需要注意的是，Emacs 自带的 Org mode 一般版本都偏旧，存在一些已知的 bug，建议替换为新版本，要达到该目的有两种办法:
+</p>
+<ol class="org-ol">
+<li>若 Emacs 版本为 24 或更新，可以通过内置的包管理器 <b>elpa</b> 来安装新版的 Org mode，使用 <b>package-install</b> 命令并在要求输入包名时输入 <span class="underline">org</span> 。这种方法安装的 Org mode 不需要进行额外配置即可在 Emacs 启动时被加载。</li>
+
+<li><p>
+从 <a href="http://orgmode.org/">Org mode的官网</a> 上下载最新的包，解压后在 Emacs 的配置文件中添加配置进行加载，比如将其解压在 ~/.emacs.d/site-lisp/org/ 目录下，那么配置语句可以是这样的:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #b5bd68;">"~/.emacs.d/site-lis/org/lisp"</span>)
+(add-to-list 'load-path <span style="color: #b5bd68;">"~/.emacs.d/site-lis/org/contrib/lisp"</span>)
+</pre>
+</div>
+
+<p>
+相比用 elpa 安装的方法，这种方法的一个优点是能使用一些其他开发者贡献的、暂未成为核心功能的增强功能，就是上面的第二条配置语句的目的。
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">基本使用</h2>
+<div class="outline-text-2" id="text-orgheadline5">
+</div><div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">所谓大纲(outline)</h3>
+<div class="outline-text-3" id="text-orgheadline3">
+
+<div class="figure">
+<p><img src="../../../assets/img/org-outline.png" alt="org-outline.png" width="40%" align="right" />
+</p>
+</div>
+
+<p>
+在 Org mode 中，文档内容是通过 headline 来组织成一个树状结构的 —— 由于在 Org mode 中还存在 "title" 这种文章级的标题，为避免混淆，就不对 "headline" 进行翻译了，我们只要知道这几点就行:
+</p>
+<ol class="org-ol">
+<li>headline 是一节内容的标题(概要)</li>
+<li>headline 可以分级</li>
+<li>headline 可以有子 headline</li>
+</ol>
+
+<p>
+我想凡是有 Markdown 、RST 乃至 Microsoft Office 使用经验的人，都能理解什么是 "headline"。
+</p>
+
+<p>
+headline 在 Org mode 中会被高亮显示，且不同级别的 headline 会以不同的颜色显示。要创建 headline 也很简单，只要一行文字以若干个连续星号(*)顶格，并在星号结束后跟随至少一个空格，则该行会被视为一个 headline ，连续星号的数量被视为 headline 的层级，如图所示。
+</p>
+
+<p>
+实际上 Org mode 提供了丰富的快捷键来操作 headline，不需要手动输入星号(*)来创建 headline。以下是这些快捷键的一个总结:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-&lt;return&gt;</td>
+<td class="org-left">在当前 headline 所属的内容后建立一个同级 headline</td>
+<td class="org-left">无 headline 时创建一个一级 headline</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;return&gt;</td>
+<td class="org-left">在当前 headline 后建立一个同级 headline</td>
+<td class="org-left">同上</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;right&gt;</td>
+<td class="org-left">降低当前 headline 的层级</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;left&gt;</td>
+<td class="org-left">提高当前 headline 的层级</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;up&gt;</td>
+<td class="org-left">将当前 headline 及其内容作为整体向上移动</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;down&gt;</td>
+<td class="org-left">将当前 headline 及其内容作为整体向下移动</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+通过 headline 来组织文档内容便于组织思想，这在很多其他编辑环境或者软件上都有体现，但与它们不同的是，Org能够方便地隐藏各级 headline 下的内容只显示 headline 的树状结构或者只显示第一级headline——这就是所谓 <b>outline</b> 了。只要通过 headline 组织好 Org 文档，概览文档、快速定位和编辑都能很方便地做到。
+</p>
+
+<p>
+通过快捷键 TAB 可以对某个 headline 及其内容的显示在三种状态(Folded, Children, Subtree)中切换；快捷键 S-TAB 则对整个 org 文件的内容显示在三种状态(Overview, Contents, Show all)中切换。Org 的文档称这种行为为"cycling"，前者称为"subtree cycling"，后者则是"global cycling"。
+</p>
+
+<p>
+subtree cycling的状态
+</p>
+<ul class="org-ul">
+<li>Folded: 对当前 headline，只显示 headline，其下的子节点及内容隐藏</li>
+<li>Children: 对当前 headline，显示当前 headline 及其下更低一级的 headline</li>
+<li>Subtree: 对当前 headline，只显示当前 headline 及其下更低级的 headline</li>
+</ul>
+
+<p>
+下面的动态图像展示了subtree cycling 的状态变化(Folded -&gt; Children -&gt; Subtre)。
+</p>
+
+
+<div class="figure">
+<p><img src="../../..//subtree-cycling.gif" alt="subtree-cycling.gif" />
+</p>
+</div>
+
+<p>
+global cycling 的状态变化与 subtree cycling 类似，不过针对的是整个文档，下面图像展示了 global cycling 的状态变化(Overview -&gt; Contents -&gt; Show all)
+</p>
+
+
+<div class="figure">
+<p><img src="../../../global-cycling.gif" alt="global-cycling.gif" />
+</p>
+</div>
+
+<p>
+Org mode 的几大特性中，任务管理、任务计时、项目管理都是建立在 outline 结构上的，捕获虽然可以不基于这个结构，但一般来说都会使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">基本语法</h3>
+<div class="outline-text-3" id="text-orgheadline4">
+<p>
+除了 headline 外，Org mode 还支持列表、文字修饰(粗体、斜体、下划线等)、代码块、引用等常见的功能。
+</p>
+<ul class="org-ul">
+<li><p>
+列表
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org">+ &#26080;&#24207;&#21015;&#34920;
+  * &#29992;"+","-", "*"&#24320;&#22836;&#65292;&#21518;&#36319;&#38543;&#29992;&#31354;&#26684;&#20998;&#38548;&#24320;&#30340;&#21015;&#34920;&#39033;&#21517;&#31216;&#12289;&#20869;&#23481;
+  * "*"&#22312;&#34892;&#39318;&#39030;&#26684;&#30340;&#35805;&#21017;&#26159;headline&#65292;&#36825;&#20010;&#35201;&#27880;&#24847;
+  * &#22914;&#26524;&#24819;&#32467;&#26463;&#19968;&#20010;&#21015;&#34920;&#65292;&#37027;&#20040;&#22312;&#20854;&#21518;&#36319;&#38543;&#20004;&#20010;&#31354;&#34892;
+
++ &#26377;&#24207;&#21015;&#34920;
+  1. &#29992;"1.","1)"&#24320;&#22836;&#65292;&#21518;&#36319;&#38543;&#29992;&#31354;&#26684;&#20998;&#38548;&#24320;&#30340;&#21015;&#34920;&#39033;&#21517;&#31216;&#12289;&#20869;&#23481;
+  2. &#20854;&#20313;&#21516;&#26080;&#24207;&#21015;&#34920;
+</pre>
+</div>
+
+<p>
+列表和 headline 一样，也是可以分级、嵌套的，列表相关的快捷键也与 headline 相关的快捷键部分重叠(Org mode 会根据实际情况来进行合理的操作，所以不用担心混淆问题):
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-&lt;return&gt;</td>
+<td class="org-left">在当前列表项的内容后建立一个同级列表项</td>
+<td class="org-left">光标在列表项同一行时有效</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;return&gt;</td>
+<td class="org-left">在当前列表项后建立一个同级列表项</td>
+<td class="org-left">同上</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;right&gt;</td>
+<td class="org-left">降低当前列表项的层级</td>
+<td class="org-left">同上</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;left&gt;</td>
+<td class="org-left">提高当前列表项的层级</td>
+<td class="org-left">同上</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;up&gt;</td>
+<td class="org-left">将当前列表项及其内容作为整体向上移动</td>
+<td class="org-left">同上</td>
+</tr>
+
+<tr>
+<td class="org-left">M-&lt;down&gt;</td>
+<td class="org-left">将当前列表项及其内容作为整体向下移动</td>
+<td class="org-left">同上</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+粗体
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="font-weight: bold;">*&#31895;&#20307;*</span> &#29992;&#20004;&#20010;&#26143;&#21495;&#21253;&#35065;&#65292;&#26143;&#21495;&#19982;&#31895;&#20307;&#21069;&#21518;&#30340;&#20854;&#20182;&#23383;&#24212;&#35813;&#21508;&#26377;&#33267;&#23569;&#19968;&#20010;&#31354;&#26684;&#25110;&#33521;&#25991;&#26631;&#28857;&#20998;&#38548;&#24320;&#26469;
+<span style="font-weight: bold;">*bold*</span>,word,&#29992;&#33521;&#25991;&#36887;&#21495;&#20998;&#38548;&#24320;&#65292;bold&#26174;&#31034;&#20986;&#31895;&#20307;&#25928;&#26524;
+*bold*word&#21017;&#19981;&#26174;&#31034;&#31895;&#20307;&#25928;&#26524;
+</pre>
+</div></li>
+
+<li><p>
+斜体
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="font-style: italic;">/hello/</span> &#29992;"/"&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
+<span style="font-style: italic;">/&#26012;&#20307;/</span> &#22909;&#20687;&#23545;&#20013;&#25991;&#19981;&#31649;&#29992;?&#23548;&#20986;&#25104;HTML&#26102;&#30475;&#21040;&#36824;&#26159;&#29983;&#25928;&#20102;&#65292;&#21487;&#33021;&#26159;&#23383;&#20307;&#20851;&#31995;&#21543;
+</pre>
+</div></li>
+
+<li><p>
+下划线
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="text-decoration: underline;">_&#19979;&#21010;&#32447;_</span> &#29992;"_"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
+_&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#21017;&#19981;&#29983;&#25928;
+</pre>
+</div></li>
+
+<li><p>
+删除线
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="text-decoration: line-through;">+&#21024;&#38500;&#32447;+</span> &#29992;"+"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
+</pre>
+</div></li>
+
+<li><p>
+引用块
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+BEGIN_QUOTE</span>
+&#24341;&#29992;&#20869;&#23481;
+<span style="color: #969896; font-style: italic;">#+END_QUOTE</span>
+</pre>
+</div>
+
+<p>
+在org文件中输入"&lt;q"然后按 TAB 键会自动插入一个引用块，插入后在其中进行编辑即可。
+</p></li>
+
+<li><p>
+示例块
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+Begin_EXAMPLE</span>
+<span style="color: #de935f;">&#31034;&#20363;</span>
+<span style="color: #969896; font-style: italic;">#+END_EXAMPLE</span>
+</pre>
+</div>
+
+<p>
+在org文件中输入 "&lt;e" 然后按 TAB 键来插入一个示例块，可以移动到其中并使用快捷键"C-'(单引号)"来在新窗格中编辑它，编辑好后用同样的快捷键来保存。
+</p></li>
+
+<li><p>
+代码块
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+BEGIN_SRC C++</span>
+<span style="color: #b294bb;">#include</span> <span style="color: #b5bd68;">&lt;iostream&gt;</span>
+
+<span style="color: #b294bb;">using</span> <span style="color: #b294bb;">namespace</span> <span style="color: #8abeb7;">std</span>;
+
+<span style="color: #f0c674;">int</span> <span style="color: #81a2be;">main</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">argc</span>, <span style="color: #f0c674;">char</span> *<span style="color: #de935f;">argv</span>)
+{
+    cout &lt;&lt; <span style="color: #b5bd68;">"&#20195;&#30721;&#22359;"</span> &lt;&lt; endl;
+
+    <span style="color: #b294bb;">return</span> 0;
+}
+<span style="color: #969896; font-style: italic;">#+END_SRC</span>
+</pre>
+</div>
+
+<p>
+代码块稍微复杂一点，插入的话是通过输入"&lt;s"然后按 TAB 键来达到，但插入后还要在"#+BEGIN_SRC"后指定代码的语言类型(如上例所示)。
+</p>
+
+<p>
+Org mode可以根据代码所属的语言来对其进行高亮，不过自Emacs 24.1后，默认设置下不对代码块进行高亮，需要进行设置
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-src-fontify-natively t)
+</pre>
+</div>
+
+<p>
+在编辑代码块的时候也会开启对应语言的 major mode，若对应的语言配置得当，在编辑 Org mode 中的代码块时，自动缩进、自动补全等功能都可以享用。编辑与保存的快捷键同示例块(exmple block)。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/source-edit.gif" alt="source-edit.gif" />
+</p>
+</div>
+
+<p>
+此外在 Org mode 中还可以对代码进行求值，产生了很多丰富的应用方式，这个留待后续。
+</p></li>
+
+<li><p>
+图片
+</p>
+
+<p>
+在 Org mode 中，可以插入本地图片，并在 Org mode 中进行显示。要做到这个，直接在 org 文件中写入本地文件的路径，然后开启 iimage-mode 即可(M-x iimage-mode)。
+</p>
+
+<p>
+为进行区分，通常会在图片地址前加上"file"前缀，如
+</p>
+<pre class="example">
+file:../../../assets/img/source-edit.gif
+</pre></li>
+
+<li><p>
+链接
+</p>
+
+<p>
+链接的语法规则是这样的:
+</p>
+<pre class="example">
+[[&lt;link url&gt;][&lt;text&gt;]]
+</pre>
+
+<p>
+比如
+</p>
+<pre class="example">
+[[http://linusp.github.io/][Linusp's Blog]]
+</pre>
+
+<p>
+会显示为 <a href="http://linusp.github.io/">Linusp's Blog</a>。
+</p></li>
+</ul>
+</div>
+</div>
+</div>
