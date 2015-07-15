@@ -1,0 +1,442 @@
+---
+layout     : post
+title      : "强大的Org mode(2):任务管理"
+categories : emacs
+tags       : org-mode
+description:
+---
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">基本的任务管理</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+在 Org mode 中，可以在 headline 的星号与内容之间插入特定的表示进度的关键词，来将一个 headline 标记为一个任务(Plan)，默认情况下，支持两个关键词，分别是 "TODO" 和 "DONE"。当一个 headline 作为一个任务时，一方面标示其状态的关键词会被高亮(如下图所示)，另一方面 Org mode 提供了一组完善的功能来对这些任务进行处理。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-status.png" alt="org-task-status.png" />
+</p>
+</div>
+
+<p>
+对任务管理而言，最基本的功能，就是快速地更改任务的状态，在这里，用户当然不用手动去修改表示任务状态的关键词，Org mode 已经提供了这样的一组快捷键给用户:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-c C-t</td>
+<td class="org-left">按照 无状态-&gt;TODO-&gt;DONE-&gt;无状态 的顺序更改任务状态</td>
+<td class="org-left">org-todo</td>
+</tr>
+
+<tr>
+<td class="org-left">Shift-&lt;right&gt;</td>
+<td class="org-left">同上</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">Shift-&lt;left&gt;</td>
+<td class="org-left">按照与 Shift-&lt;right&gt; 相反的顺序更改任务状态</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+下图是一个示例:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-status-change.gif" alt="org-task-status-change.gif" />
+</p>
+</div>
+
+<p>
+除此以外，Org mode 也提供了快速创建任务的操作
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-S-return</td>
+<td class="org-left">在当前任务的内容后面建立一个同级任务，标记为TODO</td>
+<td class="org-left">无任务时创建一级任务，标记为TODO</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-return</td>
+<td class="org-left">在当前任务后建立一个同级任务，标记为TODO</td>
+<td class="org-left">同上</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+上表中的“任务”指的就是带有相关关键词的 headline，由于 headline 是可以分级嵌套的，所以这里的任务也可以分级嵌套，这也是 Org mode 中任务结构的基础。有关子任务的话题将在后面补充。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6">自定义状态序列</h2>
+<div class="outline-text-2" id="text-orgheadline6">
+</div><div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">添加新的状态</h3>
+<div class="outline-text-3" id="text-orgheadline2">
+<p>
+上一节提到，默认情况下，Org mode 接受的任务状态关键词只有 "TODO" 和 "DONE" 两个，分别表示 "待办" 与 "完成"。这样的分类对于一些不可再分的小任务，当然是足够用的，但有时候需要设置更为丰富的任务状态，如添加一个表示 "正在进行" 状态的关键词 "DOING"，在不进行设置的情况下，这个关键词是无法高亮的:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-add-doing.png" alt="org-task-add-doing.png" />
+</p>
+</div>
+
+<p>
+这个词将会被视作任务名称的一部分，而不是表示任务状态的标识。用本文之前提到的快捷键更改任务的状态，会看到下面这样的变化。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-status-doing-ignored.gif" alt="org-task-status-doing-ignored.gif" />
+</p>
+</div>
+
+<p>
+要达到预期的目的，有两种方法，一种方法是全局的，另一种则只在当前文件生效。
+</p>
+
+<p>
+Org mode 中有一个变量 <b>org-todo-keywords</b> 存储着作用于全局的状态序列，它的默认值是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">'((sequence <span style="color: #b5bd68;">"TODO"</span> <span style="color: #b5bd68;">"DONE"</span>))
+</pre>
+</div>
+<p>
+这就是默认状态只有两个的原因，修改这个变量的值也就能达到全局修改状态序列的目的了。
+</p>
+
+<p>
+需要注意的是，状态序列在定义时的顺序是从左至右有序的，最后一个关键词会被认为是 <b>表示任务终结</b> 的关键词。所以如果要添加 "DOING" 这个状态，应该像下面这样进行设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #b5bd68;">"TODO"</span> <span style="color: #b5bd68;">"DOING"</span> <span style="color: #b5bd68;">"DONE"</span>)))
+</pre>
+</div>
+<p>
+默认情况下表示非终结状态的关键词与表示终结的关键词的高亮颜色是不一样的，而且在更改为终结状态时，会在任务下添加一条下面这样的标记。
+</p>
+<pre class="example">
+CLOSED: [2015-07-15 三 23:20]
+</pre>
+<p>
+如果将 "DOING" 放置到序列的末端，那么状态变化时的现象就会和预期的不一致:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-wrong-status.png" alt="org-task-wrong-status.png" />
+</p>
+</div>
+
+<p>
+如果只想在某个文件中为其设置独有的关键词序列，那么可以在org文件的头部用"#+SEQ_TODO"来进行设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+SEQ_TODO: TODO DOING DONE</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">为状态设置不同外观</h3>
+<div class="outline-text-3" id="text-orgheadline3">
+<p>
+之前提到，Org mode 在高亮时只区分非终结状态与终结状态，但如果各个状态都能以不同的颜色显示，那肯定能让任务的状态更加一目了然。通过修改 <b>org-todo-keyword-faces</b> 这个变量可以达到这个目的。例如我们希望 "TODO" 以红色显示，"DOING" 以黄色显示，"DONE" 用绿色显示，就可以这样设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-todo-keyword-faces '((<span style="color: #b5bd68;">"TODO"</span> . <span style="color: #b5bd68;">"red"</span>)
+                               (<span style="color: #b5bd68;">"DOING"</span> . <span style="color: #b5bd68;">"yellow"</span>)
+                               (<span style="color: #b5bd68;">"DONE"</span> . <span style="color: #b5bd68;">"green"</span>)))
+</pre>
+</div>
+
+<p>
+以下是这样设置后的效果图:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-todo-keywords-face.png" alt="org-todo-keywords-face.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">多个终结状态及快速选择</h3>
+<div class="outline-text-3" id="text-orgheadline4">
+<p>
+前面所以说 "终结状态" 而不说 "完成状态"，是因为 "终结状态" 可能有不止一种，比如在表示正常完成的状态外，还可以有表示异常中止的状态。当有多个表示终结的状态时，相应的关键词要处于关键词序列的尾部，并且用"|"和非终结状态分隔开来，也就是这样:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #b5bd68;">"TODO"</span> <span style="color: #b5bd68;">"DOING"</span> <span style="color: #b5bd68;">"|"</span> <span style="color: #b5bd68;">"DONE"</span> <span style="color: #b5bd68;">"ABORT"</span>)))
+</pre>
+</div>
+
+<p>
+若在文件中进行设置，则是:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+SEQ_TODO: TODO DOING | DONE ABORT</span>
+</pre>
+</div>
+
+<p>
+这样的话有一个问题，那就是，一般来说，对于一个任务来说，一般只会用到多个终结状态中的一个，但假如我要将一个原先为"TODO"状态的任务标记为"ABORT"，我就要使用快捷键"C-c C-t"或"S-left"/"S-right"，依次经过"DOING"、"DONE"，最后才标记为"ABORT"。这样的行为和理想的体验是不符合的。
+</p>
+
+<p>
+好在 Org mode 也提供了解决这一场景的方法，那就是，可以为每一个状态设立一个快速选择键，在使用快捷键"C-c C-t"时，会等待输入这个快速选择键来迅速指定为特定状态。使用这个功能所需要的设置也很简单。
+</p>
+
+<p>
+第一个是将变量"org-use-fast-todo-selection"的值设置为真(t)——一般来说，这个变量的值默认就是真(t):
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-use-fast-todo-selection t)
+</pre>
+</div>
+
+<p>
+然后在定义关键词序列时，在每个关键词后跟随括号并在其中指定快速选择键，如:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #b5bd68;">"TODO(t)"</span> <span style="color: #b5bd68;">"DOING(i)"</span> <span style="color: #b5bd68;">"|"</span> <span style="color: #b5bd68;">"DONE(d)"</span> <span style="color: #b5bd68;">"ABORT(a)"</span>)))
+</pre>
+</div>
+<p>
+或在文件头部设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+SEQ_TODO: TODO(t) DOING(i) | DONE(d) ABORT(a)</span>
+</pre>
+</div>
+
+<p>
+这样使用快捷键"C-c C-t"时，就能够方便地切换任务的状态了，如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-fast-select.gif" alt="org-task-fast-select.gif" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">进入与离开时的额外操作</h3>
+<div class="outline-text-3" id="text-orgheadline5">
+<p>
+除了上述内容以外，Org mode 还允许定义进入状态和离开状态时的额外动作，可用的动作包含两个:
+</p>
+<ul class="org-ul">
+<li>添加笔记和状态变更信息(包括时间信息)，用"@"表示</li>
+<li>只添加状态变更信息，用"!"表示</li>
+</ul>
+
+<p>
+这个通过定义带快速选择键的关键词时，在快速选择键后用"X/Y"来表示，X表示进入该状态时的动作，Y表示离开该状态时的动作。对于一个状态(以"DONE"为例)，以下形式都是合法的:
+</p>
+<pre class="example">
+DONE(d@)       ; 进入时添加笔记
+DONE(d/!)      ; 离开时添加变更信息
+DONE(d@/!)     ; 进入时添加笔记，离开时添加变更信息
+</pre>
+
+<p>
+而这个是不合法的:
+</p>
+<pre class="example">
+DONE(d@/)
+</pre>
+
+<p>
+需要注意的是，当由状态 A 到达状态 B 时，为状态 A 设置的离开动作 Y<sub>A</sub> 只在状态 B 未设置进入动作 X<sub>B</sub> 时生效；如果目标状态设置了进入动作，那么出发状态的离开动作不被执行，而是执行目标状态的进入动作。下图为演示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-changing-action.gif" alt="org-task-changing-action.gif" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7">基于列表的任务</h2>
+<div class="outline-text-2" id="text-orgheadline7">
+<p>
+除了基于 headline 的任务管理外，Org mode 还提供基于列表的任务管理，即将每个列表项作为任务，方法是在列表标记与列表项内容之间添加一个 "[ ]" 标记(注意中间包含一个字符的预留位置)，这个标记在 Org mode 中被称为 <b>checkbox</b> 。这种任务只有三种状态(待办、进行中和完成)，分别用 "[ ]", "[-]" 和 "[X]" 表示，如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-checkbox-task.png" alt="org-checkbox-task.png" />
+</p>
+</div>
+
+<p>
+若要将用 checkbox 标记的任务标记为完成，将光标移动到对应的行，然后使用快捷键 "C-c C-c" 即可。对于包含子任务的任务，如果其子任务未全部完成，用此快捷键更改其子任务状态时，该任务的状态会自动设置为 "进行中([-])"，表示子任务未全部完成；当用快捷键将所有子任务标记为完成时，它会自动更新为完成状态。
+</p>
+
+<p>
+用"TODO"等关键词标记为headline为任务时，使用的快捷键同样适用于checkbox，不过略有不同:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">功能</th>
+<th scope="col" class="org-left">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">C-S-return</td>
+<td class="org-left">在当前列表项的内容后面建立一个同级列表项，标记为 "[ ]"</td>
+<td class="org-left">无列表项时不创建</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-return</td>
+<td class="org-left">在当前列表项后建立一个同级列表项，标记为T"[ ]"</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+checkbox 任务相对来说更轻量、简洁一些，自然也会有人群更倾向于使用这种方式进行任务管理。不过就我个人而言，基于 headline 的任务管理可以设置 deadline，可以设置为周期循环任务，还可以计时统计，这些功能是更有吸引力而且有必要的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-2">
+<h2 id="orgheadline8">子任务、任务进度与任务依赖</h2>
+<div class="outline-text-2" id="text-orgheadline8">
+<p>
+在之前本文提到过 "子任务" 这个概念，这个在 Org mode 里的表现形式是很简单的:
+</p>
+<ol class="org-ol">
+<li>一个基于 headline 的任务，如果其下的更低等级的 headline 也被作为一个任务，那么这个更低等级的任务就是子任务</li>
+<li>一个用列表项表示的任务同理</li>
+</ol>
+
+<p>
+对包含子任务的任务，可以在该任务中加入 "[\/]" 或者 "[\%]" 来实时展现该任务的完成进度跟踪，在用快捷键来改变子任务的状态时，父任务的完成进度会被自动更新，当然，也可以执行函数 <b>org-update-statistics-cookies</b> 来手动更新，默认情况下，这个函数被绑定到快捷键 "C-c #" 上。
+</p>
+
+<p>
+下图是对 checkbox 任务进行更新时进度的自动更新情况，基于 headline 的任务进度更新类似。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-update-cookie.gif" alt="org-task-update-cookie.gif" />
+</p>
+</div>
+
+<p>
+对于包含子任务的复杂任务，除了进度跟踪外，Org mode本身还提供两种简单的任务依赖处理:
+</p>
+<ol class="org-ol">
+<li>当任务还有子任务未完成时，阻止任务从未完成状态到完成状态的改变</li>
+<li>对基于 headline 的任务而言，若其上一级任务设置了 ":ORDERED:" 属性，则在其前面的同级任务完成前，无法被设置为完成状态</li>
+</ol>
+
+<p>
+不过以上两种行为默认是被关闭的，如果要开启这些功能，要对变量 <b>org-enforce-todo-dependencies</b> 进行设置:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq org-enforce-todo-dependencies t)
+</pre>
+</div>
+
+<p>
+效果如图:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-task-dependencies.gif" alt="org-task-dependencies.gif" />
+</p>
+</div>
+
+<p>
+当然，还可以通过org-depend.el实现更复杂的依赖处理，这里就不做深入展开了。
+</p>
+</div>
+</div>

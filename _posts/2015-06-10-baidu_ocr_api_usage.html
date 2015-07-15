@@ -8,21 +8,19 @@ tags       :
 - APIStore
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">百度 OCR API 初探</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">百度 OCR API 初探</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
-近日得知百度在其 <a href="http://apistore.baidu.com/">APIStore</a> 上开放了 <a href="https://zh.wikipedia.org/wiki/%25E5%2585%2589%25E5%25AD%25A6%25E5%25AD%2597%25E7%25AC%25A6%25E8%25AF%2586%25E5%2588%25AB">OCR</a> 的 API，目前以 <a href="http://apistore.baidu.com/apiworks/readyapiprefecture.html">即用API</a> 的形式试运行，所谓 "即用" 指可立即调用、无需注册付费，但也加上了有使用次数这么一个限制。
+近日得知百度在其 <a href="http://apistore.baidu.com/">APIStore</a> 上开放了 <a href="https://zh.wikipedia.org/wiki/%E5%85%89%E5%AD%A6%E5%AD%97%E7%AC%A6%E8%AF%86%E5%88%AB">OCR</a> 的 API，目前以 <a href="http://apistore.baidu.com/apiworks/readyapiprefecture.html">即用API</a> 的形式试运行，所谓 "即用" 指可立即调用、无需注册付费，但也加上了有使用次数这么一个限制。
 </p>
 
 <p>
 目前该 API 的文档很少，不过接口和参数都在其 <a href="http://apistore.baidu.com/apiworks/servicedetail/146.html">API页面</a> 进行了说明，要用起来还是没有问题的。下面是接口的信息
 </p>
 <ul class="org-ul">
-<li>接口地址: <a href="http://apis.baidu.com/apistore/idlocr/ocr">http://apis.baidu.com/apistore/idlocr/ocr</a>
-</li>
-<li>请求方法: POST
-</li>
+<li>接口地址: <a href="http://apis.baidu.com/apistore/idlocr/ocr">http://apis.baidu.com/apistore/idlocr/ocr</a></li>
+<li>请求方法: POST</li>
 </ul>
 
 <p>
@@ -32,96 +30,96 @@ tags       :
 
 
 <colgroup>
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="left">参数名</th>
-<th scope="col" class="left">类型</th>
-<th scope="col" class="left">必填</th>
-<th scope="col" class="left">参数位置</th>
-<th scope="col" class="left">描述</th>
-<th scope="col" class="left">可用值</th>
+<th scope="col" class="org-left">参数名</th>
+<th scope="col" class="org-left">类型</th>
+<th scope="col" class="org-left">必填</th>
+<th scope="col" class="org-left">参数位置</th>
+<th scope="col" class="org-left">描述</th>
+<th scope="col" class="org-left">可用值</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="left">fromdevice</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">来源设备</td>
-<td class="left">android, iPhone, pc</td>
+<td class="org-left">fromdevice</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">来源设备</td>
+<td class="org-left">android, iPhone, pc</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">clientip</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">客户端出口ip</td>
-<td class="left">&#xa0;</td>
+<td class="org-left">clientip</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">客户端出口ip</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">detecttype</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">OCR服务类型</td>
-<td class="left">LocateRecognize, Recognize, Locate, SingleCharRecognize</td>
+<td class="org-left">detecttype</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">OCR服务类型</td>
+<td class="org-left">LocateRecognize, Recognize, Locate, SingleCharRecognize</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">languagetype</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">待检测的文字类型</td>
-<td class="left">CHN_ENG, ENG, JAP, KOR</td>
+<td class="org-left">languagetype</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">待检测的文字类型</td>
+<td class="org-left">CHN_ENG, ENG, JAP, KOR</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">imagetype</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">图片资源类型</td>
-<td class="left">1: 经过BASE64处理的字符串; 2: 图片源文件</td>
+<td class="org-left">imagetype</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">图片资源类型</td>
+<td class="org-left">1: 经过BASE64处理的字符串; 2: 图片源文件</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">image</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">bodyParam</td>
-<td class="left">图片资源,300K以下</td>
-<td class="left">&#xa0;</td>
+<td class="org-left">image</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">bodyParam</td>
+<td class="org-left">图片资源,300K以下</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 <tbody>
 <tr>
-<td class="left">apikey</td>
-<td class="left">string</td>
-<td class="left">yes</td>
-<td class="left">header</td>
-<td class="left">API 密钥</td>
-<td class="left">&#xa0;</td>
+<td class="org-left">apikey</td>
+<td class="org-left">string</td>
+<td class="org-left">yes</td>
+<td class="org-left">header</td>
+<td class="org-left">API 密钥</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>
@@ -153,48 +151,55 @@ tags       :
 各字段的意义如下:
 </p>
 <ul class="org-ul">
-<li>errNum
+<li><p>
+errNum
+</p>
 
 <p>
 标识处理是否成功, 0: 表示成功, 其它值, 表示失败。在 <a href="http://apistore.baidu.com/apiworks/servicedetail/146.html">API页面</a> 上可以查看更详细的错误码列表。
+</p></li>
+<li><p>
+errMsg
 </p>
-</li>
-<li>errMsg
 
 <p>
 错误类型说明，当服务调用成功时为字符串 'success'
+</p></li>
+<li><p>
+querySign
 </p>
-</li>
-<li>querySign
 
 <p>
 本次请求用户传递原图或rl的唯一标示, 方便定位问题
+</p></li>
+<li><p>
+retData
 </p>
-</li>
-<li>retData
 
 <p>
 返回内容集合
+</p></li>
+<li><p>
+rect
 </p>
-</li>
-<li>rect
 
 <p>
 该行文字所在的矩形区域的信息
+</p></li>
+<li><p>
+word
 </p>
-</li>
-<li>word
 
 <p>
 该行所识别出的文字
-</p>
-</li>
+</p></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">用 Python 调用百度 OCR API</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">用 Python 调用百度 OCR API</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 在 API 页面上倒是提供了 Python 的调用示例，不过个人感觉比较丑，居然还在使用 urllib !我们完全可以用 requests 来做这些事情，下面是我写的一个方法:
 </p>
@@ -275,10 +280,9 @@ tags       :
 </div>
 </div>
 </div>
-
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">与 Tesseract 的简单对比</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">与 Tesseract 的简单对比</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 要比较全面、客观地对比出两个不同的产品的性能是需要大量的数据和详尽地设计的，这里只是根据我个人对 OCR 系统的认识，使用了少量的数据进行的对比，至于两者孰优孰劣请读者自行试验再下结论。
 </p>
@@ -297,14 +301,14 @@ tags       :
 百度 OCR API 识别结果:
 </p>
 <pre class="example">
-   讨论代数方程r+积—劲—1=0在(—”0)内实根的情况
+讨论代数方程r+积—劲—1=0在(—”0)内实根的情况
 </pre>
 
 <p>
 Tesseract 识别结果:
 </p>
 <pre class="example">
-   讨论代数方程娱+4筹－3χ－l=O在 (－∞,O〉 内实根的情况₋
+讨论代数方程娱+4筹－3χ－l=O在 (－∞,O〉 内实根的情况₋
 </pre>
 
 <p>
@@ -350,7 +354,7 @@ A₋₋₃+ᵢ BL－{•S宜
 百度 OCR API 识别结果:
 </p>
 <pre class="example">
-   新课标全国)在一组样本数据(Xl,y)G,y)%不全相等的散点图中,若所有样本点ki,y4+|上,则这组样本数据的样本相关系数为0      Boc.号
+新课标全国)在一组样本数据(Xl,y)G,y)%不全相等的散点图中,若所有样本点ki,y4+|上,则这组样本数据的样本相关系数为0      Boc.号
 </pre>
 
 <p>
@@ -434,12 +438,9 @@ A美未能表有童气
 从以上这些对比，我得到以下一些 <b>不一定客观</b> 的结论:
 </p>
 <ol class="org-ol">
-<li>百度的 OCR 系统对噪声、模糊等有较强的抗干扰性，这一点上要优于 Tesseract
-</li>
-<li>百度的 OCR 系统没有进行布局分析，但 Tesseract 在布局分析上做得比较好
-</li>
-<li>百度的 OCR 系统 <b>可能</b> 对 <b>黑底白字</b> 的图像识别不好
-</li>
+<li>百度的 OCR 系统对噪声、模糊等有较强的抗干扰性，这一点上要优于 Tesseract</li>
+<li>百度的 OCR 系统没有进行布局分析，但 Tesseract 在布局分析上做得比较好</li>
+<li>百度的 OCR 系统 <b>可能</b> 对 <b>黑底白字</b> 的图像识别不好</li>
 </ol>
 </div>
 </div>

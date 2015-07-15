@@ -56,20 +56,20 @@ t2s $<span style="color: #de935f;">1</span> &amp;&amp; play $<span style="color:
 
     <span style="color: #b294bb;">while </span><span style="color: #8abeb7;">getopts</span> <span style="color: #b5bd68;">"ez"</span> arg
     <span style="color: #b294bb;">do</span>
-    <span style="color: #b294bb;">case</span> $<span style="color: #de935f;">arg</span><span style="color: #b294bb;"> in</span>
-        e)
-        <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"en"</span>;
-        ;;
-        z)
-        <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"zh"</span>;
-        ;;
-        ?)
-        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
-        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -e : in English"</span>;
-        <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -z : in Chinese"</span>;
-        <span style="color: #b294bb;">exit</span> 1;
-        ;;
-    <span style="color: #b294bb;">esac</span>
+  <span style="color: #b294bb;">case</span> $<span style="color: #de935f;">arg</span><span style="color: #b294bb;"> in</span>
+      e)
+    <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"en"</span>;
+    ;;
+      z)
+    <span style="color: #de935f;">lang</span>=<span style="color: #b5bd68;">"zh"</span>;
+    ;;
+      ?)
+    <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Usage : t2s &lt;text&gt; -e/-z"</span>;
+    <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -e : in English"</span>;
+    <span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"   -z : in Chinese"</span>;
+    <span style="color: #b294bb;">exit</span> 1;
+    ;;
+  <span style="color: #b294bb;">esac</span>
     <span style="color: #b294bb;">done</span>
 
     wget -q -U google-chrome -O $<span style="color: #de935f;">FILE</span> <span style="color: #b5bd68;">"http://translate.google.com/translate_tts?ie=UTF-8&amp;tl=$lang&amp;q=$(</span><span style="color: #b294bb;">tr</span><span style="color: #b5bd68;"> ' ' + &lt;&lt;&lt; "$first")"</span>;
