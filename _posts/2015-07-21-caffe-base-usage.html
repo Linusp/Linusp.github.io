@@ -1,0 +1,542 @@
+---
+layout     : post
+title      : 深度学习框架 Caffe 的安装与基本使用
+categories : 编程
+- Deep Learning
+- Caffe
+- CNN
+- Machine Learning
+- MNIST
+- LeNet
+tags       :
+description:
+---
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Caffe 简介</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Caffe 是一个 C++ 编写的深度学习框架，原来是 UC Berkeley 博士毕业的贾扬清的个人项目，后来被他开源。由于其清晰与高效而被广泛使用，用户逐渐地也形成了一个开放的社区，各方的一些重要的研究成果(主要是各种模型)都被分享到社区中，这是非常棒的一点。
+</p>
+
+<p>
+Caffe 的清晰表现在网络结构与参数都独立于代码，用户只要以普通文本(但需遵循一定的简单格式)就可以定义好自己的神经网络，并按自己的需要进行调整。而其高效体现在对 CUDA 的支持，GPU 运算能极大地提高运算速度，同时提供了在 CPU 模式和 GPU 模式之间切换的简便方法。
+</p>
+
+<p>
+另外，代码也写得很漂亮!
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Caffe 的安装</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Caffe 依赖以下外部的库或者工具:
+</p>
+<ol class="org-ol">
+<li><a href="http://www.nvidia.cn/object/cuda-cn.html">CUDA</a>: NVIDIA 公司发布的并行计算框架，通过利用 GPU 的处理能力来大幅提升计算性能。由于需要数据的量很大以及 DNN 本身的结构复杂性，DNN 的训练过程通常会非常非常慢，如果能够利用 CUDA 能极大地提高效率。
+
+<p>
+来块 TITAN 吧少年!
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gtx690-1.jpg" alt="gtx690-1.jpg" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gtx690-2.jpg" alt="gtx690-2.jpg" />
+</p>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gtx690-3.jpg" alt="gtx690-3.jpg" />
+</p>
+</div>
+</li>
+
+<li><a href="http://www.netlib.org/blas/">BLAS</a>: 被广泛使用的线性代数库
+</li>
+<li><a href="http://www.boost.org/">Boost</a>(&gt;=1.55): 著名的 C++ 第三方库
+</li>
+<li><a href="http://opencv.org/">OpenCV</a>(&gt;=2.4): 著名的计算机视觉库
+</li>
+<li>Google 开源的一套东西:
+
+<ul class="org-ul">
+<li>protobuf: 数据序列化框架
+</li>
+<li>gflags: 命令行参数解析库
+</li>
+<li>glog: 日志记录框架
+</li>
+</ul>
+</li>
+
+<li>IO 相关的库
+
+<ul class="org-ul">
+<li>hdf5
+</li>
+<li>leveldb
+</li>
+<li>snappy
+</li>
+<li>lmdb
+</li>
+</ul>
+</li>
+</ol>
+
+<p>
+以上依赖中可以从系统软件源安装的有 2, 5 中除 glog 外的其他两个, 6。在 Debian 上使用以下命令进行安装:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install libatlas-dev libblas-dev libatlas-base-dev libatlas3-base  <span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">BLAS</span>
+sudo apt-get install libprotobuf-dev protobuf-compiler libgflags-dev
+sudo apt-get install libhdf5-dev libleveldb-dev libsnappy-dev liblmdb-dev
+</pre>
+</div>
+
+<p>
+Boost 虽然也能从软件源安装，但需要注意版本，如果版本过低还是需要进行编译安装。
+</p>
+
+<p>
+glog 会在 Caffe 安装的时候自动安装，所以需要手动安装的就剩下:
+</p>
+<ol class="org-ol">
+<li>CUDA
+</li>
+<li>Boost
+</li>
+<li>OpenCV
+</li>
+</ol>
+
+<p>
+CUDA 的安装笔者没有经验，就不作展开了，另外两个通过源代码编译安装即可。OpenCV 建议选择稳定版本 2.4.10。
+</p>
+
+<p>
+解决上述依赖问题后进行编译安装即可。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">cd</span> caffe &amp;&amp; mkdir build
+<span style="color: #8abeb7;">cd</span> build
+cmake ..
+make &amp;&amp; make install
+</pre>
+</div>
+
+<p>
+上述命令将会把 Caffe 安装到 caffe/build/install 目录下，如果需要安装在其他位置，可以在执行 cmake 时附加参数 "CMAKE_INSTALL_PREFIX":
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">cmake -DCMAKE_INSTALL_PREFIX=/opt/caffe ../
+</pre>
+</div>
+
+<p>
+注意 cmake 输出中的 "Install path" 以确认是否生效。
+</p>
+
+<p>
+如果权限允许，比较方便的方法是安装到 /usr/local 下面，这样相应的头文件、库文件都是在系统的查找路径中，在使用 Caffe 的 API 时就无需再另外指定头文件位置和链接参数。
+</p>
+
+<p>
+此外 Caffe 还提供了 Python 的接口，在安装目录中有一个 python 目录，将其加入到环境变量中即可在 Python 项目中使用:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #8abeb7;">export</span> <span style="color: #de935f;">PYTHONPATH</span>=/opt/caffe/python:$<span style="color: #de935f;">PYTHONPATH</span>
+</pre>
+</div>
+
+<p>
+当然了，这个 python 接口也有一些依赖需要安装，这些依赖在 python 目录下的 requirements.txt 中设置，使用 pip 即可进行安装:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo pip install -r requirements.txt
+</pre>
+</div>
+
+<p>
+其中一个依赖 scipy 需要 fortran 编译器:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">sudo apt-get install gfortran
+</pre>
+</div>
+
+<p>
+至此安装结束，此时可用的资源有:
+</p>
+<ol class="org-ol">
+<li>C++ 库,包括头文件、动态链接库(或静态链接库)
+</li>
+<li>Python 接口
+</li>
+<li>命令行工具，位于安装目录的 bin/ 目录下面
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">相关概念</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">Blob</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Blob 是用于存储数据的对象，在 Caffe 中各种数据(图像输入、模型参数)都是以 Blob 的形式在网络中传输的。同时 Blob 还能在 CPU 和 GPU 之间进行同步以支持 CPU/GPU 的混合运算。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">Layer</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Layer 是网络的次级单元，也是 Caffe 中能在外部进行调整的最小网络结构单元 —— 一般来说，都让同一层的神经元具备相同的性质，因此也就没有必要提供对单个神经元的操作。
+</p>
+
+<p>
+每个 Layer 都会有输入的 Blob 和输出的 Blob。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3">Net</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+即一个完整的包含输入层、隐藏层、输出层的深度网络，在 Caffe 中一般是一个卷积神经网络(Convolution Neural Networ, CNN)。
+</p>
+
+<p>
+通过定义不同类型的 Layer，并用 Blob 将不同的 Layer 连接起来，就能产生一个 Net 。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">使用 Caffe 进行训练</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+这里以 MNIST 的例子来进行说明。
+</p>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">训练参数设置</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+训练参数通常记录到一个统一的文件中，关键参数有:
+</p>
+<ul class="org-ul">
+<li>训练(及测试)使用的网络
+
+<p>
+网络结构要在另外一个文件中定义，在配置文件中用 "net" 指定其位置，如:
+</p>
+<pre class="example">
+net: "examples/mnist/lenet_train_test.prototxt"
+</pre>
+</li>
+<li>学习率等网络迭代参数
+
+<p>
+Caffe 中的权值更新通过学习率和动量项来进行计算
+</p>
+<pre class="example">
+base_lr: 0.01        # 初始学习率
+momentum: 0.9        # 动量项
+</pre>
+
+<p>
+同时还有 "lr_policy" 等参数用于学习率的自适应优化:
+</p>
+<pre class="example">
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+</pre>
+
+<p>
+此外还可以通过 "weight_decay" 来设置权重衰减
+</p>
+<pre class="example">
+weight_decay: 0.0005
+</pre>
+</li>
+
+<li>训练迭代次数
+
+<p>
+设置最大迭代次数:
+</p>
+<pre class="example">
+max_iter: 10000
+</pre>
+</li>
+<li>训练模式(CPU/GPU)
+
+<p>
+如果系统安装了 CUDA 支持 GPU 运算，那么 GPU 模式是更好的选择，否则应当选择 CPU 模式:
+</p>
+<pre class="example">
+solver_mode: CPU
+</pre>
+</li>
+</ul>
+
+<p>
+除以上参数外，还有用于测试的一些参数:
+</p>
+<ul class="org-ul">
+<li>test_iter: 测试次数
+</li>
+<li>test_interval: 两次测试之间的间隔
+</li>
+</ul>
+
+
+<p>
+在 MNIST 例子中，配置文件为 examples/mnist/lenet_solver.prototxt，其内容为:
+</p>
+<pre class="example">
+# The train/test net protocol buffer definition
+net: "examples/mnist/lenet_train_test.prototxt"
+
+# test_iter specifies how many forward passes the test should carry out.
+# In the case of MNIST, we have test batch size 100 and 100 test iterations,
+# covering the full 10,000 testing images.
+test_iter: 100
+
+# Carry out testing every 500 training iterations.
+test_interval: 500
+
+# The base learning rate, momentum and the weight decay of the network.
+base_lr: 0.01
+momentum: 0.9
+weight_decay: 0.0005
+
+# The learning rate policy
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+
+# Display every 100 iterations
+display: 100
+
+# The maximum number of iterations
+max_iter: 10000
+
+# snapshot intermediate results
+snapshot: 5000
+
+snapshot_prefix: "examples/mnist/lenet"
+
+# solver mode: CPU or GPU
+solver_mode: GPU
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2">网络结构定义</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+如前所述，Net 由 Layer 组成，每个 Layer 的定义都是以下形式:
+</p>
+<pre class="example">
+layer {
+  name: "&lt;name&gt;"
+  type: "&lt;type&gt;"
+  bottom: "&lt;input blob&gt;"
+  top: "&lt;output blob&gt;"
+  transform_param {
+    ...
+  }
+  &lt;prefix&gt;_param {
+    ...
+  }
+}
+</pre>
+
+<p>
+可用的 Layer 类型及其参数见 <a href="http://caffe.berkeleyvision.org/tutorial/layers.html">Caffe|Layer catalogue</a> 。
+</p>
+
+<p>
+层与层通过输入和输出联系在一起，比如说定义一个两层的前馈网络，可以这样:
+</p>
+<pre class="example">
+layer {
+  name: "input"
+  type: "Data"
+  top: "data"
+}
+layer {
+  name: "output"
+  type: "SoftmaxWithLoss"
+  bottom: "data"
+  top: "loss"
+}
+</pre>
+<p>
+"input" 层的输出 Blob 是 "data" ，同时 "data" 这个 Blob 又是 "output" 层的输出，这两个层就这样被连接起来了。
+</p>
+
+<p>
+在 MNIST 例子中，网络结构定于于 examples/mnist/lenet_train_test.prototxt 中，由于其内容较长，这里就不详细写出来了，仅以图示之。
+</p>
+
+<p>
+TODO: 图
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3">数据准备</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+在 MNIST 的例子中，需要将 MNIST 数据集转换为 lmdb 格式。先来看看 MNIST 数据集的处理再谈一下普通的数据如何转换成可用于训练的数据。
+</p>
+
+<p>
+首先要获取数据，这都已经在 Caffe 的源代码包中提供了相应的工具:
+</p>
+<ul class="org-ul">
+<li>data/mnist/get_mnist.sh
+</li>
+<li>examples/mnist/create_mnist.sh
+</li>
+</ul>
+
+<p>
+第一个脚本用于下载 MNIST 数据集，阅读一下脚本内容，发现不过就是几条 wget 命令而已:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">wget http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+wget --no-check-certificate http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+wget --no-check-certificate http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+wget --no-check-certificate http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+</pre>
+</div>
+
+<p>
+第二个脚本用于将下载的 MNIST 数据集转换为 lmdb 文件，脚本内容如下，也是比较简单。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #de935f;">EXAMPLE</span>=examples/mnist
+<span style="color: #de935f;">DATA</span>=data/mnist
+<span style="color: #de935f;">BUILD</span>=build/examples/mnist
+
+<span style="color: #de935f;">BACKEND</span>=<span style="color: #b5bd68;">"lmdb"</span>
+
+<span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Creating ${BACKEND}..."</span>
+
+rm -rf $<span style="color: #de935f;">EXAMPLE</span>/mnist_train_${<span style="color: #de935f;">BACKEND</span>}
+rm -rf $<span style="color: #de935f;">EXAMPLE</span>/mnist_test_${<span style="color: #de935f;">BACKEND</span>}
+
+$<span style="color: #de935f;">BUILD</span>/convert_mnist_data.bin $<span style="color: #de935f;">DATA</span>/train-images-idx3-ubyte <span style="color: #b5bd68;">\</span>
+                              $<span style="color: #de935f;">DATA</span>/train-labels-idx1-ubyte $<span style="color: #de935f;">EXAMPLE</span>/mnist_train_${<span style="color: #de935f;">BACKEND</span>} --backend=${<span style="color: #de935f;">BACKEND</span>}
+$<span style="color: #de935f;">BUILD</span>/convert_mnist_data.bin $<span style="color: #de935f;">DATA</span>/t10k-images-idx3-ubyte <span style="color: #b5bd68;">\</span>
+                              $<span style="color: #de935f;">DATA</span>/t10k-labels-idx1-ubyte $<span style="color: #de935f;">EXAMPLE</span>/mnist_test_${<span style="color: #de935f;">BACKEND</span>} --backend=${<span style="color: #de935f;">BACKEND</span>}
+
+<span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Done."</span>
+</pre>
+</div>
+
+<p>
+对于我们自己的数据，一般来说是一堆图片，Caffe 也提供了 <b>convert_imageset</b> 这个工具，这是安装 Caffe 后提供的命令行工具之一。该命令的使用方式为:
+</p>
+<pre class="example">
+convert_imageset [FLAGS] ROOTFOLDER/ LISTFILE DB_NAME
+</pre>
+<p>
+其中 LISTFILE 每行记录一张图片的(相对)路径及类别，如:
+</p>
+<pre class="example">
+pics/0_1.png 0
+</pre>
+<p>
+需要注意的是，这里的 "类别" <b>必须是一个整数</b> 。ROOTFOLDER 和 LISTFILE 中图片的路径构成图片的真实路径，DB_NAME 是要创建的 lmdb 文件的名称。
+</p>
+
+<p>
+如果图片集中存在图片大小不一致的情况，可以用 -resize_height 和 -resize_width 来将所有图片规整成统一的尺寸。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">convert_imageset -resize_height 64 -resize_width 64 ./ pic_label.list mydb
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4">训练与测试</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+在以上步骤都完成后即可开始进行训练与测试，使用命令行工具中的 caffe 命令即可:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">caffe train --solver=lenet_train_test.prototxt
+</pre>
+</div>
+
+<p>
+在训练过程中会观察到类似下面这样的输出:
+</p>
+<pre class="example">
+I1203 solver.cpp:204] Iteration 100, lr = 0.00992565
+I1203 solver.cpp:66] Iteration 100, loss = 0.26044
+...
+I1203 solver.cpp:84] Testing net
+I1203 solver.cpp:111] Test score #0: 0.9785
+I1203 solver.cpp:111] Test score #1: 0.0606671
+</pre>
+
+<p>
+这些输出表明了学习率、loss 和测试数据在当前网络上的表现，这些输出都是需要注意的。举个栗子
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/chesnut.jpg" alt="chesnut.jpg" />
+</p>
+</div>
+
+<p>
+如果在开始时学习率设置过大，导致训练过程不收敛了，是能够通过观察 loss 和 测试数据在当前网络上的表现判断出来的。
+</p>
+
+<p>
+在 MNIST 的例子中，最后训练生成的模型是: examples/mnist/lenet_iter_10000.caffemodel。这个模型可以在之后的分类中使用。
+</p>
+</div>
+</div>
+</div>
