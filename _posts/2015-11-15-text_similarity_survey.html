@@ -1,0 +1,254 @@
+---
+layout     : post
+title      : "文本相似度量方法(1): 概览"
+categories : 算法
+tags       :
+- 自然语言处理
+- 相似度量
+- 文本相似
+---
+
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">距离度量与相似度量</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+距离度量或相似度量是被广泛应用的概念，简单来说，可以这么认为:
+</p>
+<ol class="org-ol">
+<li>距离度量是度量两个“物体”之间的差异程度的
+</li>
+<li>相似度量是度量两个“物体”之间的近似程度的
+</li>
+</ol>
+
+<p>
+在数学上，这两者都有严格的定义，比如说一个严格意义上的距离度量，是应该满足以下几个条件的:
+</p>
+<ol class="org-ol">
+<li>对称性，即 \(d(A, B) = d(B, A)\)
+</li>
+<li>非负性，即 \(\forall A\forall B, d(A, B) \ge 0\)
+</li>
+<li>一致性，即 \(A = B\Leftrightarrow d(A, B) = 0\)
+</li>
+<li>次可加性(subadditivity)/三角不等式，即 \(d(A, B) \le d(A, C) + d(C, D)\)
+</li>
+</ol>
+
+<p>
+严格意义上的相似度量也有类似的限制，比较基本的两条有:
+</p>
+<ol class="org-ol">
+<li>如果 \(A\) 和 \(B\) 完全不同，那么 \(s(A, B) = 0\)
+</li>
+<li>如果 \(A\) 和 \(B\) 完全相同，那么 \(s(A, B) = 1\)
+</li>
+</ol>
+
+
+<p>
+距离度量和相似度量是互有关联的，在一些具体的方法中，甚至是可以互相转换的，后续谈到的一些具体的度量方法，其原始目的就是度量距离的。但这两者仍然是有区别的，为了防止混淆，我会尽量统一表示成相似度量。
+</p>
+
+<p>
+另外一点需要注意的是，由于具体应用场景的限制或者特殊的需求，往往不一定会应用严格意义的相似度量方法 —— 对这些方法，称之为“度量”其实是不严谨的，但为了表述上的一致，我将保持这种用法。
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">文本相似度量方法一览</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+此处的“文本”一词涵盖以下两个对象:
+</p>
+<ol class="org-ol">
+<li>字符串/序列
+</li>
+<li>包含较多文本内容的文档
+</li>
+</ol>
+
+<p>
+相关的度量方法可以分为两大类，各类下面再有一些具体的分类，比较常用的方法如见下图
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/similarity_survey.png" alt="similarity_survey.png" />
+</p>
+</div>
+
+<p>
+总的来说，文本相似度量方法可以分为两大类:
+</p>
+<ol class="org-ol">
+<li>String Based，即基于待比较的文本本身中的信息，该类方法评估的是”词法“上的相似性，或说朴素的相似性
+</li>
+<li>Corpus Based，即基于一个较大的文本集合中的信息，该类方法评估的是“语义”上的相似性
+</li>
+</ol>
+
+<p>
+这些方法被普遍应用于以下领域:
+</p>
+<ol class="org-ol">
+<li>信息检索
+</li>
+<li>文档分类
+</li>
+<li>文档聚类
+</li>
+<li>主题检测
+</li>
+<li>自动问答
+</li>
+<li>自动摘要
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">String Based Methods</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+要比较两个文本的相似性，比较直观的方法是逐个字符比对，看看有多少个字符是一致的 —— String Based 的方法就是从这种思路中发展出来的。其中以字符为单位去比较的方法被统称为 Character Based，而以词为单位的则被称为 Term Based。
+</p>
+
+<p>
+Character Based 的方法普遍用来进行较短文本、小规模的比较，会注意文本中各字符的顺序和位置；Term Based 的方法则更适合用来进行较长文本或大规模的比较，而且通常会抛弃文本中各个单元(通常是词)之间的顺序、位置信息 —— 一般的做法是用文本中的词组成的向量来表示文本，也就是所谓的“向量空间模型(Vecter Space Model, <b>VSM</b>)”。
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">Character Based Methods</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>最长公共子序列(Longest Common Subsequence, LCS)
+
+<p>
+LCS 方法通过计算出两个字符串/序列之间的最长公共子序列，并使用这个子序列的长度来反映两个字符串/序列之间的相似程度。
+</p>
+</li>
+
+<li>编辑距离(Leveinshtein Distance)
+
+<p>
+在两个字符串的比较中应用编辑距离时，通常会有一者作为”标准字符串“，另一者则作为”可能错误“的字符串，通过将后者变换成前者所进行的字符的 <b>插入</b> 、 <b>删除</b> 或 <b>替换</b> 操作次数作为衡量两者差异程度的指标。
+</p>
+</li>
+
+<li>扩展的编辑距离(Damerau-Levenshtein Distance)
+
+<p>
+扩展的编辑距离在思想上与编辑距离一样，只是除插入、删除和替换操作外，还支持 <b>相邻字符的交换</b> 这样一个操作，增加这个操作的考虑是人们在计算机上输入文档时的错误情况中，因为快速敲击而前后两个字符的顺序被输错的情况很常见。
+</p>
+</li>
+
+<li>Needleman-Wunsch Similarity
+
+<p>
+该方法被广泛运用于生物信息学中的序列比对，如氨基酸序列比对、核苷酸序列比对等。其基本思路与编辑距离相近，但在编辑距离中，三种不同的错误情况是平等的，而在生物信息学中，序列中的单元缺失情况比错误(位置匹配但内容不同)情况更不能容忍，因此在 Needleman-Wunsch 方法中，插入错误和删除错误会被赋予较高的惩罚分数。
+</p>
+</li>
+
+<li>Smith-Waterman Similarity
+
+<p>
+Smith-Waterman 方法用于生物信息学中的序列比对，但与 Needleman-Wunsch 方法不一样，它是一个 <b>局部最优比对</b> 方法，简单来说，它的目的是找出两个序列之间 <b>连续且相同</b> 的子序列。
+</p>
+</li>
+
+<li>Jaro Similarity 和 Jaro-Winkler Similarity
+
+<p>
+Jaro 方法和 Jaro-Winkler 方法考虑两个字符串之间相同字符的顺序位置和个数，只适用于像人名这样的较短字符串之间的比较。其中 Jaro-Winkler 方法是对 Jaro 方法的改进，而 Jaro 方法现在已经不常用。
+</p>
+</li>
+
+<li>Hamming Distance
+
+<p>
+Hamming 距离用于 <b>长度相同</b> 的序列之间的比较，思想非常简单，就是逐位比较得到的不同次数。Hamming 距离被广泛应用于信息学。
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">Term Based Methods</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+Term Based 方法中的 term 不一定是词，也可以是关键词、短语，当选定”词“作为 term 时，可以用 Bag-of-Words Model(BOW) 来更精确地描述此时的模型。为了表述上的方便，本系列文章将此处的 term 视为词。
+</p>
+
+<ul class="org-ul">
+<li>Cosine Similarity
+
+<p>
+余弦相似度建立在用向量表示文档的前提上。两个文档的向量，同一个维度应该是表示的同一个词，而每一个维度的值，一般是用”词频-逆文档频率(Term Frequency-Inverse Document Frequency, <b>TF-IDF</b>)“ 来表示。
+</p>
+
+<p>
+建立向量表示后，通过计算两个向量之间的夹角大小来衡量两个文档之间的近似程度，由于夹角的余弦值的计算方便，而且天然地处在 0 和 1 之间，故一般是用夹角的余弦值而不是夹角的大小来作为度量。
+</p>
+</li>
+
+<li>Dice's Coefficient 和 Jaccard Similarity
+
+<p>
+Dice 系数和 Jaccard 相似性起初被用于生态学上，作为一种判断物种间相似性的方法。在生态学上，要比较两个物种间相似程度时，通常会对该物种的特性进行采样，最后得到各自的特性集合，而 Dice 系数和 Jaccard 相似性都是通过比较两者之间的 <b>共有特性</b> 占比来度量相似性的，因此这两种方法都不是很关心每个 "Term" 的具体量，只是关心有没有某个 "Term"。
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Corpus Based Methods</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Corpus Based 方法通过对大量文档的统计分析得到语义上的相似，这里 “大量文档” 就是 Corpus 即语料了。
+</p>
+</div>
+
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">Language Model</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+常见的语言模型(Language Model, LM)都基于马尔可夫假设(Markov Assumption)，即认为语言中每个词只与其前面长度为 N-1 个词有关 —— 这 N-1 个词其实就构成了该词的上文，同时由于每个词都会成为其他词的上文，下文信息也会得到表现。也就是说，语言模型统计的其实是语言中每个词的一定程度的上下文情况。基于语言模型的这个特点，以及下面这样一个假设:
+</p>
+
+<pre class="example">
+   具有相同(或相近)上下文的词，其语义是相近的。
+</pre>
+
+<p>
+就可以用语言模型来进行文本的相似度量了。具体一点，有两种方式:
+</p>
+<ol class="org-ol">
+<li>通过语言模型来发现同义词、近义词，来弥补 Term Based Methods 的缺陷；
+</li>
+<li>扩大 "term" 的表示范围，比如说按照词组来进行统计，甚至按照句子来进行统计，那么就可以反映词组之间的相似性、句子之间的相似性了。
+</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2">Topic Model</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+主题模型与向量空间模型有共同的一点是也是基于 BOW 模型的，也就是说，并不像语言模型一样考虑词与词之间的顺序、位置，而只是通过词与词的共现(Co-occurrence)来反映词与词之间的相似性。
+</p>
+
+<p>
+主题模型是一种无监督的方法，与聚类方法在外在表现上会有一定的相似性，但它们各自的内在原理是相差较大的。
+</p>
+</div>
+</div>
+</div>
