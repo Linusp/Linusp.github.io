@@ -236,7 +236,7 @@ slowlog-max-len 128
 </p>
 
 <p>
-第二个字段是这条记录被记录时的系统时间，可以用 <code>date</code> 命令来将其转换为友好的格式:
+第二个字段是这条记录被记录时的系统时间，可以用 <b>date</b> 命令来将其转换为友好的格式:
 </p>
 <div class="org-src-container">
 
@@ -418,13 +418,13 @@ cmdstat_slowlog:calls=23,usec=22646,usec_per_call=984.61
 <h2 id="sec-4">Redis 使用的一点点经验</h2>
 <div class="outline-text-2" id="text-4">
 <ol class="org-ol">
-<li>管理好自己 的 key ，比如用一个 set 来存放所有同类型的 key ，这样可以避免使用 keys 来获取该类型所有 key ，由于 Redis 是单线程的，在数据量大的情况下将会阻塞 Redis 中其他的操作
+<li>管理好自己的 key，比如用一个 set 来存放所有同类型的 key，这样可以避免使用 keys 来获取该类型所有 key，由于 Redis 是单线程的，在数据量大的情况下将会阻塞 Redis 中其他的操作
 </li>
 <li>如果不能避免使用 keys 操作，那么使用 scan 来替代，将遍历 Redis DB 中所有 key 的操作放到客户端来做，这样就不会导致其他操作被阻塞了
 </li>
-<li>在数据量大的情况下， key 或 value 的微小的压缩也能带来不小的内存使用提高
+<li>在数据量大的情况下，key 或 value 的微小的压缩也能带来不小的内存使用提高
 </li>
-<li>hash 结构是个好东西，但是它只支持一级 hash ，所以如果需要使用多级 hash ，那就进行序列化吧
+<li>hash 结构是个好东西，但是它只支持一级 hash，所以如果需要使用多级 hash，那就进行序列化吧
 </li>
 <li>注意客户端和服务端之间的网络通信情况(&#x2013;latency/&#x2013;latency-history)
 </li>
