@@ -1,0 +1,339 @@
+---
+layout     : post
+title      : "Numpy 笔记(二): 多维数组的切片(slicing)和索引(indexing)"
+categories : 编程
+tags       :
+- Numpy
+- ndarray
+---
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">切片(slicing)操作</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+Numpy 中多维数组的切片操作与 Python 中 list 的切片操作一样，同样由 start, stop, step 三个部分组成
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.arange(12)
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'array is:'</span>, arr
+
+<span style="color: #eeeeec;">slice_one</span> = arr[:4]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'slice begins at 0 and ends at 4 is:'</span>, slice_one
+
+<span style="color: #eeeeec;">slice_two</span> = arr[7:10]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'slice begins at 7 and ends at 10 is:'</span>, slice_two
+
+<span style="color: #eeeeec;">slice_three</span> = arr[0:12:4]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'slice begins at 0 and ends at 12 with step 4 is:'</span>, slice_three
+</pre>
+</div>
+
+<pre class="example">
+array is: [ 0  1  2  3  4  5  6  7  8  9 10 11]
+slice begins at 0 and ends at 4 is: [0 1 2 3]
+slice begins at 7 and ends at 10 is: [7 8 9]
+slice begins at 0 and ends at 12 with step 4 is: [0 4 8]
+</pre>
+
+<p>
+上述例子是一维数组的例子，如果是多维数组，将不同维度上的切片操作用 <b>逗号</b> 分开就好了
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
+<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.arange(12).reshape((3, 4))
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'array is:'</span>
+<span style="color: #729fcf;">print</span> arr
+
+<span style="color: #888a85;"># </span><span style="color: #888a85;">&#21462;&#31532;&#19968;&#32500;&#30340;&#32034;&#24341; 1 &#21040;&#32034;&#24341; 2 &#20043;&#38388;&#30340;&#20803;&#32032;&#65292;&#20063;&#23601;&#26159;&#31532;&#20108;&#34892;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">&#21462;&#31532;&#20108;&#32500;&#30340;&#32034;&#24341; 1 &#21040;&#32034;&#24341; 3 &#20043;&#38388;&#30340;&#20803;&#32032;&#65292;&#20063;&#23601;&#26159;&#31532;&#20108;&#21015;&#21644;&#31532;&#19977;&#21015;</span>
+<span style="color: #eeeeec;">slice_one</span> = arr[1:2, 1:3]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'first slice is:'</span>
+<span style="color: #729fcf;">print</span> slice_one
+
+<span style="color: #888a85;"># </span><span style="color: #888a85;">&#21462;&#31532;&#19968;&#32500;&#30340;&#20840;&#37096;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">&#25353;&#27493;&#38271;&#20026; 2 &#21462;&#31532;&#20108;&#32500;&#30340;&#32034;&#24341; 0 &#21040;&#26411;&#23614; &#20043;&#38388;&#30340;&#20803;&#32032;&#65292;&#20063;&#23601;&#26159;&#31532;&#19968;&#21015;&#21644;&#31532;&#19977;&#21015;</span>
+<span style="color: #eeeeec;">slice_two</span> = arr[:, ::2]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'second slice is:'</span>
+<span style="color: #729fcf;">print</span> slice_two
+</pre>
+</div>
+
+<pre class="example">
+array is:
+[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]]
+first slice is:
+[[5 6]]
+second slice is:
+[[ 0  2]
+ [ 4  6]
+ [ 8 10]]
+</pre>
+
+<p>
+对于 slice_two，如果 arr 是用 Python 的 list 表示的，那么要得到相同的结果得像下面这样，相对来说就麻烦多了:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.arange(12).reshape((3, 4)).tolist()
+
+<span style="color: #eeeeec;">slice_two</span> = [
+    row[::2] <span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> arr
+]
+<span style="color: #729fcf;">print</span> slice_two
+</pre>
+</div>
+
+<pre class="example">
+[[0, 2], [4, 6], [8, 10]]
+</pre>
+
+<p>
+对于维数超过 3 的多维数组，还可以通过 '&#x2026;' 来简化操作
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
+<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.arange(24).reshape((2, 3, 4))
+
+<span style="color: #729fcf;">print</span> arr[1, ...]               <span style="color: #888a85;"># </span><span style="color: #888a85;">&#31561;&#20215;&#20110; arr[1, :, :]</span>
+<span style="color: #729fcf;">print</span> arr[..., 1]               <span style="color: #888a85;"># </span><span style="color: #888a85;">&#31561;&#20215;&#20110; arr[:, :, 1]</span>
+</pre>
+</div>
+
+<pre class="example">
+[[12 13 14 15]
+ [16 17 18 19]
+ [20 21 22 23]]
+[[ 1  5  9]
+ [13 17 21]]
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">索引(indexing) 操作</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+</div><div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">最简单的情况</h3>
+<div class="outline-text-3" id="text-orgheadline2">
+<p>
+对于一个多维数组来说，最简单的情况就是访问其中一个特定位置的元素了，如下所示:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
+<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.array([
+    [1, 2, 3, 4],
+    [2, 4, 6, 8],
+    [3, 6, 9, 12],
+    [4, 8, 12, 16]
+])
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'&#31532;&#20108;&#34892;&#31532;&#20108;&#21015;&#30340;&#20540;:'</span>, arr[1, 1]
+</pre>
+</div>
+
+<pre class="example">
+第二行第二列的值: 4
+</pre>
+
+<p>
+相比之下，如果用 Python 的 list 来表示上述二维数组，获取同一个位置的元素的方法为:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
+<span style="color: #eeeeec;">arr</span> = [
+    [1, 2, 3, 4],
+    [2, 4, 6, 8],
+    [3, 6, 9, 12],
+    [4, 8, 12, 16]
+]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'&#31532;&#20108;&#34892;&#31532;&#20108;&#21015;&#30340;&#20540;:'</span>, arr[1][1]
+<span style="color: #729fcf;">try</span>:
+    <span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'&#31532;&#20108;&#34892;&#31532;&#20108;&#21015;&#30340;&#20540;(&#23581;&#35797;&#29992; Numpy &#30340;&#26041;&#24335;&#33719;&#21462;):'</span>, arr[1, 1]
+<span style="color: #729fcf;">except</span> <span style="color: #8ae234;">Exception</span> <span style="color: #729fcf;">as</span> e:
+    <span style="color: #729fcf;">print</span> <span style="color: #729fcf;">str</span>(e)
+</pre>
+</div>
+
+<pre class="example">
+第二行第二列的值: 4
+第二行第二列的值(尝试用 Numpy 的方式获取): list indices must be integers, not tuple
+</pre>
+
+<p>
+如果只是二维数组，这种差别可能看起来并不大，但想象一下假如有一个 10 维的数组，用 Python 的标准做法需要写 10 对中括号，而用 Numpy 依然只需要一对。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">获取多个元素</h3>
+<div class="outline-text-3" id="text-orgheadline3">
+<p>
+事实上，在 Numpy 的索引操作方式 `x = arr[obj]` 中， obj 不仅仅可以是一个用逗号分隔开的数字序列，还可以是更复杂的内容。
+</p>
+
+<ol class="org-ol">
+<li><p>
+用逗号分隔的数组序列
+</p>
+
+<ul class="org-ul">
+<li>序列的长度和多维数组的维数要一致</li>
+<li>序列中每个数组的长度要一致</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.array([
+    [1, 2, 3, 4],
+    [2, 4, 6, 8],
+    [3, 6, 9, 12],
+    [4, 8, 12, 16]
+])
+
+<span style="color: #729fcf;">print</span> arr[[0, 2], [3, 1]]
+</pre>
+</div>
+
+<pre class="example">
+[4 6]
+</pre>
+
+<p>
+以上面这个例子来说，其含义是: 选择第一行和第三行，然后对第一行选择第四列，对第三行选择第二列。
+</p></li>
+
+<li><p>
+boolean/mask index
+</p>
+
+<p>
+这个不太好翻译，所以就用原来的英语表达。
+</p>
+
+<p>
+所谓 boolean index，就是用一个由 boolean 类型值组成的数组来选择元素的方法。比如说对下面这样多维数组
+</p>
+
+<pre class="example">
+array([[1, 2, 3, 4],
+       [2, 4, 6, 8],
+       [3, 6, 9, 12],
+       [4, 8, 12, 16]])
+</pre>
+
+<p>
+如果要取其中 <b>值大于 5</b> 的元素，就可以用上 boolean index 了，如下所示:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.array([[1, 2, 3, 4],
+                [2, 4, 6, 8],
+                [3, 6, 9, 12],
+                [4, 8, 12, 16]])
+<span style="color: #eeeeec;">mask</span> = arr &gt; 5
+
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'boolean mask is:'</span>
+<span style="color: #729fcf;">print</span> mask
+
+<span style="color: #729fcf;">print</span> arr[mask]
+</pre>
+</div>
+
+<pre class="example">
+boolean mask is:
+[[False False False False]
+ [False False  True  True]
+ [False  True  True  True]
+ [False  True  True  True]]
+[ 6  8  6  9 12  8 12 16]
+</pre>
+
+<p>
+除了比较运算能产生 boolean mask 数组以外， Numpy 本身也提供了一些工具方法:
+</p>
+<ul class="org-ul">
+<li>numpy.iscomplex</li>
+<li>numpy.isreal</li>
+<li>numpy.isfinite</li>
+<li>numpy.isinf</li>
+<li>numpy.isnan</li>
+</ul></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">切片和索引的同异</h2>
+<div class="outline-text-2" id="text-orgheadline5">
+<p>
+切片和索引都是访问多维数组中元素的方法，这是两者的共同点，不同之处有:
+</p>
+<ol class="org-ol">
+<li>切片得到的是原多维数组的一个 <b>视图(view)</b> ，修改切片中的内容会导致原多维数组的内容也发生变化</li>
+<li>切片得到在多维数组中连续(或按特定步长连续)排列的值，而索引可以得到任意位置的值，自由度更大一些</li>
+</ol>
+
+<p>
+不考虑第一点的话，切片的操作是可以用索引操作来实现的，不过这没有必要就是了。
+</p>
+
+<p>
+对于第一点，见下面的实验:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+
+<span style="color: #eeeeec;">arr</span> = np.arange(12).reshape(2, 6)
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'array is:'</span>
+<span style="color: #729fcf;">print</span> arr
+
+<span style="color: #eeeeec;">slc</span> = arr[:, 2:5]
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'slice is:'</span>
+<span style="color: #729fcf;">print</span> slc
+
+<span style="color: #eeeeec;">slc</span>[1, 2] = 10000
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'modified slice is:'</span>
+<span style="color: #729fcf;">print</span> slc
+<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">'array is now:'</span>
+<span style="color: #729fcf;">print</span> arr
+</pre>
+</div>
+
+<pre class="example">
+array is:
+[[ 0  1  2  3  4  5]
+ [ 6  7  8  9 10 11]]
+slice is:
+[[ 2  3  4]
+ [ 8  9 10]]
+modified slice is:
+[[    2     3     4]
+ [    8     9 10000]]
+array is now:
+[[    0     1     2     3     4     5]
+ [    6     7     8     9 10000    11]]
+</pre>
+</div>
+</div>
