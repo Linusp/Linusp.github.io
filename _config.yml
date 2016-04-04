@@ -1,17 +1,30 @@
-permalink: /:year/:month/:day/:title.html
-exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
+# Dependencies
+gems:                [jekyll-paginate]
+markdown:            kramdown
 
-markdown: kramdown
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           /:year/:month/:day/:title.html
 
-title : Linusp's Blog
-author :
-  name : Linusp
-  email : linusp1024@gmail.com
-  github : Linusp
+# Setup
+title:               "Linusp's Blog"
+tagline:             '巧者劳而智者忧，无能者无所求，饱食而遨游，泛若不系之舟'
+description:         '计算机科学|人工智能|程序设计'
+url:                 http://linusp.github.io
+baseurl:             /
+paginate:            5
 
+# About/contact
+author:
+  name:              Linusp
+  url:               https://github.com/Linusp
+  email:             linusp1024@gmail.com
 
-production_url : http://linusp.github.io
+# Social Media
+github:              https://github.com/Linusp
 
+# sidebar nav
 nav:
   - text: 分类
     url : /categories.html
@@ -27,11 +40,11 @@ nav:
     url : /about.html
   - text: 简历
     url : /ZResume/index.html
+  - text: Feed
+    url : /atom.xml
 
-JB :
-  version : 0.3.0
-
-  archive_path: /archive.html
-  categories_path : /categories.html
-  tags_path : /tags.html
-  atom_path : /atom.xml
+# Theme Author (Please don't edit this line cause of MIT LICENSE rules)
+theme:
+  creator:           Rizky Ariestiyansyah
+  codename:          Naringu
+  link:              https://github.com/ariestiyansyah/naringu

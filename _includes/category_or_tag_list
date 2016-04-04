@@ -1,0 +1,14 @@
+{% if items_list.first[0] == null %}
+  {% for item in items_list %}
+    <li>
+        <a href="#{{ item }}">{{ item  }} <span>{{ site.items[item].size }}</span></a>
+    </li>
+  {% endfor %}
+{% else %}
+  {% for item in items_list %}
+    <li>
+        <a href="#{{ item[0] }}">{{ item[0] }} <span>{{ item[1].size }}</span></a>
+    </li>
+  {% endfor %}
+{% endif %}
+{% assign items_list = nil %}
