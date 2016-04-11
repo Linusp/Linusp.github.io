@@ -8,9 +8,19 @@ tags       :
 description:
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">What is process substitution?</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">What is process substitution?</a></li>
+<li><a href="#orgheadline2">Process substitution on Linux</a></li>
+<li><a href="#orgheadline3">Some more</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">What is process substitution?</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 "Process Substitution"，我将之翻译为"进程替代"，不知道有没有更相应的专业中文翻译，姑且先用着好了。它允许用将命令的输出结果当作"文件"来使用——这句话的意思是这样的，假设你有一个工具，它原本接受的参数应该是一个指代某个具体文档的"文件名"，使用"进程替代"后，我们可以用其他命令的输出来作为文件的内容，让这个工具去处理。
 </p>
@@ -23,9 +33,10 @@ In computing, process substitution is a form of inter-process communication that
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Process substitution on Linux</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">Process substitution on Linux</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 在Linux上，通过下面的形式使用 process substituion:
 </p>
@@ -43,12 +54,9 @@ In computing, process substitution is a form of inter-process communication that
 以我的工作为例，对于一个测试集，在进行完 Speaker Diarization 后，会根据标注文件(即用作参照的标准结果)计算它的错误率，而 Speaker Diarization 的错误率由三部分组成:
 </p>
 <ul class="org-ul">
-<li>Missed speech
-</li>
-<li>False alarm speech
-</li>
-<li>Speaker error
-</li>
+<li>Missed speech</li>
+<li>False alarm speech</li>
+<li>Speaker error</li>
 </ul>
 
 <p>
@@ -97,8 +105,8 @@ In computing, process substitution is a form of inter-process communication that
 <div class="org-src-container">
 
 <pre class="src src-sh">sort -k1,1 2015-05-31-der.log &gt; 2015-05-31-der-sorted.log
-sort -k1,1 2015-06-22-der.log | cut -d <span style="color: #25ef29;">' '</span> -f 2- &gt; 2015-06-22-der-sorted.log
-paste -d <span style="color: #25ef29;">'|'</span> 2015-05-31-der-sorted.log 2015-06-22-der-sorted.log
+sort -k1,1 2015-06-22-der.log | cut -d <span style="color: #ad7fa8;">' '</span> -f 2- &gt; 2015-06-22-der-sorted.log
+paste -d <span style="color: #ad7fa8;">'|'</span> 2015-05-31-der-sorted.log 2015-06-22-der-sorted.log
 rm *-sorted.log
 </pre>
 </div>
@@ -108,7 +116,7 @@ rm *-sorted.log
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">paste -d <span style="color: #25ef29;">'|'</span> &lt;(sort -k1,1 2015-05-31-der.log) &lt;(sort -k1,1 2015-06-22-der.log | cut -d <span style="color: #25ef29;">' '</span> -f 2-)
+<pre class="src src-sh">paste -d <span style="color: #ad7fa8;">'|'</span> &lt;(sort -k1,1 2015-05-31-der.log) &lt;(sort -k1,1 2015-06-22-der.log | cut -d <span style="color: #ad7fa8;">' '</span> -f 2-)
 </pre>
 </div>
 
@@ -124,24 +132,24 @@ rm *-sorted.log
 我的购物清单是 shopping-list-1.txt ，内容如下:
 </p>
 <pre class="example">
-  苹果
-  上衣
-  毛巾
-  耳机
-  无线键盘
+苹果
+上衣
+毛巾
+耳机
+无线键盘
 </pre>
 
 <p>
 我朋友的购物清单是 shopping-list-2.txt ，内容如下:
 </p>
 <pre class="example">
-  耳机
-  苹果
-  无线键盘
-  科幻小说
-  五号电池
-  体重秤
-  移动电源
+耳机
+苹果
+无线键盘
+科幻小说
+五号电池
+体重秤
+移动电源
 </pre>
 
 <p>
@@ -167,31 +175,32 @@ rm *-sorted.log
 可以看到，我买了而我朋友没买的东西是:
 </p>
 <pre class="example">
-  毛巾
-  上衣
+毛巾
+上衣
 </pre>
 
 <p>
 我朋友买了而我没买的东西是:
 </p>
 <pre class="example">
-  科幻小说
-  体重秤
-  五号电池
-  移动电源
+科幻小说
+体重秤
+五号电池
+移动电源
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Some more</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">Some more</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 实际上，进程替代也不是什么很新奇的东西，Wikipedia 上说，它是进程间通信的一种方式，事实上也确实是这样。在 Linux 上使用进程替代的时候，系统会创建一个临时的文件描述符，然后将用以替代的进程的输出和这个文件描述符关联起来，这个可以通过以下命令来验证:
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #31d3c4;">echo</span> &lt;(sort shopping-list-1.txt)
+<pre class="src src-sh"><span style="color: #729fcf;">echo</span> &lt;(sort shopping-list-1.txt)
 </pre>
 </div>
 

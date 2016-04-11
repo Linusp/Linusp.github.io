@@ -8,6 +8,18 @@ tags       :
 - 单链表
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">ELIST_LINK</a></li>
+<li><a href="#orgheadline2">ELIST</a></li>
+<li><a href="#orgheadline3">ELIST_ITERATOR</a></li>
+<li><a href="#orgheadline4">实际单链表的实现方法</a></li>
+<li><a href="#orgheadline5">Tesseract 中实际被使用的单链表类</a></li>
+</ul>
+</div>
+</div>
 <p>
 因为工作以及个人兴趣原因，已经阅读了一段时间 Tesseract 的源代码了(Tesseract 的介绍见<a href="http://linusp.github.io/2015/04/17/tesseract-install-usage.html">我的另一篇文章</a>)。从这篇文章开始，会不定期地将阅读笔记整理好发布出来。
 </p>
@@ -21,47 +33,44 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </p>
 
 <ul class="org-ul">
-<li>ELIST_LINK: 链表节点
-</li>
-<li>ELIST: 链表，保存了链表头节点
-</li>
-<li>ELIST_ITERATOR: 封装了对链表的具体操作
-</li>
+<li>ELIST_LINK: 链表节点</li>
+<li>ELIST: 链表，保存了链表头节点</li>
+<li>ELIST_ITERATOR: 封装了对链表的具体操作</li>
 </ul>
 
 <p>
 这三个类都定义于 ccutil/elst.h 中
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">ELIST_LINK</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">ELIST_LINK</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 该类的定义为:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST_LINK</span>
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">DLLSYM</span> <span style="color: #eeeeec;">ELIST_LINK</span>
 {
-    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST_ITERATOR</span>;
-    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST</span>;
+    <span style="color: #729fcf;">friend</span> <span style="color: #729fcf;">class</span> <span style="color: #8ae234;">ELIST_ITERATOR</span>;
+    <span style="color: #729fcf;">friend</span> <span style="color: #729fcf;">class</span> <span style="color: #8ae234;">ELIST</span>;
 
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">next</span>;
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">next</span>;
 
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #de935f;">ELIST_LINK</span>() {
-        next = <span style="color: #8abeb7;">NULL</span>;
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #eeeeec;">ELIST_LINK</span>() {
+        next = <span style="color: #e6a00f;">NULL</span>;
     }
 
-    <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">constructor</span>
-    <span style="color: #de935f;">ELIST_LINK</span>(                 <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">copy constructor</span>
-        <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">ELIST_LINK</span> &amp;) {   <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">dont copy link</span>
-        next = <span style="color: #8abeb7;">NULL</span>;
+    <span style="color: #888a85;">//</span><span style="color: #888a85;">constructor</span>
+    <span style="color: #eeeeec;">ELIST_LINK</span>(                 <span style="color: #888a85;">//</span><span style="color: #888a85;">copy constructor</span>
+        <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">ELIST_LINK</span> &amp;) {   <span style="color: #888a85;">//</span><span style="color: #888a85;">dont copy link</span>
+        next = <span style="color: #e6a00f;">NULL</span>;
     }
 
-    <span style="color: #f0c674;">void</span> <span style="color: #b294bb;">operator</span><span style="color: #de935f;">=</span> (            <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">dont copy links</span>
-        <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">ELIST_LINK</span> &amp;) {
-        next = <span style="color: #8abeb7;">NULL</span>;
+    <span style="color: #8ae234;">void</span> <span style="color: #729fcf;">operator</span><span style="color: #eeeeec;">=</span> (            <span style="color: #888a85;">//</span><span style="color: #888a85;">dont copy links</span>
+        <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">ELIST_LINK</span> &amp;) {
+        next = <span style="color: #e6a00f;">NULL</span>;
     }
 };
 </pre>
@@ -80,34 +89,35 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">ELIST</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">ELIST</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 该类的定义如下(出于简洁考虑，这里没有列出它内部的一些方法):
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST</span>
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">DLLSYM</span> <span style="color: #eeeeec;">ELIST</span>
 {
-    <span style="color: #b294bb;">friend</span> <span style="color: #b294bb;">class</span> <span style="color: #f0c674;">ELIST_ITERATOR</span>;
+    <span style="color: #729fcf;">friend</span> <span style="color: #729fcf;">class</span> <span style="color: #8ae234;">ELIST_ITERATOR</span>;
 
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">last</span>;           <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">End of list</span>
-    <span style="color: #969896; font-style: italic;">//</span><span style="color: #969896; font-style: italic;">(points to head)</span>
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">First</span>() {       <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">return first</span>
-        <span style="color: #b294bb;">return</span> last ? last-&gt;next : <span style="color: #8abeb7;">NULL</span>;
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">last</span>;           <span style="color: #888a85;">// </span><span style="color: #888a85;">End of list</span>
+    <span style="color: #888a85;">//</span><span style="color: #888a85;">(points to head)</span>
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">First</span>() {       <span style="color: #888a85;">// </span><span style="color: #888a85;">return first</span>
+        <span style="color: #729fcf;">return</span> last ? last-&gt;next : <span style="color: #e6a00f;">NULL</span>;
     }
 
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #de935f;">ELIST</span>() {
-        last = <span style="color: #8abeb7;">NULL</span>;
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #eeeeec;">ELIST</span>() {
+        last = <span style="color: #e6a00f;">NULL</span>;
     }
 
-    <span style="color: #f0c674;">bool</span> <span style="color: #de935f;">empty</span>() <span style="color: #b294bb;">const</span> {
-        <span style="color: #b294bb;">return</span> <span style="color: #b5bd68;">!</span>last;
+    <span style="color: #8ae234;">bool</span> <span style="color: #eeeeec;">empty</span>() <span style="color: #729fcf;">const</span> {
+        <span style="color: #729fcf;">return</span> !last;
     }
 
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">......</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">......</span>
 };
 </pre>
 </div>
@@ -122,50 +132,52 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">ELIST_ITERATOR</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">ELIST_ITERATOR</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 顾名思义，该类是 ELIST 类的 "迭代器" ，可以用来对 ELIST 进行遍历操作。该类的定义为:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">DLLSYM</span> <span style="color: #de935f;">ELIST_ITERATOR</span> {
-    <span style="color: #b294bb;">friend</span> <span style="color: #f0c674;">void</span> <span style="color: #8abeb7;">ELIST</span>::<span style="color: #de935f;">assign_to_sublist</span>(<span style="color: #f0c674;">ELIST_ITERATOR</span> *, <span style="color: #f0c674;">ELIST_ITERATOR</span> *);
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">DLLSYM</span> <span style="color: #eeeeec;">ELIST_ITERATOR</span> {
+    <span style="color: #729fcf;">friend</span> <span style="color: #8ae234;">void</span> <span style="color: #e6a00f;">ELIST</span>::<span style="color: #eeeeec;">assign_to_sublist</span>(<span style="color: #8ae234;">ELIST_ITERATOR</span> *, <span style="color: #8ae234;">ELIST_ITERATOR</span> *);
 
-    <span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list</span>;
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">prev</span>;
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">current</span>;
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">next</span>;
+    <span style="color: #8ae234;">ELIST</span> *<span style="color: #eeeeec;">list</span>;
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">prev</span>;
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">current</span>;
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">next</span>;
 
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">&#20854;&#20182;&#25104;&#21592;</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">&#20854;&#20182;&#25104;&#21592;</span>
 
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #de935f;">ELIST_ITERATOR</span>() {
-        list = <span style="color: #8abeb7;">NULL</span>;
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #eeeeec;">ELIST_ITERATOR</span>() {
+        list = <span style="color: #e6a00f;">NULL</span>;
     }
 
-    <span style="color: #de935f;">ELIST_ITERATOR</span>(<span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list_to_iterate</span>);
+    <span style="color: #eeeeec;">ELIST_ITERATOR</span>(<span style="color: #8ae234;">ELIST</span> *<span style="color: #eeeeec;">list_to_iterate</span>);
 
-    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">set_to_list</span>(<span style="color: #f0c674;">ELIST</span> *<span style="color: #de935f;">list_to_iterate</span>);
+    <span style="color: #8ae234;">void</span> <span style="color: #eeeeec;">set_to_list</span>(<span style="color: #8ae234;">ELIST</span> *<span style="color: #eeeeec;">list_to_iterate</span>);
 
-    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">add_after_then_move</span>(<span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">new_link</span>);
+    <span style="color: #8ae234;">void</span> <span style="color: #eeeeec;">add_after_then_move</span>(<span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">new_link</span>);
 
-    <span style="color: #f0c674;">void</span> <span style="color: #de935f;">add_after_stay_put</span>(<span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">new_link</span>);
+    <span style="color: #8ae234;">void</span> <span style="color: #eeeeec;">add_after_stay_put</span>(<span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">new_link</span>);
 
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">forward</span>();
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">forward</span>();
 
-    <span style="color: #f0c674;">ELIST_LINK</span> *<span style="color: #de935f;">extract</span>();
+    <span style="color: #8ae234;">ELIST_LINK</span> *<span style="color: #eeeeec;">extract</span>();
 
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">&#20854;&#20182;&#26041;&#27861;</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">&#20854;&#20182;&#26041;&#27861;</span>
 }
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">实际单链表的实现方法</h2>
-<div class="outline-text-2" id="text-4">
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">实际单链表的实现方法</h2>
+<div class="outline-text-2" id="text-orgheadline4">
 <p>
 刚才提到，在表示节点的类型 ELIST_LINK 中其实是没有表示节点数据的成员的，如果直接使用，肯定是没有意义的 —— 实际上 Tesseract 中确实也没有哪儿直接就使用 ELIST 了。Tesseract 中通过多重继承来解决了这个问题。
 </p>
@@ -175,16 +187,16 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">Point</span>
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">Point</span>
 {
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #81a2be;">Point</span>(): _x(0), <span style="color: #81a2be;">_y</span>(0) {}
-    <span style="color: #81a2be;">Point</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">x</span>, <span style="color: #f0c674;">int</span> <span style="color: #de935f;">y</span>): _x(x), <span style="color: #f0c674;">_y</span>(<span style="color: #de935f;">y</span>) {}
-    ~<span style="color: #81a2be;">Point</span>();
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #edd400;">Point</span>(): _x(0), <span style="color: #edd400;">_y</span>(0) {}
+    <span style="color: #edd400;">Point</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">x</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">y</span>): _x(x), <span style="color: #8ae234;">_y</span>(<span style="color: #eeeeec;">y</span>) {}
+    ~<span style="color: #edd400;">Point</span>();
 
-<span style="color: #b294bb;">private</span>:
-    <span style="color: #f0c674;">int</span> <span style="color: #de935f;">_x</span>;
-    <span style="color: #f0c674;">int</span> <span style="color: #de935f;">_y</span>;
+<span style="color: #729fcf;">private</span>:
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">_x</span>;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">_y</span>;
 };
 </pre>
 </div>
@@ -194,11 +206,11 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">POINT</span>: <span style="color: #b294bb;">public</span> <span style="color: #f0c674;">ELIST_LINK</span>, <span style="color: #b294bb;">public</span> <span style="color: #f0c674;">Point</span>
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">POINT</span>: <span style="color: #729fcf;">public</span> <span style="color: #8ae234;">ELIST_LINK</span>, <span style="color: #729fcf;">public</span> <span style="color: #8ae234;">Point</span>
 {
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #81a2be;">POINT</span>();
-    ~<span style="color: #81a2be;">POINT</span>();
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #edd400;">POINT</span>();
+    ~<span style="color: #edd400;">POINT</span>();
 };
 </pre>
 </div>
@@ -211,33 +223,33 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 在 Tesseract 中提供了两个宏来直接产生 POINT_LIST 类和 POINT_IT 类的定义与实现，这两个宏分别是:
 </p>
 <ul class="org-ul">
-<li>ELISTIZEH
-</li>
-<li>ELISTIZE
-</li>
+<li>ELISTIZEH</li>
+<li>ELISTIZE</li>
 </ul>
 
 <p>
 第一个宏用来产生 POINT_LIST 和 POINT_IT 的定义，第二个宏用来产生实现，其用法是(仍以 POINT 为例):
 </p>
 <ul class="org-ul">
-<li>在 point.h 中类 POINT 的定义之后，添加以下语句:
+<li><p>
+在 point.h 中类 POINT 的定义之后，添加以下语句:
+</p>
 
 <div class="org-src-container">
 
 <pre class="src src-C++">ELISTIZEH(POINT)
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>在 point.cpp 中，添加以下语句:
+<li><p>
+在 point.cpp 中，添加以下语句:
+</p>
 
 <div class="org-src-container">
 
 <pre class="src src-C++">ELISTIZE(POINT)
 </pre>
-</div>
-</li>
+</div></li>
 </ul>
 
 <p>
@@ -249,54 +261,35 @@ ELIST 是 Tesseract 中的单链表基类， Tesseract 的核心处理流程中�
 </p>
 </div>
 </div>
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">Tesseract 中实际被使用的单链表类</h2>
-<div class="outline-text-2" id="text-5">
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">Tesseract 中实际被使用的单链表类</h2>
+<div class="outline-text-2" id="text-orgheadline5">
 <p>
 之前说过，Tesseract 中有不少不同类型的单链表都是从 ELIST 继承的，由于对 ELIST 的继承都是在宏展开后进行的，从代码里是找不到这些类的定义的，不过链表节点却是要手动去定义、实现的，所以查看那些继承了 ELIST_LINK 类的类就可以知道了。从 <a href="http://tesseract-ocr.repairfaq.org/classELIST__LINK.html">Tesseract 的 API Refrence</a> 可以得知有 20 个类继承自 ELIST_LINK，它们是:
 </p>
 
 <ul class="org-ul">
-<li>ASSOC
-</li>
-<li>BLOB_CHOICE
-</li>
-<li>BLOCK_RES
-</li>
-<li>C_BLOB
-</li>
-<li>C_OUTLINE_FRAG
-</li>
-<li>CHAR_SAMPLE
-</li>
-<li>CHAR_SAMPLES
-</li>
-<li>FPSEGPT
-</li>
-<li>FRAGMENT
-</li>
-<li>ICOORDELT
-</li>
-<li>MENU_L
-</li>
-<li>OUTLINE_FRAG
-</li>
-<li>PBLOB
-</li>
-<li>PIXROW
-</li>
-<li>REGION_OCC
-</li>
-<li>ROW
-</li>
-<li>ROW_RES
-</li>
-<li>SORTED_FLOAT
-</li>
-<li>WERD
-</li>
-<li>WERD_RES
-</li>
+<li>ASSOC</li>
+<li>BLOB_CHOICE</li>
+<li>BLOCK_RES</li>
+<li>C_BLOB</li>
+<li>C_OUTLINE_FRAG</li>
+<li>CHAR_SAMPLE</li>
+<li>CHAR_SAMPLES</li>
+<li>FPSEGPT</li>
+<li>FRAGMENT</li>
+<li>ICOORDELT</li>
+<li>MENU_L</li>
+<li>OUTLINE_FRAG</li>
+<li>PBLOB</li>
+<li>PIXROW</li>
+<li>REGION_OCC</li>
+<li>ROW</li>
+<li>ROW_RES</li>
+<li>SORTED_FLOAT</li>
+<li>WERD</li>
+<li>WERD_RES</li>
 </ul>
 </div>
 </div>

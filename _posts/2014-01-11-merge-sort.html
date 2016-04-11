@@ -4,10 +4,22 @@ title      : 排序算法——归并排序
 categories : 算法
 tags       : 归并排序
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">归并排序</a></li>
+<li><a href="#orgheadline2">算法思想</a></li>
+<li><a href="#orgheadline3">完整实现</a></li>
+<li><a href="#orgheadline4">发散：外排序应用</a></li>
+<li><a href="#orgheadline5">References</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">归并排序</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">归并排序</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 归并排序也是一种使用分治法来实现的有效排序算法，它是现代计算机创始人John von Neumann于1945年发明的。
 </p>
@@ -21,19 +33,17 @@ tags       : 归并排序
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">算法思想</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">算法思想</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 归并排序的思路如下(以二路归并为例)：
 </p>
 <ol class="org-ol">
-<li>将数组划均分为两个子数组；
-</li>
-<li>对两个字数组进行排序；
-</li>
-<li>将排序好的两个字数组归并。
-</li>
+<li>将数组划均分为两个子数组；</li>
+<li>对两个字数组进行排序；</li>
+<li>将排序好的两个字数组归并。</li>
 </ol>
 
 
@@ -51,15 +61,15 @@ tags       : 归并排序
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr">1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">msort</span>(array):
-<span class="linenr">2: </span>    <span style="color: #fefc58;">length</span> = <span style="color: #31d3c4;">len</span>(array)
-<span class="linenr">3: </span>    <span style="color: #cf4a44;">if</span> length == 1:
-<span class="linenr">4: </span>        <span style="color: #cf4a44;">return</span> array
-<span class="linenr">5: </span>    <span style="color: #cf4a44;">else</span>:
-<span class="linenr">6: </span>        mid = length / 2
-<span class="linenr">7: </span>        left = msort(array[0: mid])
-<span class="linenr">8: </span>        right = msort(array[mid: length])
-<span class="linenr">9: </span>        <span style="color: #cf4a44;">return</span> merge(left, right)
+<pre class="src src-python"><span class="linenr">1: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">msort</span>(array):
+<span class="linenr">2: </span>    <span style="color: #eeeeec;">length</span> = <span style="color: #729fcf;">len</span>(array)
+<span class="linenr">3: </span>    <span style="color: #729fcf;">if</span> length == 1:
+<span class="linenr">4: </span>        <span style="color: #729fcf;">return</span> array
+<span class="linenr">5: </span>    <span style="color: #729fcf;">else</span>:
+<span class="linenr">6: </span>        <span style="color: #eeeeec;">mid</span> = length / 2
+<span class="linenr">7: </span>        <span style="color: #eeeeec;">left</span> = msort(array[0: mid])
+<span class="linenr">8: </span>        <span style="color: #eeeeec;">right</span> = msort(array[mid: length])
+<span class="linenr">9: </span>        <span style="color: #729fcf;">return</span> merge(left, right)
 </pre>
 </div>
 <p>
@@ -67,18 +77,18 @@ tags       : 归并排序
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">msort</span>(array):
-<span class="linenr"> 2: </span>    <span style="color: #fefc58;">length</span> = <span style="color: #31d3c4;">len</span>(array)
-<span class="linenr"> 3: </span>    <span style="color: #fefc58;">step</span> = 1
-<span class="linenr"> 4: </span>    <span style="color: #cf4a44;">while</span> step &lt; length:
-<span class="linenr"> 5: </span>        <span style="color: #cf4a44;">for</span> left <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(0, length - step, 2 * step):
-<span class="linenr"> 6: </span>            <span style="color: #fefc58;">result</span> = merge(array[left:left + step],
-<span class="linenr"> 7: </span>                           array[left + step: <span style="color: #31d3c4;">min</span>(left + 2 * step,
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">msort</span>(array):
+<span class="linenr"> 2: </span>    <span style="color: #eeeeec;">length</span> = <span style="color: #729fcf;">len</span>(array)
+<span class="linenr"> 3: </span>    <span style="color: #eeeeec;">step</span> = 1
+<span class="linenr"> 4: </span>    <span style="color: #729fcf;">while</span> step &lt; length:
+<span class="linenr"> 5: </span>        <span style="color: #729fcf;">for</span> left <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">range</span>(0, length - step, 2 * step):
+<span class="linenr"> 6: </span>            <span style="color: #eeeeec;">result</span> = merge(array[left:left + step],
+<span class="linenr"> 7: </span>                           array[left + step: <span style="color: #729fcf;">min</span>(left + 2 * step,
 <span class="linenr"> 8: </span>                                                  length)])
-<span class="linenr"> 9: </span>            <span style="color: #fefc58;">array</span> = array[0:left] + result + array[<span style="color: #31d3c4;">min</span>(left + 2 *
+<span class="linenr"> 9: </span>            <span style="color: #eeeeec;">array</span> = array[0:left] + result + array[<span style="color: #729fcf;">min</span>(left + 2 *
 <span class="linenr">10: </span>                                                       step, length)]
-<span class="linenr">11: </span>        <span style="color: #fefc58;">step</span> = step * 2
-<span class="linenr">12: </span>    <span style="color: #cf4a44;">return</span> array
+<span class="linenr">11: </span>        <span style="color: #eeeeec;">step</span> = step * 2
+<span class="linenr">12: </span>    <span style="color: #729fcf;">return</span> array
 </pre>
 </div>
 
@@ -91,85 +101,84 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">merge</span>(left, right):
-<span class="linenr"> 2: </span>    <span style="color: #fefc58;">llen</span> = <span style="color: #31d3c4;">len</span>(left)
-<span class="linenr"> 3: </span>    <span style="color: #fefc58;">lcur</span> = 0
-<span class="linenr"> 4: </span>    <span style="color: #fefc58;">rlen</span> = <span style="color: #31d3c4;">len</span>(right)
-<span class="linenr"> 5: </span>    <span style="color: #fefc58;">rcur</span> = 0
-<span class="linenr"> 6: </span>    <span style="color: #fefc58;">result</span> = []
-<span class="linenr"> 7: </span>    <span style="color: #cf4a44;">while</span> lcur &lt; llen <span style="color: #cf4a44;">and</span> rcur &lt; rlen:
-<span class="linenr"> 8: </span>        <span style="color: #fefc58;">lone</span> = left[lcur]
-<span class="linenr"> 9: </span>        <span style="color: #fefc58;">rone</span> = right[rcur]
-<span class="linenr">10: </span>        result.append(<span style="color: #31d3c4;">min</span>(lone, rone))
-<span class="linenr">11: </span>        <span style="color: #cf4a44;">if</span> lone &lt; rone:
-<span class="linenr">12: </span>            <span style="color: #fefc58;">lcur</span> += 1
-<span class="linenr">13: </span>        <span style="color: #cf4a44;">else</span>:
-<span class="linenr">14: </span>            <span style="color: #fefc58;">rcur</span> += 1
-<span class="linenr">15: </span>    <span style="color: #fefc58;">result</span> += left[lcur:]
-<span class="linenr">16: </span>    <span style="color: #fefc58;">result</span> += right[rcur:]
-<span class="linenr">17: </span>    <span style="color: #cf4a44;">return</span> result
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">merge</span>(left, right):
+<span class="linenr"> 2: </span>    <span style="color: #eeeeec;">llen</span> = <span style="color: #729fcf;">len</span>(left)
+<span class="linenr"> 3: </span>    <span style="color: #eeeeec;">lcur</span> = 0
+<span class="linenr"> 4: </span>    <span style="color: #eeeeec;">rlen</span> = <span style="color: #729fcf;">len</span>(right)
+<span class="linenr"> 5: </span>    <span style="color: #eeeeec;">rcur</span> = 0
+<span class="linenr"> 6: </span>    <span style="color: #eeeeec;">result</span> = []
+<span class="linenr"> 7: </span>    <span style="color: #729fcf;">while</span> lcur &lt; llen <span style="color: #729fcf;">and</span> rcur &lt; rlen:
+<span class="linenr"> 8: </span>        <span style="color: #eeeeec;">lone</span> = left[lcur]
+<span class="linenr"> 9: </span>        <span style="color: #eeeeec;">rone</span> = right[rcur]
+<span class="linenr">10: </span>        result.append(<span style="color: #729fcf;">min</span>(lone, rone))
+<span class="linenr">11: </span>        <span style="color: #729fcf;">if</span> lone &lt; rone:
+<span class="linenr">12: </span>            <span style="color: #eeeeec;">lcur</span> += 1
+<span class="linenr">13: </span>        <span style="color: #729fcf;">else</span>:
+<span class="linenr">14: </span>            <span style="color: #eeeeec;">rcur</span> += 1
+<span class="linenr">15: </span>    <span style="color: #eeeeec;">result</span> += left[lcur:]
+<span class="linenr">16: </span>    <span style="color: #eeeeec;">result</span> += right[rcur:]
+<span class="linenr">17: </span>    <span style="color: #729fcf;">return</span> result
 </pre>
 </div>
 </div>
 </div>
-
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">完整实现</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">完整实现</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 下面是综合了非递归与递归版本的二路归并排序的完整实现，结果由org-babel对代码块求值得到。
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #e81122;"># </span><span style="color: #e81122;">-*- coding: utf-8 -*-</span>
-<span class="linenr"> 2: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">merge</span>(left, right):
-<span class="linenr"> 3: </span>    <span style="color: #fefc58;">llen</span> = <span style="color: #31d3c4;">len</span>(left)
-<span class="linenr"> 4: </span>    <span style="color: #fefc58;">lcur</span> = 0
-<span class="linenr"> 5: </span>    <span style="color: #fefc58;">rlen</span> = <span style="color: #31d3c4;">len</span>(right)
-<span class="linenr"> 6: </span>    <span style="color: #fefc58;">rcur</span> = 0
-<span class="linenr"> 7: </span>    <span style="color: #fefc58;">result</span> = []
-<span class="linenr"> 8: </span>    <span style="color: #cf4a44;">while</span> lcur &lt; llen <span style="color: #cf4a44;">and</span> rcur &lt; rlen:
-<span class="linenr"> 9: </span>        <span style="color: #fefc58;">lone</span> = left[lcur]
-<span class="linenr">10: </span>        <span style="color: #fefc58;">rone</span> = right[rcur]
-<span class="linenr">11: </span>        result.append(<span style="color: #31d3c4;">min</span>(lone, rone))
-<span class="linenr">12: </span>        <span style="color: #cf4a44;">if</span> lone &lt; rone:
-<span class="linenr">13: </span>            <span style="color: #fefc58;">lcur</span> += 1
-<span class="linenr">14: </span>        <span style="color: #cf4a44;">else</span>:
-<span class="linenr">15: </span>            <span style="color: #fefc58;">rcur</span> += 1
-<span class="linenr">16: </span>    <span style="color: #fefc58;">result</span> += left[lcur:]
-<span class="linenr">17: </span>    <span style="color: #fefc58;">result</span> += right[rcur:]
-<span class="linenr">18: </span>    <span style="color: #cf4a44;">return</span> result
+<pre class="src src-python"><span class="linenr"> 1: </span><span style="color: #888a85;"># </span><span style="color: #888a85;">-*- coding: utf-8 -*-</span>
+<span class="linenr"> 2: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">merge</span>(left, right):
+<span class="linenr"> 3: </span>    <span style="color: #eeeeec;">llen</span> = <span style="color: #729fcf;">len</span>(left)
+<span class="linenr"> 4: </span>    <span style="color: #eeeeec;">lcur</span> = 0
+<span class="linenr"> 5: </span>    <span style="color: #eeeeec;">rlen</span> = <span style="color: #729fcf;">len</span>(right)
+<span class="linenr"> 6: </span>    <span style="color: #eeeeec;">rcur</span> = 0
+<span class="linenr"> 7: </span>    <span style="color: #eeeeec;">result</span> = []
+<span class="linenr"> 8: </span>    <span style="color: #729fcf;">while</span> lcur &lt; llen <span style="color: #729fcf;">and</span> rcur &lt; rlen:
+<span class="linenr"> 9: </span>        <span style="color: #eeeeec;">lone</span> = left[lcur]
+<span class="linenr">10: </span>        <span style="color: #eeeeec;">rone</span> = right[rcur]
+<span class="linenr">11: </span>        result.append(<span style="color: #729fcf;">min</span>(lone, rone))
+<span class="linenr">12: </span>        <span style="color: #729fcf;">if</span> lone &lt; rone:
+<span class="linenr">13: </span>            <span style="color: #eeeeec;">lcur</span> += 1
+<span class="linenr">14: </span>        <span style="color: #729fcf;">else</span>:
+<span class="linenr">15: </span>            <span style="color: #eeeeec;">rcur</span> += 1
+<span class="linenr">16: </span>    <span style="color: #eeeeec;">result</span> += left[lcur:]
+<span class="linenr">17: </span>    <span style="color: #eeeeec;">result</span> += right[rcur:]
+<span class="linenr">18: </span>    <span style="color: #729fcf;">return</span> result
 <span class="linenr">19: </span>
-<span class="linenr">20: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">msort_rec</span>(array):
-<span class="linenr">21: </span>    <span style="color: #fefc58;">length</span> = <span style="color: #31d3c4;">len</span>(array)
-<span class="linenr">22: </span>    <span style="color: #cf4a44;">if</span> length == 1:
-<span class="linenr">23: </span>        <span style="color: #cf4a44;">return</span> array
-<span class="linenr">24: </span>    <span style="color: #cf4a44;">else</span>:
-<span class="linenr">25: </span>        mid = length / 2
-<span class="linenr">26: </span>        left = msort_rec(array[0: mid])
-<span class="linenr">27: </span>        right = msort_rec(array[mid: length])
-<span class="linenr">28: </span>        <span style="color: #cf4a44;">return</span> merge(left, right)
+<span class="linenr">20: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">msort_rec</span>(array):
+<span class="linenr">21: </span>    <span style="color: #eeeeec;">length</span> = <span style="color: #729fcf;">len</span>(array)
+<span class="linenr">22: </span>    <span style="color: #729fcf;">if</span> length == 1:
+<span class="linenr">23: </span>        <span style="color: #729fcf;">return</span> array
+<span class="linenr">24: </span>    <span style="color: #729fcf;">else</span>:
+<span class="linenr">25: </span>        <span style="color: #eeeeec;">mid</span> = length / 2
+<span class="linenr">26: </span>        <span style="color: #eeeeec;">left</span> = msort_rec(array[0: mid])
+<span class="linenr">27: </span>        <span style="color: #eeeeec;">right</span> = msort_rec(array[mid: length])
+<span class="linenr">28: </span>        <span style="color: #729fcf;">return</span> merge(left, right)
 <span class="linenr">29: </span>
-<span class="linenr">30: </span><span style="color: #cf4a44;">def</span> <span style="color: #ed8a0c;">msort_iter</span>(array):
-<span class="linenr">31: </span>    length = <span style="color: #31d3c4;">len</span>(array)
-<span class="linenr">32: </span>    step = 1
-<span class="linenr">33: </span>    <span style="color: #cf4a44;">while</span> step &lt; length:
-<span class="linenr">34: </span>        <span style="color: #cf4a44;">for</span> left <span style="color: #cf4a44;">in</span> <span style="color: #31d3c4;">range</span>(0, length - step, 2 * step):
-<span class="linenr">35: </span>            result = merge(array[left:left + step],
-<span class="linenr">36: </span>                           array[left + step: <span style="color: #31d3c4;">min</span>(left + 2 * step,
+<span class="linenr">30: </span><span style="color: #729fcf;">def</span> <span style="color: #edd400;">msort_iter</span>(array):
+<span class="linenr">31: </span>    <span style="color: #eeeeec;">length</span> = <span style="color: #729fcf;">len</span>(array)
+<span class="linenr">32: </span>    <span style="color: #eeeeec;">step</span> = 1
+<span class="linenr">33: </span>    <span style="color: #729fcf;">while</span> step &lt; length:
+<span class="linenr">34: </span>        <span style="color: #729fcf;">for</span> left <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">range</span>(0, length - step, 2 * step):
+<span class="linenr">35: </span>            <span style="color: #eeeeec;">result</span> = merge(array[left:left + step],
+<span class="linenr">36: </span>                           array[left + step: <span style="color: #729fcf;">min</span>(left + 2 * step,
 <span class="linenr">37: </span>                                                  length)])
-<span class="linenr">38: </span>            array = array[0:left] + result + array[<span style="color: #31d3c4;">min</span>(left + 2 *
+<span class="linenr">38: </span>            <span style="color: #eeeeec;">array</span> = array[0:left] + result + array[<span style="color: #729fcf;">min</span>(left + 2 *
 <span class="linenr">39: </span>                                                       step, length):]
-<span class="linenr">40: </span>        step = step * 2
-<span class="linenr">41: </span>    <span style="color: #cf4a44;">return</span> array
+<span class="linenr">40: </span>        <span style="color: #eeeeec;">step</span> = step * 2
+<span class="linenr">41: </span>    <span style="color: #729fcf;">return</span> array
 <span class="linenr">42: </span>
-<span class="linenr">43: </span><span style="color: #cf4a44;">if</span> <span style="color: #31d3c4;">__name__</span> == <span style="color: #25ef29;">'__main__'</span>:
-<span class="linenr">44: </span>    L = [1, 4, 2, 6, 3, 5, 8, 7]
-<span class="linenr">45: </span>    <span style="color: #cf4a44;">print</span> <span style="color: #25ef29;">"&#25490;&#24207;&#21069;: %r"</span> %(L)
-<span class="linenr">46: </span>    R = msort_rec(L)
-<span class="linenr">47: </span>    <span style="color: #cf4a44;">print</span> <span style="color: #25ef29;">"&#25490;&#24207;&#21518;(&#36882;&#24402;): %r"</span> %(R)
-<span class="linenr">48: </span>    I = msort_iter(L)
-<span class="linenr">49: </span>    <span style="color: #cf4a44;">print</span> <span style="color: #25ef29;">"&#25490;&#24207;&#21518;(&#38750;&#36882;&#24402;): %r"</span> %(I)
+<span class="linenr">43: </span><span style="color: #729fcf;">if</span> <span style="color: #729fcf;">__name__</span> == <span style="color: #ad7fa8;">'__main__'</span>:
+<span class="linenr">44: </span>    <span style="color: #eeeeec;">L</span> = [1, 4, 2, 6, 3, 5, 8, 7]
+<span class="linenr">45: </span>    <span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">"&#25490;&#24207;&#21069;: %r"</span> %(L)
+<span class="linenr">46: </span>    <span style="color: #eeeeec;">R</span> = msort_rec(L)
+<span class="linenr">47: </span>    <span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">"&#25490;&#24207;&#21518;(&#36882;&#24402;): %r"</span> %(R)
+<span class="linenr">48: </span>    <span style="color: #eeeeec;">I</span> = msort_iter(L)
+<span class="linenr">49: </span>    <span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">"&#25490;&#24207;&#21518;(&#38750;&#36882;&#24402;): %r"</span> %(I)
 </pre>
 </div>
 
@@ -183,9 +192,10 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">发散：外排序应用</h2>
-<div class="outline-text-2" id="text-4">
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">发散：外排序应用</h2>
+<div class="outline-text-2" id="text-orgheadline4">
 <p>
 归并排序的思想可以用于外排序。外排序是相对内排序而言的。在常规的小规模排序过程中，都是直接在内存中对数据进行排序处理的，而对于数据量极大的排序问题，这种方式是不现实的。这个时候就要通过外排序来进行，先将数据划分成多个规模能在内存中处理的子集，对各个子集排序后存放在临时的磁盘文件上，然后再将这些子集归并到输出文件中。这个过程要使用到多路归并，如下图所示：
 </p>
@@ -197,7 +207,7 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </div>
 
 <p>
-注：该图来自 <a href="#sec-5">References</a> 中第一篇文章。
+注：该图来自 <a href="#orgheadline5">References</a> 中第一篇文章。
 </p>
 
 <p>
@@ -209,29 +219,29 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
-<span class="linenr"> 3: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;time.h&gt;</span>
+<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span class="linenr"> 2: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdlib.h&gt;</span>
+<span class="linenr"> 3: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;time.h&gt;</span>
 <span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">rand_file</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">num</span>)
+<span class="linenr"> 5: </span><span style="color: #8ae234;">int</span> <span style="color: #edd400;">rand_file</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">num</span>)
 <span class="linenr"> 6: </span>{
-<span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
-<span class="linenr"> 8: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">now</span>;
-<span class="linenr"> 9: </span>    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">f</span> = fopen(file, <span style="color: #25ef29;">"w"</span>);
+<span class="linenr"> 7: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
+<span class="linenr"> 8: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">now</span>;
+<span class="linenr"> 9: </span>    <span style="color: #8ae234;">FILE</span> *<span style="color: #eeeeec;">f</span> = fopen(file, <span style="color: #ad7fa8;">"w"</span>);
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>    <span style="color: #cf4a44;">if</span> (f == <span style="color: #bebebe;">NULL</span>) {
-<span class="linenr">12: </span>        perror(<span style="color: #25ef29;">"fopen"</span>);
-<span class="linenr">13: </span>        <span style="color: #cf4a44;">return</span> 0;
+<span class="linenr">11: </span>    <span style="color: #729fcf;">if</span> (f == <span style="color: #e6a00f;">NULL</span>) {
+<span class="linenr">12: </span>        perror(<span style="color: #ad7fa8;">"fopen"</span>);
+<span class="linenr">13: </span>        <span style="color: #729fcf;">return</span> 0;
 <span class="linenr">14: </span>    }
 <span class="linenr">15: </span>
-<span class="linenr">16: </span>    <span style="color: #cf4a44;">for</span> (; i &lt; num; ++i) {
-<span class="linenr">17: </span>        srand((<span style="color: #ca34e2;">int</span>)time(0));
+<span class="linenr">16: </span>    <span style="color: #729fcf;">for</span> (; i &lt; num; ++i) {
+<span class="linenr">17: </span>        srand((<span style="color: #8ae234;">int</span>)time(0));
 <span class="linenr">18: </span>        now = rand();
-<span class="linenr">19: </span>        fprintf(f, <span style="color: #25ef29;">"%d "</span>, now);
+<span class="linenr">19: </span>        fprintf(f, <span style="color: #ad7fa8;">"%d "</span>, now);
 <span class="linenr">20: </span>    }
 <span class="linenr">21: </span>
 <span class="linenr">22: </span>    fclose(f);
-<span class="linenr">23: </span>    <span style="color: #cf4a44;">return</span> num;
+<span class="linenr">23: </span>    <span style="color: #729fcf;">return</span> num;
 <span class="linenr">24: </span>}
 </pre>
 </div>
@@ -241,35 +251,35 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span class="linenr"> 2: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
+<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span class="linenr"> 2: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdlib.h&gt;</span>
 <span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_to_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span class="linenr"> 4: </span><span style="color: #8ae234;">int</span> <span style="color: #edd400;">read_to_mem</span>(<span style="color: #8ae234;">FILE</span> *<span style="color: #eeeeec;">file</span>, <span style="color: #8ae234;">int</span> *<span style="color: #eeeeec;">arr</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">len</span>)
 <span class="linenr"> 5: </span>{
-<span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
-<span class="linenr"> 7: </span>    <span style="color: #cf4a44;">if</span> (file != <span style="color: #bebebe;">NULL</span>) {
-<span class="linenr"> 8: </span>        <span style="color: #cf4a44;">for</span> (; !feof(file) &amp;&amp; i &lt; len; ++i) {
-<span class="linenr"> 9: </span>            fscanf(file, <span style="color: #25ef29;">"%d"</span>, arr + i);
+<span class="linenr"> 6: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
+<span class="linenr"> 7: </span>    <span style="color: #729fcf;">if</span> (file != <span style="color: #e6a00f;">NULL</span>) {
+<span class="linenr"> 8: </span>        <span style="color: #729fcf;">for</span> (; !feof(file) &amp;&amp; i &lt; len; ++i) {
+<span class="linenr"> 9: </span>            fscanf(file, <span style="color: #ad7fa8;">"%d"</span>, arr + i);
 <span class="linenr">10: </span>        }
-<span class="linenr">11: </span>        <span style="color: #cf4a44;">return</span> i;
+<span class="linenr">11: </span>        <span style="color: #729fcf;">return</span> i;
 <span class="linenr">12: </span>    }
-<span class="linenr">13: </span>    <span style="color: #cf4a44;">else</span>
-<span class="linenr">14: </span>        <span style="color: #cf4a44;">return</span> 0;
+<span class="linenr">13: </span>    <span style="color: #729fcf;">else</span>
+<span class="linenr">14: </span>        <span style="color: #729fcf;">return</span> 0;
 <span class="linenr">15: </span>}
 <span class="linenr">16: </span>
-<span class="linenr">17: </span><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">write_from_mem</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span>, <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span class="linenr">17: </span><span style="color: #8ae234;">int</span> <span style="color: #edd400;">write_from_mem</span>(<span style="color: #8ae234;">FILE</span> *<span style="color: #eeeeec;">file</span>, <span style="color: #8ae234;">int</span> *<span style="color: #eeeeec;">arr</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">len</span>)
 <span class="linenr">18: </span>{
-<span class="linenr">19: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
-<span class="linenr">20: </span>    <span style="color: #cf4a44;">if</span> (file != <span style="color: #bebebe;">NULL</span>) {
-<span class="linenr">21: </span>        <span style="color: #cf4a44;">for</span> ( ; i &lt; len; ++i) {
-<span class="linenr">22: </span>            fprintf(file, <span style="color: #25ef29;">"%d "</span>, arr[i]);
+<span class="linenr">19: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
+<span class="linenr">20: </span>    <span style="color: #729fcf;">if</span> (file != <span style="color: #e6a00f;">NULL</span>) {
+<span class="linenr">21: </span>        <span style="color: #729fcf;">for</span> ( ; i &lt; len; ++i) {
+<span class="linenr">22: </span>            fprintf(file, <span style="color: #ad7fa8;">"%d "</span>, arr[i]);
 <span class="linenr">23: </span>        }
 <span class="linenr">24: </span>
-<span class="linenr">25: </span>        <span style="color: #cf4a44;">return</span> i;
+<span class="linenr">25: </span>        <span style="color: #729fcf;">return</span> i;
 <span class="linenr">26: </span>    }
 <span class="linenr">27: </span>
-<span class="linenr">28: </span>    <span style="color: #cf4a44;">else</span>
-<span class="linenr">29: </span>        <span style="color: #cf4a44;">return</span> 0;
+<span class="linenr">28: </span>    <span style="color: #729fcf;">else</span>
+<span class="linenr">29: </span>        <span style="color: #729fcf;">return</span> 0;
 <span class="linenr">30: </span>}
 </pre>
 </div>
@@ -283,48 +293,48 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdlib.h&gt;</span>
+<pre class="src src-C"><span class="linenr"> 1: </span><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdlib.h&gt;</span>
 <span class="linenr"> 2: </span>
-<span class="linenr"> 3: </span><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">merge</span>(<span style="color: #ca34e2;">File</span> *<span style="color: #fefc58;">out</span>, <span style="color: #ca34e2;">File</span> **<span style="color: #fefc58;">flist</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fnum</span>)
+<span class="linenr"> 3: </span><span style="color: #8ae234;">void</span> <span style="color: #edd400;">merge</span>(<span style="color: #8ae234;">File</span> *<span style="color: #eeeeec;">out</span>, <span style="color: #8ae234;">File</span> **<span style="color: #eeeeec;">flist</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">fnum</span>)
 <span class="linenr"> 4: </span>{
-<span class="linenr"> 5: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
-<span class="linenr"> 6: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">now</span> = 0;                <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#29992;&#20110;&#20445;&#23384;&#24403;&#21069;&#26368;&#23567;&#30340;&#20540; </span><span style="color: #e81122;">*/</span>
-<span class="linenr"> 7: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">fstaus</span> = (<span style="color: #ca34e2;">int</span> *)calloc(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>)); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#25991;&#20214;&#29366;&#24577; </span><span style="color: #e81122;">*/</span>
-<span class="linenr"> 8: </span>    <span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">farr</span> =(<span style="color: #ca34e2;">int</span> *)calloc(fnum, <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">int</span>));    <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#20174;&#21508;&#20010;&#25991;&#20214;&#20013;&#21462;&#20986;&#30340;&#25968; </span><span style="color: #e81122;">*/</span>
-<span class="linenr"> 9: </span>    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">min</span> = 0;                <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35760;&#24405;&#24403;&#21069;&#20540;&#26368;&#23567;&#30340;&#25991;&#20214;&#32034;&#24341; </span><span style="color: #e81122;">*/</span>
+<span class="linenr"> 5: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
+<span class="linenr"> 6: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">now</span> = 0;                <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#29992;&#20110;&#20445;&#23384;&#24403;&#21069;&#26368;&#23567;&#30340;&#20540; </span><span style="color: #888a85;">*/</span>
+<span class="linenr"> 7: </span>    <span style="color: #8ae234;">int</span> *<span style="color: #eeeeec;">fstaus</span> = (<span style="color: #8ae234;">int</span> *)calloc(fnum, <span style="color: #729fcf;">sizeof</span>(<span style="color: #8ae234;">int</span>)); <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#35760;&#24405;&#25991;&#20214;&#29366;&#24577; </span><span style="color: #888a85;">*/</span>
+<span class="linenr"> 8: </span>    <span style="color: #8ae234;">int</span> *<span style="color: #eeeeec;">farr</span> =(<span style="color: #8ae234;">int</span> *)calloc(fnum, <span style="color: #729fcf;">sizeof</span>(<span style="color: #8ae234;">int</span>));    <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#35760;&#24405;&#20174;&#21508;&#20010;&#25991;&#20214;&#20013;&#21462;&#20986;&#30340;&#25968; </span><span style="color: #888a85;">*/</span>
+<span class="linenr"> 9: </span>    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">min</span> = 0;                <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#35760;&#24405;&#24403;&#21069;&#20540;&#26368;&#23567;&#30340;&#25991;&#20214;&#32034;&#24341; </span><span style="color: #888a85;">*/</span>
 <span class="linenr">10: </span>
-<span class="linenr">11: </span>    <span style="color: #cf4a44;">for</span> (; i &lt; fnum; ++i) {     <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#26816;&#26597;&#21508;&#20010;&#25991;&#20214;&#25351;&#38024;&#30340;&#29366;&#24577; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">12: </span>        <span style="color: #cf4a44;">if</span> (feof(fscanf(flist[i], <span style="color: #25ef29;">"%d"</span>, farr + i))) {
+<span class="linenr">11: </span>    <span style="color: #729fcf;">for</span> (; i &lt; fnum; ++i) {     <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#26816;&#26597;&#21508;&#20010;&#25991;&#20214;&#25351;&#38024;&#30340;&#29366;&#24577; </span><span style="color: #888a85;">*/</span>
+<span class="linenr">12: </span>        <span style="color: #729fcf;">if</span> (feof(fscanf(flist[i], <span style="color: #ad7fa8;">"%d"</span>, farr + i))) {
 <span class="linenr">13: </span>            fstatus[i] = 0;
 <span class="linenr">14: </span>        }
-<span class="linenr">15: </span>        <span style="color: #cf4a44;">else</span> {
+<span class="linenr">15: </span>        <span style="color: #729fcf;">else</span> {
 <span class="linenr">16: </span>            fstatus[i] = 1;
 <span class="linenr">17: </span>        }
 <span class="linenr">18: </span>    }
 <span class="linenr">19: </span>
-<span class="linenr">20: </span>    <span style="color: #cf4a44;">while</span> (1) {
+<span class="linenr">20: </span>    <span style="color: #729fcf;">while</span> (1) {
 <span class="linenr">21: </span>        now = 0;
-<span class="linenr">22: </span>        <span style="color: #cf4a44;">for</span> (i = 0; i &lt; fnum &amp;&amp; !fstatus[i]; ++i) {}
-<span class="linenr">23: </span>        <span style="color: #cf4a44;">if</span> (i &gt;= fnum) {     <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#22914;&#26080;&#21487;&#29992;&#25991;&#20214;&#65292;&#21017;&#36864;&#20986; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">24: </span>            <span style="color: #cf4a44;">break</span>;
+<span class="linenr">22: </span>        <span style="color: #729fcf;">for</span> (i = 0; i &lt; fnum &amp;&amp; !fstatus[i]; ++i) {}
+<span class="linenr">23: </span>        <span style="color: #729fcf;">if</span> (i &gt;= fnum) {     <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#22914;&#26080;&#21487;&#29992;&#25991;&#20214;&#65292;&#21017;&#36864;&#20986; </span><span style="color: #888a85;">*/</span>
+<span class="linenr">24: </span>            <span style="color: #729fcf;">break</span>;
 <span class="linenr">25: </span>        }
 <span class="linenr">26: </span>
-<span class="linenr">27: </span>        <span style="color: #cf4a44;">for</span> (; i &lt; fnum; ++i) { <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#20174;&#31532;&#19968;&#20010;&#21487;&#29992;&#30340;&#25991;&#20214;&#24320;&#22987;&#35835; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">28: </span>            <span style="color: #cf4a44;">if</span> (fstatus[i] &amp;&amp; farr[i] &lt; now) {
+<span class="linenr">27: </span>        <span style="color: #729fcf;">for</span> (; i &lt; fnum; ++i) { <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#20174;&#31532;&#19968;&#20010;&#21487;&#29992;&#30340;&#25991;&#20214;&#24320;&#22987;&#35835; </span><span style="color: #888a85;">*/</span>
+<span class="linenr">28: </span>            <span style="color: #729fcf;">if</span> (fstatus[i] &amp;&amp; farr[i] &lt; now) {
 <span class="linenr">29: </span>                now = farr[i];
 <span class="linenr">30: </span>                min = i;
 <span class="linenr">31: </span>            }
 <span class="linenr">32: </span>        }
 <span class="linenr">33: </span>
-<span class="linenr">34: </span>        fprintf(out, <span style="color: #25ef29;">"%d "</span>, now); <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#23558;&#26368;&#23567;&#20540;&#20889;&#20837;&#36755;&#20986;&#25991;&#20214; </span><span style="color: #e81122;">*/</span>
+<span class="linenr">34: </span>        fprintf(out, <span style="color: #ad7fa8;">"%d "</span>, now); <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#23558;&#26368;&#23567;&#20540;&#20889;&#20837;&#36755;&#20986;&#25991;&#20214; </span><span style="color: #888a85;">*/</span>
 <span class="linenr">35: </span>
-<span class="linenr">36: </span>        <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35835;&#21462;&#35813;&#25991;&#20214;&#19979;&#19968;&#20010;&#25968;&#65292;&#24182;&#26816;&#26597;&#26159;&#21542;&#35835;&#23436; </span><span style="color: #e81122;">*/</span>
-<span class="linenr">37: </span>        <span style="color: #cf4a44;">if</span> (feof(fscanf(flist[min], <span style="color: #25ef29;">"%d"</span>, farr + min))) {
+<span class="linenr">36: </span>        <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#35835;&#21462;&#35813;&#25991;&#20214;&#19979;&#19968;&#20010;&#25968;&#65292;&#24182;&#26816;&#26597;&#26159;&#21542;&#35835;&#23436; </span><span style="color: #888a85;">*/</span>
+<span class="linenr">37: </span>        <span style="color: #729fcf;">if</span> (feof(fscanf(flist[min], <span style="color: #ad7fa8;">"%d"</span>, farr + min))) {
 <span class="linenr">38: </span>            fstatus[min] = 0;
 <span class="linenr">39: </span>        }
 <span class="linenr">40: </span>    }
 <span class="linenr">41: </span>
-<span class="linenr">42: </span>    free(farr);                 <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#37322;&#25918;&#20869;&#23384; </span><span style="color: #e81122;">*/</span>
+<span class="linenr">42: </span>    free(farr);                 <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#37322;&#25918;&#20869;&#23384; </span><span style="color: #888a85;">*/</span>
 <span class="linenr">43: </span>    free(fstatus);
 <span class="linenr">44: </span>}
 </pre>
@@ -339,19 +349,14 @@ msort中的归并部分(merge)的思想是：分别取出字数组中最小的�
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">References</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">References</h2>
+<div class="outline-text-2" id="text-orgheadline5">
 <ol class="org-ol">
-<li><a href="http://www.cnblogs.com/daoluanxiaozi/archive/2012/03/29/2423087.html">《编程珠玑，字字珠玑》1234读书笔记——多路归并排序</a>
-</li>
-<li><a href="http://diducoder.com/mass-data-topic-9-external-sort.html">海量数据处理专题（九）——外排序</a>
-</li>
-<li><a href="http://www.cnblogs.com/huangxincheng/archive/2012/12/19/2824943.html">经典算法题每日演练——第十八题 外排序</a>
-</li>
-<li><a href="http://blog.csdn.net/v_JULY_v/article/details/6451990">程序员编程艺术：第十章、如何给10^7个数据量的磁盘文件排序</a>
-</li>
+<li><a href="http://www.cnblogs.com/daoluanxiaozi/archive/2012/03/29/2423087.html">《编程珠玑，字字珠玑》1234读书笔记——多路归并排序</a></li>
+<li><a href="http://diducoder.com/mass-data-topic-9-external-sort.html">海量数据处理专题（九）——外排序</a></li>
+<li><a href="http://www.cnblogs.com/huangxincheng/archive/2012/12/19/2824943.html">经典算法题每日演练——第十八题 外排序</a></li>
+<li><a href="http://blog.csdn.net/v_JULY_v/article/details/6451990">程序员编程艺术：第十章、如何给10^7个数据量的磁盘文件排序</a></li>
 </ol>
 </div>
 </div>

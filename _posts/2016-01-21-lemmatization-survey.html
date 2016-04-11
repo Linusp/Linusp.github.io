@@ -10,13 +10,29 @@ tags       :
 description:
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">词形还原(Lemmatization)</a></li>
+<li><a href="#orgheadline2">词形还原的工具</a>
+<ul>
+<li><a href="#orgheadline3">Python: NLTK</a></li>
+<li><a href="#orgheadline4">Python: Pattern</a></li>
+<li><a href="#orgheadline5">Python: TextBlob</a></li>
+<li><a href="#orgheadline6">Tree Tagger</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <p>
 <b>注: 本文仅讨论英文</b>
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">词形还原(Lemmatization)</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">词形还原(Lemmatization)</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 在英文当中，一些词会在不同的情况中有不同的形态：名词有单复数，动词有时态和语态，形容词有比较级。而在自然语言处理的一些场景中，这种形态的差异是没有意义的甚至有干扰作用，需要将不同形态的词转换为其 <b>原型</b> ，这种处理就称为 "词形还原(Lemmatization/Lemmatisation)" ，得到的原型被称为 "词元(Lemma)" 。
 </p>
@@ -25,12 +41,9 @@ description:
 举栗子:
 </p>
 <ol class="org-ol">
-<li>dogs -&gt; dog, cats -&gt; cat
-</li>
-<li>doing -&gt; do, done -&gt; do
-</li>
-<li>better -&gt; good
-</li>
+<li>dogs -&gt; dog, cats -&gt; cat</li>
+<li>doing -&gt; do, done -&gt; do</li>
+<li>better -&gt; good</li>
 </ol>
 
 <p>
@@ -54,70 +67,70 @@ D3: I was sleeping at home
 
 
 <colgroup>
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="left">&#xa0;</th>
-<th scope="col" class="right">D1</th>
-<th scope="col" class="right">D2</th>
-<th scope="col" class="right">D3</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">D1</th>
+<th scope="col" class="org-right">D2</th>
+<th scope="col" class="org-right">D3</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="left">I</td>
-<td class="right">1</td>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-left">I</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="left">was</td>
-<td class="right">0</td>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-left">was</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="left">work</td>
-<td class="right">1</td>
-<td class="right">0</td>
-<td class="right">0</td>
+<td class="org-left">work</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="left">working</td>
-<td class="right">0</td>
-<td class="right">1</td>
-<td class="right">0</td>
+<td class="org-left">working</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="left">sleeping</td>
-<td class="right">0</td>
-<td class="right">0</td>
-<td class="right">1</td>
+<td class="org-left">sleeping</td>
+<td class="org-right">0</td>
+<td class="org-right">0</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="left">at</td>
-<td class="right">1</td>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-left">at</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="left">home</td>
-<td class="right">1</td>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-left">home</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 </tbody>
 </table>
@@ -130,42 +143,42 @@ D3: I was sleeping at home
 
 
 <colgroup>
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="left">&#xa0;</th>
-<th scope="col" class="right">D1</th>
-<th scope="col" class="right">D2</th>
-<th scope="col" class="right">D3</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">D1</th>
+<th scope="col" class="org-right">D2</th>
+<th scope="col" class="org-right">D3</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="left">D1</td>
-<td class="right">7</td>
-<td class="right">4</td>
-<td class="right">4</td>
+<td class="org-left">D1</td>
+<td class="org-right">7</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
 </tr>
 
 <tr>
-<td class="left">D2</td>
-<td class="right">4</td>
-<td class="right">7</td>
-<td class="right">5</td>
+<td class="org-left">D2</td>
+<td class="org-right">4</td>
+<td class="org-right">7</td>
+<td class="org-right">5</td>
 </tr>
 
 <tr>
-<td class="left">D3</td>
-<td class="right">4</td>
-<td class="right">5</td>
-<td class="right">7</td>
+<td class="org-left">D3</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+<td class="org-right">7</td>
 </tr>
 </tbody>
 </table>
@@ -184,12 +197,12 @@ D3: I was sleeping at home
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">词形还原的工具</h2>
-<div class="outline-text-2" id="text-2">
-</div><div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">Python: <a href="http://www.nltk.org/">NLTK</a></h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">词形还原的工具</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+</div><div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">Python: <a href="http://www.nltk.org/">NLTK</a></h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 NLTK 是著名的 Python 自然语言处理包，其中包含了非常多的自然语言处理相关方法和工具，其中也包含了词形还原的功能。
 </p>
@@ -219,11 +232,6 @@ nltk.download(<span style="color: #ad7fa8;">"averaged_perceptron_tagger"</span>)
 </pre>
 </div>
 
-<pre class="example">
-dog
-work
-</pre>
-
 <p>
 NLTK 里这个词形还原工具的一个问题是需要手动指定词性，比如上面例子中的 "working" 这个词，如果不加后面那个 pos 参数，输出的结果将会是 "working" 本身。
 </p>
@@ -232,14 +240,10 @@ NLTK 里这个词形还原工具的一个问题是需要手动指定词性，比
 如果希望在实际应用中使用 NLTK 进行词形还原，一个完整的解决方案是:
 </p>
 <ol class="org-ol">
-<li>输入一个完整的句子
-</li>
-<li>用 NLTK 提供的工具对句子进行分词和词性标注
-</li>
-<li>将得到的词性标注结果转换为 WordNet 的格式
-</li>
-<li>使用 WordNetLemmatizer 对词进行词形还原
-</li>
+<li>输入一个完整的句子</li>
+<li>用 NLTK 提供的工具对句子进行分词和词性标注</li>
+<li>将得到的词性标注结果转换为 WordNet 的格式</li>
+<li>使用 WordNetLemmatizer 对词进行词形还原</li>
 </ol>
 
 <p>
@@ -288,9 +292,9 @@ nltk.download(<span style="color: #ad7fa8;">"maxnet_treebank_pos_tagger"</span>)
 </div>
 </div>
 
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">Python: <a href="https://github.com/clips/pattern">Pattern</a></h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">Python: <a href="https://github.com/clips/pattern">Pattern</a></h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 Pattern 是一个 Python 的数据挖掘库，还实现了自然语言处理、机器学习以及数据可视化等一整套的功能，是一个非常强大的库， Github 上 4000 多个 star 呢。
 </p>
@@ -352,9 +356,9 @@ So easy!完全不用管什么词性标注之类的。
 </div>
 </div>
 
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">Python: <a href="https://github.com/sloria/textblob">TextBlob</a></h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">Python: <a href="https://github.com/sloria/textblob">TextBlob</a></h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <p>
 TextBlob 是一个专注自然语言处理的 Python 库，集成了 NLTK 和 Pattern 的一些功能。其中的词形还原功能使用如下:
 </p>
@@ -370,24 +374,15 @@ TextBlob 是一个专注自然语言处理的 Python 库，集成了 NLTK 和 Pa
 </pre>
 </div>
 
-<pre class="example">
-['I', 'was', 'working', 'at', 'home']
-I
-wa
-working
-at
-home
-</pre>
-
 <p>
 结果并不是很理想，同 NLTK 一样，可以传入词性来使词形提高还原结果。
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-2-4" class="outline-3">
-<h3 id="sec-2-4"><a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">Tree Tagger</a></h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6"><a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">Tree Tagger</a></h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的功能。
 </p>
@@ -396,22 +391,19 @@ Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的�
 安装:
 </p>
 <ol class="org-ol">
-<li>下载词性标注器: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-linux-3.2.tar.gz">Linux</a> / <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-MacOSX-3.2-intel.tar.gz">Mac OS-X</a>
-</li>
-<li>下载词性标注 <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tagger-scripts.tar.gz">脚本</a>
-</li>
-<li>下载安装工具: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/install-tagger.sh">install-tagger.sh</a>
-</li>
-<li>下载需要处理的语言的参数文件: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/english-par-linux-3.2-utf8.bin.gz">英语</a>
-</li>
-<li>将上述下载好的资源放到同一个目录中，其中的压缩包不需要解压，直接执行 install-tagger.sh
+<li>下载词性标注器: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-linux-3.2.tar.gz">Linux</a> / <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tree-tagger-MacOSX-3.2-intel.tar.gz">Mac OS-X</a></li>
+<li>下载词性标注 <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/tagger-scripts.tar.gz">脚本</a></li>
+<li>下载安装工具: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/install-tagger.sh">install-tagger.sh</a></li>
+<li>下载需要处理的语言的参数文件: <a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data/english-par-linux-3.2-utf8.bin.gz">英语</a></li>
+<li><p>
+将上述下载好的资源放到同一个目录中，其中的压缩包不需要解压，直接执行 install-tagger.sh
+</p>
 
 <div class="org-src-container">
 
 <pre class="src src-sh">chmod +x install-tagger.sh &amp;&amp; ./install-tagger.sh
 </pre>
-</div>
-</li>
+</div></li>
 </ol>
 
 
@@ -424,14 +416,6 @@ Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的�
 <pre class="src src-sh"><span style="color: #729fcf;">echo</span> <span style="color: #ad7fa8;">'I was working at home'</span> | tree-tagger-english
 </pre>
 </div>
-
-<pre class="example">
-I   PP  I
-was VBD be
-working VBG work
-at  IN  at
-home    NN  home
-</pre>
 </div>
 </div>
 </div>

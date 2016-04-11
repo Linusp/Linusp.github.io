@@ -8,13 +8,34 @@ tags       :
 description:
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">更易配置和使用的训练工具</a>
+<ul>
+<li><a href="#orgheadline2">获取工具</a></li>
+<li><a href="#orgheadline3">配置</a></li>
+<li><a href="#orgheadline4">训练</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline5">字符识别歧义校正</a>
+<ul>
+<li><a href="#orgheadline6">旧版本格式</a></li>
+<li><a href="#orgheadline7">新版本格式</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline8">词典: DAWG 文件</a></li>
+</ul>
+</div>
+</div>
 <p>
 续上篇: <a href="http://linusp.github.io/2015/05/05/tesseract-training.html">《Tesseract:训练》</a>。本篇主要解释一下 DAWG 文件的生成方法，并提供一个更易用的训练工具。
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">更易配置和使用的训练工具</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">更易配置和使用的训练工具</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 Tesseract 自身提供的训练工具分为了多个不同的程序，用起来比较灵活，但说实话，要记住每个程序的使用方法还真是一件费力的事情。此外，为了得到较好的训练结果，往往会需要用多种字体进行训练，而不同的字体除了一两个参数(一般为字体名称、位置)不一样外，其他的过程、参数都是相似的，这里有大量的重复性操作。
 </p>
@@ -24,9 +45,9 @@ Tesseract 自身提供的训练工具分为了多个不同的程序，用起来�
 </p>
 </div>
 
-<div id="outline-container-sec-1-1" class="outline-3">
-<h3 id="sec-1-1">获取工具</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">获取工具</h3>
+<div class="outline-text-3" id="text-orgheadline2">
 <p>
 工具放在我的 Github 项目中，项目地址为:
 </p>
@@ -40,52 +61,52 @@ https://github.com/Linusp/zutil
 </div>
 </div>
 
-<div id="outline-container-sec-1-2" class="outline-3">
-<h3 id="sec-1-2">配置</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">配置</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 见项目 python/configs/ 目录下的 tess.json，其内容为:
 </p>
 <div class="org-src-container">
 
 <pre class="src src-python">{
-    <span style="color: #b5bd68;">"name"</span>: <span style="color: #b5bd68;">"chi_eng"</span>,
-    <span style="color: #b5bd68;">"font"</span>: {
-        <span style="color: #b5bd68;">"wqy"</span>: {
-            <span style="color: #b5bd68;">"font-dir"</span>: <span style="color: #b5bd68;">"/usr/share/fonts/truetype"</span>,
-            <span style="color: #b5bd68;">"sub-font"</span>: {
-                <span style="color: #b5bd68;">"fixed"</span>: <span style="color: #b5bd68;">"WenQuanYi Micro Hei"</span>
+    <span style="color: #ad7fa8;">"name"</span>: <span style="color: #ad7fa8;">"chi_eng"</span>,
+    <span style="color: #ad7fa8;">"font"</span>: {
+        <span style="color: #ad7fa8;">"wqy"</span>: {
+            <span style="color: #ad7fa8;">"font-dir"</span>: <span style="color: #ad7fa8;">"/usr/share/fonts/truetype"</span>,
+            <span style="color: #ad7fa8;">"sub-font"</span>: {
+                <span style="color: #ad7fa8;">"fixed"</span>: <span style="color: #ad7fa8;">"WenQuanYi Micro Hei"</span>
             }
         },
-        <span style="color: #b5bd68;">"sun"</span>: {
-            <span style="color: #b5bd68;">"font-dir"</span>: <span style="color: #b5bd68;">"/home/linusp/datas/fonts/"</span>,
-            <span style="color: #b5bd68;">"sub-font"</span>: {
-                <span style="color: #b5bd68;">"serif"</span>: <span style="color: #b5bd68;">"SimSun"</span>
+        <span style="color: #ad7fa8;">"sun"</span>: {
+            <span style="color: #ad7fa8;">"font-dir"</span>: <span style="color: #ad7fa8;">"/home/linusp/datas/fonts/"</span>,
+            <span style="color: #ad7fa8;">"sub-font"</span>: {
+                <span style="color: #ad7fa8;">"serif"</span>: <span style="color: #ad7fa8;">"SimSun"</span>
             }
         },
-        <span style="color: #b5bd68;">"nsun"</span>: {
-            <span style="color: #b5bd68;">"font-dir"</span>: <span style="color: #b5bd68;">"/home/linusp/datas/fonts/"</span>,
-            <span style="color: #b5bd68;">"sub-font"</span>: {
-                <span style="color: #b5bd68;">"serif"</span>: <span style="color: #b5bd68;">"NSimSun"</span>
+        <span style="color: #ad7fa8;">"nsun"</span>: {
+            <span style="color: #ad7fa8;">"font-dir"</span>: <span style="color: #ad7fa8;">"/home/linusp/datas/fonts/"</span>,
+            <span style="color: #ad7fa8;">"sub-font"</span>: {
+                <span style="color: #ad7fa8;">"serif"</span>: <span style="color: #ad7fa8;">"NSimSun"</span>
             }
         },
-        <span style="color: #b5bd68;">"times"</span>: {
-            <span style="color: #b5bd68;">"font-dir"</span>: <span style="color: #b5bd68;">"/home/linusp/data/fonts/TimesNewRoman"</span>,
-            <span style="color: #b5bd68;">"sub-font"</span>: {
-                <span style="color: #b5bd68;">"italic"</span>: <span style="color: #b5bd68;">"Times New Roman, Italic"</span>,
-                <span style="color: #b5bd68;">"bold"</span>: <span style="color: #b5bd68;">"Times New Roman, Bold"</span>,
-                <span style="color: #b5bd68;">"serif"</span>: <span style="color: #b5bd68;">"Times New Roman,"</span>
+        <span style="color: #ad7fa8;">"times"</span>: {
+            <span style="color: #ad7fa8;">"font-dir"</span>: <span style="color: #ad7fa8;">"/home/linusp/data/fonts/TimesNewRoman"</span>,
+            <span style="color: #ad7fa8;">"sub-font"</span>: {
+                <span style="color: #ad7fa8;">"italic"</span>: <span style="color: #ad7fa8;">"Times New Roman, Italic"</span>,
+                <span style="color: #ad7fa8;">"bold"</span>: <span style="color: #ad7fa8;">"Times New Roman, Bold"</span>,
+                <span style="color: #ad7fa8;">"serif"</span>: <span style="color: #ad7fa8;">"Times New Roman,"</span>
             }
         }
     },
-    <span style="color: #b5bd68;">"data"</span>: {
-        <span style="color: #b5bd68;">"chi"</span>: {
-            <span style="color: #b5bd68;">"file-name"</span>: <span style="color: #b5bd68;">"chi.txt"</span>,
-            <span style="color: #b5bd68;">"font-list"</span>: [<span style="color: #b5bd68;">"wqy"</span>, <span style="color: #b5bd68;">"sun"</span>, <span style="color: #b5bd68;">"nsun"</span>]
+    <span style="color: #ad7fa8;">"data"</span>: {
+        <span style="color: #ad7fa8;">"chi"</span>: {
+            <span style="color: #ad7fa8;">"file-name"</span>: <span style="color: #ad7fa8;">"chi.txt"</span>,
+            <span style="color: #ad7fa8;">"font-list"</span>: [<span style="color: #ad7fa8;">"wqy"</span>, <span style="color: #ad7fa8;">"sun"</span>, <span style="color: #ad7fa8;">"nsun"</span>]
         },
-        <span style="color: #b5bd68;">"eng"</span>: {
-            <span style="color: #b5bd68;">"file-name"</span>: <span style="color: #b5bd68;">"eng.txt"</span>,
-            <span style="color: #b5bd68;">"font-list"</span>: [<span style="color: #b5bd68;">"wqy"</span>, <span style="color: #b5bd68;">"times"</span>]
+        <span style="color: #ad7fa8;">"eng"</span>: {
+            <span style="color: #ad7fa8;">"file-name"</span>: <span style="color: #ad7fa8;">"eng.txt"</span>,
+            <span style="color: #ad7fa8;">"font-list"</span>: [<span style="color: #ad7fa8;">"wqy"</span>, <span style="color: #ad7fa8;">"times"</span>]
         }
     }
 }
@@ -96,12 +117,9 @@ https://github.com/Linusp/zutil
 可以看到，配置文件内容分为三大块:
 </p>
 <ul class="org-ul">
-<li>name: 即最后生成的 traineddata 文件名称
-</li>
-<li>font: 要使用到的字体
-</li>
-<li>data: 要用于训练的文本，以及它们各自要使用的字体
-</li>
+<li>name: 即最后生成的 traineddata 文件名称</li>
+<li>font: 要使用到的字体</li>
+<li>data: 要用于训练的文本，以及它们各自要使用的字体</li>
 </ul>
 
 <p>
@@ -113,12 +131,12 @@ name 和 data 这两块都比较易懂，这里只对 font 这一块多做一点
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #b5bd68;">"times"</span>: {
-    <span style="color: #b5bd68;">"font-dir"</span>: <span style="color: #b5bd68;">"/home/linusp/data/fonts/TimesNewRoman"</span>,
-    <span style="color: #b5bd68;">"sub-font"</span>: {
-        <span style="color: #b5bd68;">"italic"</span>: <span style="color: #b5bd68;">"Times New Roman, Italic"</span>,
-        <span style="color: #b5bd68;">"bold"</span>: <span style="color: #b5bd68;">"Times New Roman, Bold"</span>,
-        <span style="color: #b5bd68;">"serif"</span>: <span style="color: #b5bd68;">"Times New Roman,"</span>
+<pre class="src src-python"><span style="color: #ad7fa8;">"times"</span>: {
+    <span style="color: #ad7fa8;">"font-dir"</span>: <span style="color: #ad7fa8;">"/home/linusp/data/fonts/TimesNewRoman"</span>,
+    <span style="color: #ad7fa8;">"sub-font"</span>: {
+        <span style="color: #ad7fa8;">"italic"</span>: <span style="color: #ad7fa8;">"Times New Roman, Italic"</span>,
+        <span style="color: #ad7fa8;">"bold"</span>: <span style="color: #ad7fa8;">"Times New Roman, Bold"</span>,
+        <span style="color: #ad7fa8;">"serif"</span>: <span style="color: #ad7fa8;">"Times New Roman,"</span>
     }
 }
 </pre>
@@ -135,16 +153,11 @@ name 和 data 这两块都比较易懂，这里只对 font 这一块多做一点
 "sub-font" 指定需要使用的字体样式，可用的有五种，分别是:
 </p>
 <ul class="org-ul">
-<li>italic: 斜体
-</li>
-<li>bold: 粗体
-</li>
-<li>serif: 衬线体
-</li>
-<li>fixed: 无衬线体
-</li>
-<li>fraktur: 哥特体
-</li>
+<li>italic: 斜体</li>
+<li>bold: 粗体</li>
+<li>serif: 衬线体</li>
+<li>fixed: 无衬线体</li>
+<li>fraktur: 哥特体</li>
 </ul>
 
 <p>
@@ -162,9 +175,9 @@ serif 和 fixed 都是字体的普通样式，但是这两者是只能有其一�
 </div>
 </div>
 
-<div id="outline-container-sec-1-3" class="outline-3">
-<h3 id="sec-1-3">训练</h3>
-<div class="outline-text-3" id="text-1-3">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">训练</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 在设置好配置文件后，就可以方便地使用 tess_train.py 进行训练了， tess_train.py 的使用方法是:
 </p>
@@ -178,35 +191,26 @@ serif 和 fixed 都是字体的普通样式，但是这两者是只能有其一�
 不使用 -a 选项时，会认为是一个全新的训练过程，并将处理整个训练过程，通过 -a 选项可以指定进行训练过程中的某个子步骤，以便更灵活地控制训练过程。可以使用的 &lt;action&gt; 有:
 </p>
 <ul class="org-ul">
-<li>tifbox: 用配置文件中 "data" 部分指定的文本生成图像和 BOX 文件
-</li>
-<li>charset: 提取字符集信息并生成字符集文件
-</li>
-<li>fontprop: 生成字体信息文件
-</li>
-<li>feature: 用之前生成的图像和 BOX 文件提取每个字符的特征
-</li>
-<li>cluster: 从特征文件产生每个字符的 <b>原型</b>
-</li>
-<li>combine: 将中间文件打包成 traineddata
-</li>
+<li>tifbox: 用配置文件中 "data" 部分指定的文本生成图像和 BOX 文件</li>
+<li>charset: 提取字符集信息并生成字符集文件</li>
+<li>fontprop: 生成字体信息文件</li>
+<li>feature: 用之前生成的图像和 BOX 文件提取每个字符的特征</li>
+<li>cluster: 从特征文件产生每个字符的 <b>原型</b></li>
+<li>combine: 将中间文件打包成 traineddata</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">字符识别歧义校正</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">字符识别歧义校正</h2>
+<div class="outline-text-2" id="text-orgheadline5">
 <p>
 针对单个字符的识别，所谓歧义，包含以下三种情况(以下A, B皆为代指):
 </p>
 <ol class="org-ol">
-<li>将字符 A 识别作字符 B
-</li>
-<li>将一个字符 A 识别多个字符
-</li>
-<li>将多个字符识别作一个字符 A
-</li>
+<li>将字符 A 识别作字符 B</li>
+<li>将一个字符 A 识别多个字符</li>
+<li>将多个字符识别作一个字符 A</li>
 </ol>
 
 <p>
@@ -226,9 +230,9 @@ serif 和 fixed 都是字体的普通样式，但是这两者是只能有其一�
 </p>
 </div>
 
-<div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">旧版本格式</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">旧版本格式</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 不管是哪个版本，unicharambigs 文件都是以文本文件的形式存在，并且每行一条校正规则。
 </p>
@@ -257,19 +261,16 @@ v1
 从前到后三条规则的含义分别为:
 </p>
 <ol class="org-ol">
-<li>识别结果中两个连续的单引号(')应当被强制替换为双引号(")
-</li>
-<li>识别结果中的字符 m 有可能是 rn
-</li>
-<li>识别结果中的连续字符串 iii 可能是字符 m
-</li>
+<li>识别结果中两个连续的单引号(')应当被强制替换为双引号(")</li>
+<li>识别结果中的字符 m 有可能是 rn</li>
+<li>识别结果中的连续字符串 iii 可能是字符 m</li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">新版本格式</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">新版本格式</h3>
+<div class="outline-text-3" id="text-orgheadline7">
 <p>
 新版本格式更为友好一点，每条校正规则为:
 </p>
@@ -294,9 +295,9 @@ iii m 0
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">词典: DAWG 文件</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgheadline8" class="outline-2">
+<h2 id="orgheadline8">词典: DAWG 文件</h2>
+<div class="outline-text-2" id="text-orgheadline8">
 <p>
 上篇中提到有 DAWG 文件可以增强、调整识别结果，这些 DAWG 文件被称为词典(dictionary)，使用来对识别结果进行后处理的。
 </p>
@@ -313,21 +314,25 @@ iii m 0
 Tesseract 中支持的 DAWG 文件有五种类型，分别是:
 </p>
 <ol class="org-ol">
-<li>word-dawg
+<li><p>
+word-dawg
+</p>
 
 <p>
 这个词典文件记录可用的词，每个词占一行。
-</p>
-</li>
+</p></li>
 
-<li>freq-dawg
+<li><p>
+freq-dawg
+</p>
 
 <p>
 这个词典文件记录最常用的一些词，建议数量在 <b>百</b> 这个量级。
-</p>
-</li>
+</p></li>
 
-<li>bigram-dawg
+<li><p>
+bigram-dawg
+</p>
 
 <p>
 这个词典记录二元词，同样每个二元词一行。
@@ -337,18 +342,18 @@ Tesseract 中支持的 DAWG 文件有五种类型，分别是:
 所谓的二元词是由前后连续的两个词组成的一个单元，比如说
 </p>
 <pre class="example">
-     生存 还是 死亡 这 是 一个 问题
+生存 还是 死亡 这 是 一个 问题
 </pre>
 <p>
 这句话里的二元词就有:
 </p>
 <pre class="example">
-     生存 还是
-     还是 死亡
-     死亡 这
-     这 是
-     是 一个
-     一个 问题
+生存 还是
+还是 死亡
+死亡 这
+这 是
+是 一个
+一个 问题
 </pre>
 
 <p>
@@ -357,17 +362,19 @@ Tesseract 中支持的 DAWG 文件有五种类型，分别是:
 
 <p>
 另外一点要注意的是，在 bigram-dawg 中，二元词之中的数字统一用英文的问号(?)替代
-</p>
-</li>
+</p></li>
 
-<li>number-dawg
+<li><p>
+number-dawg
+</p>
 
 <p>
 这个词典用来记录包含数字的词，同样每个词一行，但和 word-dawg 不一样的是，这里记录的词里面的数字，都要用空格替代。
-</p>
-</li>
+</p></li>
 
-<li>punc-dawg
+<li><p>
+punc-dawg
+</p>
 
 <p>
 这个文件用来记录标点的 <b>模式</b> ，所谓模式就是说标点在训练用的文本(或语言)中是如何使用的。描述不太直观，下面是从 Tesseract 的英文 traineddata 中 punc-dawg 提取出来的的一段，可以参考一下:
@@ -397,8 +404,7 @@ Tesseract 中支持的 DAWG 文件有五种类型，分别是:
 { }???
 { }.
 { }...
-</pre>
-</li>
+</pre></li>
 </ol>
 
 <p>

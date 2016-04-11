@@ -6,9 +6,19 @@ tags       : emacs org-mode
 description: 将org-mode更换为8.x版本后，按照之前的经验，无论怎么设置，导出成html时都不能产生语法高亮效果
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">问题</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">问题</a></li>
+<li><a href="#orgheadline2">解决方法</a></li>
+<li><a href="#orgheadline3">吐槽</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">问题</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 在我将org-mode更换为8.x版本后，按照之前的经验，无论怎么设置，导出成html时都不能产生语法高亮效果.
 </p>
@@ -18,7 +28,7 @@ description: 将org-mode更换为8.x版本后，按照之前的经验，无论�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span style="color: #cf4a44;">require</span> '<span style="color: #bebebe;">htmlize</span>) <span style="color: #e81122;">;</span><span style="color: #e81122;">htmlize.el</span>
+<pre class="src src-emacs-lisp">(<span style="color: #729fcf;">require</span> '<span style="color: #e6a00f;">htmlize</span>) <span style="color: #888a85;">;</span><span style="color: #888a85;">htmlize.el</span>
 (setq org-src-fontify-natively t)
 </pre>
 </div>
@@ -27,9 +37,10 @@ description: 将org-mode更换为8.x版本后，按照之前的经验，无论�
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">解决方法</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">解决方法</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 最后在org-mode的网站上找到了相关的信息，那就是在设置org的导出项目时，要在对应的alist中添加一个 <b>:publishing-function</b> 参数，并设置其值为非nil值，如下所示:
 </p>
@@ -37,9 +48,9 @@ description: 将org-mode更换为8.x版本后，按照之前的经验，无论�
 
 <pre class="src src-emacs-lisp">(setq org-publish-project-alist
     '(
-      (<span style="color: #25ef29;">"project-name"</span>
+      (<span style="color: #ad7fa8;">"project-name"</span>
        ......
-   <span style="color: #31d3c4;">:htmlized-source</span> t
+   <span style="color: #729fcf;">:htmlized-source</span> t
        ......
        )
        ......))
@@ -47,9 +58,10 @@ description: 将org-mode更换为8.x版本后，按照之前的经验，无论�
 </div>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">吐槽</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">吐槽</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 org-mode 8.x的变化太多了……不知道官方有没有对这些改动之处做一个详细说明……虽然说文档都发生了改变，但到发生问题时再来找真的很费劲啊……
 </p>

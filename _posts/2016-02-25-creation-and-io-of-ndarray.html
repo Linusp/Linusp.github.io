@@ -6,11 +6,27 @@ tags       :
 - Numpy
 - ndarray
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">Numpy 及 ndarray 简介</a></li>
+<li><a href="#orgheadline2">ndarray 的创建</a>
+<ul>
+<li><a href="#orgheadline3">从已有数据中创建</a></li>
+<li><a href="#orgheadline4">创建特定形状的多维数组并进行填充</a></li>
+<li><a href="#orgheadline5">从 numerical range 创建多维数组</a></li>
+<li><a href="#orgheadline6">创建矩阵(二维数组)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Numpy 及 ndarray 简介</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Numpy 及 ndarray 简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 
 <div class="figure">
 <p><img src="../../../assets/img/numpy_logo.png" alt="numpy_logo.png" align="right" />
@@ -21,12 +37,9 @@ tags       :
 <a href="http://www.numpy.org/">Numpy</a> 是一个 Python 的科学计算包，提供了以下功能:
 </p>
 <ol class="org-ol">
-<li>强大、灵活的多维数组对象及丰富的操作
-</li>
-<li>C 实现，执行效率高
-</li>
-<li>线性代数、丰富的随机数功能
-</li>
+<li>强大、灵活的多维数组对象及丰富的操作</li>
+<li>C 实现，执行效率高</li>
+<li>线性代数、丰富的随机数功能</li>
 </ol>
 
 
@@ -36,14 +49,16 @@ ndarray 就是 Numpy 中表示多维数组的类。本篇笔记将对 ndarray �
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">ndarray 的创建</h2>
-<div class="outline-text-2" id="text-2">
-</div><div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">从已有数据中创建</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">ndarray 的创建</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+</div><div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">从已有数据中创建</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <ol class="org-ol">
-<li>从 list, tuple 对象中创建:
+<li><p>
+从 list, tuple 对象中创建:
+</p>
 
 <div class="org-src-container">
 
@@ -60,10 +75,11 @@ ndarray 就是 Numpy 中表示多维数组的类。本篇笔记将对 ndarray �
 <pre class="example">
 a is: [1 2 3 4]
 b is: [1 2 3 4]
-</pre>
-</li>
+</pre></li>
 
-<li>从文件中读取
+<li><p>
+从文件中读取
+</p>
 
 <p>
 从文件中读取的方法有: <b>fromfile</b>, <b>load</b>, *loadtxt*。其中 fromfile 方法不建议使用，因为 fromfile 读取的文件要求是用 tofile 保存的，而 tofile 方法保存数据到文件时的具体行为是和具体平台有关的。
@@ -135,10 +151,11 @@ np.savetxt(<span style="color: #ad7fa8;">'/tmp/array.txt'</span>, origin_array)
 2.000000000000000000e+00
 3.000000000000000000e+00
 4.000000000000000000e+00
-</pre>
-</li>
+</pre></li>
 
-<li>从字符串中读取
+<li><p>
+从字符串中读取
+</p>
 
 <p>
 用 <b>fromstring</b> 方法可以从字符串中读取数据并转换为 <b>一维数组</b>:
@@ -170,21 +187,19 @@ np.savetxt(<span style="color: #ad7fa8;">'/tmp/array.txt'</span>, origin_array)
 
 <pre class="example">
 [  4.94065646e-324   9.88131292e-324   1.48219694e-323   1.97626258e-323]
-</pre>
-</li>
+</pre></li>
 
-<li><b>fromiter</b>: 从可迭代对象中生成一维数组
+<li><p>
+<b>fromiter</b>: 从可迭代对象中生成一维数组
+</p>
 
 <p>
 和第一种方法的不同之处在于:
 </p>
 <ul class="org-ul">
-<li>只能返回一维数组
-</li>
-<li>必须显式指定数组中元素的数据类型
-</li>
-<li>输入可以是 <b>所有可迭代对象</b> ，包括 list、tuple、string、unicode, generator，但需要注意的是，这里的 list 和 tuple 不能有嵌套。
-</li>
+<li>只能返回一维数组</li>
+<li>必须显式指定数组中元素的数据类型</li>
+<li>输入可以是 <b>所有可迭代对象</b> ，包括 list、tuple、string、unicode, generator，但需要注意的是，这里的 list 和 tuple 不能有嵌套。</li>
 </ul>
 <div class="org-src-container">
 
@@ -218,17 +233,18 @@ from string: [1 2 3 4]
 from unicode: [u'\u767d' u'\u65e5' u'\u4f9d' u'\u5c71' u'\u5c3d']
 from generator: [0 1 2 3]
 from nested list: bad list
-</pre>
-</li>
+</pre></li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">创建特定形状的多维数组并进行填充</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">创建特定形状的多维数组并进行填充</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <ul class="org-ul">
-<li>ones
+<li><p>
+ones
+</p>
 
 <p>
 创建给定形状的多维数组并将数组中所有元素填充为 1:
@@ -245,10 +261,11 @@ from nested list: bad list
 [[ 1.  1.  1.  1.]
  [ 1.  1.  1.  1.]
  [ 1.  1.  1.  1.]]
-</pre>
-</li>
+</pre></li>
 
-<li>zeros
+<li><p>
+zeros
+</p>
 
 <p>
 类似 ones ，但用 0 进行填充:
@@ -265,10 +282,11 @@ from nested list: bad list
 [[ 0.  0.  0.  0.]
  [ 0.  0.  0.  0.]
  [ 0.  0.  0.  0.]]
-</pre>
-</li>
+</pre></li>
 
-<li>empty
+<li><p>
+empty
+</p>
 
 <p>
 类似 ones, 但不进行初始化，得到的多维数组中的元素值是不确定的。
@@ -282,13 +300,14 @@ from nested list: bad list
 </div>
 
 <pre class="example">
-[[  6.91439802e-310   1.85033829e-316   0.00000000e+000   0.00000000e+000]
- [  6.91439420e-310   0.00000000e+000   0.00000000e+000   0.00000000e+000]
- [  0.00000000e+000   0.00000000e+000   1.84181902e-316   4.94065646e-324]]
-</pre>
-</li>
+[[  6.91834826e-310   5.88866962e-317   2.06427754e-309   8.83643129e-090]
+ [  1.27809062e+294   4.84561986e-309   3.48173121e+026   1.27840247e+294]
+ [  6.73606380e-310   1.63321526e-301  -3.13417697e-294   4.50881791e-310]]
+</pre></li>
 
-<li>full
+<li><p>
+full
+</p>
 
 <p>
 类似 ones, 但需要自己手动指定需为多维数组填充的值。
@@ -300,23 +319,18 @@ from nested list: bad list
 
 <span style="color: #729fcf;">print</span> np.full((3, 4), 17)
 </pre>
-</div>
-
-<pre class="example">
-[[ 17.  17.  17.  17.]
- [ 17.  17.  17.  17.]
- [ 17.  17.  17.  17.]]
-</pre>
-</li>
+</div></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">从 numerical range 创建多维数组</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">从 numerical range 创建多维数组</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <ul class="org-ul">
-<li>arange
+<li><p>
+arange
+</p>
 
 <p>
 创建一个一维的数组，用法同 Python 内建方法 <b>range</b>:
@@ -335,10 +349,11 @@ from nested list: bad list
 [0 1 2 3 4 5 6 7 8 9]
 [0 1 2 3 4 5 6 7 8 9]
 [9 8 7 6 5 4 3 2 1 0]
-</pre>
-</li>
+</pre></li>
 
-<li>linspace
+<li><p>
+linspace
+</p>
 
 <p>
 给定一个区间，取其 N 等分点组成一个一维数组:
@@ -353,10 +368,11 @@ from nested list: bad list
 
 <pre class="example">
 [  1.   2.   3.   4.   5.   6.   7.   8.   9.  10.]
-</pre>
-</li>
+</pre></li>
 
-<li>logspace
+<li><p>
+logspace
+</p>
 
 <p>
 给定一个 <b>对数尺度(log scale)区间</b> ，取其 N 等分点对应的 <b>线性尺度(linear scale)上的数值</b>:
@@ -373,10 +389,11 @@ from nested list: bad list
 <pre class="example">
 [   10.   100.  1000.]
 [ 1.  2.  3.]
-</pre>
-</li>
+</pre></li>
 
-<li>meshgrid
+<li><p>
+meshgrid
+</p>
 
 <p>
 根据给定的坐标向量创建坐标矩阵。
@@ -398,19 +415,6 @@ from nested list: bad list
 <span style="color: #729fcf;">print</span> np.rec.fromarrays([x, y])
 </pre>
 </div>
-
-<pre class="example">
-[array([0, 1, 2, 3, 4, 5])]
-
-x is: [[-1  0  1]
- [-1  0  1]]
-y is: [[0 0 0]
- [1 1 1]]
-
-points built by (x, y):
-[[(-1, 0) (0, 0) (1, 0)]
- [(-1, 1) (0, 1) (1, 1)]]
-</pre>
 
 <p>
 在上面的例子中，所得到的是 X 轴上 [-1, 0, 1] 和 X 轴上 [0, 1] 构成的一个 3x2 的网格，共有 6 个点。返回的两个值中的 x 是这 6 个点 在 X 轴上的投影， y 则是这 6 个点在 y 轴上的投影。
@@ -443,18 +447,20 @@ plt.savefig(<span style="color: #ad7fa8;">'contor.png'</span>)
 <div class="figure">
 <p><img src="../../../assets/img/contor.png" alt="contor.png" />
 </p>
-</div>
-</li>
+</div></li>
 
-<li>mgrid
+<li><p>
+mgrid
+</p>
 
 <p>
 mgrid 的功能与 meshgrid 类似，但有几点不同:
 </p>
 <ol class="org-ol">
-<li>mgrid 不是函数，而是一个类的对象
-</li>
-<li>mgrid 和 meshgrid 的使用方式不一样，meshgrid 需要传入一维数组作为对象，而 mgrid 则直接使用 '[]' 运算符
+<li>mgrid 不是函数，而是一个类的对象</li>
+<li><p>
+mgrid 和 meshgrid 的使用方式不一样，meshgrid 需要传入一维数组作为对象，而 mgrid 则直接使用 '[]' 运算符
+</p>
 
 <div class="org-src-container">
 
@@ -463,10 +469,11 @@ mgrid 的功能与 meshgrid 类似，但有几点不同:
 np.meshgrid(np.arange(-1, 2), np.arange(-1, 2))
 np.mgrid[-1:2, -1:2]
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>返回值的前两个顺序相反
+<li><p>
+返回值的前两个顺序相反
+</p>
 
 <div class="org-src-container">
 
@@ -490,12 +497,12 @@ np.mgrid[-1:2, -1:2]
 0 0
 0 0 0
 0 0 0 0
-</pre>
-</li>
-</ol>
-</li>
+</pre></li>
+</ol></li>
 
-<li>ogrid
+<li><p>
+ogrid
+</p>
 
 <p>
 ogrid 与 mgrid 类似，也是类的对象而非函数，但和 mgrid 的不同之处在于，它返回的结果是 <b>稀疏</b> 的。
@@ -533,21 +540,19 @@ x from ogrid:
  [ 1]]
 y from ogrid:
 [[3 4 5]]
-</pre>
-</li>
+</pre></li>
 
-<li>fromfunction
+<li><p>
+fromfunction
+</p>
 
 <p>
 fromfunction 的行为稍微有点不一样，它有三个参数:
 </p>
 <ol class="org-ol">
-<li>function
-</li>
-<li>shape
-</li>
-<li>dtype(optional)
-</li>
+<li>function</li>
+<li>shape</li>
+<li>dtype(optional)</li>
 </ol>
 <p>
 其中 function 的参数个数要和 shape 的长度一致，fromfunction 会对 shape 对应的多维数组中每个元素的坐标传给 function ，然后将返回值组合起来。
@@ -584,17 +589,18 @@ array generated by g is:
 [[ 0.  1.  2.]
  [ 1.  2.  3.]
  [ 2.  3.  4.]]
-</pre>
-</li>
+</pre></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-2-4" class="outline-3">
-<h3 id="sec-2-4">创建矩阵(二维数组)</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">创建矩阵(二维数组)</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <ul class="org-ul">
-<li>eye:
+<li><p>
+eye:
+</p>
 
 <p>
 创建一个对角矩阵或者 super/sub diagional square matrix，且所指定的对角线上的元素值为 1.
@@ -616,10 +622,11 @@ array generated by g is:
  [ 0.  0.  1.]]
 [[ 0.  0.  0.]
  [ 1.  0.  0.]]
-</pre>
-</li>
+</pre></li>
 
-<li>identity
+<li><p>
+identity
+</p>
 
 <p>
 创建单位矩阵
@@ -639,19 +646,18 @@ array generated by g is:
 [[ 1.  0.  0.]
  [ 0.  1.  0.]
  [ 0.  0.  1.]]
-</pre>
-</li>
+</pre></li>
 
-<li>diag
+<li><p>
+diag
+</p>
 
 <p>
 创建对角矩阵或 super/sub diagional matrix。与 eye 的不同之处在于:
 </p>
 <ol class="org-ol">
-<li>对角线上的元素值不是都为 1 ，而是手动指定
-</li>
-<li>不需要制定矩阵的形状，而是靠指定对角线上元素值来确定矩阵的形状
-</li>
+<li>对角线上的元素值不是都为 1 ，而是手动指定</li>
+<li>不需要制定矩阵的形状，而是靠指定对角线上元素值来确定矩阵的形状</li>
 </ol>
 <div class="org-src-container">
 
@@ -669,10 +675,11 @@ array generated by g is:
 [[0 3 0]
  [0 0 4]
  [0 0 0]]
-</pre>
-</li>
+</pre></li>
 
-<li>diaglat
+<li><p>
+diaglat
+</p>
 
 <p>
 对输入进行 flatten 然后用之创建对角矩阵
@@ -691,8 +698,7 @@ array generated by g is:
  [0 1 0 0]
  [0 0 1 0]
  [0 0 0 1]]
-</pre>
-</li>
+</pre></li>
 </ul>
 </div>
 </div>

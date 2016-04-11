@@ -5,68 +5,88 @@ categories : 博客
 tags       : Github Jekyll hexo OctoPress Pelican Dropbox Markdown
 description: "纯静态博客写作有响应速度快等优势，本文总结了一些常见的静态博客写作方案"
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">静态博客写作的优势</a></li>
+<li><a href="#orgheadline2">解决方案</a>
+<ul>
+<li><a href="#orgheadline3">自购主机方案</a></li>
+<li><a href="#orgheadline4">Github Pages</a></li>
+<li><a href="#orgheadline5">Dropbox App</a></li>
+<li><a href="#orgheadline6">云平台方案</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">其他一些话</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">静态博客写作的优势</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">静态博客写作的优势</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
-纯静态博客写作有以下优势：  
+纯静态博客写作有以下优势：
 </p>
 <ol class="org-ol">
-<li>响应速度快（访问时）
+<li><p>
+响应速度快（访问时）
+</p>
 
 <p>
 博客站点页面都是静态页面，访问时不需要查询数据库，因此自然就能够有较好的响应速度。
+</p></li>
+<li><p>
+最大限度的控制
 </p>
-</li>
-<li>最大限度的控制
 
 <p>
 对于大部分静态博客写作方案而言，网站的每一个实现细节都是可以由自己来调整掌控的，这样虽然带来了一定的技术难度，但一来流行的解决方案在网上都有许多可用的模板，二来网站的可定制性非常高。
+</p></li>
+<li><p>
+更好的写作体验
 </p>
-</li>
-<li>更好的写作体验
 
 <p>
 在解决了网站的外观后，就可以体验静态博客写作的最大好处了。常见的静态博客写作方案都支持在本地编写文章，这样的优势是可以自行选用最合适最顺手的编辑器，而不是那些常见博客平台上简陋的在线编辑器。
+</p></li>
+<li><p>
+更加方便进行备份
 </p>
-</li>
-<li>更加方便进行备份
 
 <p>
 静态博客写作方案都支持本地编写文章（甚至有的解决方案只能在本地编写文章），这样的好处是我们可以在本地有所有自己文章的一个备份，只要小心地使用你的计算机，这些数据就能够得到很好的保护，不放心的话还可以使用Dropbox之类的工具进行进一步的备份。
+</p></li>
+<li><p>
+省钱
 </p>
-</li>
-<li>省钱
 
 <p>
 我不是开玩笑的，待会你就知道了。
-</p>
-</li>
+</p></li>
 </ol>
 </div>
 </div>
-
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">解决方案</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">解决方案</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 大致有三种解决方案，且看我一一道来。
 </p>
 </div>
 
-<div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">自购主机方案</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">自购主机方案</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 如果能够有条件购买主机空间，那么这是最理想的。试想一下，都有自己的主机空间了，想怎么折腾不行是不？想用Wordpress就用Wordpress，想自己写html就自己写html。这种情况下如果还是想构建静态博客，参看下一个解决方案。
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">Github Pages</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">Github Pages</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 Github Pages的介绍以及使用它来建立个人博客的内容可以看我之前的一篇文章<a href="http://linusp.github.io/2013/09/14/blogging-with-jekyll-emacs.html">使用Github Pages服务建立个人博客</a> 。使用Github Pages的好处是不用花钱购买自己的主机空间，这后面的Dropbox方案同样如此。
 </p>
@@ -87,42 +107,48 @@ Jekyll是一个静态博客生成器，事实上还有很多其他静态博客�
 这里列举一些比较流行的静态博客生成器或者静态博客框架：
 </p>
 <ul class="org-ul">
-<li>Jekyll
+<li><p>
+Jekyll
+</p>
 
 <p>
 Github Pages官方推荐产品，依赖ruby。
+</p></li>
+<li><p>
+Jekyll-bootstrap
 </p>
-</li>
-<li>Jekyll-bootstrap
 
 <p>
 基于Jekyll的框架，提供了几种现成的外观主题。
+</p></li>
+<li><p>
+OctoPress
 </p>
-</li>
-<li>OctoPress
 
 <p>
 基于Jekyll的框架，只用过短短几天时间，不予置评。
+</p></li>
+<li><p>
+hexo
 </p>
-</li>
-<li>hexo
 
 <p>
 由Node.js驱动的博客框架，功能强大、使用简单。
+</p></li>
+<li><p>
+Pelican
 </p>
-</li>
-<li>Pelican
 
 <p>
 Python编写的静态博客生成器，对Python有爱的人不妨一用。
+</p></li>
+<li><p>
+OpooPress
 </p>
-</li>
-<li>OpooPress
 
 <p>
 一个基于Java 的可用于博客的静态网站生成器。
-</p>
-</li>
+</p></li>
 </ul>
 
 <p>
@@ -130,23 +156,21 @@ Python编写的静态博客生成器，对Python有爱的人不妨一用。
 </p>
 
 <p>
-注：新兴的国内代码托管平台<a href="https://gitcafe.com">Gitcafe</a> 现在也提供 <b>Pages</b> 服务了，用同样的方法也可以在Gitcafe上搭建静态网站，<a href="http://linusp.gitcafe.com">这是</a> 我在Gitcafe上搭建的笔记网站(2013-12-24更新)
+注：新兴的国内代码托管平台<a href="https://gitcafe.com/">Gitcafe</a> 现在也提供 <b>Pages</b> 服务了，用同样的方法也可以在Gitcafe上搭建静态网站，<a href="http://linusp.gitcafe.com/">这是</a> 我在Gitcafe上搭建的笔记网站(2013-12-24更新)
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">Dropbox App</h3>
-<div class="outline-text-3" id="text-2-3">
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">Dropbox App</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <p>
 DropBox 是一款非常优秀的免费网络文件同步工具，它有以下几个优点：
 </p>
 <ul class="org-ul">
-<li>全平台支持
-</li>
-<li>稳定，不用担心宕机
-</li>
-<li>第三方应用丰富
-</li>
+<li>全平台支持</li>
+<li>稳定，不用担心宕机</li>
+<li>第三方应用丰富</li>
 </ul>
 
 <p>
@@ -169,7 +193,9 @@ DropBox 是一款非常优秀的免费网络文件同步工具，它有以下几
 以下应用可以用于和Dropbox一起来搭建个人博客：
 </p>
 <ul class="org-ul">
-<li>Scriptogr.am
+<li><p>
+Scriptogr.am
+</p>
 
 <p>
 我尝试了一下Scriptogr.am，这里是我用它搭建的<a href="http://scriptogr.am/zix">博客</a> 。
@@ -179,38 +205,59 @@ DropBox 是一款非常优秀的免费网络文件同步工具，它有以下几
 Scriptogr.am只要求用户编写Markdown格式的文章即可，除了通用的在本地编写文章外，Scriptogr.am还提供了一个非常简洁的后台管理界面，在那里可以管理文章、编写文章，此外还能修改网站的css和html源代码。
 </p>
 <img src="/assets/img/2013-09-30-scriptogr-am.png"/>
-</p>
+</p></li>
+</ul>
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">静态博客写作的优势</a></li>
+<li><a href="#orgheadline2">解决方案</a>
+<ul>
+<li><a href="#orgheadline3">自购主机方案</a></li>
+<li><a href="#orgheadline4">Github Pages</a></li>
+<li><a href="#orgheadline5">Dropbox App</a></li>
+<li><a href="#orgheadline6">云平台方案</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">其他一些话</a></li>
+</ul>
+</div>
+</div>
 <p>
 网站的默认外观干净、清爽，不过除了首页外，只有一个Archive页面，可能稍显美中不足。
 </p>
-</li>
-<li>DropPages
+<ul class="org-ul">
+<li><p>
+DropPages
+</p>
 
 <p>
 DropPages不同于Scriptogr.am，它会将网站的构成细节交由用户，用户可以自由地修改网站布局、外观等等，默认提供一个可用的主题，不过说实话，我不知道它用的是什么模板语言。
+</p></li>
+<li><p>
+site44
 </p>
-</li>
-<li>site44
 
 <p>
 site44和DropPages类似，但也有不同之处，DropPages生成的应用目录下并不是网站的完整结构，而是一些用户可以修改的文件；site44则不一样，它将对应的应用目录下的文件作为网站来进行发布，相对来说site44的自由度更高一些——此外，site44默认只有一个index.html，所以要想有一个功能完整、丰富的博客，还得下点功夫，可以考虑用之前提到的静态博客生成器来做这件事情。
 </p>
 
 <p>
-<a href="http://linusp.site44.com">这里</a> 是我用site44这个应用配合Dropbox搭建的一个个人网站(请不要太在意内容)。
+<a href="http://linusp.site44.com/">这里</a> 是我用site44这个应用配合Dropbox搭建的一个个人网站(请不要太在意内容)。
+</p></li>
+<li><p>
+FarBox
 </p>
-</li>
-<li>FarBox
 
 <p>
 FarBox也是一款受到相关人群喜爱的Dropbox应用，其使用和Scriptogr.am类似，用户只要关心文章的撰写就可以了，至于外观，官方提供六种模板。相对Scriptogr.am来说，FarBox的后台管理功能更为强大，而且支持categories。另外，FarBox不仅可以和Dropbox一起使用，通过Google Drive同样可以利用FarBox进行博客写作。
 </p>
 
 <p>
-不知道是Bug还是什么，我在FarBox上写文时，插入的链接不能正常显示，看<a href="http://linusp1024.farbox.com">这里</a> ——我保证我遵守了Markdown的语法。
-</p>
-</li>
+不知道是Bug还是什么，我在FarBox上写文时，插入的链接不能正常显示，看<a href="http://linusp1024.farbox.com/">这里</a> ——我保证我遵守了Markdown的语法。
+</p></li>
 </ul>
 
 <p>
@@ -218,9 +265,10 @@ FarBox也是一款受到相关人群喜爱的Dropbox应用，其使用和Scripto
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-4" class="outline-3">
-<h3 id="sec-2-4">云平台方案</h3>
-<div class="outline-text-3" id="text-2-4">
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">云平台方案</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 云平台即 <b>PaaS</b> (Platform as a Service)也是一个搭建个人博客的途径。当然，在云平台上搭建个人博客可以不限于静态博客，不过一般云平台的免费服务都有流量以及存储的限制，所以搭建静态博客可以更加有效地利用这些免费的资源。
 </p>
@@ -229,18 +277,17 @@ FarBox也是一款受到相关人群喜爱的Dropbox应用，其使用和Scripto
 这里推荐几个云平台：
 </p>
 <ul class="org-ul">
-<li>Heroku
+<li><p>
+Heroku
+</p>
 
 <p>
 Heroku的操作非常简洁，而且也是使用git来进行管理，非常方便。
-</p>
-</li>
+</p></li>
 
-<li>Openshift
-</li>
+<li>Openshift</li>
 
-<li>Sae/Bae/&#x2026;
-</li>
+<li>Sae/Bae/&#x2026;</li>
 </ul>
 
 
@@ -250,9 +297,10 @@ Heroku的操作非常简洁，而且也是使用git来进行管理，非常方�
 </div>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">其他一些话</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7">其他一些话</h2>
+<div class="outline-text-2" id="text-orgheadline7">
 <p>
 总的来说，可选的解决方案是很多的，选择何种方式就看自己喜好了，不过我想不应该太纠结于形式，一旦选定了一个平台，老实点多写点东西才是正道吧。
 </p>

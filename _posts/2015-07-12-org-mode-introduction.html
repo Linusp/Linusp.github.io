@@ -6,6 +6,21 @@ tags       :
 - org-mode
 description:
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">简介</a></li>
+<li><a href="#orgheadline2">安装与基础设置</a></li>
+<li><a href="#orgheadline3">基本使用</a>
+<ul>
+<li><a href="#orgheadline4">所谓大纲(outline)</a></li>
+<li><a href="#orgheadline5">基本语法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1">简介</h2>
@@ -63,7 +78,7 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(add-to-list 'auto-mode-alist  '(<span style="color: #b5bd68;">"\\.org\\'"</span> . org-mode))
+<pre class="src src-emacs-lisp">(add-to-list 'auto-mode-alist  '(<span style="color: #ad7fa8;">"\\.org\\'"</span> . org-mode))
 </pre>
 </div>
 
@@ -90,8 +105,8 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 </p>
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #b5bd68;">"~/.emacs.d/site-lis/org/lisp"</span>)
-(add-to-list 'load-path <span style="color: #b5bd68;">"~/.emacs.d/site-lis/org/contrib/lisp"</span>)
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #ad7fa8;">"~/.emacs.d/site-lis/org/lisp"</span>)
+(add-to-list 'load-path <span style="color: #ad7fa8;">"~/.emacs.d/site-lis/org/contrib/lisp"</span>)
 </pre>
 </div>
 
@@ -102,12 +117,12 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5">基本使用</h2>
-<div class="outline-text-2" id="text-orgheadline5">
-</div><div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">所谓大纲(outline)</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">基本使用</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+</div><div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">所谓大纲(outline)</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 在 Org mode 中，文档内容是通过 headline 来组织成一个树状结构的 —— 由于在 Org mode 中还存在 "title" 这种文章级的标题，为避免混淆，就不对 "headline" 进行翻译了，我们只要知道这几点就行:
 </p>
@@ -233,9 +248,9 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">基本语法</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">基本语法</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <p>
 除了 headline 外，Org mode 还支持列表、文字修饰(粗体、斜体、下划线等)、代码块、引用等常见的功能。
 </p>
@@ -366,9 +381,9 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+BEGIN_QUOTE</span>
+<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_QUOTE</span>
 &#24341;&#29992;&#20869;&#23481;
-<span style="color: #969896; font-style: italic;">#+END_QUOTE</span>
+<span style="color: #888a85;">#+END_QUOTE</span>
 </pre>
 </div>
 
@@ -382,9 +397,9 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+Begin_EXAMPLE</span>
-<span style="color: #de935f;">&#31034;&#20363;</span>
-<span style="color: #969896; font-style: italic;">#+END_EXAMPLE</span>
+<pre class="src src-org"><span style="color: #888a85;">#+Begin_EXAMPLE</span>
+<span style="color: #b3b3b3;">&#31034;&#20363;</span>
+<span style="color: #888a85;">#+END_EXAMPLE</span>
 </pre>
 </div>
 
@@ -398,18 +413,18 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #969896; font-style: italic;">#+BEGIN_SRC C++</span>
-<span style="color: #b294bb;">#include</span> <span style="color: #b5bd68;">&lt;iostream&gt;</span>
+<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_SRC C++</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;iostream&gt;</span>
 
-<span style="color: #b294bb;">using</span> <span style="color: #b294bb;">namespace</span> <span style="color: #8abeb7;">std</span>;
+<span style="color: #729fcf;">using</span> <span style="color: #729fcf;">namespace</span> <span style="color: #e6a00f;">std</span>;
 
-<span style="color: #f0c674;">int</span> <span style="color: #81a2be;">main</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">argc</span>, <span style="color: #f0c674;">char</span> *<span style="color: #de935f;">argv</span>)
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>)
 {
-    cout &lt;&lt; <span style="color: #b5bd68;">"&#20195;&#30721;&#22359;"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span style="color: #ad7fa8;">"&#20195;&#30721;&#22359;"</span> &lt;&lt; endl;
 
-    <span style="color: #b294bb;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
-<span style="color: #969896; font-style: italic;">#+END_SRC</span>
+<span style="color: #888a85;">#+END_SRC</span>
 </pre>
 </div>
 

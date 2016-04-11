@@ -6,9 +6,61 @@ tags       : C语言 字符串
 description:
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">string.h</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">string.h</a></li>
+<li><a href="#orgheadline2">字符串拷贝(strcpy, strncpy)</a>
+<ul>
+<li><a href="#orgheadline3">strcpy</a></li>
+<li><a href="#orgheadline4">strncpy</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline5">字符串比较(strcmp, strncmp, strcasecmp, strncasecmp)</a>
+<ul>
+<li><a href="#orgheadline6">strcmp</a></li>
+<li><a href="#orgheadline7">strncmp</a></li>
+<li><a href="#orgheadline8">strcasecmp</a></li>
+<li><a href="#orgheadline9">strncasecmp</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline10">字符串连接(strcat, strncat)</a>
+<ul>
+<li><a href="#orgheadline11">strcat</a></li>
+<li><a href="#orgheadline12">strncat</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline13">字符查找(strchr, strrchr, strchrnul, strpbrk)</a>
+<ul>
+<li><a href="#orgheadline14">strchr</a></li>
+<li><a href="#orgheadline15">strrchr</a></li>
+<li><a href="#orgheadline16">strchrnul</a></li>
+<li><a href="#orgheadline17">strpbrk</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline18">字符串分割(strtok, strtok_r, strsep)</a>
+<ul>
+<li><a href="#orgheadline19">strtok</a></li>
+<li><a href="#orgheadline20">strtok_r</a></li>
+<li><a href="#orgheadline21">strsep</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline22">字符串匹配(strstr)</a></li>
+<li><a href="#orgheadline23">字符串副本创建(strdup, strndup, strdupa, strndupa)</a>
+<ul>
+<li><a href="#orgheadline24">strdup</a></li>
+<li><a href="#orgheadline25">strndup</a></li>
+<li><a href="#orgheadline26">strdupa</a></li>
+<li><a href="#orgheadline27">strndupa</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">string.h</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 其实在C语言的标准库中，也有非常丰富的字符串操作函数。当然了，由于C语言中 <b>字符串</b> 并不是基本数据类型，也没有 <b>类</b> 这个概念，相对来说操作上可能没有Python/Java之类的语言方便。不过了解一下C语言中的字符串操作还是有意义的。
 </p>
@@ -35,48 +87,55 @@ C语言中的字符串操作函数在 <b>string.h</b> 中，不过要了解都�
 其中一些常用的函数及其大致功能如下(具体细节后面再细说)：
 </p>
 <ul class="org-ul">
-<li>字符串拷贝
+<li><p>
+字符串拷贝
+</p>
 
 <p>
 stcpy, strncpy
+</p></li>
+<li><p>
+字符串比较
 </p>
-</li>
-<li>字符串比较
 
 <p>
 strcmp, strncmp, strcasecmp, strncasecmp
+</p></li>
+<li><p>
+字符串连接
 </p>
-</li>
-<li>字符串连接
 
 <p>
 strcat, strncat
+</p></li>
+<li><p>
+字符查找
 </p>
-</li>
-<li>字符查找
 
 <p>
 strchr, strrchr, strchrnul, strpbrk
+</p></li>
+<li><p>
+建立字符串副本
 </p>
-</li>
-<li>建立字符串副本
 
 <p>
 strdup, strndup, strdupa, strndupa
+</p></li>
+<li><p>
+字符串分割
 </p>
-</li>
-<li>字符串分割
 
 <p>
 strsep, strtok, strtok_r
+</p></li>
+<li><p>
+字符串匹配
 </p>
-</li>
-<li>字符串匹配
 
 <p>
 strstr
-</p>
-</li>
+</p></li>
 </ul>
 
 
@@ -85,19 +144,18 @@ strstr
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">字符串拷贝(strcpy, strncpy)</h2>
-<div class="outline-text-2" id="text-2">
-</div><div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">strcpy</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">字符串拷贝(strcpy, strncpy)</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+</div><div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">strcpy</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strcpy</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strcpy</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dest</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span>);
 </pre>
 </div>
 
@@ -106,18 +164,18 @@ strstr
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = {0};
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">dest</span>[1024] = {0};
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span> = <span style="color: #ad7fa8;">"abcde"</span>;
 
     strcpy(dest, src);
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, dest);
-    <span style="color: #cf4a44;">return</span> 0;
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, dest);
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -138,16 +196,15 @@ strcpy()函数会将源字符串中的结束符('\0')也拷贝到目的字符串
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">strncpy</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">strncpy</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strncpy</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strncpy</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dest</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span>, <span style="color: #8ae234;">size_t</span> <span style="color: #eeeeec;">n</span>);
 </pre>
 </div>
 
@@ -160,19 +217,19 @@ strcpy()函数会将源字符串中的结束符('\0')也拷贝到目的字符串
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[7] = {0};
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">dest</span>[7] = {0};
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span> = <span style="color: #ad7fa8;">"abcde"</span>;
 
-    dest[5] = <span style="color: #25ef29;">'A'</span>;
+    dest[5] = <span style="color: #ad7fa8;">'A'</span>;
     strncpy(dest, src, 5);
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, dest);
-    <span style="color: #cf4a44;">return</span> 0;
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, dest);
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -190,18 +247,19 @@ abcdeA
 </div>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">字符串比较(strcmp, strncmp, strcasecmp, strncasecmp)</h2>
-<div class="outline-text-2" id="text-3">
-</div><div id="outline-container-sec-3-1" class="outline-3">
-<h3 id="sec-3-1">strcmp</h3>
-<div class="outline-text-3" id="text-3-1">
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">字符串比较(strcmp, strncmp, strcasecmp, strncasecmp)</h2>
+<div class="outline-text-2" id="text-orgheadline5">
+</div><div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">strcmp</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">strcmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>);
+<pre class="src src-C"><span style="color: #8ae234;">int</span> <span style="color: #edd400;">strcmp</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span>);
 </pre>
 </div>
 <p>
@@ -213,20 +271,20 @@ abcdeA
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"abcde"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcef"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s3</span> = <span style="color: #25ef29;">"ad"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span> = <span style="color: #ad7fa8;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span> = <span style="color: #ad7fa8;">"abcef"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s3</span> = <span style="color: #ad7fa8;">"ad"</span>;
 
-    printf(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s2, strcmp(s1, s2));
-    printf(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s3, strcmp(s1, s3));
-    printf(<span style="color: #25ef29;">"compare(%s, %s) -&gt; %d\n"</span>, s2, s3, strcmp(s2, s3));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s2, strcmp(s1, s2));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s) -&gt; %d\n"</span>, s1, s3, strcmp(s1, s3));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s) -&gt; %d\n"</span>, s2, s3, strcmp(s2, s3));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -251,15 +309,16 @@ d - e = -1 #按字典序，大小已分，不再比较
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-3-2" class="outline-3">
-<h3 id="sec-3-2">strncmp</h3>
-<div class="outline-text-3" id="text-3-2">
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">strncmp</h3>
+<div class="outline-text-3" id="text-orgheadline7">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">strncmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+<pre class="src src-C"><span style="color: #8ae234;">int</span> <span style="color: #edd400;">strncmp</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span>, <span style="color: #8ae234;">size_t</span> <span style="color: #eeeeec;">n</span>);
 </pre>
 </div>
 
@@ -272,20 +331,20 @@ d - e = -1 #按字典序，大小已分，不再比较
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"abcde"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcfg"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s3</span> = <span style="color: #25ef29;">"abd"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span> = <span style="color: #ad7fa8;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span> = <span style="color: #ad7fa8;">"abcfg"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s3</span> = <span style="color: #ad7fa8;">"abd"</span>;
 
-    printf(<span style="color: #25ef29;">"compare(%s, %s, 4) -&gt; %d\n"</span>, s1, s2, strncmp(s1, s2, 4));
-    printf(<span style="color: #25ef29;">"compare(%s, %s, 2) -&gt; %d\n"</span>, s1, s3, strncmp(s1, s3, 2));
-    printf(<span style="color: #25ef29;">"compare(%s, %s, 3) -&gt; %d\n"</span>, s2, s3, strncmp(s2, s3, 3));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s, 4) -&gt; %d\n"</span>, s1, s2, strncmp(s1, s2, 4));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s, 2) -&gt; %d\n"</span>, s1, s3, strncmp(s1, s3, 2));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s, 3) -&gt; %d\n"</span>, s2, s3, strncmp(s2, s3, 3));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -300,15 +359,16 @@ compare(abcfg, abd, 3) -&gt; -1
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-3-3" class="outline-3">
-<h3 id="sec-3-3">strcasecmp</h3>
-<div class="outline-text-3" id="text-3-3">
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">strcasecmp</h3>
+<div class="outline-text-3" id="text-orgheadline8">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">strcasecmp</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span>);
+<pre class="src src-C"><span style="color: #8ae234;">int</span> <span style="color: #edd400;">strcasecmp</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span>);
 </pre>
 </div>
 
@@ -316,10 +376,8 @@ compare(abcfg, abd, 3) -&gt; -1
 strcasecmp()也是用来比较字符串的，和strcmp()有两点区别：
 </p>
 <ol class="org-ol">
-<li>使用strcasecmp()应该包含 <b>strings.h</b> 而不是 <b>string.h</b>
-</li>
-<li>strcasecmp()在比较时不区分大小写
-</li>
+<li>使用strcasecmp()应该包含 <b>strings.h</b> 而不是 <b>string.h</b></li>
+<li>strcasecmp()在比较时不区分大小写</li>
 </ol>
 
 <p>
@@ -327,19 +385,19 @@ strcasecmp()也是用来比较字符串的，和strcmp()有两点区别：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;strings.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;strings.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s1</span> = <span style="color: #25ef29;">"AbcdE"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s2</span> = <span style="color: #25ef29;">"abcdE"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s1</span> = <span style="color: #ad7fa8;">"AbcdE"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s2</span> = <span style="color: #ad7fa8;">"abcdE"</span>;
 
-    printf(<span style="color: #25ef29;">"compare(%s, %s) with case -&gt; %d\n"</span>, s1, s2, strcmp(s1, s2));
-    printf(<span style="color: #25ef29;">"compare(%s, %s) ignore case -&gt; %d\n"</span>, s1, s2, strcasecmp(s1, s2));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s) with case -&gt; %d\n"</span>, s1, s2, strcmp(s1, s2));
+    printf(<span style="color: #ad7fa8;">"compare(%s, %s) ignore case -&gt; %d\n"</span>, s1, s2, strcasecmp(s1, s2));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -353,28 +411,28 @@ compare(AbcdE, abcdE) ignore case -&gt; 0
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-3-4" class="outline-3">
-<h3 id="sec-3-4">strncasecmp</h3>
-<div class="outline-text-3" id="text-3-4">
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">strncasecmp</h3>
+<div class="outline-text-3" id="text-orgheadline9">
 <p>
 strncasecmp()之于strcasecmp()就如strncmp()之于strcmp()，不再赘述。
 </p>
 </div>
 </div>
 </div>
-
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">字符串连接(strcat, strncat)</h2>
-<div class="outline-text-2" id="text-4">
-</div><div id="outline-container-sec-4-1" class="outline-3">
-<h3 id="sec-4-1">strcat</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10">字符串连接(strcat, strncat)</h2>
+<div class="outline-text-2" id="text-orgheadline10">
+</div><div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11">strcat</h3>
+<div class="outline-text-3" id="text-orgheadline11">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strcat</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strcat</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dest</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span>);
 </pre>
 </div>
 
@@ -391,17 +449,17 @@ strcat()在操作完成后，返回目的字符串的首地址，这样可以方
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = <span style="color: #25ef29;">"hello "</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"world!"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">dest</span>[1024] = <span style="color: #ad7fa8;">"hello "</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span> = <span style="color: #ad7fa8;">"world!"</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strcat(dest, src));
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strcat(dest, src));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -414,15 +472,16 @@ hello world!
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-4-2" class="outline-3">
-<h3 id="sec-4-2">strncat</h3>
-<div class="outline-text-3" id="text-4-2">
+
+<div id="outline-container-orgheadline12" class="outline-3">
+<h3 id="orgheadline12">strncat</h3>
+<div class="outline-text-3" id="text-orgheadline12">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strncat</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dest</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strncat</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dest</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span>, <span style="color: #8ae234;">size_t</span> <span style="color: #eeeeec;">n</span>);
 </pre>
 </div>
 
@@ -439,17 +498,17 @@ strncat()将最多n个字节的内容追加到目的字符串尾部，并且会�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">dest</span>[1024] = <span style="color: #25ef29;">"hello "</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">src</span> = <span style="color: #25ef29;">"world!lkjsdljsd"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">dest</span>[1024] = <span style="color: #ad7fa8;">"hello "</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">src</span> = <span style="color: #ad7fa8;">"world!lkjsdljsd"</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strncat(dest, src, 6));
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strncat(dest, src, 6));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -463,18 +522,19 @@ hello world!
 </div>
 </div>
 </div>
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">字符查找(strchr, strrchr, strchrnul, strpbrk)</h2>
-<div class="outline-text-2" id="text-5">
-</div><div id="outline-container-sec-5-1" class="outline-3">
-<h3 id="sec-5-1">strchr</h3>
-<div class="outline-text-3" id="text-5-1">
+
+<div id="outline-container-orgheadline13" class="outline-2">
+<h2 id="orgheadline13">字符查找(strchr, strrchr, strchrnul, strpbrk)</h2>
+<div class="outline-text-2" id="text-orgheadline13">
+</div><div id="outline-container-orgheadline14" class="outline-3">
+<h3 id="orgheadline14">strchr</h3>
+<div class="outline-text-3" id="text-orgheadline14">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strchr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strchr</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">c</span>);
 </pre>
 </div>
 
@@ -487,17 +547,17 @@ strchr()返回一个字符指针，指向指定字符在指定字符串中第一
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"hello world!"</span>;
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'l'</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"hello world!"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">c</span> = <span style="color: #ad7fa8;">'l'</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strchr(s, c));
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strchr(s, c));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -510,16 +570,15 @@ llo world!
 </pre>
 </div>
 </div>
-
-<div id="outline-container-sec-5-2" class="outline-3">
-<h3 id="sec-5-2">strrchr</h3>
-<div class="outline-text-3" id="text-5-2">
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">strrchr</h3>
+<div class="outline-text-3" id="text-orgheadline15">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strrchr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strrchr</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">c</span>);
 </pre>
 </div>
 
@@ -532,17 +591,17 @@ strrchr()和strchr()类似，但它返回的是指定字符在指定字符串中
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"hello world!"</span>;
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'l'</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"hello world!"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">c</span> = <span style="color: #ad7fa8;">'l'</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strrchr(s, c));
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strrchr(s, c));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -555,16 +614,15 @@ ld!
 </pre>
 </div>
 </div>
-
-<div id="outline-container-sec-5-3" class="outline-3">
-<h3 id="sec-5-3">strchrnul</h3>
-<div class="outline-text-3" id="text-5-3">
+<div id="outline-container-orgheadline16" class="outline-3">
+<h3 id="orgheadline16">strchrnul</h3>
+<div class="outline-text-3" id="text-orgheadline16">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strchrnul</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">c</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strchrnul</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">c</span>);
 </pre>
 </div>
 
@@ -577,17 +635,17 @@ strchrnul()的功能和strchr()只有细微的区别，那就是，当没有找�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">c</span> = <span style="color: #25ef29;">'m'</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">c</span> = <span style="color: #ad7fa8;">'m'</span>;
 
-    printf(<span style="color: #25ef29;">"%p, %p\n"</span>, s, strchrnul(s, c));
+    printf(<span style="color: #ad7fa8;">"%p, %p\n"</span>, s, strchrnul(s, c));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -610,16 +668,15 @@ strchrnul()的功能和strchr()只有细微的区别，那就是，当没有找�
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-5-4" class="outline-3">
-<h3 id="sec-5-4">strpbrk</h3>
-<div class="outline-text-3" id="text-5-4">
+<div id="outline-container-orgheadline17" class="outline-3">
+<h3 id="orgheadline17">strpbrk</h3>
+<div class="outline-text-3" id="text-orgheadline17">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strpbrk</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">accept</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strpbrk</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">accept</span>);
 </pre>
 </div>
 
@@ -632,17 +689,17 @@ strpbrk()和strchr()的区别在于，strchr()是从字符串里搜索 <b>一个
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"Hello World!"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">accept</span> = <span style="color: #25ef29;">"Wo"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"Hello World!"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">accept</span> = <span style="color: #ad7fa8;">"Wo"</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strpbrk(s, accept));
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strpbrk(s, accept));
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -656,19 +713,18 @@ o World!
 </div>
 </div>
 </div>
-
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6">字符串分割(strtok, strtok_r, strsep)</h2>
-<div class="outline-text-2" id="text-6">
-</div><div id="outline-container-sec-6-1" class="outline-3">
-<h3 id="sec-6-1">strtok</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-orgheadline18" class="outline-2">
+<h2 id="orgheadline18">字符串分割(strtok, strtok_r, strsep)</h2>
+<div class="outline-text-2" id="text-orgheadline18">
+</div><div id="outline-container-orgheadline19" class="outline-3">
+<h3 id="orgheadline19">strtok</h3>
+<div class="outline-text-3" id="text-orgheadline19">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strtok</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strtok</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">str</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delim</span>);
 </pre>
 </div>
 
@@ -681,24 +737,24 @@ strtok()根据第二个参数指定的分隔符(可能存在多个不同的分�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[1024] = <span style="color: #25ef29;">"abc;lsdk:lskdj,;slsj"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">";:,"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span> = strlen(s);
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">s</span>[1024] = <span style="color: #ad7fa8;">"abc;lsdk:lskdj,;slsj"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delm</span> = <span style="color: #ad7fa8;">";:,"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">result</span> = <span style="color: #e6a00f;">NULL</span>;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">len</span> = strlen(s);
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
 
     result = strtok(s, delm);
-    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {
-        printf(<span style="color: #25ef29;">"Source:%s, Sub:%s\n"</span>, s, result);
-        result = strtok(<span style="color: #bebebe;">NULL</span>, delm);
+    <span style="color: #729fcf;">while</span> (result != <span style="color: #e6a00f;">NULL</span>) {
+        printf(<span style="color: #ad7fa8;">"Source:%s, Sub:%s\n"</span>, s, result);
+        result = strtok(<span style="color: #e6a00f;">NULL</span>, delm);
     }
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -722,39 +778,39 @@ Source:abc Sub:slsj
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"To be or not to be"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" ,."</span>;         <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#20998;&#38548;&#31526;&#65306;&#31354;&#26684; </span><span style="color: #e81122;">*/</span>
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0, <span style="color: #fefc58;">len</span> = strlen(s);
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">s</span>[64] = <span style="color: #ad7fa8;">"To be or not to be"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delm</span> = <span style="color: #ad7fa8;">" ,."</span>;         <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#20998;&#38548;&#31526;&#65306;&#31354;&#26684; </span><span style="color: #888a85;">*/</span>
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">result</span> = <span style="color: #e6a00f;">NULL</span>;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0, <span style="color: #eeeeec;">len</span> = strlen(s);
 
-    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#30340;&#23383;&#31526; </span><span style="color: #e81122;">*/</span>
-        printf(<span style="color: #25ef29;">"%c "</span>, s[i]);
+    <span style="color: #729fcf;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#30340;&#23383;&#31526; </span><span style="color: #888a85;">*/</span>
+        printf(<span style="color: #ad7fa8;">"%c "</span>, s[i]);
     }
-    printf(<span style="color: #25ef29;">"\n"</span>);
+    printf(<span style="color: #ad7fa8;">"\n"</span>);
 
 
-    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#23383;&#31526;&#30340;&#25968;&#20540; </span><span style="color: #e81122;">*/</span>
-        printf(<span style="color: #25ef29;">"%d "</span>, (<span style="color: #ca34e2;">int</span>)s[i]);
+    <span style="color: #729fcf;">for</span> (i = 0; i &lt; len; ++i) { <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#36880;&#20010;&#25171;&#21360;s&#20013;&#23383;&#31526;&#30340;&#25968;&#20540; </span><span style="color: #888a85;">*/</span>
+        printf(<span style="color: #ad7fa8;">"%d "</span>, (<span style="color: #8ae234;">int</span>)s[i]);
     }
-    printf(<span style="color: #25ef29;">"\n"</span>);
+    printf(<span style="color: #ad7fa8;">"\n"</span>);
 
     result = strtok(s, delm);
-    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {    <span style="color: #e81122;">/* </span><span style="color: #e81122;">&#35266;&#23519;s&#20013;&#23383;&#31526;&#25968;&#20540;&#30340;&#21464;&#21270; </span><span style="color: #e81122;">*/</span>
+    <span style="color: #729fcf;">while</span> (result != <span style="color: #e6a00f;">NULL</span>) {    <span style="color: #888a85;">/* </span><span style="color: #888a85;">&#35266;&#23519;s&#20013;&#23383;&#31526;&#25968;&#20540;&#30340;&#21464;&#21270; </span><span style="color: #888a85;">*/</span>
 
-        <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) {
-            printf(<span style="color: #25ef29;">"%d "</span>, (<span style="color: #ca34e2;">int</span>)s[i]);
+        <span style="color: #729fcf;">for</span> (i = 0; i &lt; len; ++i) {
+            printf(<span style="color: #ad7fa8;">"%d "</span>, (<span style="color: #8ae234;">int</span>)s[i]);
         }
-        printf(<span style="color: #25ef29;">"\n"</span>);
+        printf(<span style="color: #ad7fa8;">"\n"</span>);
 
-        result = strtok(<span style="color: #bebebe;">NULL</span>, delm);
+        result = strtok(<span style="color: #e6a00f;">NULL</span>, delm);
     }
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -766,209 +822,209 @@ Source:abc Sub:slsj
 
 
 <colgroup>
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 </colgroup>
 <tbody>
 <tr>
-<td class="right">T</td>
-<td class="right">o</td>
-<td class="right">&#xa0;</td>
-<td class="right">b</td>
-<td class="right">e</td>
-<td class="right">&#xa0;</td>
-<td class="right">o</td>
-<td class="right">r</td>
-<td class="right">&#xa0;</td>
-<td class="right">n</td>
-<td class="right">o</td>
-<td class="right">t</td>
-<td class="right">&#xa0;</td>
-<td class="right">t</td>
-<td class="right">o</td>
-<td class="right">&#xa0;</td>
-<td class="right">b</td>
-<td class="right">e</td>
+<td class="org-right">T</td>
+<td class="org-right">o</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">b</td>
+<td class="org-right">e</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">o</td>
+<td class="org-right">r</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">n</td>
+<td class="org-right">o</td>
+<td class="org-right">t</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">t</td>
+<td class="org-right">o</td>
+<td class="org-right">&#xa0;</td>
+<td class="org-right">b</td>
+<td class="org-right">e</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">32</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">32</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">32</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">32</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">32</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">32</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">32</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">32</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">32</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">32</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">32</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">32</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">0</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">32</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">32</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">0</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">32</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">32</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">0</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">0</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">32</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">0</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">0</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">32</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">0</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">0</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">0</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">32</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">0</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">0</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">0</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">32</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">0</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">0</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">0</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">0</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">0</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">0</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 
 <tr>
-<td class="right">84</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
-<td class="right">0</td>
-<td class="right">111</td>
-<td class="right">114</td>
-<td class="right">0</td>
-<td class="right">110</td>
-<td class="right">111</td>
-<td class="right">116</td>
-<td class="right">0</td>
-<td class="right">116</td>
-<td class="right">111</td>
-<td class="right">0</td>
-<td class="right">98</td>
-<td class="right">101</td>
+<td class="org-right">84</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
+<td class="org-right">0</td>
+<td class="org-right">111</td>
+<td class="org-right">114</td>
+<td class="org-right">0</td>
+<td class="org-right">110</td>
+<td class="org-right">111</td>
+<td class="org-right">116</td>
+<td class="org-right">0</td>
+<td class="org-right">116</td>
+<td class="org-right">111</td>
+<td class="org-right">0</td>
+<td class="org-right">98</td>
+<td class="org-right">101</td>
 </tr>
 </tbody>
 </table>
@@ -981,16 +1037,15 @@ Source:abc Sub:slsj
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-6-2" class="outline-3">
-<h3 id="sec-6-2">strtok_r</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-orgheadline20" class="outline-3">
+<h3 id="orgheadline20">strtok_r</h3>
+<div class="outline-text-3" id="text-orgheadline20">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strtok_r</span>(<span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">str</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>, <span style="color: #ca34e2;">char</span> **<span style="color: #fefc58;">saveptr</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strtok_r</span>(<span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">str</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delim</span>, <span style="color: #8ae234;">char</span> **<span style="color: #eeeeec;">saveptr</span>);
 </pre>
 </div>
 
@@ -1003,26 +1058,26 @@ strtok_r()是Linux下的strtok()的可重入版本(线程安全版本)，它比s
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"Hello world"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" "</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>, *<span style="color: #fefc58;">ptr</span> = <span style="color: #bebebe;">NULL</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">s</span>[64] = <span style="color: #ad7fa8;">"Hello world"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delm</span> = <span style="color: #ad7fa8;">" "</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">result</span> = <span style="color: #e6a00f;">NULL</span>, *<span style="color: #eeeeec;">ptr</span> = <span style="color: #e6a00f;">NULL</span>;
 
-    printf(<span style="color: #25ef29;">"Source:%p\n"</span>, s);
+    printf(<span style="color: #ad7fa8;">"Source:%p\n"</span>, s);
     result = strtok_r(s, delm, &amp;ptr);
-    <span style="color: #cf4a44;">while</span> (result != <span style="color: #bebebe;">NULL</span>) {
-        printf(<span style="color: #25ef29;">"Result:%p\t"</span>, result);
-        printf(<span style="color: #25ef29;">"Saveptr:%p\n"</span>, ptr);
-        printf(<span style="color: #25ef29;">"---%s\t"</span>, result);
-        printf(<span style="color: #25ef29;">"---%s\n"</span>, ptr);
+    <span style="color: #729fcf;">while</span> (result != <span style="color: #e6a00f;">NULL</span>) {
+        printf(<span style="color: #ad7fa8;">"Result:%p\t"</span>, result);
+        printf(<span style="color: #ad7fa8;">"Saveptr:%p\n"</span>, ptr);
+        printf(<span style="color: #ad7fa8;">"---%s\t"</span>, result);
+        printf(<span style="color: #ad7fa8;">"---%s\n"</span>, ptr);
 
-        result = strtok_r(<span style="color: #bebebe;">NULL</span>, delm, &amp;ptr);
+        result = strtok_r(<span style="color: #e6a00f;">NULL</span>, delm, &amp;ptr);
     }
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -1042,15 +1097,16 @@ Result:0x7fff180f3de6 Saveptr:0x7fff180f3deb
 </p>
 </div>
 </div>
-<div id="outline-container-sec-6-3" class="outline-3">
-<h3 id="sec-6-3">strsep</h3>
-<div class="outline-text-3" id="text-6-3">
+
+<div id="outline-container-orgheadline21" class="outline-3">
+<h3 id="orgheadline21">strsep</h3>
+<div class="outline-text-3" id="text-orgheadline21">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strsep</span>(<span style="color: #ca34e2;">char</span> **<span style="color: #fefc58;">stringp</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delim</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strsep</span>(<span style="color: #8ae234;">char</span> **<span style="color: #eeeeec;">stringp</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delim</span>);
 </pre>
 </div>
 
@@ -1063,22 +1119,22 @@ strsep()同样是字符串分割函数，它和strtok()的不同之处在于，�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> <span style="color: #fefc58;">s</span>[64] = <span style="color: #25ef29;">"To be or not to be"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">source</span> = s;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">delm</span> = <span style="color: #25ef29;">" "</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">result</span> = <span style="color: #bebebe;">NULL</span>;
+    <span style="color: #8ae234;">char</span> <span style="color: #eeeeec;">s</span>[64] = <span style="color: #ad7fa8;">"To be or not to be"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">source</span> = s;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">delm</span> = <span style="color: #ad7fa8;">" "</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">result</span> = <span style="color: #e6a00f;">NULL</span>;
 
-    <span style="color: #cf4a44;">while</span> (source != <span style="color: #bebebe;">NULL</span>) {
-        printf(<span style="color: #25ef29;">"Source:%s | "</span>, source);
+    <span style="color: #729fcf;">while</span> (source != <span style="color: #e6a00f;">NULL</span>) {
+        printf(<span style="color: #ad7fa8;">"Source:%s | "</span>, source);
         result = strsep(&amp;source, delm);
-        printf(<span style="color: #25ef29;">"result:%s\n"</span>, result);
+        printf(<span style="color: #ad7fa8;">"result:%s\n"</span>, result);
     }
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -1101,16 +1157,15 @@ Source:be | result: be
 </div>
 </div>
 </div>
-
-<div id="outline-container-sec-7" class="outline-2">
-<h2 id="sec-7">字符串匹配(strstr)</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-orgheadline22" class="outline-2">
+<h2 id="orgheadline22">字符串匹配(strstr)</h2>
+<div class="outline-text-2" id="text-orgheadline22">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strstr</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">haystack</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">needle</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strstr</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">haystack</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">needle</span>);
 </pre>
 </div>
 
@@ -1123,16 +1178,16 @@ strstr()返回字符串needle在字符串haystack中第一次出现的位置；�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"To be or not to be."</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">p</span> = <span style="color: #25ef29;">"be"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"To be or not to be."</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">p</span> = <span style="color: #ad7fa8;">"be"</span>;
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, strstr(s, p));
-    <span style="color: #cf4a44;">return</span> 0;
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, strstr(s, p));
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -1145,18 +1200,19 @@ be or not to be.
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-8" class="outline-2">
-<h2 id="sec-8">字符串副本创建(strdup, strndup, strdupa, strndupa)</h2>
-<div class="outline-text-2" id="text-8">
-</div><div id="outline-container-sec-8-1" class="outline-3">
-<h3 id="sec-8-1">strdup</h3>
-<div class="outline-text-3" id="text-8-1">
+
+<div id="outline-container-orgheadline23" class="outline-2">
+<h2 id="orgheadline23">字符串副本创建(strdup, strndup, strdupa, strndupa)</h2>
+<div class="outline-text-2" id="text-orgheadline23">
+</div><div id="outline-container-orgheadline24" class="outline-3">
+<h3 id="orgheadline24">strdup</h3>
+<div class="outline-text-3" id="text-orgheadline24">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strdup</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strdup</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>);
 </pre>
 </div>
 
@@ -1169,16 +1225,16 @@ strdup()调用malloc()分配一块内存并将字符串s的内容拷贝进去，
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dup</span> = strdup(s);
-    printf(<span style="color: #25ef29;">"%s\n"</span>, dup);
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dup</span> = strdup(s);
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, dup);
     free(dup);
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -1191,16 +1247,15 @@ abcde
 </pre>
 </div>
 </div>
-
-<div id="outline-container-sec-8-2" class="outline-3">
-<h3 id="sec-8-2">strndup</h3>
-<div class="outline-text-3" id="text-8-2">
+<div id="outline-container-orgheadline25" class="outline-3">
+<h3 id="orgheadline25">strndup</h3>
+<div class="outline-text-3" id="text-orgheadline25">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strndup</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strndup</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #8ae234;">size_t</span> <span style="color: #eeeeec;">n</span>);
 </pre>
 </div>
 
@@ -1213,18 +1268,18 @@ strndup()和strdup()类似，但最多只拷贝s的前n个字节。如果s的长
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
-<span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;string.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
+<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;string.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span> = <span style="color: #25ef29;">"abcde"</span>;
-    <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">dup</span> = strndup(s, 4);
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span> = <span style="color: #ad7fa8;">"abcde"</span>;
+    <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">dup</span> = strndup(s, 4);
 
-    printf(<span style="color: #25ef29;">"%s\n"</span>, dup);
+    printf(<span style="color: #ad7fa8;">"%s\n"</span>, dup);
 
     free(dup);
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -1237,16 +1292,15 @@ abcd
 </pre>
 </div>
 </div>
-
-<div id="outline-container-sec-8-3" class="outline-3">
-<h3 id="sec-8-3">strdupa</h3>
-<div class="outline-text-3" id="text-8-3">
+<div id="outline-container-orgheadline26" class="outline-3">
+<h3 id="orgheadline26">strdupa</h3>
+<div class="outline-text-3" id="text-orgheadline26">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strdupa</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strdupa</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>);
 </pre>
 </div>
 
@@ -1255,16 +1309,15 @@ strdupa()和strdup()类似，但在分配内存时，它使用alloca()而不是m
 </p>
 </div>
 </div>
-
-<div id="outline-container-sec-8-4" class="outline-3">
-<h3 id="sec-8-4">strndupa</h3>
-<div class="outline-text-3" id="text-8-4">
+<div id="outline-container-orgheadline27" class="outline-3">
+<h3 id="orgheadline27">strndupa</h3>
+<div class="outline-text-3" id="text-orgheadline27">
 <p>
 函数原型：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">char</span> *<span style="color: #ed8a0c;">strndupa</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">s</span>, <span style="color: #ca34e2;">size_t</span> <span style="color: #fefc58;">n</span>);
+<pre class="src src-C"><span style="color: #8ae234;">char</span> *<span style="color: #edd400;">strndupa</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">s</span>, <span style="color: #8ae234;">size_t</span> <span style="color: #eeeeec;">n</span>);
 </pre>
 </div>
 

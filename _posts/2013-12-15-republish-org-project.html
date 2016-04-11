@@ -6,9 +6,18 @@ tags       : org-mode export publish
 description: org-mode导出项目时会检查项目中的文件，然后仅发布被修改且未被发布过的文件，而有时候因为项目导出设置的变化，需要重新发布项目中的所有文件.
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">问题</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">问题</a></li>
+<li><a href="#orgheadline2">解决方法</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">问题</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 使用org-mode，可以将一个目录下的所有org文件作为一个完整的项目进行导出，这个功能常常用于将写好的org文件以完整的网站结构导出成html文件。
 </p>
@@ -18,9 +27,10 @@ description: org-mode导出项目时会检查项目中的文件，然后仅发�
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">解决方法</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">解决方法</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 上述所说的org的特性——导出项目时仅对修改过或未被发布过的文件，是由org内置的变量 <b>org-publish-use-timestamps-flag</b> 来决定的。
 </p>
@@ -54,10 +64,10 @@ When nil, do no timestamp checking and always publish all files.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">publish-project</span> (project no-cache)
-   (interactive <span style="color: #25ef29;">"sName of project: \nsNo-cache?[y/n] "</span>)
-      (<span style="color: #cf4a44;">if</span> (or (string= no-cache <span style="color: #25ef29;">"y"</span>)
-          (string= no-cache <span style="color: #25ef29;">"Y"</span>))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">publish-project</span> (project no-cache)
+   (interactive <span style="color: #ad7fa8;">"sName of project: \nsNo-cache?[y/n] "</span>)
+      (<span style="color: #729fcf;">if</span> (or (string= no-cache <span style="color: #ad7fa8;">"y"</span>)
+          (string= no-cache <span style="color: #ad7fa8;">"Y"</span>))
           (setq org-publish-use-timestamps-flag nil))
    (org-publish-project project)
    (setq org-publish-use-timestamps-flag t))

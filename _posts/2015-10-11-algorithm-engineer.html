@@ -4,6 +4,16 @@ title      : 对算法工程师一职的思考
 categories : 算法
 tags       : 算法工程师
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">从做过的工作说起</a></li>
+<li><a href="#orgheadline2">再谈这个职位</a></li>
+<li><a href="#orgheadline3">参考</a></li>
+</ul>
+</div>
+</div>
 
 <p>
 如果要我想别人做自我介绍，那么大概我会这样来描述自己:
@@ -22,23 +32,18 @@ tags       : 算法工程师
 我尝试去梳理自己对这个职位的理解，并记录下来，如果以后能一直从事相关工作，再回过头来看这篇文章，大概也会别有一番趣味。
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">从做过的工作说起</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">从做过的工作说起</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 作为一个算法工程师的我，做过什么工作呢？从项目的角度上来说，主要有这么几个:
 </p>
 <ul class="org-ul">
-<li>说话人分割(Speaker Diarization): 对一段音频，确定 <b>何人在何时说话</b>
-</li>
-<li>情感识别: 对一段音频，判断说话者在其中表达的是 <b>正面的情感</b> 还是 <b>负面的情感</b>
-</li>
-<li>题库搜索
-</li>
-<li>OCR
-</li>
-<li>学生能力评估
-</li>
+<li>说话人分割(Speaker Diarization): 对一段音频，确定 <b>何人在何时说话</b></li>
+<li>情感识别: 对一段音频，判断说话者在其中表达的是 <b>正面的情感</b> 还是 <b>负面的情感</b></li>
+<li>题库搜索</li>
+<li>OCR</li>
+<li>学生能力评估</li>
 </ul>
 
 <p>
@@ -57,26 +62,29 @@ tags       : 算法工程师
 以我做过的“说话人分割项目“来说，在预处理阶段，需要做这些事情:
 </p>
 <ol class="org-ol">
-<li>音频格式转换
+<li><p>
+音频格式转换
+</p>
 
 <p>
 收到的客户的音频数据往往格式杂乱，而且这些音频为了便于保存和传输，大都是经过压缩的格式，在进行转换后可能会有一定程度的失真。
-</p>
-</li>
+</p></li>
 
-<li>去除明显的非人声和静音，所谓非人声包括: 通信噪音、场景噪音、音乐
+<li><p>
+去除明显的非人声和静音，所谓非人声包括: 通信噪音、场景噪音、音乐
+</p>
 
 <p>
 对于与人声不重叠的非人声，可以通过语音活性检测(Voice Activity Detection, VAD)来进行区分，难点在于如何处理与人声混杂在一起的噪声。
-</p>
-</li>
+</p></li>
 
-<li>定位不同说话人连续语音的起始和结束点
+<li><p>
+定位不同说话人连续语音的起始和结束点
+</p>
 
 <p>
 如果有两个人(甚至三个人以上)同时在说话，那么这个起始和结束点会不准确。
-</p>
-</li>
+</p></li>
 </ol>
 
 <p>
@@ -101,10 +109,8 @@ tags       : 算法工程师
 算法工程师，首先是作为工程师存在的，其工作成果当然也要为实际需求服务；其次，算法工程师的项目不会是孤立的，必然会和其他项目有关联。对项目提出的直接需求，以及对相关联项目的需求，都会对项目有很大影响:
 </p>
 <ol class="org-ol">
-<li>需求会决定数据的来源和质量
-</li>
-<li>需求会决定算法实现的复杂性
-</li>
+<li>需求会决定数据的来源和质量</li>
+<li>需求会决定算法实现的复杂性</li>
 </ol>
 
 <p>
@@ -125,9 +131,9 @@ tags       : 算法工程师
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">再谈这个职位</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">再谈这个职位</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 由于无法进行快速迭代，算法工程师的工作强度不算太大(相对而言)，而且一般待遇不错，这算是这个职位的优点了。而相对的，算法工程师的工作会比较枯燥，远没有外行人所想象的那么“酷”，而且大部分时间是在做工程化和调优，其实并没有太多时间去做探索性的工作。
 </p>
@@ -139,16 +145,13 @@ tags       : 算法工程师
 </div>
 
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">参考</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">参考</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <ol class="org-ol">
-<li><a href="http://www.cnblogs.com/aquastone/p/algorithm-technology-and-others.html">算法、技术即其他</a>
-</li>
-<li><a href="http://www.wentrue.net/blog/?p=1552">算法工程师的三重境界</a>
-</li>
-<li><a href="http://segmentfault.com/a/1190000000308327">算法工程师的爱与哀愁</a>
-</li>
+<li><a href="http://www.cnblogs.com/aquastone/p/algorithm-technology-and-others.html">算法、技术即其他</a></li>
+<li><a href="http://www.wentrue.net/blog/?p=1552">算法工程师的三重境界</a></li>
+<li><a href="http://segmentfault.com/a/1190000000308327">算法工程师的爱与哀愁</a></li>
 </ol>
 </div>
 </div>

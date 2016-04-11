@@ -6,23 +6,34 @@ tags       :
 - Redis
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Redis 简介</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">Redis 简介</a></li>
+<li><a href="#orgheadline2">从遇到的问题说起</a></li>
+<li><a href="#orgheadline3">用于分析 Redis 性能的一些命令(参数)</a>
+<ul>
+<li><a href="#orgheadline4">redis-cli 参数</a></li>
+<li><a href="#orgheadline5">redis-cli 子命令</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline6">Redis 使用的一点点经验</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Redis 简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 Redis 是一个 key-value 内存存储系统，并且支持丰富的数据结构，包括:
 </p>
 <ol class="org-ol">
-<li>string
-</li>
-<li>list
-</li>
-<li>hash table
-</li>
-<li>set(集合)
-</li>
-<li>zset(有序集合)
-</li>
+<li>string</li>
+<li>list</li>
+<li>hash table</li>
+<li>set(集合)</li>
+<li>zset(有序集合)</li>
 </ol>
 
 <p>
@@ -39,9 +50,9 @@ Redis 是一个 key-value 内存存储系统，并且支持丰富的数据结构
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">从遇到的问题说起</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">从遇到的问题说起</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 目前我负责的一个项目使用着 Redis ，在 10 月中下旬的时候发现往 Redis 写数据的定时任务频繁 timeout ，同时从同一个 Redis 读数据的线上项目的 log 也显示经常一些读操作耗时增长了十倍甚至更多。
 </p>
@@ -65,10 +76,8 @@ Redis 是一个 key-value 内存存储系统，并且支持丰富的数据结构
 原来，这个 Redis server 的持久化方式是 RDB+AOF，而上述警告信息是因为 AOF 操作造成的。有了这个明确的警告信息后，再去网上搜索就找到了不少类似的案例:
 </p>
 <ol class="org-ol">
-<li><a href="https://engineering.sharethrough.com/blog/2013/06/06/how-redis-took-us-offline-and-what-we-did-about-it/">how redis took us offline and what we did about it</a>
-</li>
-<li><a href="https://github.com/twitter/twemproxy/issues/248">logs of timeout in someone second #248</a>
-</li>
+<li><a href="https://engineering.sharethrough.com/blog/2013/06/06/how-redis-took-us-offline-and-what-we-did-about-it/">how redis took us offline and what we did about it</a></li>
+<li><a href="https://github.com/twitter/twemproxy/issues/248">logs of timeout in someone second #248</a></li>
 </ol>
 
 <p>
@@ -87,19 +96,21 @@ Redis 是一个 key-value 内存存储系统，并且支持丰富的数据结构
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">用于分析 Redis 性能的一些命令(参数)</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">用于分析 Redis 性能的一些命令(参数)</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 都是在解决上面提到的问题的过程中，所了解到的 tricks。
 </p>
 </div>
 
-<div id="outline-container-sec-3-1" class="outline-3">
-<h3 id="sec-3-1">redis-cli 参数</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">redis-cli 参数</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <ul class="org-ul">
-<li>&#x2013;bigkeys
+<li><p>
+&#x2013;bigkeys
+</p>
 
 <div class="org-src-container">
 
@@ -143,10 +154,11 @@ Biggest   hash found 'idx:的' has 196 fields
 
 <p>
 这条命令给出的 "big key" ，是值得去分析一下的。
-</p>
-</li>
+</p></li>
 
-<li>&#x2013;latency, &#x2013;latency-history
+<li><p>
+&#x2013;latency, &#x2013;latency-history
+</p>
 
 <p>
 这两条命令用来测试 Redis 服务端的响应延迟，&#x2013;latency 的输出是这样的
@@ -172,17 +184,18 @@ min: 7, max: 809, avg: 95.09 (143 samples) -- 15.04 seconds range
 
 <p>
 用这两个参数可以判断客户端与服务端之间的网络通信造成的延迟对整体延迟的影响，方法是在 Redis Server 所在的服务器上使用 &#x2013;latency/&#x2013;latency-history 得到大致的延迟结果，然后在客户端所在机器上同样得到延迟情况进行对比。
-</p>
-</li>
+</p></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-3-2" class="outline-3">
-<h3 id="sec-3-2">redis-cli 子命令</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">redis-cli 子命令</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <ul class="org-ul">
-<li>slowlog 命令
+<li><p>
+slowlog 命令
+</p>
 
 <p>
 默认的 Redis server 配置中有这么两条:
@@ -255,10 +268,11 @@ slowlog-max-len 128
 
 <p>
 因此上面这个例子的含义就是: 在 2015 年 12 月 16 日 16 时 5 分 33 秒执行的 flushdb 操作耗时 43ms ，因为超过了设定的值被记录到慢日志中。
-</p>
-</li>
+</p></li>
 
-<li>info
+<li><p>
+info
+</p>
 
 <p>
 顾名思义，这个子命令用来获取 Redis server 的一些信息，这些信息按照内容被分成了很多部分，可以用额外的参数来单独获取，如下:
@@ -268,65 +282,65 @@ slowlog-max-len 128
 
 
 <colgroup>
-<col  class="left" />
+<col  class="org-left" />
 
-<col  class="left" />
+<col  class="org-left" />
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="left">参数名</th>
-<th scope="col" class="left">说明</th>
+<th scope="col" class="org-left">参数名</th>
+<th scope="col" class="org-left">说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="left">server</td>
-<td class="left">获取 server 信息，包括 version, OS, port 等信息</td>
+<td class="org-left">server</td>
+<td class="org-left">获取 server 信息，包括 version, OS, port 等信息</td>
 </tr>
 
 <tr>
-<td class="left">clients</td>
-<td class="left">获取 clients 信息，如客户端连接数等</td>
+<td class="org-left">clients</td>
+<td class="org-left">获取 clients 信息，如客户端连接数等</td>
 </tr>
 
 <tr>
-<td class="left">memory</td>
-<td class="left">获取 server 的内存信息，包括当前内存消耗、内存使用峰值</td>
+<td class="org-left">memory</td>
+<td class="org-left">获取 server 的内存信息，包括当前内存消耗、内存使用峰值</td>
 </tr>
 
 <tr>
-<td class="left">persistence</td>
-<td class="left">获取 server 的持久化配置信息</td>
+<td class="org-left">persistence</td>
+<td class="org-left">获取 server 的持久化配置信息</td>
 </tr>
 
 <tr>
-<td class="left">stats</td>
-<td class="left">获取 server 的一些基本统计信息，如处理过的连接数量等</td>
+<td class="org-left">stats</td>
+<td class="org-left">获取 server 的一些基本统计信息，如处理过的连接数量等</td>
 </tr>
 
 <tr>
-<td class="left">replication</td>
-<td class="left">获取 server 的主从配置信息</td>
+<td class="org-left">replication</td>
+<td class="org-left">获取 server 的主从配置信息</td>
 </tr>
 
 <tr>
-<td class="left">cpu</td>
-<td class="left">获取 server 的 CPU 使用信息</td>
+<td class="org-left">cpu</td>
+<td class="org-left">获取 server 的 CPU 使用信息</td>
 </tr>
 
 <tr>
-<td class="left">keyspace</td>
-<td class="left">获取 server 中各个 DB 的 key 的数量</td>
+<td class="org-left">keyspace</td>
+<td class="org-left">获取 server 中各个 DB 的 key 的数量</td>
 </tr>
 
 <tr>
-<td class="left">cluster</td>
-<td class="left">获取集群节点信息，仅在开启集群后可见</td>
+<td class="org-left">cluster</td>
+<td class="org-left">获取集群节点信息，仅在开启集群后可见</td>
 </tr>
 
 <tr>
-<td class="left">commandstas</td>
-<td class="left">获取每种命令的统计信息，非常有用</td>
+<td class="org-left">commandstas</td>
+<td class="org-left">获取每种命令的统计信息，非常有用</td>
 </tr>
 </tbody>
 </table>
@@ -336,7 +350,9 @@ slowlog-max-len 128
 </p>
 
 <ul class="org-ul">
-<li>info memory
+<li><p>
+info memory
+</p>
 
 <p>
 输出如下:
@@ -355,10 +371,11 @@ mem_allocator:jemalloc-3.0.0
 
 <p>
 了解 Redis server 的内存占用是很有必要的
-</p>
-</li>
+</p></li>
 
-<li>info keyspace
+<li><p>
+info keyspace
+</p>
 
 <p>
 输出如下:
@@ -376,10 +393,11 @@ db4:keys=513887,expires=0,avg_ttl=0
 
 <p>
 key 的数量太多时可以使用 hash 结构将 key 进行分隔成两部分来减少数量，当然这个要看是否能满足具体的业务、功能需求了。
-</p>
-</li>
+</p></li>
 
-<li>info commandstats
+<li><p>
+info commandstats
+</p>
 
 <p>
 其输出如下:
@@ -405,31 +423,23 @@ cmdstat_slowlog:calls=23,usec=22646,usec_per_call=984.61
 
 <p>
 输出中包含处理过的每一种命令的调用次数、消耗的总 CPU 时间(单位 ms)以及平均 CPU 耗时，这对了解自己的程序所使用的 Redis 操作情况非常有用。
-</p>
-</li>
-</ul>
-</li>
+</p></li>
+</ul></li>
 </ul>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">Redis 使用的一点点经验</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6">Redis 使用的一点点经验</h2>
+<div class="outline-text-2" id="text-orgheadline6">
 <ol class="org-ol">
-<li>管理好自己的 key，比如用一个 set 来存放所有同类型的 key，这样可以避免使用 keys 来获取该类型所有 key，由于 Redis 是单线程的，在数据量大的情况下将会阻塞 Redis 中其他的操作
-</li>
-<li>如果不能避免使用 keys 操作，那么使用 scan 来替代，将遍历 Redis DB 中所有 key 的操作放到客户端来做，这样就不会导致其他操作被阻塞了
-</li>
-<li>在数据量大的情况下，key 或 value 的微小的压缩也能带来不小的内存使用提高
-</li>
-<li>hash 结构是个好东西，但是它只支持一级 hash，所以如果需要使用多级 hash，那就进行序列化吧
-</li>
-<li>注意客户端和服务端之间的网络通信情况(&#x2013;latency/&#x2013;latency-history)
-</li>
-<li>Redis 的 python 接口返回的 key 的类型和 value 中的最小结构的类型都是 string，记得转换成自己需要的类型
-</li>
+<li>管理好自己的 key，比如用一个 set 来存放所有同类型的 key，这样可以避免使用 keys 来获取该类型所有 key，由于 Redis 是单线程的，在数据量大的情况下将会阻塞 Redis 中其他的操作</li>
+<li>如果不能避免使用 keys 操作，那么使用 scan 来替代，将遍历 Redis DB 中所有 key 的操作放到客户端来做，这样就不会导致其他操作被阻塞了</li>
+<li>在数据量大的情况下，key 或 value 的微小的压缩也能带来不小的内存使用提高</li>
+<li>hash 结构是个好东西，但是它只支持一级 hash，所以如果需要使用多级 hash，那就进行序列化吧</li>
+<li>注意客户端和服务端之间的网络通信情况(&#x2013;latency/&#x2013;latency-history)</li>
+<li>Redis 的 python 接口返回的 key 的类型和 value 中的最小结构的类型都是 string，记得转换成自己需要的类型</li>
 </ol>
 </div>
 </div>

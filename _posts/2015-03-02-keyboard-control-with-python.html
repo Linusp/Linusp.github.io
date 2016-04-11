@@ -8,10 +8,21 @@ tags       :
 - PyUserInput
 description:
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">缘起</a></li>
+<li><a href="#orgheadline2">适用于Linux的方法</a></li>
+<li><a href="#orgheadline3">适用于Windows的方法</a></li>
+<li><a href="#orgheadline4">跨平台的方法</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">缘起</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">缘起</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 最近想尝试做一个简单的命令控制系统，关于命令控制方面的技术暂且不说，这个我也还在调研、学习，估计进度会很慢——我将问题分解后，发现有一些无关语音技术的小问题是可以优先去解决的，比如音频的录制，还有就是本篇所说的按键触发。
 </p>
@@ -25,9 +36,10 @@ description:
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">适用于Linux的方法</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">适用于Linux的方法</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 在 Linux 的 X 环境(即桌面环境)上，可以通过 <b>xautomation</b> 软件包中的 <b>xte</b> 工具来触发按键、鼠标点击等事件，在 Linux 系统上通过软件包管理系统直接安装即可。其效果如下图所示:
 </p>
@@ -43,19 +55,19 @@ description:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/usr/bin/env python</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
+<pre class="src src-python"><span style="color: #888a85;">#</span><span style="color: #888a85;">!/usr/bin/env python</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">-*- coding: utf-8 -*-</span>
 
-<span style="color: #b294bb;">from</span> subprocess <span style="color: #b294bb;">import</span> Popen, PIPE
+<span style="color: #729fcf;">from</span> subprocess <span style="color: #729fcf;">import</span> Popen, PIPE
 
-<span style="color: #de935f;">emacs_save_sequence</span> = <span style="color: #b5bd68;">'''keydown Control_L</span>
-<span style="color: #b5bd68;">key x</span>
-<span style="color: #b5bd68;">key s</span>
-<span style="color: #b5bd68;">keyup Control_L</span>
-<span style="color: #b5bd68;">'''</span>
-<span style="color: #b294bb;">def</span> <span style="color: #81a2be;">keypress</span>(sequence):
-    <span style="color: #de935f;">p</span> = Popen([<span style="color: #b5bd68;">'xte'</span>], stdin=PIPE)
-    p.communicate(<span style="color: #8abeb7;">input</span>=sequence)
+<span style="color: #eeeeec;">emacs_save_sequence</span> = <span style="color: #ad7fa8;">'''keydown Control_L</span>
+<span style="color: #ad7fa8;">key x</span>
+<span style="color: #ad7fa8;">key s</span>
+<span style="color: #ad7fa8;">keyup Control_L</span>
+<span style="color: #ad7fa8;">'''</span>
+<span style="color: #729fcf;">def</span> <span style="color: #edd400;">keypress</span>(sequence):
+    <span style="color: #eeeeec;">p</span> = Popen([<span style="color: #ad7fa8;">'xte'</span>], stdin=PIPE)
+    p.communicate(<span style="color: #729fcf;">input</span>=sequence)
 
 keypress(emacs_save_sequence)
 </pre>
@@ -66,17 +78,19 @@ keypress(emacs_save_sequence)
 </p>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">适用于Windows的方法</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">适用于Windows的方法</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 在Windows系统上可以通过<a href="https://pypi.python.org/pypi/pyHook"> pyHook </a>来进行按键触发，限于环境，就不作展开了。
 </p>
 </div>
 </div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">跨平台的方法</h2>
-<div class="outline-text-2" id="text-4">
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">跨平台的方法</h2>
+<div class="outline-text-2" id="text-orgheadline4">
 <p>
 <a href="https://github.com/SavinaRoja/PyUserInput">PyUserInput </a>这个 Python 库能够在 Linux 、Mac 和 Windows 三个系统上使用，考虑跨平台的工具的话可以使用它。
 </p>
@@ -85,12 +99,9 @@ keypress(emacs_save_sequence)
 它的使用也很简单，对于按键事件来说，是通过一个 PyKeyboard 对象来进行的，通过三种不同的方法来触发不同的事件
 </p>
 <ul class="org-ul">
-<li>press_key: 按下
-</li>
-<li>release_key: 松开
-</li>
-<li>tap_key: 敲击
-</li>
+<li>press_key: 按下</li>
+<li>release_key: 松开</li>
+<li>tap_key: 敲击</li>
 </ul>
 
 <p>
@@ -103,16 +114,16 @@ keypress(emacs_save_sequence)
 
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/usr/bin/env python</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
+<pre class="src src-python"><span style="color: #888a85;">#</span><span style="color: #888a85;">!/usr/bin/env python</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">-*- coding: utf-8 -*-</span>
 
-<span style="color: #b294bb;">from</span> pykeyboard <span style="color: #b294bb;">import</span> PyKeyboard
+<span style="color: #729fcf;">from</span> pykeyboard <span style="color: #729fcf;">import</span> PyKeyboard
 
-<span style="color: #de935f;">k</span> = PyKeyboard()
+<span style="color: #eeeeec;">k</span> = PyKeyboard()
 
 k.press_key(k.control_l_key)
-k.tap_key(<span style="color: #b5bd68;">'x'</span>)
-k.tap_key(<span style="color: #b5bd68;">'s'</span>)
+k.tap_key(<span style="color: #ad7fa8;">'x'</span>)
+k.tap_key(<span style="color: #ad7fa8;">'s'</span>)
 k.release_key(k.control_l_key)
 </pre>
 </div>

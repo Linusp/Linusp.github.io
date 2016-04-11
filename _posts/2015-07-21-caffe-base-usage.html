@@ -12,9 +12,33 @@ tags       :
 description:
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Caffe 简介</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">Caffe 简介</a></li>
+<li><a href="#orgheadline2">Caffe 的安装</a></li>
+<li><a href="#orgheadline3">相关概念</a>
+<ul>
+<li><a href="#orgheadline4">Blob</a></li>
+<li><a href="#orgheadline5">Layer</a></li>
+<li><a href="#orgheadline6">Net</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">使用 Caffe 进行训练</a>
+<ul>
+<li><a href="#orgheadline8">训练参数设置</a></li>
+<li><a href="#orgheadline9">网络结构定义</a></li>
+<li><a href="#orgheadline10">数据准备</a></li>
+<li><a href="#orgheadline11">训练与测试</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Caffe 简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 Caffe 是一个 C++ 编写的深度学习框架，原来是 UC Berkeley 博士毕业的贾扬清的个人项目，后来被他开源。由于其清晰与高效而被广泛使用，用户逐渐地也形成了一个开放的社区，各方的一些重要的研究成果(主要是各种模型)都被分享到社区中，这是非常棒的一点。
 </p>
@@ -29,14 +53,16 @@ Caffe 的清晰表现在网络结构与参数都独立于代码，用户只要�
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Caffe 的安装</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">Caffe 的安装</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 Caffe 依赖以下外部的库或者工具:
 </p>
 <ol class="org-ol">
-<li><a href="http://www.nvidia.cn/object/cuda-cn.html">CUDA</a>: NVIDIA 公司发布的并行计算框架，通过利用 GPU 的处理能力来大幅提升计算性能。由于需要数据的量很大以及 DNN 本身的结构复杂性，DNN 的训练过程通常会非常非常慢，如果能够利用 CUDA 能极大地提高效率。
+<li><p>
+<a href="http://www.nvidia.cn/object/cuda-cn.html">CUDA</a>: NVIDIA 公司发布的并行计算框架，通过利用 GPU 的处理能力来大幅提升计算性能。由于需要数据的量很大以及 DNN 本身的结构复杂性，DNN 的训练过程通常会非常非常慢，如果能够利用 CUDA 能极大地提高效率。
+</p>
 
 <p>
 来块 TITAN 吧少年!
@@ -58,40 +84,27 @@ Caffe 依赖以下外部的库或者工具:
 <div class="figure">
 <p><img src="../../../assets/img/gtx690-3.jpg" alt="gtx690-3.jpg" />
 </p>
-</div>
-</li>
+</div></li>
 
-<li><a href="http://www.netlib.org/blas/">BLAS</a>: 被广泛使用的线性代数库
-</li>
-<li><a href="http://www.boost.org/">Boost</a>(&gt;=1.55): 著名的 C++ 第三方库
-</li>
-<li><a href="http://opencv.org/">OpenCV</a>(&gt;=2.4): 著名的计算机视觉库
-</li>
+<li><a href="http://www.netlib.org/blas/">BLAS</a>: 被广泛使用的线性代数库</li>
+<li><a href="http://www.boost.org/">Boost</a>(&gt;=1.55): 著名的 C++ 第三方库</li>
+<li><a href="http://opencv.org/">OpenCV</a>(&gt;=2.4): 著名的计算机视觉库</li>
 <li>Google 开源的一套东西:
 
 <ul class="org-ul">
-<li>protobuf: 数据序列化框架
-</li>
-<li>gflags: 命令行参数解析库
-</li>
-<li>glog: 日志记录框架
-</li>
-</ul>
-</li>
+<li>protobuf: 数据序列化框架</li>
+<li>gflags: 命令行参数解析库</li>
+<li>glog: 日志记录框架</li>
+</ul></li>
 
 <li>IO 相关的库
 
 <ul class="org-ul">
-<li>hdf5
-</li>
-<li>leveldb
-</li>
-<li>snappy
-</li>
-<li>lmdb
-</li>
-</ul>
-</li>
+<li>hdf5</li>
+<li>leveldb</li>
+<li>snappy</li>
+<li>lmdb</li>
+</ul></li>
 </ol>
 
 <p>
@@ -99,7 +112,7 @@ Caffe 依赖以下外部的库或者工具:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">sudo apt-get install libatlas-dev libblas-dev libatlas-base-dev libatlas3-base  <span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">BLAS</span>
+<pre class="src src-sh">sudo apt-get install libatlas-dev libblas-dev libatlas-base-dev libatlas3-base  <span style="color: #888a85;"># </span><span style="color: #888a85;">BLAS</span>
 sudo apt-get install libprotobuf-dev protobuf-compiler libgflags-dev
 sudo apt-get install libhdf5-dev libleveldb-dev libsnappy-dev liblmdb-dev
 </pre>
@@ -113,12 +126,9 @@ Boost 虽然也能从软件源安装，但需要注意版本，如果版本过�
 glog 会在 Caffe 安装的时候自动安装，所以需要手动安装的就剩下:
 </p>
 <ol class="org-ol">
-<li>CUDA
-</li>
-<li>Boost
-</li>
-<li>OpenCV
-</li>
+<li>CUDA</li>
+<li>Boost</li>
+<li>OpenCV</li>
 </ol>
 
 <p>
@@ -130,8 +140,8 @@ CUDA 的安装笔者没有经验，就不作展开了，另外两个通过源代
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">cd</span> caffe &amp;&amp; mkdir build
-<span style="color: #8abeb7;">cd</span> build
+<pre class="src src-sh"><span style="color: #729fcf;">cd</span> caffe &amp;&amp; mkdir build
+<span style="color: #729fcf;">cd</span> build
 cmake ..
 make &amp;&amp; make install
 </pre>
@@ -159,7 +169,7 @@ make &amp;&amp; make install
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">export</span> <span style="color: #de935f;">PYTHONPATH</span>=/opt/caffe/python:$<span style="color: #de935f;">PYTHONPATH</span>
+<pre class="src src-sh"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">PYTHONPATH</span>=/opt/caffe/python:$<span style="color: #eeeeec;">PYTHONPATH</span>
 </pre>
 </div>
 
@@ -185,31 +195,28 @@ make &amp;&amp; make install
 至此安装结束，此时可用的资源有:
 </p>
 <ol class="org-ol">
-<li>C++ 库,包括头文件、动态链接库(或静态链接库)
-</li>
-<li>Python 接口
-</li>
-<li>命令行工具，位于安装目录的 bin/ 目录下面
-</li>
+<li>C++ 库,包括头文件、动态链接库(或静态链接库)</li>
+<li>Python 接口</li>
+<li>命令行工具，位于安装目录的 bin/ 目录下面</li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">相关概念</h2>
-<div class="outline-text-2" id="text-3">
-</div><div id="outline-container-sec-3-1" class="outline-3">
-<h3 id="sec-3-1">Blob</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">相关概念</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+</div><div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">Blob</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 Blob 是用于存储数据的对象，在 Caffe 中各种数据(图像输入、模型参数)都是以 Blob 的形式在网络中传输的。同时 Blob 还能在 CPU 和 GPU 之间进行同步以支持 CPU/GPU 的混合运算。
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-3-2" class="outline-3">
-<h3 id="sec-3-2">Layer</h3>
-<div class="outline-text-3" id="text-3-2">
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">Layer</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <p>
 Layer 是网络的次级单元，也是 Caffe 中能在外部进行调整的最小网络结构单元 —— 一般来说，都让同一层的神经元具备相同的性质，因此也就没有必要提供对单个神经元的操作。
 </p>
@@ -220,9 +227,9 @@ Layer 是网络的次级单元，也是 Caffe 中能在外部进行调整的最�
 </div>
 </div>
 
-<div id="outline-container-sec-3-3" class="outline-3">
-<h3 id="sec-3-3">Net</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">Net</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 即一个完整的包含输入层、隐藏层、输出层的深度网络，在 Caffe 中一般是一个卷积神经网络(Convolution Neural Networ, CNN)。
 </p>
@@ -234,31 +241,34 @@ Layer 是网络的次级单元，也是 Caffe 中能在外部进行调整的最�
 </div>
 </div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">使用 Caffe 进行训练</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7">使用 Caffe 进行训练</h2>
+<div class="outline-text-2" id="text-orgheadline7">
 <p>
 这里以 MNIST 的例子来进行说明。
 </p>
 </div>
 
-<div id="outline-container-sec-4-1" class="outline-3">
-<h3 id="sec-4-1">训练参数设置</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">训练参数设置</h3>
+<div class="outline-text-3" id="text-orgheadline8">
 <p>
 训练参数通常记录到一个统一的文件中，关键参数有:
 </p>
 <ul class="org-ul">
-<li>训练(及测试)使用的网络
+<li><p>
+训练(及测试)使用的网络
+</p>
 
 <p>
 网络结构要在另外一个文件中定义，在配置文件中用 "net" 指定其位置，如:
 </p>
 <pre class="example">
 net: "examples/mnist/lenet_train_test.prototxt"
-</pre>
-</li>
-<li>学习率等网络迭代参数
+</pre></li>
+<li><p>
+学习率等网络迭代参数
+</p>
 
 <p>
 Caffe 中的权值更新通过学习率和动量项来进行计算
@@ -282,37 +292,36 @@ power: 0.75
 </p>
 <pre class="example">
 weight_decay: 0.0005
-</pre>
-</li>
+</pre></li>
 
-<li>训练迭代次数
+<li><p>
+训练迭代次数
+</p>
 
 <p>
 设置最大迭代次数:
 </p>
 <pre class="example">
 max_iter: 10000
-</pre>
-</li>
-<li>训练模式(CPU/GPU)
+</pre></li>
+<li><p>
+训练模式(CPU/GPU)
+</p>
 
 <p>
 如果系统安装了 CUDA 支持 GPU 运算，那么 GPU 模式是更好的选择，否则应当选择 CPU 模式:
 </p>
 <pre class="example">
 solver_mode: CPU
-</pre>
-</li>
+</pre></li>
 </ul>
 
 <p>
 除以上参数外，还有用于测试的一些参数:
 </p>
 <ul class="org-ul">
-<li>test_iter: 测试次数
-</li>
-<li>test_interval: 两次测试之间的间隔
-</li>
+<li>test_iter: 测试次数</li>
+<li>test_interval: 两次测试之间的间隔</li>
 </ul>
 
 
@@ -358,9 +367,9 @@ solver_mode: GPU
 </div>
 </div>
 
-<div id="outline-container-sec-4-2" class="outline-3">
-<h3 id="sec-4-2">网络结构定义</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">网络结构定义</h3>
+<div class="outline-text-3" id="text-orgheadline9">
 <p>
 如前所述，Net 由 Layer 组成，每个 Layer 的定义都是以下形式:
 </p>
@@ -413,9 +422,9 @@ TODO: 图
 </div>
 </div>
 
-<div id="outline-container-sec-4-3" class="outline-3">
-<h3 id="sec-4-3">数据准备</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-orgheadline10" class="outline-3">
+<h3 id="orgheadline10">数据准备</h3>
+<div class="outline-text-3" id="text-orgheadline10">
 <p>
 在 MNIST 的例子中，需要将 MNIST 数据集转换为 lmdb 格式。先来看看 MNIST 数据集的处理再谈一下普通的数据如何转换成可用于训练的数据。
 </p>
@@ -424,10 +433,8 @@ TODO: 图
 首先要获取数据，这都已经在 Caffe 的源代码包中提供了相应的工具:
 </p>
 <ul class="org-ul">
-<li>data/mnist/get_mnist.sh
-</li>
-<li>examples/mnist/create_mnist.sh
-</li>
+<li>data/mnist/get_mnist.sh</li>
+<li>examples/mnist/create_mnist.sh</li>
 </ul>
 
 <p>
@@ -447,23 +454,23 @@ wget --no-check-certificate http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ub
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #de935f;">EXAMPLE</span>=examples/mnist
-<span style="color: #de935f;">DATA</span>=data/mnist
-<span style="color: #de935f;">BUILD</span>=build/examples/mnist
+<pre class="src src-sh"><span style="color: #eeeeec;">EXAMPLE</span>=examples/mnist
+<span style="color: #eeeeec;">DATA</span>=data/mnist
+<span style="color: #eeeeec;">BUILD</span>=build/examples/mnist
 
-<span style="color: #de935f;">BACKEND</span>=<span style="color: #b5bd68;">"lmdb"</span>
+<span style="color: #eeeeec;">BACKEND</span>=<span style="color: #ad7fa8;">"lmdb"</span>
 
-<span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Creating ${BACKEND}..."</span>
+<span style="color: #729fcf;">echo</span> <span style="color: #ad7fa8;">"Creating ${BACKEND}..."</span>
 
-rm -rf $<span style="color: #de935f;">EXAMPLE</span>/mnist_train_${<span style="color: #de935f;">BACKEND</span>}
-rm -rf $<span style="color: #de935f;">EXAMPLE</span>/mnist_test_${<span style="color: #de935f;">BACKEND</span>}
+rm -rf $<span style="color: #eeeeec;">EXAMPLE</span>/mnist_train_${<span style="color: #eeeeec;">BACKEND</span>}
+rm -rf $<span style="color: #eeeeec;">EXAMPLE</span>/mnist_test_${<span style="color: #eeeeec;">BACKEND</span>}
 
-$<span style="color: #de935f;">BUILD</span>/convert_mnist_data.bin $<span style="color: #de935f;">DATA</span>/train-images-idx3-ubyte <span style="color: #b5bd68;">\</span>
-                              $<span style="color: #de935f;">DATA</span>/train-labels-idx1-ubyte $<span style="color: #de935f;">EXAMPLE</span>/mnist_train_${<span style="color: #de935f;">BACKEND</span>} --backend=${<span style="color: #de935f;">BACKEND</span>}
-$<span style="color: #de935f;">BUILD</span>/convert_mnist_data.bin $<span style="color: #de935f;">DATA</span>/t10k-images-idx3-ubyte <span style="color: #b5bd68;">\</span>
-                              $<span style="color: #de935f;">DATA</span>/t10k-labels-idx1-ubyte $<span style="color: #de935f;">EXAMPLE</span>/mnist_test_${<span style="color: #de935f;">BACKEND</span>} --backend=${<span style="color: #de935f;">BACKEND</span>}
+$<span style="color: #eeeeec;">BUILD</span>/convert_mnist_data.bin $<span style="color: #eeeeec;">DATA</span>/train-images-idx3-ubyte <span style="color: #ad7fa8;">\</span>
+                              $<span style="color: #eeeeec;">DATA</span>/train-labels-idx1-ubyte $<span style="color: #eeeeec;">EXAMPLE</span>/mnist_train_${<span style="color: #eeeeec;">BACKEND</span>} --backend=${<span style="color: #eeeeec;">BACKEND</span>}
+$<span style="color: #eeeeec;">BUILD</span>/convert_mnist_data.bin $<span style="color: #eeeeec;">DATA</span>/t10k-images-idx3-ubyte <span style="color: #ad7fa8;">\</span>
+                              $<span style="color: #eeeeec;">DATA</span>/t10k-labels-idx1-ubyte $<span style="color: #eeeeec;">EXAMPLE</span>/mnist_test_${<span style="color: #eeeeec;">BACKEND</span>} --backend=${<span style="color: #eeeeec;">BACKEND</span>}
 
-<span style="color: #8abeb7;">echo</span> <span style="color: #b5bd68;">"Done."</span>
+<span style="color: #729fcf;">echo</span> <span style="color: #ad7fa8;">"Done."</span>
 </pre>
 </div>
 
@@ -495,9 +502,9 @@ pics/0_1.png 0
 </div>
 </div>
 
-<div id="outline-container-sec-4-4" class="outline-3">
-<h3 id="sec-4-4">训练与测试</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11">训练与测试</h3>
+<div class="outline-text-3" id="text-orgheadline11">
 <p>
 在以上步骤都完成后即可开始进行训练与测试，使用命令行工具中的 caffe 命令即可:
 </p>

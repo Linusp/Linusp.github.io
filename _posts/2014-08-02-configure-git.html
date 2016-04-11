@@ -6,9 +6,20 @@ tags       :
 - Git
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">配置及配置文件</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">配置及配置文件</a></li>
+<li><a href="#orgheadline2">配置: Section user</a></li>
+<li><a href="#orgheadline3">配置: Section core</a></li>
+<li><a href="#orgheadline4">配置: Section color</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">配置及配置文件</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 Git可以使用命令
 </p>
@@ -25,12 +36,9 @@ Git可以使用命令
 Git会在三个可能的地方寻找配置文件
 </p>
 <ol class="org-ol">
-<li>系统级全局配置文件:/etc/gitconfig，对操作系统上所有用户都起作用
-</li>
-<li>用户级全局配置文件:~/.gitconfig，对用户的所有代码仓库起作用
-</li>
-<li>代码仓库级配置文件:&lt;repo&gt;/.git/confg，只对当前对应的代码仓库起作用
-</li>
+<li>系统级全局配置文件:/etc/gitconfig，对操作系统上所有用户都起作用</li>
+<li>用户级全局配置文件:~/.gitconfig，对用户的所有代码仓库起作用</li>
+<li>代码仓库级配置文件:&lt;repo&gt;/.git/confg，只对当前对应的代码仓库起作用</li>
 </ol>
 
 
@@ -133,15 +141,18 @@ Git 提供了很多的可配置项，具体可以执行
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">配置: Section user</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">配置: Section user</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 user下的配置项主要是用于在线认证的，比如说Github。
 </p>
 
 <ul class="org-ul">
-<li>user.name
+<li><p>
+user.name
+</p>
 
 <p>
 设置用户名，比如我在Github上的用户名是'Linusp'，那么就设置:
@@ -153,23 +164,26 @@ user下的配置项主要是用于在线认证的，比如说Github。
 </div>
 <p>
 如果公司使用Git进行代码管理，这一步也是需要的.
-</p>
-</li>
+</p></li>
 
-<li>user.email
+<li><p>
+user.email
+</p>
 
 <p>
 设置邮箱，同上，用于认证。
-</p>
-</li>
+</p></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">配置: Section core</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">配置: Section core</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <ul class="org-ul">
-<li>core.filemode
+<li><p>
+core.filemode
+</p>
 
 <p>
 设置是否检查文件权限，其值默认为'true'，对同样内容、名字的文件，如果其文件权限发生了改变，则会认为发生了'修改'。如果要忽略文件权限的检查，可以将该项的值设置为'false':
@@ -178,23 +192,27 @@ user下的配置项主要是用于在线认证的，比如说Github。
 
 <pre class="src src-shell-script">git config core.filemode false
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>core.ignorecase
+<li><p>
+core.ignorecase
+</p>
 
 <p>
 设置是否忽略文件名大小写的区别，默认为'false'，即默认情况下是大小写敏感的。在Windows的文件系统上，将这个项的值设置为'true'可能会比较常见
-</p>
-</li>
+</p></li>
 
-<li>core.autocrlf
+<li><p>
+core.autocrlf
+</p>
 
 <p>
 设置Git对行尾的换行符的处理方式。这个设置项主要是为了解决跨平台开发时Windows操作系统与*nix系统上换行符不一致的矛盾。其值有三个可能:
 </p>
 <ol class="org-ol">
-<li>true
+<li><p>
+true
+</p>
 
 <p>
 设置为该值时，代码仓库里的代码会保证以*nix的换行符结尾，在用户提交时会把Windows的换行符替换为*nix的换行符，但在用户checkout后将会替换成Windows的换行符。在Windows环境下开发但其合作者中在*nix系统下开发的用户可以将'core.autocrlf'项的值设置为'true':
@@ -203,24 +221,26 @@ user下的配置项主要是用于在线认证的，比如说Github。
 
 <pre class="src src-shell-script">git config core.autocrlf true
 </pre>
-</div>
-</li>
-<li>input
+</div></li>
+<li><p>
+input
+</p>
 
 <p>
 设置为该值时，代码仓库里的代码和checkout的结果都会保证以*nix的换行符结尾，如果提交时的文件中存在Windows的换行符，Git会将其替换为*nix的换行符。
+</p></li>
+<li><p>
+false
 </p>
-</li>
-<li>false
 
 <p>
 设置为该值时，Git不对文件行结尾的换行符进行检测和处理。
-</p>
-</li>
-</ol>
-</li>
+</p></li>
+</ol></li>
 
-<li>core.excludesfile
+<li><p>
+core.excludesfile
+</p>
 
 <p>
 设置一个文件，文件中包含一些文件名或者正则表达式，代码仓库中被匹配到的文件将会被视为不是代码仓库中的文件，既不会检查其改动，在执行'git add'的时候也会自动忽略它们。
@@ -228,10 +248,11 @@ user下的配置项主要是用于在线认证的，比如说Github。
 
 <p>
 在代码仓库中建立名为.gitignore的文件能起到相同的作用。
-</p>
-</li>
+</p></li>
 
-<li>core.editor
+<li><p>
+core.editor
+</p>
 
 <p>
 设置'git commit'时编辑提交信息的编辑器，如要设置为vim，则:
@@ -240,26 +261,27 @@ user下的配置项主要是用于在线认证的，比如说Github。
 
 <pre class="src src-shell-script">git config --global core.editor vim
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>core.pager
+<li><p>
+core.pager
+</p>
 
 <p>
 设置在执行'git log'等包含大量输出的命令时的分页器，默认为'less'，通过这个项可以将其设置为'more'，或者设置为空以关闭分页输出:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">git config core.pager <span style="color: #25ef29;">''</span>
+<pre class="src src-shell-script">git config core.pager <span style="color: #ad7fa8;">''</span>
 </pre>
-</div>
-</li>
+</div></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">配置: Section color</h2>
-<div class="outline-text-2" id="text-4">
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">配置: Section color</h2>
+<div class="outline-text-2" id="text-orgheadline4">
 <p>
 该组配置可以让Git在输出时进行着色——默认情况下都是不着色的，而着色有助于阅读，比如在执行'git diff'和'git log'的时候。
 </p>

@@ -6,10 +6,29 @@ tags       :
 - Tesseract
 - OCR
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">资源文件</a></li>
+<li><a href="#orgheadline2">资源文件的训练</a>
+<ul>
+<li><a href="#orgheadline3">数据准备</a></li>
+<li><a href="#orgheadline4">图像与BOX文件生成</a></li>
+<li><a href="#orgheadline5">字符集文件与字体信息文件生成</a></li>
+<li><a href="#orgheadline6">特征文件生成</a></li>
+<li><a href="#orgheadline7">聚集</a></li>
+<li><a href="#orgheadline8">[可选]添加配置文件、歧义修正文件、DAWG文件</a></li>
+<li><a href="#orgheadline9">打包</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">资源文件</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">资源文件</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 在<a href="http://linusp.github.io/2015/04/17/tesseract-install-usage.html">上一篇文章</a>中已经讲述了 Tesseract 的基本使用，同时也提到， Tesseract 在识别是需要使用存储在磁盘上的 "语言文件" —— 为不产生歧义，这里简单以 "资源文件" 称呼它。在 Windows 系统上，这些资源文件可以在安装目录下的 tessdata 目录下找到；在 Linux 系统上，这些资源文件通常是在 /usr/share/tesseract-ocr/tessdata 目录下。按照 Tesseract 的约定，这些资源文件以 "traineddata" 作为后缀，除去后缀的部分则是该资源文件的 "名称" ，在使用 Tesseract 命令行工具或者 API 时，就通过这个名称来引用需要的资源文件。比如我们要用英语的资源文件来识别一张图像，通常会这么写:
 </p>
@@ -76,24 +95,15 @@ Tesseract 提供了工具来将一个资源文件打开，这个工具叫做 com
 可以看到，这个资源文件里包含了很多东西，这些文件各自的意义为:
 </p>
 <ul class="org-ul">
-<li>config: 配置文件
-</li>
-<li>unicharset: 字符集文件，所谓 "字符集" 即是所有可被识别的字符的集合
-</li>
-<li>unicharambigs: 识别歧义修正文件
-</li>
-<li>inttemp: 每个字符的 "原型" ，或者是 "标准型" ，当然啦，这里面其实是包含了字符的各种特征，并不是一个标准的 "字符图像"
-</li>
-<li>pffmtable: 指明了每个字符的特征数量
-</li>
-<li>normproto: 项目网站上的说法是 "normalization sensitivity prototypes" ，不知道怎么翻译合适
-</li>
-<li>以 dawg 结尾的文件: 有向非循环词图(Directed Acyclic Word Graph, DAWG)文件，用来增强、调整识别过程
-</li>
-<li>cube-unicharset, cube-word-dawg: 用于 Tesseract 内部名为 CUBE 的识别引擎，无资料，不详
-</li>
-<li>shapetable: 同样是个不知道如何翻译的家伙，反正项目网站上说这个文件已经不需要使用(但还是得有这个文件)，就不纠结了
-</li>
+<li>config: 配置文件</li>
+<li>unicharset: 字符集文件，所谓 "字符集" 即是所有可被识别的字符的集合</li>
+<li>unicharambigs: 识别歧义修正文件</li>
+<li>inttemp: 每个字符的 "原型" ，或者是 "标准型" ，当然啦，这里面其实是包含了字符的各种特征，并不是一个标准的 "字符图像"</li>
+<li>pffmtable: 指明了每个字符的特征数量</li>
+<li>normproto: 项目网站上的说法是 "normalization sensitivity prototypes" ，不知道怎么翻译合适</li>
+<li>以 dawg 结尾的文件: 有向非循环词图(Directed Acyclic Word Graph, DAWG)文件，用来增强、调整识别过程</li>
+<li>cube-unicharset, cube-word-dawg: 用于 Tesseract 内部名为 CUBE 的识别引擎，无资料，不详</li>
+<li>shapetable: 同样是个不知道如何翻译的家伙，反正项目网站上说这个文件已经不需要使用(但还是得有这个文件)，就不纠结了</li>
 </ul>
 
 <p>
@@ -101,7 +111,7 @@ Tesseract 提供了工具来将一个资源文件打开，这个工具叫做 com
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">cd</span> english
+<pre class="src src-sh"><span style="color: #729fcf;">cd</span> english
 combine_tessdata eng
 </pre>
 </div>
@@ -111,23 +121,19 @@ combine_tessdata eng
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">资源文件的训练</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">资源文件的训练</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 如果刚才按照建议进行过了尝试，应该能发现哪些是必要的文件，它们是:
 </p>
 <ul class="org-ul">
-<li>unicharset
-</li>
-<li>inttemp
-</li>
-<li>pffmtable
-</li>
-<li>normproto
-</li>
-<li>shapetable
-</li>
+<li>unicharset</li>
+<li>inttemp</li>
+<li>pffmtable</li>
+<li>normproto</li>
+<li>shapetable</li>
 </ul>
 
 <p>
@@ -135,17 +141,15 @@ combine_tessdata eng
 </p>
 </div>
 
-<div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">数据准备</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">数据准备</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 首先要准备好训练用的文本数据，根据不同的应用场景，对文本数据的要求会不一样。这些文本数据有两个用途:
 </p>
 <ol class="org-ol">
-<li>用以产生字符集
-</li>
-<li>用以产生语言模型
-</li>
+<li>用以产生字符集</li>
+<li>用以产生语言模型</li>
 </ol>
 
 <p>
@@ -160,10 +164,8 @@ combine_tessdata eng
 所以这一步要做的事情有两个:
 </p>
 <ol class="org-ol">
-<li>数据清洗，这个和自然语言处理里的清洗是一样的
-</li>
-<li>字符集提取，简单来说，排序、去重即可
-</li>
+<li>数据清洗，这个和自然语言处理里的清洗是一样的</li>
+<li>字符集提取，简单来说，排序、去重即可</li>
 </ol>
 
 <p>
@@ -179,16 +181,17 @@ combine_tessdata eng
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">图像与BOX文件生成</h3>
-<div class="outline-text-3" id="text-2-2">
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">图像与BOX文件生成</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 有了数据文件后，我们需要用这些数据文件中的文字来生成图像，用这些图像去进行训练。在 3.03 后， Tesseract 已经提供了相应的工具 text2image，使用方法为:
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-sh">text2image  --text=chinese.txt --outputbase=chinese.sun.exp0 --font=<span style="color: #b5bd68;">"SimSun"</span> --fonts_dir=./fonts/
+<pre class="src src-sh">text2image  --text=chinese.txt --outputbase=chinese.sun.exp0 --font=<span style="color: #ad7fa8;">"SimSun"</span> --fonts_dir=./fonts/
 </pre>
 </div>
 
@@ -201,9 +204,10 @@ combine_tessdata eng
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">字符集文件与字体信息文件生成</h3>
-<div class="outline-text-3" id="text-2-3">
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">字符集文件与字体信息文件生成</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <p>
 提取 Tesseract 能读取、处理的字符集文件，使用 unicharset_extractor 命令:
 </p>
@@ -228,16 +232,11 @@ unicharset_extractor  chinses.box  english.box
 第一个字段为字体名称，名称中不能有空格，名称可以任意，但建议尽量贴近字体在操作系统上的名称，后面五个字段分别表示:
 </p>
 <ul class="org-ul">
-<li>该字体是否有斜体
-</li>
-<li>该字体是否有粗体
-</li>
-<li>该字体是否有无衬线体
-</li>
-<li>该字体是否有衬线体
-</li>
-<li>该字体是否有哥特体
-</li>
+<li>该字体是否有斜体</li>
+<li>该字体是否有粗体</li>
+<li>该字体是否有无衬线体</li>
+<li>该字体是否有衬线体</li>
+<li>该字体是否有哥特体</li>
 </ul>
 
 <p>
@@ -248,9 +247,10 @@ SimSun 1 1 0 1 0
 </pre>
 </div>
 </div>
-<div id="outline-container-sec-2-4" class="outline-3">
-<h3 id="sec-2-4">特征文件生成</h3>
-<div class="outline-text-3" id="text-2-4">
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">特征文件生成</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 特征文件的生成使用 tesseract 命令:
 </p>
@@ -266,9 +266,10 @@ SimSun 1 1 0 1 0
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-5" class="outline-3">
-<h3 id="sec-2-5">聚集</h3>
-<div class="outline-text-3" id="text-2-5">
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">聚集</h3>
+<div class="outline-text-3" id="text-orgheadline7">
 <p>
 上一步的特征文件生成后，需要将同样文字的不同字体的特征聚集到一起来产生该文字的一个 <b>原型</b> ，这一步需要执行三个命令:
 </p>
@@ -304,17 +305,19 @@ SimSun 1 1 0 1 0
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-6" class="outline-3">
-<h3 id="sec-2-6">[可选]添加配置文件、歧义修正文件、DAWG文件</h3>
-<div class="outline-text-3" id="text-2-6">
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">[可选]添加配置文件、歧义修正文件、DAWG文件</h3>
+<div class="outline-text-3" id="text-orgheadline8">
 <p>
 略(后面补上)
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-7" class="outline-3">
-<h3 id="sec-2-7">打包</h3>
-<div class="outline-text-3" id="text-2-7">
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">打包</h3>
+<div class="outline-text-3" id="text-orgheadline9">
 <p>
 在上述步骤都完成后，将要打包入资源文件的那些文件加上一个统一的前缀，该前缀即是待生成的资源文件的名称，这里假定我们要生成 chi.traineddata 这样一个资源文件，那么我们的可能操作就是:
 </p>

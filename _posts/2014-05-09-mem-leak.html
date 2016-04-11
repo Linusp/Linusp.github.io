@@ -1,98 +1,71 @@
----
+<p>
+#+begin_html
+&#x2014;
 layout     : post
 title      : C++函数内部new操作并返回对象给外部导致的内存泄漏
 categories : 编程
 tags       :
-- c++
-- valgrind
+</p>
+<ul class="org-ul">
+<li>c++</li>
+<li>valgrind</li>
+</ul>
+<p>
 description: 
----
-
+&#x2014;
+#+end_html
+</p>
 <p>
 最近在为公司一个项目的一个模块写API，在API基本完成后，我写了几个demo把各种情况测试了一下。通过简单测试后，一时兴起，用valgrind进行了一下内存检查，真是不看不知道，一看吓一跳。
-</p>
 
+<img src="../../../assets/img/mem-leak.jpg" alt="mem-leak.jpg" />
 
-<div class="figure">
-<p><img src="../../../assets/img/mem-leak.jpg" alt="mem-leak.jpg" />
-</p>
-</div>
-
-<p>
 当时为了更快地看到结果，只拿了一个小的音频文件来进行处理，大概就几百个KB吧，然后内存泄漏的量就达到了3,481,396个字节！
-</p>
 
-<p>
 花了一两天的时间，借助valgrind以及代码阅读工具(sublime text + ctags)，我发现了内存泄漏的源头。
-</p>
 
-<p>
 一方面，有项目本身的代码编写不规范导致的泄漏；另一方面，也有项目使用的开源库自身的问题。
-</p>
 
-<p>
 项目本身存在的问题有：
 </p>
 <ol class="org-ol">
-<li>new/delete 操作不成对
-</li>
-<li>拷贝构造函数/赋值运算符重载 在进行拷贝时只进行了浅拷贝
-</li>
+<li>new/delete 操作不成对</li>
+<li>拷贝构造函数/赋值运算符重载 在进行拷贝时只进行了浅拷贝</li>
 </ol>
 
 
 <p>
 项目本身的问题不太多，而且容易发现，所以被我优先解决了，此时内存泄漏的量减少了一半左右。
-</p>
 
-<p>
 接下来进入正题，在我们项目使用的开源库中，存在大量的同一个问题。
-</p>
 
-<p>
 对于下面这个类
-</p>
-<div class="org-src-container">
-
-<pre class="src src-C++"><span style="color: #cf4a44;">class</span> <span style="color: #ca34e2;">A</span>
+#+BEGIN_SRC C++
+class A
 {
-<span style="color: #cf4a44;">public</span>:
-    <span style="color: #ca34e2;">A</span> &amp;<span style="color: #ed8a0c;">create</span>() {<span style="color: #ca34e2;">A</span> *<span style="color: #fefc58;">p</span> = <span style="color: #cf4a44;">new</span> <span style="color: #ca34e2;">A</span>; <span style="color: #cf4a44;">return</span> *p;}
-    <span style="color: #cf4a44;">virtual</span> ~<span style="color: #ed8a0c;">A</span>();
-<span style="color: #cf4a44;">private</span>:
-    <span style="color: #ed8a0c;">A</span>();
+public:
+    A &amp;create() {A *p = new A; return *p;}
+    virtual ~A();
+private:
+    A();
 };
-</pre>
-</div>
-<p>
+#+END_SRC
 首先，对于类 <b>A</b> 的方法 <b>create</b> ，如果按下面的形式调用：
-</p>
-<div class="org-src-container">
-
-<pre class="src src-C++"><span style="color: #ca34e2;">A</span> <span style="color: #fefc58;">a</span>;
-<span style="color: #ca34e2;">A</span> <span style="color: #fefc58;">b</span> = a.create();
-</pre>
-</div>
-<p>
+#+BEGIN_SRC C++
+A a;
+A b = a.create();
+#+END_SRC
 是必然会发生内存泄漏的，因为 b 不是引用类型，在赋值时发生的是拷贝操作， <b>create()</b> 内部产生的指针已经被丢失了。所幸这种行为在项目以及项目使用的开源库中并没有发现。但在该开源库自身的代码中，大量存在另外一种错误。
-</p>
-<div class="org-src-container">
-
-<pre class="src src-C++"><span style="color: #ca34e2;">A</span> <span style="color: #fefc58;">a</span>;
-<span style="color: #ca34e2;">A</span> &amp;<span style="color: #fefc58;">b</span> = a.create();
-</pre>
-</div>
-<p>
+#+BEGIN_SRC C++
+A a;
+A &amp;b = a.create();
+#+END_SRC
 使用引用对象来接受 <b>create()</b> 返回的对象是正确的，但是，由于对象所使用的内存空间是通过 <b>new</b> 得到的，也就是说，其占用的内存，是在堆上的，对于这样的内存空间，如果不手动进行回收，则在程序退出时也不会被回收。也就是说，下面的操作才是正确的：
-</p>
-<div class="org-src-container">
-
-<pre class="src src-C++"><span style="color: #ca34e2;">A</span> <span style="color: #fefc58;">a</span>;
-<span style="color: #ca34e2;">A</span> &amp;<span style="color: #fefc58;">b</span> = a.create();
-<span style="color: #e81122;">// </span><span style="color: #e81122;">...</span>
-<span style="color: #cf4a44;">delete</span> &amp;b;
-</pre>
-</div>
-<p>
+#+BEGIN_SRC C++
+A a;
+A &amp;b = a.create();
+// &#x2026;
+delete &amp;b;
+#+END_SRC
 然而很不幸的是，这个开源库里面对于大量调用 <b>create()</b> 及类似方法返回的对象，都没有进行回收，这是它自身的问题。如果要彻底解决目前我面临的内存泄漏问题，只能去修改这个开源库了，想想就觉得是一件很麻烦的事情_(:3」∠)_
 </p>

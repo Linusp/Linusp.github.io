@@ -8,19 +8,32 @@ tags       :
 - C语言
 ---
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">ucc简介</h2>
-<div class="outline-text-2" id="text-1">
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">ucc简介</a></li>
+<li><a href="#orgheadline2">主体框架</a>
+<ul>
+<li><a href="#orgheadline3">第一部分：参数检查：</a></li>
+<li><a href="#orgheadline4">第二部分：环境准备</a></li>
+<li><a href="#orgheadline5">第三部分：参数解析</a></li>
+<li><a href="#orgheadline6">第四部分：动作执行</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">ucc简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 <a href="http://ucc.sourceforge.net/">ucc</a> 是早些年一位清华大学的学生编写的x86平台上的C语言编译器，遵从ANSI C89标准，能在Linux/Windows系统上正确编译自身并成功运行。它有以下特点：
 </p>
 <ol class="org-ol">
-<li>代码结构清晰，有详细的文档讲述它的实现(中英文皆有)
-</li>
-<li>使用三地址码作为中间码，构建了由基本块组成的控制流图，适合很多优化算法
-</li>
-<li>轻量级，编译速度快，词法分析器、语法分析器和目标代码生成器都是自行实现的
-</li>
+<li>代码结构清晰，有详细的文档讲述它的实现(中英文皆有)</li>
+<li>使用三地址码作为中间码，构建了由基本块组成的控制流图，适合很多优化算法</li>
+<li>轻量级，编译速度快，词法分析器、语法分析器和目标代码生成器都是自行实现的</li>
 </ol>
 
 
@@ -33,19 +46,20 @@ tags       :
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">主体框架</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">主体框架</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 ucc.c是编译器的入口模块，其中的main函数如下所示：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<pre class="src src-C"><span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span>;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span>;
 
-    <span style="color: #cf4a44;">if</span> (argc &lt;= 1)
+    <span style="color: #729fcf;">if</span> (argc &lt;= 1)
     {
         ShowHelp();
         exit(0);
@@ -53,35 +67,35 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 
     Option.oftype = EXE_FILE;
     SetupToolChain();
-    Command = Alloc((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
-    Command[0] = <span style="color: #bebebe;">NULL</span>;
+    Command = Alloc((argc + 60) * <span style="color: #729fcf;">sizeof</span>(<span style="color: #8ae234;">char</span> *));
+    Command[0] = <span style="color: #e6a00f;">NULL</span>;
 
     i = ParseCmdLine(--argc, ++argv);
-    <span style="color: #cf4a44;">for</span> (; i &lt; argc; ++i)
+    <span style="color: #729fcf;">for</span> (; i &lt; argc; ++i)
     {
-        <span style="color: #cf4a44;">if</span> (argv[i][0] == <span style="color: #25ef29;">'-'</span>)
+        <span style="color: #729fcf;">if</span> (argv[i][0] == <span style="color: #ad7fa8;">'-'</span>)
         {
             Option.linput = ListAppend(Option.linput, argv[i]);
         }
-        <span style="color: #cf4a44;">else</span>
+        <span style="color: #729fcf;">else</span>
         {
             AddFile(argv[i]);
         }
     }
 
-    <span style="color: #cf4a44;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
+    <span style="color: #729fcf;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
     {
-        <span style="color: #cf4a44;">if</span> (InvokeProgram(i) != 0)
+        <span style="color: #729fcf;">if</span> (InvokeProgram(i) != 0)
         {
             RemoveFiles();
-            fprintf(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
+            fprintf(stderr, <span style="color: #ad7fa8;">"ucc invoke command error:"</span>);
             PrintCommand();
-            <span style="color: #cf4a44;">return</span> -1;
+            <span style="color: #729fcf;">return</span> -1;
         }
     }
 
     RemoveFiles();
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -90,23 +104,19 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 可以很明显地发现，整个main函数可以细分为以下几部分：
 </p>
 <ul class="org-ul">
-<li>参数检查
-</li>
-<li>环境准备
-</li>
-<li>参数解析
-</li>
-<li>动作执行
-</li>
+<li>参数检查</li>
+<li>环境准备</li>
+<li>参数解析</li>
+<li>动作执行</li>
 </ul>
 </div>
 
-<div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">第一部分：参数检查：</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">第一部分：参数检查：</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #cf4a44;">if</span> (argc &lt;= 1)
+<pre class="src src-C"><span style="color: #729fcf;">if</span> (argc &lt;= 1)
 {
     ShowHelp();
     exit(0);
@@ -118,15 +128,16 @@ ucc.c是编译器的入口模块，其中的main函数如下所示：
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">第二部分：环境准备</h3>
-<div class="outline-text-3" id="text-2-2">
+
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">第二部分：环境准备</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <div class="org-src-container">
 
 <pre class="src src-C">Option.oftype = EXE_FILE;
 SetupToolChain();
-Command = Alloc((argc + 60) * <span style="color: #cf4a44;">sizeof</span>(<span style="color: #ca34e2;">char</span> *));
-Command[0] = <span style="color: #bebebe;">NULL</span>;
+Command = Alloc((argc + 60) * <span style="color: #729fcf;">sizeof</span>(<span style="color: #8ae234;">char</span> *));
+Command[0] = <span style="color: #e6a00f;">NULL</span>;
 </pre>
 </div>
 <p>
@@ -142,19 +153,20 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">第三部分：参数解析</h3>
-<div class="outline-text-3" id="text-2-3">
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">第三部分：参数解析</h3>
+<div class="outline-text-3" id="text-orgheadline5">
 <div class="org-src-container">
 
 <pre class="src src-C">i = ParseCmdLine(--argc, ++argv);
-<span style="color: #cf4a44;">for</span> (; i &lt; argc; ++i)
+<span style="color: #729fcf;">for</span> (; i &lt; argc; ++i)
 {
-    <span style="color: #cf4a44;">if</span> (argv[i][0] == <span style="color: #25ef29;">'-'</span>)
+    <span style="color: #729fcf;">if</span> (argv[i][0] == <span style="color: #ad7fa8;">'-'</span>)
     {
         Option.linput = ListAppend(Option.linput, argv[i]);
     }
-    <span style="color: #cf4a44;">else</span>
+    <span style="color: #729fcf;">else</span>
     {
         AddFile(argv[i]);
     }
@@ -166,19 +178,20 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 </p>
 </div>
 </div>
-<div id="outline-container-sec-2-4" class="outline-3">
-<h3 id="sec-2-4">第四部分：动作执行</h3>
-<div class="outline-text-3" id="text-2-4">
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">第四部分：动作执行</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #cf4a44;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
+<pre class="src src-C"><span style="color: #729fcf;">for</span> (i = PP_FILE; i &lt;= Option.oftype; ++i)
 {
-    <span style="color: #cf4a44;">if</span> (InvokeProgram(i) != 0)
+    <span style="color: #729fcf;">if</span> (InvokeProgram(i) != 0)
     {
         RemoveFiles();
-        fprintf(stderr, <span style="color: #25ef29;">"ucc invoke command error:"</span>);
+        fprintf(stderr, <span style="color: #ad7fa8;">"ucc invoke command error:"</span>);
         PrintCommand();
-        <span style="color: #cf4a44;">return</span> -1;
+        <span style="color: #729fcf;">return</span> -1;
     }
 }
 </pre>
@@ -188,19 +201,19 @@ Command[0] = <span style="color: #bebebe;">NULL</span>;
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">ret</span> = 0;
-<span style="color: #e81122;">/* </span><span style="color: #e81122;">do some thing </span><span style="color: #e81122;">*/</span>
+<pre class="src src-C"><span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">ret</span> = 0;
+<span style="color: #888a85;">/* </span><span style="color: #888a85;">do some thing </span><span style="color: #888a85;">*/</span>
 ret = Preproc();
-<span style="color: #cf4a44;">if</span> (ret &lt; 0) {                  <span style="color: #e81122;">/* </span><span style="color: #e81122;">error </span><span style="color: #e81122;">*/</span>
-    <span style="color: #cf4a44;">return</span> ret;
+<span style="color: #729fcf;">if</span> (ret &lt; 0) {                  <span style="color: #888a85;">/* </span><span style="color: #888a85;">error </span><span style="color: #888a85;">*/</span>
+    <span style="color: #729fcf;">return</span> ret;
 }
 
 ret = Lexana();
-<span style="color: #cf4a44;">if</span> (ret &lt; 0) {                  <span style="color: #e81122;">/* </span><span style="color: #e81122;">error </span><span style="color: #e81122;">*/</span>
-    <span style="color: #cf4a44;">return</span> ret;
+<span style="color: #729fcf;">if</span> (ret &lt; 0) {                  <span style="color: #888a85;">/* </span><span style="color: #888a85;">error </span><span style="color: #888a85;">*/</span>
+    <span style="color: #729fcf;">return</span> ret;
 };
 
-<span style="color: #e81122;">/* </span><span style="color: #e81122;">... </span><span style="color: #e81122;">*/</span>
+<span style="color: #888a85;">/* </span><span style="color: #888a85;">... </span><span style="color: #888a85;">*/</span>
 </pre>
 </div>
 <p>
@@ -208,7 +221,7 @@ ret = Lexana();
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #cf4a44;">enum</span> { <span style="color: #fefc58;">C_FILE</span>, <span style="color: #fefc58;">PP_FILE</span>, <span style="color: #fefc58;">ASM_FILE</span>, <span style="color: #fefc58;">OBJ_FILE</span>, <span style="color: #fefc58;">LIB_FILE</span>, <span style="color: #fefc58;">EXE_FILE</span> };
+<pre class="src src-C"><span style="color: #729fcf;">enum</span> { <span style="color: #eeeeec;">C_FILE</span>, <span style="color: #eeeeec;">PP_FILE</span>, <span style="color: #eeeeec;">ASM_FILE</span>, <span style="color: #eeeeec;">OBJ_FILE</span>, <span style="color: #eeeeec;">LIB_FILE</span>, <span style="color: #eeeeec;">EXE_FILE</span> };
 </pre>
 </div>
 <p>

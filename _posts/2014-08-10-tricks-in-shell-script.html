@@ -10,22 +10,37 @@ tags       :
 - awk
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">使用特殊变量</a></li>
+<li><a href="#orgheadline2">条件表达式</a></li>
+<li><a href="#orgheadline3">变量使用</a></li>
+<li><a href="#orgheadline4">处理文件</a></li>
+<li><a href="#orgheadline5">后记</a></li>
+</ul>
+</div>
+</div>
 <p>
 自工作以来，写了不少脚本，有自己临时需要而写的，也有给测试妹子编写的工具。在这个过程中，碰到了许多问题，当然也就学习到了很多啦。有些零零碎碎的细节，花大篇幅讲有点没必要，就整合在这篇文章里吧。
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">使用特殊变量</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">使用特殊变量</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <ol class="org-ol">
-<li>$#
+<li><p>
+$#
+</p>
 
 <p>
 $#表示当前参数列表的长度，对需要参数的Shell函数，这个变量同样有效
-</p>
-</li>
+</p></li>
 
-<li>$*与$@
+<li><p>
+$*与$@
+</p>
 
 <p>
 这两个都包含了当前所有参数，但当用 <b>双引号将这两个特殊变量括起来</b> 后，它们之间会产生差异。
@@ -36,13 +51,13 @@ $#表示当前参数列表的长度，对需要参数的Shell函数，这个变�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #969896; font-style: italic;">#</span><span style="color: #969896; font-style: italic;">!/bin/</span><span style="color: #b294bb;">bash</span>
+<pre class="src src-shell-script"><span style="color: #888a85;">#</span><span style="color: #888a85;">!/bin/</span><span style="color: #729fcf;">bash</span>
 
-<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">arg_num</span>(){
-    <span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">#</span>, $<span style="color: #de935f;">1</span>
+<span style="color: #729fcf;">function</span> <span style="color: #edd400;">arg_num</span>(){
+    <span style="color: #729fcf;">echo</span> $<span style="color: #eeeeec;">#</span>, $<span style="color: #eeeeec;">1</span>
 }
 
-arg_num <span style="color: #b5bd68;">"$*"</span>
+arg_num <span style="color: #ad7fa8;">"$*"</span>
 </pre>
 </div>
 
@@ -73,56 +88,63 @@ arg_num <span style="color: #b5bd68;">"$*"</span>
 <div class="figure">
 <p><img src="../../../assets/img/spe_arg-2.png" alt="spe_arg-2.png" />
 </p>
-</div>
-</li>
+</div></li>
 
-<li>$$
+<li><p>
+$$
+</p>
 
 <p>
 这表示当前的进程号。我经常将其用于生成临时文件，由于每个脚本运行后，其进程号都是唯一的，可以保证不会和其他脚本产生的临时文件发生冲突。
-</p>
-</li>
+</p></li>
 
-<li>$?
+<li><p>
+$?
+</p>
 
 <p>
 上一条命令的返回值，为0则表示上一条命令正常执行，否则就是出错了。通过这个值可以方便地进行错误处理。
-</p>
-</li>
+</p></li>
 
-<li>$0
+<li><p>
+$0
+</p>
 
 <p>
 表示当前脚本的名字
-</p>
-</li>
+</p></li>
 
-<li>$1, $2, &#x2026; $9
+<li><p>
+$1, $2, &#x2026; $9
+</p>
 
 <p>
 分别表示第1个、第2个&#x2026;第9个参数
-</p>
-</li>
+</p></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">条件表达式</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">条件表达式</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 在Shell脚本中，有三种条件表达式的形式:
 </p>
 <ol class="org-ol">
-<li>一对中括号括起来的条件表达式，如
+<li><p>
+一对中括号括起来的条件表达式，如
+</p>
 <pre class="example">
 [ 0 -gt 1 ]
 </pre>
 
 <p>
 使用这种方式，在进行字符串比较时，用于比较的运算符"&lt;"和"&gt;"必须转义，即必须表示为"\&lt;"和"\&gt;"。
+</p></li>
+<li><p>
+用一对双中括号括起来的条件表达式，如
 </p>
-</li>
-<li>用一对双中括号括起来的条件表达式，如
 <pre class="example">
 [[ 0 -gt 1 ]]
 </pre>
@@ -137,9 +159,10 @@ arg_num <span style="color: #b5bd68;">"$*"</span>
 [0 -gt 1]
 [0 -gt 1 ]
 [ 0 -gt 1]
-</pre>
-</li>
-<li>用一对双括号括起来的条件表达式，如
+</pre></li>
+<li><p>
+用一对双括号括起来的条件表达式，如
+</p>
 <pre class="example">
 (())
 </pre>
@@ -149,28 +172,31 @@ arg_num <span style="color: #b5bd68;">"$*"</span>
 
 <p>
 当然，双括号不只用于条件表达式，还可以在其中进行四则运算，for循环也可以使用它。
-</p>
-</li>
+</p></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">变量使用</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">变量使用</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <ol class="org-ol">
-<li>局部变量
+<li><p>
+局部变量
+</p>
 
 <p>
 在函数中，应该尽量将使用到的变量定义为局部变量，以下做法可以达到该目的:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #8abeb7;">local</span> <span style="color: #de935f;">var</span>=<span style="color: #b5bd68;">""</span>
+<pre class="src src-shell-script"><span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">var</span>=<span style="color: #ad7fa8;">""</span>
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>$var与${var}
+<li><p>
+\(var与\){var}
+</p>
 
 <p>
 在可能产生歧义的地方，应该使用后一种方式。所谓的歧义，可能这个词我用得不太准确，还是举个例子来描述一下吧。
@@ -181,11 +207,11 @@ arg_num <span style="color: #b5bd68;">"$*"</span>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #de935f;">i</span>=0
-<span style="color: #b294bb;">for</span> i<span style="color: #b294bb;"> in</span> $(<span style="color: #b294bb;">seq</span> 1 3);<span style="color: #b294bb;">do</span>
-    <span style="color: #de935f;">now_file</span>=$<span style="color: #de935f;">ROOT_PATH</span>/$<span style="color: #de935f;">i_wavlist</span>
-    &gt; $<span style="color: #de935f;">now_file</span>
-<span style="color: #b294bb;">done</span>
+<pre class="src src-shell-script"><span style="color: #eeeeec;">i</span>=0
+<span style="color: #729fcf;">for</span> i<span style="color: #729fcf;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #729fcf;">do</span>
+    <span style="color: #eeeeec;">now_file</span>=$<span style="color: #eeeeec;">ROOT_PATH</span>/$<span style="color: #eeeeec;">i_wavlist</span>
+    &gt; $<span style="color: #eeeeec;">now_file</span>
+<span style="color: #729fcf;">done</span>
 </pre>
 </div>
 <p>
@@ -193,15 +219,16 @@ arg_num <span style="color: #b5bd68;">"$*"</span>
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #de935f;">i</span>=0
-<span style="color: #b294bb;">for</span> i<span style="color: #b294bb;"> in</span> $(<span style="color: #b294bb;">seq</span> 1 3);<span style="color: #b294bb;">do</span>
-    <span style="color: #de935f;">now_file</span>=$<span style="color: #de935f;">ROOT_PATH</span>/${<span style="color: #de935f;">i</span>}_wavlist
-    &gt; $<span style="color: #de935f;">now_file</span>
-<span style="color: #b294bb;">done</span>
+<pre class="src src-shell-script"><span style="color: #eeeeec;">i</span>=0
+<span style="color: #729fcf;">for</span> i<span style="color: #729fcf;"> in</span> $(<span style="color: #fa8072;">seq</span> 1 3);<span style="color: #729fcf;">do</span>
+    <span style="color: #eeeeec;">now_file</span>=$<span style="color: #eeeeec;">ROOT_PATH</span>/${<span style="color: #eeeeec;">i</span>}_wavlist
+    &gt; $<span style="color: #eeeeec;">now_file</span>
+<span style="color: #729fcf;">done</span>
 </pre>
-</div>
-</li>
-<li>在sed/grep/awk中使用Shell变量
+</div></li>
+<li><p>
+在sed/grep/awk中使用Shell变量
+</p>
 
 <p>
 sed和grep可以一起说，因为是同样的问题。在sed/grep的表达式中使用Shell变量，如果想得到期望的结果，应该用双引号而不是单引号将表达式括起来。这是因为在Shell中，双引号是 <b>弱引用(Weak Quotes)</b> ，而单引号是 <b>强引用(Strong Quotes)</b> ，在一对单引号中的内容，会作为字符串内容原原本本地输出，也就是说，Shell的取值操作符dollar符($)在一对单引号中，也是被视为一个普通字符的。
@@ -220,7 +247,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk -v <span style="color: #de935f;">var</span>=<span style="color: #b5bd68;">"$shell_var"</span> <span style="color: #b5bd68;">'{print var}'</span> a.txt
+<pre class="src src-shell-script">awk -v <span style="color: #eeeeec;">var</span>=<span style="color: #ad7fa8;">"$shell_var"</span> <span style="color: #ad7fa8;">'{print var}'</span> a.txt
 </pre>
 </div>
 
@@ -233,7 +260,7 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk <span style="color: #b5bd68;">"{print \$1, $shell_var}"</span> a.txt
+<pre class="src src-shell-script">awk <span style="color: #ad7fa8;">"{print \$1, $shell_var}"</span> a.txt
 </pre>
 </div>
 
@@ -242,37 +269,40 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script">awk <span style="color: #b5bd68;">'{print $1, "'</span>$<span style="color: #de935f;">shell_var</span><span style="color: #b5bd68;">'"}'</span> a.txt
+<pre class="src src-shell-script">awk <span style="color: #ad7fa8;">'{print $1, "'</span>$<span style="color: #eeeeec;">shell_var</span><span style="color: #ad7fa8;">'"}'</span> a.txt
 </pre>
-</div>
-</li>
+</div></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">处理文件</h2>
-<div class="outline-text-2" id="text-4">
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">处理文件</h2>
+<div class="outline-text-2" id="text-orgheadline4">
 <p>
 文本处理这里就不说了，只是说一下处理文件时的一些小细节。
 </p>
 
 <ol class="org-ol">
-<li>文件属性判断
+<li><p>
+文件属性判断
+</p>
 
 <p>
 条件表达式中，'-e'用于判断文件是否存在，'-d'用于判断是否是一个目录，'-s'用于判断文件是否存在但内容为空。这三个都是我比较常用的。
-</p>
-</li>
+</p></li>
 
-<li>获取文件绝对路径
+<li><p>
+获取文件绝对路径
+</p>
 
 <p>
 在一些情景下，我们需要获得文件的绝对路径，比较蠢的办法是:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #de935f;">dir</span>=$(<span style="color: #b294bb;">dirname</span> $<span style="color: #de935f;">file</span>)
-<span style="color: #de935f;">full_dir</span>=$(<span style="color: #b294bb;">cd</span> $<span style="color: #de935f;">dir</span> &amp;&amp; <span style="color: #8abeb7;">pwd</span>)
+<pre class="src src-shell-script"><span style="color: #eeeeec;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $<span style="color: #eeeeec;">file</span>)
+<span style="color: #eeeeec;">full_dir</span>=$(<span style="color: #fa8072;">cd</span> $<span style="color: #eeeeec;">dir</span> &amp;&amp; <span style="color: #729fcf;">pwd</span>)
 </pre>
 </div>
 
@@ -281,16 +311,16 @@ awk中的情况与前面两者类似，但又有所不同。由于awk的表达�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-shell-script"><span style="color: #de935f;">dir</span>=$(<span style="color: #b294bb;">dirname</span> $(<span style="color: #b294bb;">readlink</span> -f $<span style="color: #de935f;">file</span>))
+<pre class="src src-shell-script"><span style="color: #eeeeec;">dir</span>=$(<span style="color: #fa8072;">dirname</span> $(<span style="color: #fa8072;">readlink</span> -f $<span style="color: #eeeeec;">file</span>))
 </pre>
-</div>
-</li>
+</div></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">后记</h2>
-<div class="outline-text-2" id="text-5">
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">后记</h2>
+<div class="outline-text-2" id="text-orgheadline5">
 <p>
 暂时先这样吧，以后还有东西，会继续更新本文。
 </p>

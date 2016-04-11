@@ -8,6 +8,16 @@ tags       :
 - APIStore
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">百度 OCR API 初探</a></li>
+<li><a href="#orgheadline2">用 Python 调用百度 OCR API</a></li>
+<li><a href="#orgheadline3">与 Tesseract 的简单对比</a></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1">百度 OCR API 初探</h2>
 <div class="outline-text-2" id="text-orgheadline1">
@@ -205,53 +215,53 @@ word
 </p>
 <div class="org-src-container">
 
-<pre class="src src-python"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">-*- coding: utf-8 -*-</span>
-<span style="color: #b294bb;">import</span> requests
+<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">-*- coding: utf-8 -*-</span>
+<span style="color: #729fcf;">import</span> requests
 
-<span style="color: #de935f;">URL</span> = <span style="color: #b5bd68;">'http://apis.baidu.com/apistore/idlocr/ocr'</span>
-<span style="color: #de935f;">LANG_LIST</span> = [<span style="color: #b5bd68;">'CHN_ENG'</span>, <span style="color: #b5bd68;">'ENG'</span>, <span style="color: #b5bd68;">'JAP'</span>, <span style="color: #b5bd68;">'KOR'</span>]
+<span style="color: #eeeeec;">URL</span> = <span style="color: #ad7fa8;">'http://apis.baidu.com/apistore/idlocr/ocr'</span>
+<span style="color: #eeeeec;">LANG_LIST</span> = [<span style="color: #ad7fa8;">'CHN_ENG'</span>, <span style="color: #ad7fa8;">'ENG'</span>, <span style="color: #ad7fa8;">'JAP'</span>, <span style="color: #ad7fa8;">'KOR'</span>]
 
 
-<span style="color: #b294bb;">def</span> <span style="color: #81a2be;">ocr</span>(picture, lang=<span style="color: #b5bd68;">'CHN_ENG'</span>):
-    <span style="color: #b5bd68;">"""Recognize a picture and return the text on it.</span>
+<span style="color: #729fcf;">def</span> <span style="color: #edd400;">ocr</span>(picture, lang=<span style="color: #ad7fa8;">'CHN_ENG'</span>):
+    <span style="color: #ad7fa8;">"""Recognize a picture and return the text on it.</span>
 
-<span style="color: #b5bd68;">    picture could be a local picture or url of picture on web.</span>
+<span style="color: #ad7fa8;">    picture could be a local picture or url of picture on web.</span>
 
-<span style="color: #b5bd68;">    lang should be one of CHN_ENG, ENG, JAP, KOR</span>
-<span style="color: #b5bd68;">    """</span>
-    <span style="color: #de935f;">data</span> = {}
-    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'fromdevice'</span>] = <span style="color: #b5bd68;">"pc"</span>
-    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'clientip'</span>] = <span style="color: #b5bd68;">'10.10.10.0'</span>
-    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'detecttype'</span>] = <span style="color: #b5bd68;">'Recognize'</span>
-    <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'imagetype'</span>] = <span style="color: #b5bd68;">"2"</span>
+<span style="color: #ad7fa8;">    lang should be one of CHN_ENG, ENG, JAP, KOR</span>
+<span style="color: #ad7fa8;">    """</span>
+    <span style="color: #eeeeec;">data</span> = {}
+    <span style="color: #eeeeec;">data</span>[<span style="color: #ad7fa8;">'fromdevice'</span>] = <span style="color: #ad7fa8;">"pc"</span>
+    <span style="color: #eeeeec;">data</span>[<span style="color: #ad7fa8;">'clientip'</span>] = <span style="color: #ad7fa8;">'10.10.10.0'</span>
+    <span style="color: #eeeeec;">data</span>[<span style="color: #ad7fa8;">'detecttype'</span>] = <span style="color: #ad7fa8;">'Recognize'</span>
+    <span style="color: #eeeeec;">data</span>[<span style="color: #ad7fa8;">'imagetype'</span>] = <span style="color: #ad7fa8;">"2"</span>
 
-    <span style="color: #b294bb;">if</span> lang <span style="color: #b294bb;">not</span> <span style="color: #b294bb;">in</span> LANG_LIST:
-        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'invalid language: %s'</span> % lang)
-    <span style="color: #b294bb;">else</span>:
-        <span style="color: #de935f;">data</span>[<span style="color: #b5bd68;">'languagetype'</span>] = lang
+    <span style="color: #729fcf;">if</span> lang <span style="color: #729fcf;">not</span> <span style="color: #729fcf;">in</span> LANG_LIST:
+        <span style="color: #729fcf;">raise</span> <span style="color: #8ae234;">Exception</span>(<span style="color: #ad7fa8;">'invalid language: %s'</span> % lang)
+    <span style="color: #729fcf;">else</span>:
+        <span style="color: #eeeeec;">data</span>[<span style="color: #ad7fa8;">'languagetype'</span>] = lang
 
-    <span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">&#27492;&#22788;&#24212;&#20351;&#29992;&#33258;&#24049;&#30340; API key</span>
-    <span style="color: #de935f;">header</span> = {<span style="color: #b5bd68;">"apikey"</span>: <span style="color: #b5bd68;">"your api key"</span>}
+    <span style="color: #888a85;"># </span><span style="color: #888a85;">&#27492;&#22788;&#24212;&#20351;&#29992;&#33258;&#24049;&#30340; API key</span>
+    <span style="color: #eeeeec;">header</span> = {<span style="color: #ad7fa8;">"apikey"</span>: <span style="color: #ad7fa8;">"your api key"</span>}
 
-    <span style="color: #de935f;">image_file</span> = <span style="color: #8abeb7;">None</span>
-    <span style="color: #b294bb;">try</span>:
-        <span style="color: #b294bb;">if</span> picture.startswith(<span style="color: #b5bd68;">'http://'</span>) <span style="color: #b294bb;">or</span> picture.startswith(<span style="color: #b5bd68;">'https://'</span>):
-            <span style="color: #de935f;">image_file</span> = requests.get(picture).content
-        <span style="color: #b294bb;">else</span>:
-            <span style="color: #de935f;">image_file</span> = <span style="color: #8abeb7;">open</span>(picture, <span style="color: #b5bd68;">'rb'</span>).read()
-    <span style="color: #b294bb;">except</span> <span style="color: #f0c674;">Exception</span>:
-        <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(<span style="color: #b5bd68;">'invalid picture: %s'</span> % picture)
+    <span style="color: #eeeeec;">image_file</span> = <span style="color: #e6a00f;">None</span>
+    <span style="color: #729fcf;">try</span>:
+        <span style="color: #729fcf;">if</span> picture.startswith(<span style="color: #ad7fa8;">'http://'</span>) <span style="color: #729fcf;">or</span> picture.startswith(<span style="color: #ad7fa8;">'https://'</span>):
+            <span style="color: #eeeeec;">image_file</span> = requests.get(picture).content
+        <span style="color: #729fcf;">else</span>:
+            <span style="color: #eeeeec;">image_file</span> = <span style="color: #729fcf;">open</span>(picture, <span style="color: #ad7fa8;">'rb'</span>).read()
+    <span style="color: #729fcf;">except</span> <span style="color: #8ae234;">Exception</span>:
+        <span style="color: #729fcf;">raise</span> <span style="color: #8ae234;">Exception</span>(<span style="color: #ad7fa8;">'invalid picture: %s'</span> % picture)
 
-    <span style="color: #de935f;">resp</span> = requests.post(URL, headers=header, data=data, files={<span style="color: #b5bd68;">"image"</span>: (<span style="color: #b5bd68;">"baidu.jpg"</span>, image_file)})
+    <span style="color: #eeeeec;">resp</span> = requests.post(URL, headers=header, data=data, files={<span style="color: #ad7fa8;">"image"</span>: (<span style="color: #ad7fa8;">"baidu.jpg"</span>, image_file)})
 
-    <span style="color: #b294bb;">if</span> resp <span style="color: #b294bb;">is</span> <span style="color: #b294bb;">not</span> <span style="color: #8abeb7;">None</span>:
-        <span style="color: #de935f;">resp</span> = resp.json()
-        <span style="color: #b294bb;">if</span>  <span style="color: #8abeb7;">int</span>(resp.get(<span style="color: #b5bd68;">'errNum'</span>)) != 0:
-            <span style="color: #b294bb;">raise</span> <span style="color: #f0c674;">Exception</span>(reps.get(<span style="color: #b5bd68;">'errMsg'</span>))
-        <span style="color: #b294bb;">else</span>:
-            <span style="color: #b294bb;">return</span> resp.get(<span style="color: #b5bd68;">'retData'</span>)[0].get(<span style="color: #b5bd68;">'word'</span>)
-    <span style="color: #b294bb;">else</span>:
-        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">None</span>
+    <span style="color: #729fcf;">if</span> resp <span style="color: #729fcf;">is</span> <span style="color: #729fcf;">not</span> <span style="color: #e6a00f;">None</span>:
+        <span style="color: #eeeeec;">resp</span> = resp.json()
+        <span style="color: #729fcf;">if</span>  <span style="color: #729fcf;">int</span>(resp.get(<span style="color: #ad7fa8;">'errNum'</span>)) != 0:
+            <span style="color: #729fcf;">raise</span> <span style="color: #8ae234;">Exception</span>(reps.get(<span style="color: #ad7fa8;">'errMsg'</span>))
+        <span style="color: #729fcf;">else</span>:
+            <span style="color: #729fcf;">return</span> resp.get(<span style="color: #ad7fa8;">'retData'</span>)[0].get(<span style="color: #ad7fa8;">'word'</span>)
+    <span style="color: #729fcf;">else</span>:
+        <span style="color: #729fcf;">return</span> <span style="color: #e6a00f;">None</span>
 </pre>
 </div>
 

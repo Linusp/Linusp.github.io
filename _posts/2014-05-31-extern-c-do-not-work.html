@@ -6,31 +6,41 @@ tags       :
 - "C/C++"
 - nm
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">extern "C": 指示编译器以C形式进行链接</a></li>
+<li><a href="#orgheadline2">nm: 查看目标文件中的符号是C形式还是C++形式</a></li>
+<li><a href="#orgheadline3">"undefined reference": 诡异的错误</a></li>
+</ul>
+</div>
+</div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">extern "C": 指示编译器以C形式进行链接</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">extern "C": 指示编译器以C形式进行链接</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 某些时候，我们需要将一些C++的库封装成C风格的接口供外部使用，所谓“C风格”的接口，是指该接口的参数、返回值中不包含类、作用域等C++的元素，但其实现中是可以有的。比如说，我们有一个类 <b>Wav</b> ，用来处理wave文件
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _WAV_H_
-<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_WAV_H_</span>
+<pre class="src src-C++"><span style="color: #729fcf;">#if</span><span style="color: #729fcf;">n</span><span style="color: #729fcf;">def</span> _WAV_H_
+<span style="color: #729fcf;">#define</span> <span style="color: #eeeeec;">_WAV_H_</span>
 
-<span style="color: #cf4a44;">class</span> <span style="color: #ca34e2;">Wav</span>
+<span style="color: #729fcf;">class</span> <span style="color: #8ae234;">Wav</span>
 {
-<span style="color: #cf4a44;">public</span>:
-    <span style="color: #ed8a0c;">Wav</span>();
-    <span style="color: #ed8a0c;">Wav</span>(<span style="color: #ca34e2;">string</span> <span style="color: #fefc58;">wav_file</span>);
-    <span style="color: #cf4a44;">virtual</span> ~<span style="color: #ed8a0c;">Wav</span>();
-    <span style="color: #ca34e2;">bool</span> <span style="color: #ed8a0c;">load_wav</span>(<span style="color: #ca34e2;">string</span> <span style="color: #fefc58;">wav_file</span>);
-    <span style="color: #cf4a44;">private</span>:
-    <span style="color: #ca34e2;">short</span> *<span style="color: #fefc58;">data</span>;
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">sampel_rate</span>;
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #edd400;">Wav</span>();
+    <span style="color: #edd400;">Wav</span>(<span style="color: #8ae234;">string</span> <span style="color: #eeeeec;">wav_file</span>);
+    <span style="color: #729fcf;">virtual</span> ~<span style="color: #edd400;">Wav</span>();
+    <span style="color: #8ae234;">bool</span> <span style="color: #edd400;">load_wav</span>(<span style="color: #8ae234;">string</span> <span style="color: #eeeeec;">wav_file</span>);
+    <span style="color: #729fcf;">private</span>:
+    <span style="color: #8ae234;">short</span> *<span style="color: #eeeeec;">data</span>;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">sampel_rate</span>;
 };
 
-<span style="color: #31d3c4;">#endif</span> <span style="color: #e81122;">/* </span><span style="color: #e81122;">_WAV_H_ */</span>
+<span style="color: #729fcf;">#endif</span> <span style="color: #888a85;">/* </span><span style="color: #888a85;">_WAV_H_ */</span>
 </pre>
 </div>
 
@@ -39,21 +49,21 @@ tags       :
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _WAVPROC_H_
-<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_WAVPROC_H_</span>
+<pre class="src src-C"><span style="color: #729fcf;">#if</span><span style="color: #729fcf;">n</span><span style="color: #729fcf;">def</span> _WAVPROC_H_
+<span style="color: #729fcf;">#define</span> <span style="color: #eeeeec;">_WAVPROC_H_</span>
 
-<span style="color: #31d3c4;">#ifdef</span> __cplusplus
-<span style="color: #cf4a44;">extern</span> <span style="color: #25ef29;">"C"</span>{
-<span style="color: #31d3c4;">#endif</span>
-    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_wav</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">wav_file</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">denoise</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">cutscene</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">feature_extract</span>(<span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">data</span>, <span style="color: #ca34e2;">double</span> *<span style="color: #fefc58;">feature</span>);
-<span style="color: #31d3c4;">#ifdef</span> __cplusplus
+<span style="color: #729fcf;">#ifdef</span> __cplusplus
+<span style="color: #729fcf;">extern</span> <span style="color: #ad7fa8;">"C"</span>{
+<span style="color: #729fcf;">#endif</span>
+    <span style="color: #8ae234;">int</span> <span style="color: #edd400;">read_wav</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">wav_file</span>, <span style="color: #8ae234;">double</span> *<span style="color: #eeeeec;">data</span>);
+    <span style="color: #8ae234;">int</span> <span style="color: #edd400;">denoise</span>(<span style="color: #8ae234;">double</span> *<span style="color: #eeeeec;">data</span>);
+    <span style="color: #8ae234;">int</span> <span style="color: #edd400;">cutscene</span>(<span style="color: #8ae234;">double</span> *<span style="color: #eeeeec;">data</span>);
+    <span style="color: #8ae234;">int</span> <span style="color: #edd400;">feature_extract</span>(<span style="color: #8ae234;">double</span> *<span style="color: #eeeeec;">data</span>, <span style="color: #8ae234;">double</span> *<span style="color: #eeeeec;">feature</span>);
+<span style="color: #729fcf;">#ifdef</span> __cplusplus
 }
-<span style="color: #31d3c4;">#endif</span>
+<span style="color: #729fcf;">#endif</span>
 
-<span style="color: #31d3c4;">#endif</span> <span style="color: #e81122;">/* </span><span style="color: #e81122;">_WAVPROC_H_ </span><span style="color: #e81122;">*/</span>
+<span style="color: #729fcf;">#endif</span> <span style="color: #888a85;">/* </span><span style="color: #888a85;">_WAVPROC_H_ </span><span style="color: #888a85;">*/</span>
 </pre>
 </div>
 
@@ -61,28 +71,27 @@ tags       :
 然后在"wavproc.cpp"中实现这些接口，此时在"wavproc.cpp"中是可以使用上面定义的类以及其他C++语言的特性的。实现以后以静态库/动态库的形式提供接口，对于使用接口的C程序来说，只需要
 </p>
 <ol class="org-ol">
-<li>wavproc.h
-</li>
-<li>对应的静态库/动态库，如: libwavproc.a
-</li>
+<li>wavproc.h</li>
+<li>对应的静态库/动态库，如: libwavproc.a</li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">nm: 查看目标文件中的符号是C形式还是C++形式</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">nm: 查看目标文件中的符号是C形式还是C++形式</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 nm是一个查看目标文件中符号列表的工具，其具体使用这里不会详谈，只讲一下用nm来判断使用extern "C"是否起作用。举个栗子，对下面这个函数：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">"fs.h"</span>
+<pre class="src src-C++"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">"fs.h"</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">file_size</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>)
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fs</span> = 0;
-    <span style="color: #e81122;">// </span><span style="color: #e81122;">do something</span>
-    <span style="color: #cf4a44;">return</span> fs;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">fs</span> = 0;
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">do something</span>
+    <span style="color: #729fcf;">return</span> fs;
 }
 </pre>
 </div>
@@ -91,12 +100,12 @@ nm是一个查看目标文件中符号列表的工具，其具体使用这里不
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _FS_H_
-<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_FS_H_</span>
+<pre class="src src-C++"><span style="color: #729fcf;">#if</span><span style="color: #729fcf;">n</span><span style="color: #729fcf;">def</span> _FS_H_
+<span style="color: #729fcf;">#define</span> <span style="color: #eeeeec;">_FS_H_</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">file_size</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>);
 
-<span style="color: #31d3c4;">#endif</span>
+<span style="color: #729fcf;">#endif</span>
 </pre>
 </div>
 <p>
@@ -120,13 +129,13 @@ nm是一个查看目标文件中符号列表的工具，其具体使用这里不
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">"fs.h"</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">"fs.h"</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>)
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">file_size</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>)
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">fs</span> = 0;
-    <span style="color: #e81122;">/* </span><span style="color: #e81122;">do something </span><span style="color: #e81122;">*/</span>
-    <span style="color: #cf4a44;">return</span> fs;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">fs</span> = 0;
+    <span style="color: #888a85;">/* </span><span style="color: #888a85;">do something </span><span style="color: #888a85;">*/</span>
+    <span style="color: #729fcf;">return</span> fs;
 }
 </pre>
 </div>
@@ -155,20 +164,20 @@ nm是一个查看目标文件中符号列表的工具，其具体使用这里不
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #31d3c4;">#if</span><span style="color: #31d3c4;">n</span><span style="color: #31d3c4;">def</span> _FS_H_
-<span style="color: #31d3c4;">#define</span> <span style="color: #fefc58;">_FS_H_</span>
+<pre class="src src-C++"><span style="color: #729fcf;">#if</span><span style="color: #729fcf;">n</span><span style="color: #729fcf;">def</span> _FS_H_
+<span style="color: #729fcf;">#define</span> <span style="color: #eeeeec;">_FS_H_</span>
 
-<span style="color: #31d3c4;">#ifdef</span> __cpulsplus
-<span style="color: #cf4a44;">extern</span> <span style="color: #25ef29;">"C"</span>{
-<span style="color: #31d3c4;">#endif</span>
+<span style="color: #729fcf;">#ifdef</span> __cpulsplus
+<span style="color: #729fcf;">extern</span> <span style="color: #ad7fa8;">"C"</span>{
+<span style="color: #729fcf;">#endif</span>
 
-    <span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">file_size</span>(<span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+    <span style="color: #8ae234;">int</span> <span style="color: #edd400;">file_size</span>(<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>);
 
-<span style="color: #31d3c4;">#ifdef</span> __cplusplus
+<span style="color: #729fcf;">#ifdef</span> __cplusplus
 }
-<span style="color: #31d3c4;">#endif</span>
+<span style="color: #729fcf;">#endif</span>
 
-<span style="color: #31d3c4;">#endif</span>
+<span style="color: #729fcf;">#endif</span>
 </pre>
 </div>
 <p>
@@ -191,9 +200,10 @@ nm是一个查看目标文件中符号列表的工具，其具体使用这里不
 </p>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">"undefined reference": 诡异的错误</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">"undefined reference": 诡异的错误</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 好了，终于到了标题提到的内容了。
 </p>
@@ -219,7 +229,7 @@ undeined reference: xxxx
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">InitDiarizationSpace</span>(<span style="color: #ca34e2;">Dia</span> *<span style="color: #fefc58;">env</span>, <span style="color: #cf4a44;">const</span> <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>);
+<pre class="src src-C++"><span style="color: #8ae234;">void</span> <span style="color: #edd400;">InitDiarizationSpace</span>(<span style="color: #8ae234;">Dia</span> *<span style="color: #eeeeec;">env</span>, <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>);
 </pre>
 </div>
 <p>
@@ -227,8 +237,8 @@ undeined reference: xxxx
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">InitDiarizationSpace</span>(<span style="color: #ca34e2;">Dia</span> *<span style="color: #fefc58;">env</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">file</span>) {
-    <span style="color: #e81122;">// </span><span style="color: #e81122;">...</span>
+<pre class="src src-C++"><span style="color: #8ae234;">void</span> <span style="color: #edd400;">InitDiarizationSpace</span>(<span style="color: #8ae234;">Dia</span> *<span style="color: #eeeeec;">env</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">file</span>) {
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">...</span>
 }
 </pre>
 </div>

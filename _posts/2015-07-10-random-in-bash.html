@@ -8,6 +8,17 @@ tags       :
 - Linux
 description:
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">$RANDOM</a></li>
+<li><a href="#orgheadline2">/dev/random</a></li>
+<li><a href="#orgheadline3">seq + sort</a></li>
+<li><a href="#orgheadline4">shuf</a></li>
+</ul>
+</div>
+</div>
 
 
 <p>
@@ -31,8 +42,8 @@ description:
 
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">4230</span>
+<pre class="src src-sh"><span style="color: #729fcf;">echo</span> $<span style="color: #eeeeec;">RANDOM</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">4230</span>
 </pre>
 </div>
 
@@ -42,9 +53,9 @@ description:
 
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #de935f;">RANDOM</span>=10
-<span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">4230</span>
+<pre class="src src-sh"><span style="color: #eeeeec;">RANDOM</span>=10
+<span style="color: #729fcf;">echo</span> $<span style="color: #eeeeec;">RANDOM</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">4230</span>
 </pre>
 </div>
 
@@ -53,9 +64,9 @@ description:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_with_time</span>{} {
-    <span style="color: #de935f;">RANDOM</span>=$(<span style="color: #b294bb;">date</span> +%s)
-    <span style="color: #8abeb7;">echo</span> $<span style="color: #de935f;">RANDOM</span>
+<pre class="src src-sh"><span style="color: #729fcf;">function</span> <span style="color: #edd400;">random_with_time</span>{} {
+    <span style="color: #eeeeec;">RANDOM</span>=$(<span style="color: #fa8072;">date</span> +%s)
+    <span style="color: #729fcf;">echo</span> $<span style="color: #eeeeec;">RANDOM</span>
 }
 </pre>
 </div>
@@ -69,12 +80,12 @@ description:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
-<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span>() {
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
-    <span style="color: #8abeb7;">echo</span> $((RANDOM % ($<span style="color: #de935f;">end</span> - $<span style="color: #de935f;">beg</span>) + $<span style="color: #de935f;">beg</span>))
+<pre class="src src-sh"><span style="color: #888a85;"># </span><span style="color: #888a85;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
+<span style="color: #729fcf;">function</span> <span style="color: #edd400;">random_range</span>() {
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">beg</span>=$<span style="color: #eeeeec;">1</span>
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">end</span>=$<span style="color: #eeeeec;">2</span>
+    <span style="color: #729fcf;">echo</span> $((RANDOM % ($<span style="color: #eeeeec;">end</span> - $<span style="color: #eeeeec;">beg</span>) + $<span style="color: #eeeeec;">beg</span>))
 }
 </pre>
 </div>
@@ -90,7 +101,7 @@ description:
 <div class="org-src-container">
 
 <pre class="src src-sh">od -An -N2 -i /dev/random
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">13176</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">13176</span>
 </pre>
 </div>
 <p>
@@ -102,12 +113,12 @@ description:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
-<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span>() {
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
-    <span style="color: #8abeb7;">echo</span> $(($(<span style="color: #b294bb;">od</span> -An -N2 -i /dev/random) % ($<span style="color: #de935f;">end</span> - $<span style="color: #de935f;">beg</span>) + $<span style="color: #de935f;">beg</span>))
+<pre class="src src-sh"><span style="color: #888a85;"># </span><span style="color: #888a85;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">return random integer in [&lt;beg&gt;, &lt;end&gt;)</span>
+<span style="color: #729fcf;">function</span> <span style="color: #edd400;">random_range</span>() {
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">beg</span>=$<span style="color: #eeeeec;">1</span>
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">end</span>=$<span style="color: #eeeeec;">2</span>
+    <span style="color: #729fcf;">echo</span> $(($(<span style="color: #fa8072;">od</span> -An -N2 -i /dev/random) % ($<span style="color: #eeeeec;">end</span> - $<span style="color: #eeeeec;">beg</span>) + $<span style="color: #eeeeec;">beg</span>))
 }
 </pre>
 </div>
@@ -123,12 +134,12 @@ sort 命令有一个 -R 选项，可以根据随机 hash 排序，那么我们�
 
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
-<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span> {
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">beg</span>=$<span style="color: #de935f;">1</span>
-    <span style="color: #8abeb7;">local</span> <span style="color: #de935f;">end</span>=$<span style="color: #de935f;">2</span>
-    seq $<span style="color: #de935f;">beg</span> $<span style="color: #de935f;">end</span> | sort -R | head -n1
+<pre class="src src-sh"><span style="color: #888a85;"># </span><span style="color: #888a85;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
+<span style="color: #729fcf;">function</span> <span style="color: #edd400;">random_range</span> {
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">beg</span>=$<span style="color: #eeeeec;">1</span>
+    <span style="color: #729fcf;">local</span> <span style="color: #eeeeec;">end</span>=$<span style="color: #eeeeec;">2</span>
+    seq $<span style="color: #eeeeec;">beg</span> $<span style="color: #eeeeec;">end</span> | sort -R | head -n1
 }
 </pre>
 </div>
@@ -147,10 +158,10 @@ shuf 和 'sort -R' 的作用类似，用来根据输入生成随机序列:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">@args &lt;beg&gt; &lt;end&gt;</span>
-<span style="color: #969896; font-style: italic;"># </span><span style="color: #969896; font-style: italic;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
-<span style="color: #b294bb;">function</span> <span style="color: #81a2be;">random_range</span> {
-    shuf -i $<span style="color: #de935f;">1</span>-$<span style="color: #de935f;">2</span> -n1
+<pre class="src src-sh"><span style="color: #888a85;"># </span><span style="color: #888a85;">@args &lt;beg&gt; &lt;end&gt;</span>
+<span style="color: #888a85;"># </span><span style="color: #888a85;">return random integer in [&lt;beg&gt;, &lt;end&gt;]</span>
+<span style="color: #729fcf;">function</span> <span style="color: #edd400;">random_range</span> {
+    shuf -i $<span style="color: #eeeeec;">1</span>-$<span style="color: #eeeeec;">2</span> -n1
 }
 </pre>
 </div>

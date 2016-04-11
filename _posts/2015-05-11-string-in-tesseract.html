@@ -20,24 +20,24 @@ STRING 类是 Tesseract 中自定义的字符串类，封装了一些字符串�
 
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">class</span> <span style="color: #f0c674;">TESS_API</span> <span style="color: #de935f;">STRING</span> {
-<span style="color: #b294bb;">public</span>:
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">....</span>
+<pre class="src src-C++"><span style="color: #729fcf;">class</span> <span style="color: #8ae234;">TESS_API</span> <span style="color: #eeeeec;">STRING</span> {
+<span style="color: #729fcf;">public</span>:
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">....</span>
 
-<span style="color: #b294bb;">private</span>:
-    <span style="color: #b294bb;">typedef</span> <span style="color: #b294bb;">struct</span> <span style="color: #f0c674;">STRING_HEADER</span> {
-        <span style="color: #f0c674;">int</span> <span style="color: #de935f;">capacity_</span>;
+<span style="color: #729fcf;">private</span>:
+    <span style="color: #729fcf;">typedef</span> <span style="color: #729fcf;">struct</span> <span style="color: #8ae234;">STRING_HEADER</span> {
+        <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">capacity_</span>;
 
-        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">used_ is how much of the capacity is currently being used,</span>
-        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">including a '\0' terminator.</span>
-        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">if used_ is 0 then string is NULL(not even the '\0')</span>
-        <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">else if used_ &gt; 0 then it is strlen() + 1 (because it includes '\0')</span>
-        <span style="color: #b294bb;">mutable</span> <span style="color: #f0c674;">int</span> <span style="color: #de935f;">used_</span>;
-    } <span style="color: #f0c674;">STRING_HEADER</span>;
+        <span style="color: #888a85;">// </span><span style="color: #888a85;">used_ is how much of the capacity is currently being used,</span>
+        <span style="color: #888a85;">// </span><span style="color: #888a85;">including a '\0' terminator.</span>
+        <span style="color: #888a85;">// </span><span style="color: #888a85;">if used_ is 0 then string is NULL(not even the '\0')</span>
+        <span style="color: #888a85;">// </span><span style="color: #888a85;">else if used_ &gt; 0 then it is strlen() + 1 (because it includes '\0')</span>
+        <span style="color: #729fcf;">mutable</span> <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">used_</span>;
+    } <span style="color: #8ae234;">STRING_HEADER</span>;
 
-    <span style="color: #f0c674;">STRING_HEADER</span> *<span style="color: #de935f;">data_</span>;
+    <span style="color: #8ae234;">STRING_HEADER</span> *<span style="color: #eeeeec;">data_</span>;
 
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">....</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">....</span>
 };
 </pre>
 </div>
@@ -60,15 +60,15 @@ string() 方法
 
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">string</span>() <span style="color: #b294bb;">const</span> {
-    <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">STRING_HEADER</span>* <span style="color: #de935f;">header</span> = GetHeader();
-    <span style="color: #b294bb;">if</span> (header-&gt;used_ == 0)
-        <span style="color: #b294bb;">return</span> <span style="color: #8abeb7;">NULL</span>;
+<pre class="src src-C++"><span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span>* <span style="color: #e6a00f;">STRING</span>::<span style="color: #edd400;">string</span>() <span style="color: #729fcf;">const</span> {
+    <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">STRING_HEADER</span>* <span style="color: #eeeeec;">header</span> = GetHeader();
+    <span style="color: #729fcf;">if</span> (header-&gt;used_ == 0)
+        <span style="color: #729fcf;">return</span> <span style="color: #e6a00f;">NULL</span>;
 
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">mark header length unreliable because tesseract might</span>
-    <span style="color: #969896; font-style: italic;">// </span><span style="color: #969896; font-style: italic;">cast away the const and mutate the string directly.</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">mark header length unreliable because tesseract might</span>
+    <span style="color: #888a85;">// </span><span style="color: #888a85;">cast away the const and mutate the string directly.</span>
     header-&gt;used_ = -1;
-    <span style="color: #b294bb;">return</span> GetCStr();
+    <span style="color: #729fcf;">return</span> GetCStr();
 }
 </pre>
 </div></li>
@@ -79,8 +79,8 @@ c_str()
 
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">c_str</span>() <span style="color: #b294bb;">const</span> {
-    <span style="color: #b294bb;">return</span> string();
+<pre class="src src-C++"><span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span>* <span style="color: #e6a00f;">STRING</span>::<span style="color: #edd400;">c_str</span>() <span style="color: #729fcf;">const</span> {
+    <span style="color: #729fcf;">return</span> string();
 }
 </pre>
 </div></li>
@@ -92,8 +92,8 @@ c_str() 方法是 string() 方法的别名，而 string() 方法中返回的结�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #b294bb;">inline</span> <span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span>* <span style="color: #81a2be;">GetCStr</span>() <span style="color: #b294bb;">const</span> {
-    <span style="color: #b294bb;">return</span> ((<span style="color: #b294bb;">const</span> <span style="color: #f0c674;">char</span> *)data_) + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER);
+<pre class="src src-C++"><span style="color: #729fcf;">inline</span> <span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span>* <span style="color: #edd400;">GetCStr</span>() <span style="color: #729fcf;">const</span> {
+    <span style="color: #729fcf;">return</span> ((<span style="color: #729fcf;">const</span> <span style="color: #8ae234;">char</span> *)data_) + <span style="color: #729fcf;">sizeof</span>(STRING_HEADER);
 };
 </pre>
 </div>
@@ -107,14 +107,14 @@ c_str() 方法是 string() 方法的别名，而 string() 方法中返回的结�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++"><span style="color: #f0c674;">char</span> *<span style="color: #8abeb7;">STRING</span>::<span style="color: #81a2be;">AllocData</span>(<span style="color: #f0c674;">int</span> <span style="color: #de935f;">used</span>, <span style="color: #f0c674;">int</span> <span style="color: #de935f;">capacity</span>) {
-    data_ = (<span style="color: #f0c674;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER));
+<pre class="src src-C++"><span style="color: #8ae234;">char</span> *<span style="color: #e6a00f;">STRING</span>::<span style="color: #edd400;">AllocData</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">used</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">capacity</span>) {
+    data_ = (<span style="color: #8ae234;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #729fcf;">sizeof</span>(STRING_HEADER));
 
-    <span style="color: #f0c674;">STRING_HEADER</span> *<span style="color: #de935f;">header</span> = GetHeader();
+    <span style="color: #8ae234;">STRING_HEADER</span> *<span style="color: #eeeeec;">header</span> = GetHeader();
     header-&gt;capacity_ = capacity;
     header-&gt;used_ = used;
 
-    <span style="color: #b294bb;">return</span> GetCStr();
+    <span style="color: #729fcf;">return</span> GetCStr();
 }
 </pre>
 </div>
@@ -124,12 +124,12 @@ c_str() 方法是 string() 方法的别名，而 string() 方法中返回的结�
 </p>
 <div class="org-src-container">
 
-<pre class="src src-C++">data_ = (<span style="color: #f0c674;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #b294bb;">sizeof</span>(STRING_HEADER));
+<pre class="src src-C++">data_ = (<span style="color: #8ae234;">STRING_HEADER</span> *)alloc_string(capacity + <span style="color: #729fcf;">sizeof</span>(STRING_HEADER));
 
 data_-&gt;capacity_ = capacity;
 data_-&gt;used_ = used;
 
-<span style="color: #b294bb;">return</span> GetCStr();
+<span style="color: #729fcf;">return</span> GetCStr();
 </pre>
 </div>
 

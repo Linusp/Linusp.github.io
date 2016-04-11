@@ -4,9 +4,10 @@ title      : 《ANSI Common Lisp》第三章习题
 categories : 编程
 tags       : lisp
 ---
-
 <ol class="org-ol">
-<li>Show the following lists in box notation:
+<li><p>
+Show the following lists in box notation:
+</p>
 
 <pre class="example">
 (a) (a b (c d))
@@ -29,10 +30,11 @@ My answer:
 
 <p>
 (c) (((A . (B . NIL)) . (C . NIL)) . (D . NIL))
-</p>
-</li>
+</p></li>
 
-<li>Write a version of <b>union</b> that preserves the order of the elements in the original lists:
+<li><p>
+Write a version of <b>union</b> that preserves the order of the elements in the original lists:
+</p>
 
 <pre class="example">
 &gt; (new-union '(a b c) '(b a d))
@@ -44,15 +46,16 @@ My answer:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-union</span> (first second)
-  (<span style="color: #cf4a44;">dolist</span> (obj second)
-    (<span style="color: #cf4a44;">if</span> (not (member obj first))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">new-union</span> (first second)
+  (<span style="color: #729fcf;">dolist</span> (obj second)
+    (<span style="color: #729fcf;">if</span> (not (member obj first))
         (append first (list obj)))))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>Define a function that takes a list and returns a list indicating the number of times each (eql) element appears, sorted from most common element to least common:
+<li><p>
+Define a function that takes a list and returns a list indicating the number of times each (eql) element appears, sorted from most common element to least common:
+</p>
 
 <pre class="example">
 &gt; (occurrences '(a b a d a c d c a))
@@ -64,19 +67,20 @@ My answer:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">occurrence</span> (lst)
-  (<span style="color: #cf4a44;">let</span> ((result nil))
-    (<span style="color: #cf4a44;">dolist</span> (obj lst)
-      (<span style="color: #cf4a44;">if</span> (null (assoc obj result))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">occurrence</span> (lst)
+  (<span style="color: #729fcf;">let</span> ((result nil))
+    (<span style="color: #729fcf;">dolist</span> (obj lst)
+      (<span style="color: #729fcf;">if</span> (null (assoc obj result))
       (push (cons obj 1) result)
       (incf (cdr (assoc obj result)))
     ))
-    (sort result #'(<span style="color: #cf4a44;">lambda</span> (a b) (<span style="color: #cf4a44;">if</span> (&gt; (cdr a) (cdr b)) t nil)))))
+    (sort result #'(<span style="color: #729fcf;">lambda</span> (a b) (<span style="color: #729fcf;">if</span> (&gt; (cdr a) (cdr b)) t nil)))))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>Why does (member '(a) '((a) (b))) return nil?
+<li><p>
+Why does (member '(a) '((a) (b))) return nil?
+</p>
 
 <p>
 My answer:
@@ -84,10 +88,11 @@ My answer:
 
 <p>
 因为每次产生cons调用时系统都会分配新的对象，所以'(a)和'((a) (b))中的第一个元素虽然具有同样的值，但却不是同一个对象，而member函数使用的判定函数是eql。
-</p>
-</li>
+</p></li>
 
-<li>Suppose the function <b>pos+</b> takes a list and returns a list of each element plus its position:
+<li><p>
+Suppose the function <b>pos+</b> takes a list and returns a list of each element plus its position:
+</p>
 
 <pre class="example">
 &gt; (pos+ '(7 5 1 4))
@@ -106,13 +111,13 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos-plus</span> (lst pos)<span style="color: #a07f41; background-color: #073642;"> </span>
-  (<span style="color: #cf4a44;">if</span> (not (null lst))
-      (<span style="color: #cf4a44;">progn</span>
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">rec-pos-plus</span> (lst pos)<span style="color: #ffff00; background-color: #ff0000; font-weight: bold;"> </span>
+  (<span style="color: #729fcf;">if</span> (not (null lst))
+      (<span style="color: #729fcf;">progn</span>
     (incf (car lst) pos)
     (rec-pos-plus (cdr lst) (1+ pos)))))
 
-(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">rec-pos+</span> (lst)
+(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">rec-pos+</span> (lst)
   (rec-pos-plus lst 0)
   lst)
 </pre>
@@ -124,8 +129,8 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">iter-pos+</span> (lst)
-  (<span style="color: #cf4a44;">do</span> ((i 0 (+ i 1)))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">iter-pos+</span> (lst)
+  (<span style="color: #729fcf;">do</span> ((i 0 (+ i 1)))
       ((= i (length lst)) lst)
     (incf (nth i lst) i)
     ))
@@ -138,14 +143,15 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">pos+</span> (lst)
-  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (x) (incf x (position x lst)))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">pos+</span> (lst)
+  (mapcar #'(<span style="color: #729fcf;">lambda</span> (x) (incf x (position x lst)))
       lst))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>After yeas of deliiberation, a government commission has decided that lists should be represented by using the cdr to point to the first element and the car to point to the rest of the list. Define the government versions of the following functions:
+<li><p>
+After yeas of deliiberation, a government commission has decided that lists should be represented by using the cdr to point to the first element and the car to point to the rest of the list. Define the government versions of the following functions:
+</p>
 
 <pre class="example">
 (a) cons
@@ -164,8 +170,8 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">cons</span> (x y)
-  (<span style="color: #cf4a44;">let</span> ((result '(nil . nil)))
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">cons</span> (x y)
+  (<span style="color: #729fcf;">let</span> ((result '(nil . nil)))
     (setf (cdr result) x)
     (setf (car result) y)))
 </pre>
@@ -177,7 +183,7 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">list</span> (<span style="color: #ca34e2;">&amp;rest</span> arg)
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">list</span> (<span style="color: #8ae234;">&amp;rest</span> arg)
   arg)
 </pre>
 </div>
@@ -188,8 +194,8 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">length</span> (lst)
-  (<span style="color: #cf4a44;">if</span> (null lst)
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">length</span> (lst)
+  (<span style="color: #729fcf;">if</span> (null lst)
       0
       (+ 1 (length (car lst)))))
 </pre>
@@ -201,44 +207,46 @@ My answer:
 
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">member</span> (element list)
-  (<span style="color: #cf4a44;">cond</span> ((null list) nil)
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">member</span> (element list)
+  (<span style="color: #729fcf;">cond</span> ((null list) nil)
         ((eql element (cdr list)) list)
         (t (member element (car list)))))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>Modify the program in Figure 3.6 to use fewer cons cells. (Hing: Use dottedlists.)
+<li><p>
+Modify the program in Figure 3.6 to use fewer cons cells. (Hing: Use dottedlists.)
+</p>
 
 <p>
 My answer:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">n-elts</span> (elt n)
-  (<span style="color: #cf4a44;">if</span> (&gt; n 1)
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">n-elts</span> (elt n)
+  (<span style="color: #729fcf;">if</span> (&gt; n 1)
       (cons n elt)
       elt))
 
-(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compr</span> (elt n lst)
-  (<span style="color: #cf4a44;">if</span> (null lst)
+(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">compr</span> (elt n lst)
+  (<span style="color: #729fcf;">if</span> (null lst)
       (list (n-elts elt n))
-      (<span style="color: #cf4a44;">let</span> ((next (car lst)))
-    (<span style="color: #cf4a44;">if</span> (eql next elt)
+      (<span style="color: #729fcf;">let</span> ((next (car lst)))
+    (<span style="color: #729fcf;">if</span> (eql next elt)
         (compr elt (+ n 1) (cdr lst))
         (cons (n-elts elt n)
           (compr next 1 (cdr lst)))))))
 
-(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">compress</span> (x)
-  (<span style="color: #cf4a44;">if</span> (consp x)
+(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">compress</span> (x)
+  (<span style="color: #729fcf;">if</span> (consp x)
       (compr (car x) 1 (cdr x))
       x))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>Define a function that takes a list and prints it in dot natation:
+<li><p>
+Define a function that takes a list and prints it in dot natation:
+</p>
 
 <pre class="example">
 &gt; (showdots '(a b c))
@@ -251,54 +259,54 @@ My answer:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">showdots</span> (list)
-(<span style="color: #cf4a44;">cond</span> ((null list) nil)
-  ((consp list) (<span style="color: #cf4a44;">progn</span>
-         (format t <span style="color: #25ef29;">"("</span>)
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">showdots</span> (list)
+(<span style="color: #729fcf;">cond</span> ((null list) nil)
+  ((consp list) (<span style="color: #729fcf;">progn</span>
+         (format t <span style="color: #ad7fa8;">"("</span>)
          (showdots (car list))
-         (format t <span style="color: #25ef29;">" . "</span>)
-         (<span style="color: #cf4a44;">if</span> (null (cdr list))
-             (format t <span style="color: #25ef29;">"NIL"</span>)
+         (format t <span style="color: #ad7fa8;">" . "</span>)
+         (<span style="color: #729fcf;">if</span> (null (cdr list))
+             (format t <span style="color: #ad7fa8;">"NIL"</span>)
              (showdots (cdr list)))
-         (format t <span style="color: #25ef29;">")"</span>)
+         (format t <span style="color: #ad7fa8;">")"</span>)
          ))
-  (t (format t <span style="color: #25ef29;">"~a"</span> list))))
+  (t (format t <span style="color: #ad7fa8;">"~a"</span> list))))
 </pre>
-</div>
-</li>
+</div></li>
 
-<li>Write a program to find the <i>longest</i> finite path through a network represented as in Section 3.15. The network may contain cycles.
+<li><p>
+Write a program to find the <i>longest</i> finite path through a network represented as in Section 3.15. The network may contain cycles.
+</p>
 
 <p>
 My answer(对shortest-path的改写):
 </p>
 <div class="org-src-container">
 
-<pre class="src src-lisp">(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">new-paths</span> (path node net)
-  (mapcar #'(<span style="color: #cf4a44;">lambda</span> (n)<span style="color: #a07f41; background-color: #073642;"> </span>
-               (<span style="color: #cf4a44;">if</span> (not (member n path)) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#21028;&#26029;&#19979;&#19968;&#23618;&#33410;&#28857;&#26159;&#21542;&#21253;&#21547;&#22312;&#36335;&#24452;&#20013;&#20197;&#21066;&#38500;&#29615;&#30340;&#24433;&#21709;</span>
+<pre class="src src-lisp">(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">new-paths</span> (path node net)
+  (mapcar #'(<span style="color: #729fcf;">lambda</span> (n)<span style="color: #ffff00; background-color: #ff0000; font-weight: bold;"> </span>
+               (<span style="color: #729fcf;">if</span> (not (member n path)) <span style="color: #888a85;">;&#21028;&#26029;&#19979;&#19968;&#23618;&#33410;&#28857;&#26159;&#21542;&#21253;&#21547;&#22312;&#36335;&#24452;&#20013;&#20197;&#21066;&#38500;&#29615;&#30340;&#24433;&#21709;</span>
                    (cons n path)))
           (cdr (assoc node net))))
 
-(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">bfs</span> (end quene net)
-  (<span style="color: #cf4a44;">if</span> (null quene)
+(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">bfs</span> (end quene net)
+  (<span style="color: #729fcf;">if</span> (null quene)
       nil
-      (<span style="color: #cf4a44;">let</span> ((path (car quene)))
-        (<span style="color: #cf4a44;">let</span> ((node (car path)))
-          (<span style="color: #cf4a44;">if</span> (eql node end)
+      (<span style="color: #729fcf;">let</span> ((path (car quene)))
+        (<span style="color: #729fcf;">let</span> ((node (car path)))
+          (<span style="color: #729fcf;">if</span> (eql node end)
               (reverse path)
               (bfs end
-                   (sort (append (cdr quene) <span style="color: #e81122;">;</span><span style="color: #e81122;">&#25490;&#24207;&#20197;&#20445;&#35777;&#26368;&#38271;&#30340;&#36335;&#24452;&#22312;&#38431;&#21015;&#26368;&#21069;&#26041;</span>
+                   (sort (append (cdr quene) <span style="color: #888a85;">;&#25490;&#24207;&#20197;&#20445;&#35777;&#26368;&#38271;&#30340;&#36335;&#24452;&#22312;&#38431;&#21015;&#26368;&#21069;&#26041;</span>
                                  (new-paths path node net))
                          #'&gt;
-                         <span style="color: #31d3c4;">:key</span> #'length)
+                         <span style="color: #729fcf;">:key</span> #'length)
                    net))))))
 
-(<span style="color: #cf4a44;">defun</span> <span style="color: #ed8a0c;">longest-path</span> (start end net)
+(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">longest-path</span> (start end net)
   (bfs end (list (list start)) net))
 </pre>
-</div>
-</li>
+</div></li>
 </ol>
 
 <p>

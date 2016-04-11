@@ -8,16 +8,38 @@ tags       :
 - 序列比对
 ---
 
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">最长公共子序列</a>
+<ul>
+<li><a href="#orgheadline2">问题定义</a></li>
+<li><a href="#orgheadline3">求解方法</a></li>
+<li><a href="#orgheadline4">数学表示与相似度量</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline5">编辑距离</a>
+<ul>
+<li><a href="#orgheadline6">所谓编辑距离</a></li>
+<li><a href="#orgheadline7">求解方法</a></li>
+<li><a href="#orgheadline8">从编辑距离到相似度量</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline9">一点看法</a></li>
+</ul>
+</div>
+</div>
 <p>
 本文是<a href="http://linusp.github.io/2015/11/15/text_similarity_survey.html">《文本相似度量方法(1): 概览》</a> 一文的后续，着重讲述最长公共子序列(Longest Common Subsequence, LCS)和编辑距离的原理和实现。
 </p>
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4">最长公共子序列</h2>
-<div class="outline-text-2" id="text-orgheadline4">
-</div><div id="outline-container-orgheadline1" class="outline-3">
-<h3 id="orgheadline1">问题定义</h3>
-<div class="outline-text-3" id="text-orgheadline1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">最长公共子序列</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+</div><div id="outline-container-orgheadline2" class="outline-3">
+<h3 id="orgheadline2">问题定义</h3>
+<div class="outline-text-3" id="text-orgheadline2">
 <p>
 对给定序列 A 和 B, 满足以下条件的一个序列 C 被称为 A 和 B 的公共子序列:
 </p>
@@ -51,9 +73,9 @@ tags       :
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-3">
-<h3 id="orgheadline2">求解方法</h3>
-<div class="outline-text-3" id="text-orgheadline2">
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3">求解方法</h3>
+<div class="outline-text-3" id="text-orgheadline3">
 <p>
 LCS 是一个比较经典的算法问题，了解动态规划的读者应该对它不会陌生。
 </p>
@@ -662,9 +684,9 @@ heo
 </p>
 </div>
 </div>
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">数学表示与相似度量</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">数学表示与相似度量</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
 上述求解方法可以用数学语言表示如下:
 </p>
@@ -697,12 +719,12 @@ heo
 </div>
 
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8">编辑距离</h2>
-<div class="outline-text-2" id="text-orgheadline8">
-</div><div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">所谓编辑距离</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">编辑距离</h2>
+<div class="outline-text-2" id="text-orgheadline5">
+</div><div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">所谓编辑距离</h3>
+<div class="outline-text-3" id="text-orgheadline6">
 <p>
 编辑距离最早由俄罗斯科学家 <a href="https://en.wikipedia.org/wiki/Vladimir_Levenshtein">Levenshtein</a> 提出，故又称 "Levenshtein 距离"。其定义为: 给定两个字符串 A 和 B，将 A 通过删除、插入、替换操作转换为 B 所需要的最少操作次数。
 </p>
@@ -726,9 +748,9 @@ heo
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">求解方法</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">求解方法</h3>
+<div class="outline-text-3" id="text-orgheadline7">
 <p>
 编辑距离的核心过程 LCS 在我看来是一样的，可以看一下它的数学描述:
 </p>
@@ -786,9 +808,9 @@ heo
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">从编辑距离到相似度量</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">从编辑距离到相似度量</h3>
+<div class="outline-text-3" id="text-orgheadline8">
 <p>
 与 LCS 不同的是，编辑距离衡量的是差异性，所以用编辑距离来表示相似程度，按照如下式子进行转换:
 </p>

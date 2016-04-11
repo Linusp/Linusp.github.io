@@ -6,14 +6,24 @@ tags       :
 - GDB
 - C/C++
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">bt/backtrace</a></li>
+<li><a href="#orgheadline2">打印数组内容</a></li>
+<li><a href="#orgheadline3">设置源代码目录</a></li>
+</ul>
+</div>
+</div>
 
 <p>
 以下是这几个月工作以来所学习到的GDB调试技巧，虽然并不全面，但我认为还是比较实用的一些东西。
 </p>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">bt/backtrace</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">bt/backtrace</h2>
+<div class="outline-text-2" id="text-orgheadline1">
 <p>
 这条命令可以在程序出错时打印出函数调用栈，方便追踪问题发生的所在。对于代码结构比较复杂的项目，这条命令是非常有用的，所以这条命令也是必须掌握的了。
 </p>
@@ -24,22 +34,22 @@ tags       :
 
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">read_int</span>(<span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">fp</span>)
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">read_int</span>(<span style="color: #8ae234;">FILE</span> *<span style="color: #eeeeec;">fp</span>)
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = 0;
-    fscanf(fp, <span style="color: #25ef29;">"%d"</span>, &amp;a);
-    <span style="color: #cf4a44;">return</span> a;
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">a</span> = 0;
+    fscanf(fp, <span style="color: #ad7fa8;">"%d"</span>, &amp;a);
+    <span style="color: #729fcf;">return</span> a;
 }
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">FILE</span> *<span style="color: #fefc58;">file</span> = fopen(argv[1], <span style="color: #25ef29;">"r"</span>);
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span> = read_int(file);
-    printf(<span style="color: #25ef29;">"read %d\n"</span>, a);
+    <span style="color: #8ae234;">FILE</span> *<span style="color: #eeeeec;">file</span> = fopen(argv[1], <span style="color: #ad7fa8;">"r"</span>);
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">a</span> = read_int(file);
+    printf(<span style="color: #ad7fa8;">"read %d\n"</span>, a);
     fclose(file);
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -65,32 +75,33 @@ tags       :
 </div>
 </div>
 </div>
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">打印数组内容</h2>
-<div class="outline-text-2" id="text-2">
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">打印数组内容</h2>
+<div class="outline-text-2" id="text-orgheadline2">
 <p>
 在GDB中，如果在数组的定义所在的函数内查看数组内容，直接调用print命令即可，如，对下面的代码：
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-C"><span style="color: #31d3c4;">#include</span> <span style="color: #25ef29;">&lt;stdio.h&gt;</span>
+<pre class="src src-C"><span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;stdio.h&gt;</span>
 
-<span style="color: #ca34e2;">void</span> <span style="color: #ed8a0c;">add_one</span>(<span style="color: #ca34e2;">int</span> *<span style="color: #fefc58;">arr</span>, <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">len</span>)
+<span style="color: #8ae234;">void</span> <span style="color: #edd400;">add_one</span>(<span style="color: #8ae234;">int</span> *<span style="color: #eeeeec;">arr</span>, <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">len</span>)
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">i</span> = 0;
-    <span style="color: #cf4a44;">for</span> (i = 0; i &lt; len; ++i) {
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">i</span> = 0;
+    <span style="color: #729fcf;">for</span> (i = 0; i &lt; len; ++i) {
         arr[i] = arr[i] + 1;
     }
 }
 
-<span style="color: #ca34e2;">int</span> <span style="color: #ed8a0c;">main</span>(<span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">argc</span>, <span style="color: #ca34e2;">char</span> *<span style="color: #fefc58;">argv</span>[])
+<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>[])
 {
-    <span style="color: #ca34e2;">int</span> <span style="color: #fefc58;">a</span>[] = {1, 2, 3, 4, 5, 6, 7};
+    <span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">a</span>[] = {1, 2, 3, 4, 5, 6, 7};
 
     add_one(a, 7);
 
-    <span style="color: #cf4a44;">return</span> 0;
+    <span style="color: #729fcf;">return</span> 0;
 }
 </pre>
 </div>
@@ -129,7 +140,9 @@ tags       :
 </p>
 
 <ol class="org-ol">
-<li>print *arr@7 / p *arr@7
+<li><p>
+print *arr@7 / p *arr@7
+</p>
 
 
 <div class="figure">
@@ -139,10 +152,11 @@ tags       :
 
 <p>
 不管指针指向的内存中存储的是基本类型的数据还是自定义的类型，这个方法都适用。
-</p>
-</li>
+</p></li>
 
-<li>print (int [​7])*arr / p (int [​7])*arr
+<li><p>
+print (int [​7])*arr / p (int [​7])*arr
+</p>
 
 
 <div class="figure">
@@ -152,10 +166,11 @@ tags       :
 
 <p>
 同上，但在操作上要麻烦一点。
-</p>
-</li>
+</p></li>
 
-<li>x/7dw arr
+<li><p>
+x/7dw arr
+</p>
 
 
 <div class="figure">
@@ -175,14 +190,14 @@ x/nfu addr
 
 <p>
 不过对于自定义的复杂类型，这个方法并不好用。
-</p>
-</li>
+</p></li>
 </ol>
 </div>
 </div>
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">设置源代码目录</h2>
-<div class="outline-text-2" id="text-3">
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">设置源代码目录</h2>
+<div class="outline-text-2" id="text-orgheadline3">
 <p>
 有时候存在这样的情况，程序运行的机器和源代码所在的机器不是同一台机器，假如程序崩溃了，因为没有源代码，也只能大致知道是在什么地方出错了，但却没有办法详查。当然，这种情况下，一个很笨的办法是，把整个项目代码拿过来，配置好编译环境，然后用编译好的程序替换原来的程序，再进行调试。
 </p>
@@ -199,10 +214,8 @@ x/nfu addr
 指定源代码目录有两种方式：
 </p>
 <ol class="org-ol">
-<li>在启动时使用 <b>-d</b> 选项设置
-</li>
-<li>在启动后使用 <b>directory</b> 命令设置
-</li>
+<li>在启动时使用 <b>-d</b> 选项设置</li>
+<li>在启动后使用 <b>directory</b> 命令设置</li>
 </ol>
 
 

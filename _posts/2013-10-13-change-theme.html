@@ -10,7 +10,7 @@ tags       : Jekyll
 </p>
 
 <p>
-对于<i>Pizn</i> 设计的主题 <b>The One</b> ，我不能说不好，只是还是不太符合我的喜好，我这段时间花了大量的时间想自己写一个 <b>极致简洁</b> 的模板，比如说<a href="http://liutos.github.io">Liutos的博客</a> 这样的风格，不过web知识太过匮乏，全凭自己在<a href="http://www.w3school.com.cn/">w3school在线教程</a> 上对HTML/CSS 得到的丁点了解，而没有前端设计的理念，完全就是乱来（我自己倒是搞了个比较简单的模板出来，但是太丑了（╯‵□′）╯︵┴─┴ ）。
+对于 <a href="http://www.zhanxin.info/">掌心</a> 设计的主题 <b>The One</b> ，我不能说不好，只是还是不太符合我的喜好，我这段时间花了大量的时间想自己写一个 <b>极致简洁</b> 的模板，比如说<a href="http://liutos.github.io/">Liutos的博客</a> 这样的风格，不过web知识太过匮乏，全凭自己在<a href="http://www.w3school.com.cn/">w3school在线教程</a> 上对HTML/CSS 得到的丁点了解，而没有前端设计的理念，完全就是乱来（我自己倒是搞了个比较简单的模板出来，但是太丑了（╯‵□′）╯︵┴─┴ ）。
 </p>
 
 <p>
@@ -22,7 +22,7 @@ tags       : Jekyll
 </p>
 
 <p>
-还有，jekyll-bootstrap的twitter主题有一个问题，它的模板 <b>page.html</b> 和 <b>post.html</b> 中，本应显示页面/文章 标签的地方，一直显示的是 
+还有，jekyll-bootstrap的twitter主题有一个问题，它的模板 <b>page.html</b> 和 <b>post.html</b> 中，本应显示页面/文章 标签的地方，一直显示的是
 </p>
 <blockquote>
 <p>
@@ -34,9 +34,9 @@ Supporting tagline
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #ed8a0c;">div</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"page-header"</span>&gt;
-  &lt;<span style="color: #ed8a0c;">h1</span>&gt;{{ page.title }} &lt;<span style="color: #ed8a0c;">small</span>&gt;<span style="color: #bebebe; background-color: #1c1c1c;">Supporting tagline</span>&lt;/<span style="color: #ed8a0c;">small</span>&gt;&lt;/<span style="color: #ed8a0c;">h1</span>&gt;
-&lt;/<span style="color: #ed8a0c;">div</span>&gt;
+<pre class="src src-html">&lt;<span style="color: #edd400;">div</span> <span style="color: #eeeeec;">class</span>=<span style="color: #ad7fa8;">"page-header"</span>&gt;
+  &lt;<span style="color: #edd400;">h1</span>&gt;{{ page.title }} &lt;<span style="color: #edd400;">small</span>&gt;<span style="color: #eeeeec; background-color: #101e2e;">Supporting tagline</span>&lt;/<span style="color: #edd400;">small</span>&gt;&lt;/<span style="color: #edd400;">h1</span>&gt;
+&lt;/<span style="color: #edd400;">div</span>&gt;
 </pre>
 </div>
 <p>
@@ -50,24 +50,24 @@ Supporting tagline
 还有一个小问题是，模板的首页文件即 <b>index.md</b> 设置了一个title为 <b>Hello World</b> ，而由于 <b>default.html</b> 这个模板将页面文件的tile设置为博客页面的title，这就有一个问题了。index.md生成的index.html会渲染为博客的首页，也就是说，博客首页的标题会被设置为index.md中指定的title，按照常理，首页的页面标题应该是和博客的标题一致的。接下来就有两种情况：
 </p>
 <ol class="org-ol">
-<li>将index.md中的title设置为博客标题，但这样和导航栏中的博客标题重复了，看起来有点多余
-</li>
-<li>将index.md中的title设置为非博客标题的内容，这样就和刚才说的 <b>常理</b> 不符
-</li>
+<li>将index.md中的title设置为博客标题，但这样和导航栏中的博客标题重复了，看起来有点多余</li>
+<li>将index.md中的title设置为非博客标题的内容，这样就和刚才说的 <b>常理</b> 不符</li>
 </ol>
 
 <p>
 我的做法是：
 </p>
 <ol class="org-ol">
-<li>修改default.html
+<li><p>
+修改default.html
+</p>
 
 <p>
 将以下内容
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #ed8a0c;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">{% raw %}{{ page.title }}{% endraw %}</span>&lt;/<span style="color: #ed8a0c;">title</span>&gt;
+<pre class="src src-html">&lt;<span style="color: #edd400;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">{% raw %}{{ page.title }}{% endraw %}</span>&lt;/<span style="color: #edd400;">title</span>&gt;
 </pre>
 </div>
 <p>
@@ -75,29 +75,29 @@ Supporting tagline
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html"> &lt;<span style="color: #ed8a0c;">title</span>&gt;
+<pre class="src src-html"> &lt;<span style="color: #edd400;">title</span>&gt;
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{% if page.title %}{% endraw %}</span>
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{{ page.title }}{% endraw %}</span>
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{% else %}{% endraw %}</span>
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{{ site.title }}{% endraw %}</span>
 <span style="font-weight: bold; text-decoration: underline;">   {% raw %}{% endif %}{% endraw %}</span>
-&lt;/<span style="color: #ed8a0c;">title</span>&gt;
+&lt;/<span style="color: #edd400;">title</span>&gt;
 </pre>
-</div>
-</li>
-<li>修改index.md
+</div></li>
+<li><p>
+修改index.md
+</p>
 
 <p>
 删除其title，修改其模板为 default，在头部添加：
 </p>
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #ed8a0c;">div</span> <span style="color: #fefc58;">class</span>=<span style="color: #25ef29;">"page-header"</span>&gt;
-&lt;<span style="color: #ed8a0c;">h1</span>&gt;&#25991;&#31456;&#21015;&#34920; &lt;<span style="color: #ed8a0c;">small</span>&gt;<span style="color: #bebebe; background-color: #1c1c1c;">{% raw %}{{ page.tagline }}{% endraw %}</span>&lt;/<span style="color: #ed8a0c;">small</span>&gt;&lt;/<span style="color: #ed8a0c;">h1</span>&gt;
-&lt;/<span style="color: #ed8a0c;">div</span>&gt;
+<pre class="src src-html">&lt;<span style="color: #edd400;">div</span> <span style="color: #eeeeec;">class</span>=<span style="color: #ad7fa8;">"page-header"</span>&gt;
+&lt;<span style="color: #edd400;">h1</span>&gt;&#25991;&#31456;&#21015;&#34920; &lt;<span style="color: #edd400;">small</span>&gt;<span style="color: #eeeeec; background-color: #101e2e;">{% raw %}{{ page.tagline }}{% endraw %}</span>&lt;/<span style="color: #edd400;">small</span>&gt;&lt;/<span style="color: #edd400;">h1</span>&gt;
+&lt;/<span style="color: #edd400;">div</span>&gt;
 </pre>
-</div>
-</li>
+</div></li>
 </ol>
 
 <p>

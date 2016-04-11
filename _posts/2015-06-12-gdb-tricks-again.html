@@ -6,6 +6,17 @@ tags       :
 - GDB
 - C/C++
 ---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">设置环境变量</a></li>
+<li><a href="#orgheadline2">修改、设置程序中的变量</a></li>
+<li><a href="#orgheadline3">查看变量的类型</a></li>
+<li><a href="#orgheadline4">调用函数</a></li>
+</ul>
+</div>
+</div>
 
 <p>
 以下是这段时间阅读 Tesseract 源代码时所学习并实践过的一些 GDB 调试技巧，和 <a href="http://linusp.github.io/2014/07/27/gdb-tricks.html">前一篇</a> 一样，我也认为这些是比较实用的(虽然对别人来说未必)。
@@ -31,7 +42,7 @@ tags       :
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">set</span> environment <span style="color: #de935f;">TESSDATA_PREFIX</span>=/home/linusp/data/tessdata
+<pre class="src src-sh"><span style="color: #729fcf;">set</span> environment <span style="color: #eeeeec;">TESSDATA_PREFIX</span>=/home/linusp/data/tessdata
 </pre>
 </div>
 
@@ -53,7 +64,7 @@ set 命令:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">set</span> variable <span style="color: #de935f;">i</span>=0
+<pre class="src src-sh"><span style="color: #729fcf;">set</span> variable <span style="color: #eeeeec;">i</span>=0
 </pre>
 </div>
 <p>
@@ -61,7 +72,7 @@ set 命令:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh"><span style="color: #8abeb7;">set</span> *((int *) 0xbfbb0000) = 20
+<pre class="src src-sh"><span style="color: #729fcf;">set</span> *((int *) 0xbfbb0000) = 20
 </pre>
 </div>
 
@@ -70,7 +81,7 @@ print 命令:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-sh">print <span style="color: #de935f;">i</span>=0
+<pre class="src src-sh">print <span style="color: #eeeeec;">i</span>=0
 </pre>
 </div>
 </div>
