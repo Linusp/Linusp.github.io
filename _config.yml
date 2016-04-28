@@ -32,6 +32,8 @@ nav:
     url : /tags.html
   - text: 归档
     url : /archive.html
+  - text: 笔记
+    url : /notes.html
   - text: IF
     url : /if.html
   - text: 链接
