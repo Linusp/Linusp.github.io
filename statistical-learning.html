@@ -1,0 +1,707 @@
+---
+title: 《统计学习方法》阅读笔记
+author: Linusp
+layout: page
+permalink: /notes/statistical-learning-methods.html
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">说明</a></li>
+<li><a href="#orgheadline2">第一章：统计学习方法概论</a></li>
+<li><a href="#orgheadline3">第二章 感知机</a></li>
+<li><a href="#orgheadline4">第三章：k近邻法</a></li>
+<li><a href="#orgheadline5">第四章：朴素贝叶斯法</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">说明</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<ul class="org-ul">
+<li>书名： 统计学习方法</li>
+<li>作者： 李航</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">第一章：统计学习方法概论</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+</div><div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">特点</h3>
+<div class="outline-text-3" id="text-orgheadline6">
+<p>
+统计学习(statistical learning)做的事情是：基于数据建立概率统计模型，然后用模型对数据进行预测和分析。
+</p>
+
+<blockquote>
+<p>
+统计学是概率论、统计学、信息论、计算理论、最优化理论及计算机科学等多个领域的交叉学科。
+</p>
+</blockquote>
+<p>
+其中，概率论和统计学是紧密相连的两个学科，它们和信息论、最优化理论是统计学习中的重点内容。概率论和统计学涉及到模型建立，信息论和最优化理论则对模型的优化有着重要意义。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">对象</h3>
+<div class="outline-text-3" id="text-orgheadline7">
+<p>
+统计学习的对象是数据，数据可能有多种，如音频、图像、文字。
+</p>
+
+<p>
+统计学习关于数据的基本假设是同类数据具有一定的统计规律性，这是统计学习的前提。不过，存在 <b>同类数据不具备一定的统计规律性</b> 这个可能么？
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">方法</h3>
+<div class="outline-text-3" id="text-orgheadline8">
+<ul class="org-ul">
+<li>监督学习(Supervised learning)</li>
+<li>非监督学习(Unsupervised learning)</li>
+<li>半监督学习(Semi-supervised learning)</li>
+<li>强化学习(Reinforce learning)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">监督学习</h3>
+<div class="outline-text-3" id="text-orgheadline9">
+<ul class="org-ul">
+<li><p>
+符号表示
+</p>
+
+<p>
+输入:\(x=\left[x^{(1)}, x^{(2)},...,x^{(n)}\right]^{T}\)。
+</p>
+
+<p>
+用\(x^{(i)}\)表示输入向量\(x\)的第\(i\)个分量，用\(x_{i}\)表示第\(i\)个输入变量。
+</p>
+
+<p>
+训练集：\(T=\{(x_{1}, y_{1}),(x_{2}, y_{2}), ... ,(x_{n}, y_{n})\}\)。
+</p></li>
+
+<li><p>
+问题分类
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">类别</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">回归问题</td>
+<td class="org-left">输入和输出变量都是连续变量的预测问题被称为回归问题。</td>
+</tr>
+
+<tr>
+<td class="org-left">分类问题</td>
+<td class="org-left">输出变量为有限个离散变量的预测问题被称为分类问题。</td>
+</tr>
+
+<tr>
+<td class="org-left">标注问题</td>
+<td class="org-left">输入与输出变量均为变量序列的预测问题称为标注问题。</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+基本假设
+</p>
+
+<p>
+假设输入与输出的随机变量\(X\)和\(Y\)遵循联合概率分布\(P(X,Y)\)。训练数据和测试数据被视为是依联合分布\(P(X, Y)\)独立同分布产生的。
+</p></li>
+
+<li><p>
+学习模型
+</p>
+
+<p>
+监督学习的模型可以是概率模型或非概率模型，概率模型时是条件概率分布\(P(Y|X)\)，非概率模型则是决策函数\(Y=f(X)\)。
+</p></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline10" class="outline-3">
+<h3 id="orgheadline10">统计学习方法的三要素</h3>
+<div class="outline-text-3" id="text-orgheadline10">
+<ul class="org-ul">
+<li><p>
+模型(model)
+</p>
+
+<p>
+模型的假设空间，即所有可能的模型(但不一定最优)的集合。对于非概率模型，其假设空间为：
+\[\mathcal{F}= \left\{ f|Y=f_{\boldsymbol\theta}(X), \boldsymbol\theta\in \mathbb{R} \right\}\]
+</p>
+
+<p>
+对于概率模型，其假设空间为：
+\[\mathcal{F}= \left\{ P|P_{\boldsymbol\theta}(Y|X), \boldsymbol\theta\in\mathbb{R} \right\}\]
+</p></li>
+</ul>
+
+
+<ul class="org-ul">
+<li><p>
+策略(strategy)
+</p>
+
+<p>
+模型选择的准则，即评估模型优劣以助于选择最优模型的准则。
+</p>
+
+<ul class="org-ul">
+<li><p>
+损失函数(loss function)
+</p>
+
+<p>
+损失函数度量模型 <b>一次预测</b> 的好坏，常用的损失函数有：
+</p>
+<ul class="org-ul">
+<li><p>
+0-1 损失函数(0-1 loss function)
+</p>
+
+<p>
+\[L(Y,f(X))=\begin{cases} 1, & \mbox{if } Y = f(X)
+         \\ 0, & \mbox{if } Y\ne f(X)\end{cases}\]
+</p></li>
+
+<li><p>
+平方损失函数(quadratic loss function)
+</p>
+
+<p>
+\[L(Y,f(X))=(Y-f(X))^{2}\]
+</p></li>
+
+<li><p>
+绝对损失函数(absolute loss function)
+</p>
+
+<p>
+\[L(Y,f(X))=\left|Y-f(X)\right|\]
+</p></li>
+
+<li><p>
+对数损失函数(logarithmic loss function)/对数似然损失函数(log-likehood loss function)
+</p>
+
+<p>
+\[L(Y,P(Y|X))=-\log P(Y|X)\]
+</p></li>
+</ul></li>
+
+<li><p>
+风险函数(risk function)
+</p>
+
+<p>
+风险函数度量 <b>平均意义</b> 上模型预测的好坏。
+</p>
+
+<p>
+风险函数是损失函数的期望，即
+</p>
+
+<p>
+\[R_{exp}(f)=\int_{x\times y}L(Y,f(X))\cdot P(X,Y)dxdy\]
+</p>
+
+<p>
+学习的目标就是要选择期望风险最小的模型，但在此过程中，上式的联合概率分布是未知的，因此一般通过模型\(f(X)\)在训练集上的 <b>经验风险(empirical risk)</b> 来近似：
+</p>
+
+<p>
+\[R_{emp}(f)=\frac{1}{n}\sum_{i=1}^{n}L(y_{i}, f(x_{i}))\]
+</p>
+
+<p>
+理论上，当训练集的规模趋于无穷时，经验风险\(R_{emp}(f)\)会趋近期望风险\(R_{exp}(f)\).
+</p></li>
+
+<li><p>
+经验风险最小化(empirical risk minimization, ERM)和结构风险最小化(structural risk minimization, SRM)
+</p>
+
+<p>
+经验风险最小化策略认为，经验风险最小的模型就是最优的模型。在样本规模足够大的时候，经验风险最小化能得到较好的学习效果。极大似然估计(maximum likehood estimation)就是经验风险最小化的一个例子。
+</p>
+
+<p>
+经验风险最小化的问题是，在实际情况中，样本规模通常并不能保证“足够大”，这时容易产生“过拟合”现象，即模型过度适应了训练集，以致模型对训练集外数据的预测一塌糊涂。
+</p>
+
+<p>
+结构风险最小化策略就是为了防止过拟合而提出来的策略，它等价于正则化(regularization)。结构风险在经验风险的基础上加上表示模型复杂度的正则化项(regularizer)或惩罚项(penalty term)，如下：
+</p>
+
+<p>
+\[R_{srm}(f)=\frac{1}{n}\sum_{i=1}^{n}L(y_{i}, f(x_{i})) + \lambda J(f)\]
+其中\(J(f)\)为模型的复杂度，模型\(f\)越复杂，其值就越大。贝叶斯估计中的最大后验概率估计(maximum posterior probability estimation, MAP)就是结构风险最小化的一个例子
+</p></li>
+</ul>
+<p>
+实际中主要通过训练误差(training error)和测试误差(test error)来作为模型评估的标准。其中测试误差反映了学习方法堆未知的测试数据集的预测能力，是学习中的重要概念——通常，也将学习方法堆未知数据的预测能力称为 <b>泛化能力(generalization ability)</b> 。
+</p></li>
+<li><p>
+算法(algorithm)
+</p>
+
+<p>
+模型学习的算法就是求解最优化问题的算法。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11">过拟合与模型选择</h3>
+<div class="outline-text-3" id="text-orgheadline11">
+<p>
+如果一味提高对训练数据的预测能力，所选模型的复杂度则往往会比真实模型更高，导致模型对已知数据预测很好，但对未知数据预测得很差。这种现象就是过拟合(overfit)。
+</p>
+
+<p>
+如下图所示，当模型复杂度增大时，训练误差会逐渐减小直至趋近于0，而测试误差会先减小，达到最小值时后又增大。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/model-o.png" alt="model-o.png" />
+</p>
+</div>
+
+<p>
+(注：上图来自《统计学习方法(李航)》一书)
+</p>
+
+<ul class="org-ul">
+<li><p>
+正则化(regularization)
+</p>
+
+<p>
+正则化一般具有如下形式：
+\[R_{srm}(f)=\frac{1}{n}\sum_{i=1}^{n}L(y_{i}, f(x_{i})) + \lambda J(f)\]
+</p>
+
+<p>
+等式右边第一项是经验风险，第二项是正则化项。正则化项可以取不同的形式。举个栗子，在回归问题中，损失函数是平方损失，正则化项可以是参数向量\(\boldsymbol\theta\)的\(L_{2}\)范数，如下：
+</p>
+
+<p>
+\[L(\boldsymbol\theta) = \frac{1}{n}\sum_{i=1}^{n}(f_{\boldsymbol\theta}(x_{i}) - y_{i})^{2} + \frac{\lambda}{2}\left|\left|\boldsymbol\theta\right|\right|^{2}\]
+</p>
+
+<p>
+能够直观地发现，当第一项的值越小时，模型可能比较复杂，这个时候第二项的值就会较大。正则化的作用是选择经验风险和模型复杂度同时较小的模型。
+</p></li>
+
+<li><p>
+交叉验证(cross validation)
+</p>
+
+<p>
+交叉验证的基本想法是重复使用数据，把给定的数据进行切分，将切分的数据组合为训练集和测试集，在此基础上反复进行训练、测试和模型选择。
+</p>
+
+<ul class="org-ul">
+<li><p>
+简单交叉验证
+</p>
+
+<p>
+随机地将给定数据分为两部分，一部分作为训练集，另外一部分作为测试集，然后用训练集在各种条件下训练，从而得到不同的模型；在测试集上评价各个模型的测试误差，选出测试误差最小的模型
+</p></li>
+
+<li><p>
+S折交叉验证(S-fold cross validation)
+</p>
+
+<p>
+首先将数据等分为K个互不相交的子集，然后利用其中的S-1个子集的数据进行训练，利用剩下的一个子集测试模型。进行S次这样的过程，即每个子集都要充当一次测试集。最后选取S次评测中平均测试误差最小的模型。
+</p></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline12" class="outline-3">
+<h3 id="orgheadline12">泛化能力(generalization ability)</h3>
+<div class="outline-text-3" id="text-orgheadline12">
+<p>
+泛化误差就是学习到的模型对为知数据的预测误差：
+\[R_{exp}(\hat{f})=E_{P}\left[L(Y,\hat{f}(X))\right]=\int_{x\times y}L(y, \hat{f}(x))\cdot P(x,y)dxdy\]
+</p>
+
+<p>
+如果一种方法学习到的模型比另外一种方法学到的模型具有更小的泛化误差，那么这种方法就更有效。实际上泛化误差就是模型的期望风险。
+</p>
+
+<p>
+学习方法的泛化能力往往是通过研究泛化误差的概率商界来进行的，简称泛化误差上界(generalization error bound)。
+</p>
+</div>
+</div>
+<div id="outline-container-orgheadline13" class="outline-3">
+<h3 id="orgheadline13">生成模型与判别模型</h3>
+<div class="outline-text-3" id="text-orgheadline13">
+<ul class="org-ul">
+<li><p>
+生成模型
+</p>
+
+<p>
+由数据学习联合概率分布\(P(X,Y)\)，然后求出条件概率分布\(P(Y|X)\)作为预测的模型。这样的学习方法称为 <b>生成方法(generative approach)</b> ，所生成的模型为 <b>生成模型(generative model)</b> 。
+</p></li>
+</ul>
+
+<p>
+这样的方法之所以被称为生成方法是，是因为模型表示了给定输入\(X\)后产生输出\(Y\)的生成关系。典型的生成模型有：朴素贝叶斯和隐马尔科夫模型。
+</p>
+
+<p>
+生成方法可以还原出联合概率分布\(P(X,y)\)，而判别方法不能。此外生成方法的学习收敛速度更快，即当样本容量增加的时候，学到的模型可以更快地收敛于真实模型；且当存在隐藏变量时，仍然可以使用生成方法学习，而判别方法不能用于有隐藏变量的情况。
+</p>
+
+<ul class="org-ul">
+<li><p>
+判别模型
+</p>
+
+<p>
+由数据直接学习决策函数\(f(X)\)或者条件概率分布\(P(Y|X)\)作为预测的模型。这样的学习方法被称为 <b>判别方法(discriminative approach)</b> ，所学习的模型被称为 <b>判别模型(discriminative model)</b> 。
+</p>
+
+<p>
+判别方法关心的是对给定的输入\(X\)，应该预测什么样的输出\(Y\)。典型的判别模型包括：k近邻法、感知机、决策树、逻辑斯蒂回归模型、最大熵模型、支持向量机、提升方法和条件随机场等。
+</p>
+
+<p>
+判别方法直接面对预测，往往学习的准确率更高，由于直接学习\(P(Y|X)\)或者\(f(X)\)，可以堆数据进行各种成都的抽象、定义特征并使用特征，因此可以简化学习问题。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline14" class="outline-3">
+<h3 id="orgheadline14">分类问题</h3>
+<div class="outline-text-3" id="text-orgheadline14">
+<p>
+当输出变量\(Y\)取有限个离散值时，预测问题便成为分类问题。此时，监督学习从数据中学习一个分类模型或分类决策函数，称为 <b>分类器(classifier)</b> 。分类器对新的输入进行新的预测，称为 <b>分类(classification)</b> ，可能的输出称为 <b>类(class)</b> 。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">标注问题</h3>
+<div class="outline-text-3" id="text-orgheadline15">
+<p>
+标注(tagging)问题可以认为是分类问题的一个推广，同事标注问题又是更复杂的结构预测(structure prediction)问题的简单形式。
+</p>
+
+<p>
+标注问题的输入是一个观测序列，输出是一个 <b>标记序列</b> 或者 <b>状态序列</b> 。这里可能的标记个数是有限的。
+</p>
+
+<p>
+给定训练数据集:
+\[T=\left\{(x_{1}, y_{1}),(x_{2}, y_{2}), ... ,(x_{m}, y_{m})\right\}\]
+</p>
+
+<p>
+这里\(x_{i}=\left[x_{i}^{(1)},x_{i}^{(2)},...,x_{i}^{(n)}\right]^{T}\)是输入的观测序列，\(y_{i}=\left[y_{i}^{(1)},y_{i}^{(2)},...,y_{i}^{(n)}\right]^{T}\)其中\(n\)是序列长度，对不同样本(\(x_{i}\))可以有不同的的值。学习系统基于训练数据集构建一个模型，表示为一个条件概率分布：
+\[P(Y^{(1)},Y^{(2)},...,Y^{(n)}|X^{(1)},X^{(2)},...,X^{(n)})\]
+其中，每一个\(X^{(i)}(i=1,2,...,n\))取值为所有可能的观测，每一个\(Y^{(i)}(i=1,2,...,n)\)取值为所有可能的标记，一般\(n\ll m\)。
+</p>
+
+<p>
+标注系统按照学习得到的条件概率分布模型，对新的输入观测序列找到使条件概率最大的标记序列最为输出序列。
+</p>
+
+<p>
+词性标注是标注问题的一个实例。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline16" class="outline-3">
+<h3 id="orgheadline16">回归问题</h3>
+<div class="outline-text-3" id="text-orgheadline16">
+<p>
+当输入和输出都是连续随机变量时，对应的学习问题称为回归问题。回归模型用于预测输入变量和输出变量之间的关系，即表示输入变量到输出变量之间的映射函数，因此回归问题的学习等价于函数拟合：选择一条函数曲线使其很好地拟合已知数据且很好地预测未知数据。
+</p>
+
+<p>
+回归学习最常用的损失函数是平方损失函数，在此情况下，回归问题可以由最小二乘法(least squares)求解。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">第二章 感知机</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+</div><div id="outline-container-orgheadline17" class="outline-3">
+<h3 id="orgheadline17">模型</h3>
+<div class="outline-text-3" id="text-orgheadline17">
+<p>
+输入空间是\(\mathcal{X}\subseteq \boldsymbol{R}^{n}\)，输出空间是\(\mathcal{Y}=\left\{+1, -1\right\}\)，输入\(\boldsymbol{x}\in\mathcal{X}\)表示实际的输入向量，对应于输入空间的点；输出\(y\in\mathcal{Y}\)表示输入的类别，由输入到输出的如下函数
+\[f(x)=sign(\boldsymbol{w}\cdot\boldsymbol{x} + b)\]
+称为"感知机"。其中\(\boldsymbol{w}\)和\(b\)为感知机模型参数，\(\boldsymbol{w}\in\boldsymbol{R}^{n}\)叫做权值或权值向量，\(b\in\boldsymbol{R}\)叫做偏置(bias)，\(\boldsymbol{w}\cdot\boldsymbol{x}\)表示\(\boldsymbol{w}\)和\(\boldsymbol{x}\)的内积，\(sign\)是符号函数：
+\[sign(x)=\begin{cases} +1, & \mbox{if } x\ge 0
+   \\ -1, & \mbox{if } x < 0\end{cases}\]
+</p>
+
+<p>
+感知机的目的是求出一个超平面
+\[\boldsymbol{w}\cdot\boldsymbol{x} + b = 0\]
+这个超平面将输入空间划分为两个部分，位于两部分的点分别被分为正、负两类。其中\(\boldsymbol{w}\)是这个超平面的法向量，\(b\)是这个超平面的截距。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline18" class="outline-3">
+<h3 id="orgheadline18">数据集的线性可分性</h3>
+<div class="outline-text-3" id="text-orgheadline18">
+<p>
+给定一个数据集
+\[T=\left\{(x_{1}, y_{1}),(x_{2}, y_{2}), ... ,(x_{m}, y_{m})\right\}\]
+其中，\(\boldsymbol{x}_{i}\in\mathcal{X}\)，\(y_{i}\in\mathcal{Y}=\left\{+1, -1\right\}\)，如果存在某个超平面S
+\[\boldsymbol{w}\cdot\boldsymbol{x} + b = 0\]
+能够将数据集的正实例点和负实例点完全正确地划分到超平面的两侧，则称数据集\(T\)为线性可分数据集(linearly separable data set)；否则，称数据集\(T\)线性不可分。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline19" class="outline-3">
+<h3 id="orgheadline19">感知机学习策略</h3>
+<div class="outline-text-3" id="text-orgheadline19">
+<p>
+在训练数据集是线性可分的前提下，感知机的学习目标是球的一个能够将训练数据集中正实例点和负实例点完全正确分开的分离超平面。
+</p>
+
+<p>
+定义损失函数为：
+\[L(\boldsymbol{w}, b)=-\sum\limits_{\boldsymbol{x}_{i}\in \boldsymbol{M}}y_{i}(\boldsymbol{w}\cdot\boldsymbol{x}_{i} + b)\]
+其中\(\boldsymbol{M}\)是误分类点集，对误分类点来说，有
+\[y=\begin{cases} -1, & \mbox{if  } \boldsymbol{w}\cdot\boldsymbol{x}+b\ge 0
+   \\+1, & \mbox{if  } \boldsymbol{w}\cdot\boldsymbol{x}+b < 0\end{cases}\]
+显然，损失函数是非负的，如果没有误分类点，损失函数值为0，而且误分类点越少，误分类点离超平面越近，损失函数值就越小。
+</p>
+
+<p>
+损失函数\(L(\boldsymbol{w}, b)\)是\(\boldsymbol{w}\)和\(b\)的连续可导函数。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline20" class="outline-3">
+<h3 id="orgheadline20">算法：原始形式</h3>
+<div class="outline-text-3" id="text-orgheadline20">
+<p>
+感知机的学习，就是要求使损失函数极小化问题的解：
+\[\mathop{min}_{\boldsymbol{w}, b} L(\boldsymbol{w}, b)=-\mathop{\sum}_{\boldsymbol{\boldsymbol{x}}_{i}\in \boldsymbol{M}}y_{i}(\boldsymbol{w}\cdot\boldsymbol{x_{i}} + b)\]
+</p>
+
+<p>
+学习时采用随机梯度下降法(stochastic gradient descent)：
+</p>
+<ol class="org-ol">
+<li>任意选取一个超平面 \((\boldsymbol{w}_{0}, b_{0})\)</li>
+<li>在训练集中选取数据\((\boldsymbol{x}_{i}, y_{i})\)</li>
+<li><p>
+如果选取的点是误分类点，则对\(\boldsymbol{w}\)和\(b\)进行调整
+</p>
+
+<p>
+\[{\boldsymbol{w}_{t+1}}\leftarrow\boldsymbol{w}_{t} + \eta y_{i}\boldsymbol{x_{i}}\]
+</p>
+
+<p>
+\[b_{t+1}\leftarrow b_{t}+\eta y_{i}\]
+</p>
+
+<p>
+其中\(\eta(0<\eta\le1)\)是步长，或称学习率(learning rate)
+</p></li>
+<li>转至2，直至训练集中没有误分类点</li>
+</ol>
+
+
+<p>
+TODO: 写一个octave/python程序，生成动态图像演示收敛过程
+</p>
+</div>
+</div>
+<div id="outline-container-orgheadline21" class="outline-3">
+<h3 id="orgheadline21">算法：对偶形式</h3>
+<div class="outline-text-3" id="text-orgheadline21">
+<p>
+感知机学习算法是神经网络和支持向量机的基础。这里的学习算法的原始形式和对偶形式与支持向量机学习算法的原始形式和对偶形式相对应。
+</p>
+
+<p>
+考虑初始超平面的参数都是0，对误分类点通过：
+\[{\boldsymbol{w}_{t+1}}\leftarrow\boldsymbol{w}_{t} + \eta y_{i}\boldsymbol{x_{i}}\]
+</p>
+
+<p>
+\[b_{t+1}\leftarrow b_{t}+\eta y_{i}\]
+来逐步修改，不难看出，最后学习到的\(\boldsymbol{w}\)和\(b\)可以分别表示为：
+\[\boldsymbol{w}=\sum_{j=1}^{K}\alpha_{j}y_{j}\boldsymbol{x}_{j}\]
+</p>
+
+<p>
+\[b=\sum_{j=1}^{m}\alpha_{j}y_{j}\]
+其中\(\alpha_{j}=n_{j}\eta\)，\(n_{j}\)表示第\(j\)个实例点由于误分类而进行更新的次数。
+</p>
+
+<p>
+这样，感知机模型可以表示为：
+\[f(\boldsymbol{x}) = sign\left(\sum_{j}^{m}\alpha_{j}y_{j}\boldsymbol{x}_{j}\cdot\boldsymbol{x} + b\right)\]
+</p>
+
+<p>
+令\(\boldsymbol{\alpha}=\left[\alpha_{1}, \alpha_{2},...,\alpha_{m}\right]^{T}\)，则具体的学习算法为：
+</p>
+<ol class="org-ol">
+<li><p>
+首先，初始化模型为：
+</p>
+
+<p>
+\[\boldsymbol{\alpha}\leftarrow 0\]
+\[b\leftarrow 0\]
+</p></li>
+
+<li>在训练集中选取数据\((\boldsymbol{x}_{i}, y_{i})\)</li>
+<li><p>
+如果\(y_{i}f(\boldsymbol{x}_{i})\le 0\)，则更新\(\alpha_{i}\)和\(b\)：
+</p>
+
+<p>
+\[\alpha_{i} \leftarrow \alpha_{i} + \eta\]
+\[b \leftarrow b + \eta y_{i}\]
+</p></li>
+<li>转至2直至没有误分类数据</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-orgheadline22" class="outline-3">
+<h3 id="orgheadline22">扩展</h3>
+<div class="outline-text-3" id="text-orgheadline22">
+<p>
+样本集线性可分的充要条件：
+</p>
+<pre class="example">
+正实例点与负实例点构成的凸壳互不相交
+</pre>
+
+<p>
+扩展学习算法：
+</p>
+<ul class="org-ul">
+<li>口袋算法(pocket algorithm)</li>
+<li>表决感知机(voted perceptron)</li>
+<li>带边缘感知机(perceptron with margin)</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline23" class="outline-3">
+<h3 id="orgheadline23">局限性</h3>
+<div class="outline-text-3" id="text-orgheadline23">
+<ul class="org-ul">
+<li>当训练数据集线性可分时，感知机学习算法存在无穷多个解，其解由于不同的初值或不同的迭代顺序可能有所不同</li>
+<li>感知机是线性模型，对于非线性问题无法求解（如异或问题）</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">第三章：k近邻法</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+</div><div id="outline-container-orgheadline24" class="outline-3">
+<h3 id="orgheadline24">模型</h3>
+<div class="outline-text-3" id="text-orgheadline24">
+<p>
+\(K\)近邻法(\(k\)-nearest neighbor, \(k\)-NN)假设给定一个数据集，其中的实例类别已经确定。然后对新的实例，根据给定数据集中与新实例最相近的\(k\)个实例的类别，通过多数表决等方式判定新实例的类别。因此，\(k\)近邻法不具有显示的学习过程，而是利用给定数据集对特征向量空间进行划分，并以之作为分类的"模型"。
+</p>
+
+<p>
+首先，给定训练数据集
+\[T=\left\{(x_{1}, y_{1}),(x_{2}, y_{2}), ... ,(x_{m}, y_{m})\right\}\]
+其中，\(x_{i}\)为实例的特征向量，\(y_{i}\in\left\{c_{1}, c_{2},...,c_{K}\right\}\)为实例的类别。
+</p>
+
+<p>
+然后，给定新的实例\(x\)，根据给定的距离度量，在训练集中找出与\(x\)最邻近的\(k\)个点，涵盖这个\(k\)个点的\(x\)的邻域记为\(N_{k}(x)\)。
+</p>
+
+<p>
+最后，在\(N_{k}(x)\)中决定\(x\)的类别\(y\)。
+</p>
+
+<p>
+距离度量、\(k\)值和分类决策规则是这个模型的三个基本要素。
+</p>
+</div>
+</div>
+<div id="outline-container-orgheadline25" class="outline-3">
+<h3 id="orgheadline25">kd树</h3>
+<div class="outline-text-3" id="text-orgheadline25">
+<p>
+\(k\)近邻法的最简单实现称为"线性扫描(linear scan)"，每次都需要计算输入实例与训练数据集中点的距离，当训练集很大时，计算非常耗时。
+</p>
+
+<p>
+kd树是对\(k\)维空间中的实例点进行存储以便对其进行快速检索的树形数据结构。其本质是一棵平衡二叉树。
+</p>
+
+<p>
+TODO kd树的定义
+</p>
+
+<p>
+TODO kd树的构建
+</p>
+
+<p>
+TODO kd树的搜索
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">第四章：朴素贝叶斯法</h2>
+</div>
