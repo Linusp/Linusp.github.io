@@ -232,6 +232,11 @@ nltk.download(<span style="color: #ad7fa8;">"averaged_perceptron_tagger"</span>)
 </pre>
 </div>
 
+<pre class="example">
+dog
+work
+</pre>
+
 <p>
 NLTK 里这个词形还原工具的一个问题是需要手动指定词性，比如上面例子中的 "working" 这个词，如果不加后面那个 pos 参数，输出的结果将会是 "working" 本身。
 </p>
@@ -374,6 +379,15 @@ TextBlob 是一个专注自然语言处理的 Python 库，集成了 NLTK 和 Pa
 </pre>
 </div>
 
+<pre class="example">
+['I', 'was', 'working', 'at', 'home']
+I
+wa
+working
+at
+home
+</pre>
+
 <p>
 结果并不是很理想，同 NLTK 一样，可以传入词性来使词形提高还原结果。
 </p>
@@ -416,6 +430,14 @@ Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的�
 <pre class="src src-sh"><span style="color: #729fcf;">echo</span> <span style="color: #ad7fa8;">'I was working at home'</span> | tree-tagger-english
 </pre>
 </div>
+
+<pre class="example">
+I   PP  I
+was VBD be
+working VBG work
+at  IN  at
+home    NN  home
+</pre>
 </div>
 </div>
 </div>
