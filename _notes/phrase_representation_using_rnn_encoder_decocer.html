@@ -9,7 +9,7 @@ permalink: /notes/phrase_representation_using_rnn_encoder_decoder.html
 </p>
 
 <p>
-模型结构如下图所示:
+模型结构如下图所示
 </p>
 
 
@@ -86,6 +86,49 @@ Decoder 中 t 时刻的内部状态的 \(h_{t}\) 为:
 
 <p>
 这个模型用来做机器翻译是很自然的，除了机器翻译外，作者还用这个模型来得到英语 phrase 和法语 phrase 之间的语义近似值(或说相似性)，方法是用大量的英语和法语的 phrase pair 进行训练，每个 pair 在训练时最后都会有概率输出，就用这个概率值作为这个 pair 对的 score ，并在整个训练过程中更新，最后得到一张记录很多 phare pair 近似值的表，这个表可以在其他的统计机器翻译(Statistical Machine Translation, SMT)系统中使用 —— 比如要将某个英语 phrase 翻译成法语 phrase 时，可以从表中找到与该英语 phrase 最接近的 K 个法语 phrase 作为候选。
+</p>
+
+<p>
+在机器翻译上，作者用 Moses (一个 SMT 系统) 建立了一个 phrase based 的翻译模型作为 baseline system ，然后对比了以下四个模型的 BLEU 值
+</p>
+
+<ol class="org-ol">
+<li>Baseline configuration</li>
+<li>Baseline + RNN</li>
+<li>Baseline + CSLM + RNN</li>
+<li>Baseline + CSLM + RNN + Word penalty</li>
+</ol>
+
+<p>
+所谓 BLEU 呢，是 BiLingual Evaluation Understudy 的缩写，是业界用来评估一个机器翻译系统水平的基准，如果遇到做机器翻译的上去问问 “你们的系统 BLEU 是多少” ，绝对会被认为你是专业人士，所以不妨记一下这个词 :) 。不过实际上 BLEU 和人工评价相差甚远，而且对于一些小的错误非常敏感，Yvette Graham 等人在 NAACL 2016 上专门有一篇长论文(Achieving Accurate conclusions in Evaluation of Automatic Machine Translation Metrics)讨论这个事情，这篇论文受到了很大的重视。
+</p>
+
+<p>
+回归正题，四种不同的模型的 BLEU 值如下表所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/bleu_of_models.png" alt="bleu_of_models.png" />
+</p>
+</div>
+
+<p>
+其实也不见得比传统方法要好多少。当然据我所知， Encoder-Decoder 这个模型还是挺受重视的，如果我没记错的话，上次在 QCon 上看到阿里的跨境电商翻译系统应该是用上了 Encoder-Decoder 结构(不想误导，他们还有专业团队进行人工翻译)。
+</p>
+
+<p>
+phrase pair 打分的结果如下:
+</p>
+
+
+<div class="figure">
+<p><img src="../.././assets/img/pair_score.png" alt="pair_score.png" />
+</p>
+</div>
+
+<p>
+其中第一栏是输入的英语 phrase ，第二栏是用传统的模型得到的最近似的三个法语 phrase，第三栏是用 Encoder-Decoder 模型得到的最近似的三个 phrase。
 </p>
 
 <p>
