@@ -242,10 +242,25 @@ some modules operate directly on the input representation, while others also als
 <p>
 比如说， describe 这样一个 module，除了需要 world representation 作为输入外，还需要 question 中的部分信息。
 </p>
-</div>
-</div>
+
+<p>
+Two base types are considered in this paper are <b>Attention</b> and <b>Labels</b> .
+</p>
+<ul class="org-ul">
+<li>Attention: a distribution over pixels or entities</li>
+<li>Labels: a distribution over answers</li>
+</ul>
 
 
+<p>
+Parameter arguments, like the running <i>bird</i> example in Section 2, are provided by the layout, and are used to specialize module behavior for particular lexical items.
+</p>
+
+<p>
+Ordinary inputs are the result of computation lower in the network
+</p>
+</div>
+</div>
 <div id="outline-container-orgheadline5" class="outline-2">
 <h2 id="orgheadline5">Notes for page 5</h2>
 <div class="outline-text-2" id="text-orgheadline5">
