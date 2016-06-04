@@ -89,7 +89,7 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 <div class="org-src-container">
 
 <pre class="src src-org"><span style="color: #87cefa;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
-<span style="color: #87cefa;">|--------+--------+--------|</span>
+<span style="color: #87cefa;">|-------+-------+-------|</span>
 </pre>
 </div>
 
@@ -310,7 +310,7 @@ $1..$3
 </p>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #e81122;">#+CONSTANTS: pi=3.14 eps=2.4e-6</span>
+<pre class="src src-org"><span style="color: #888a85;">#+CONSTANTS: pi=3.14 eps=2.4e-6</span>
 </pre>
 </div>
 
@@ -412,7 +412,7 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #e81122;">#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]" <a href="file:&quot;./plot.png">file:"./plot.png</a>"</span>
+<pre class="src src-org"><span style="color: #888a85;">#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]" file:"./plot.png"</span>
 <span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
 <span style="color: #87cefa;">|-----------+-----------+---------|</span>
 <span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
@@ -498,7 +498,7 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #e81122;">#+NAME: citas-data</span>
+<pre class="src src-org"><span style="color: #888a85;">#+NAME: citas-data</span>
 <span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
 <span style="color: #87cefa;">|-----------+-----------+---------|</span>
 <span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
@@ -514,28 +514,28 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 </p>
 <div class="org-src-container">
 
-<pre class="src src-org"><span style="color: #e81122;">#+BEGIN_SRC python :results file :var tbl_data=citas-data filename="./org-plot-example2.png"</span>
-<span style="color: #cf4a44;">import</span> numpy <span style="color: #cf4a44;">as</span> np
-<span style="color: #cf4a44;">import</span> matplotlib
-<span style="color: #cf4a44;">import</span> matplotlib.pyplot <span style="color: #cf4a44;">as</span> plt
+<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_SRC python :results file :var tbl_data=citas-data filename="./org-plot-example2.png"</span>
+<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
+<span style="color: #729fcf;">import</span> matplotlib
+<span style="color: #729fcf;">import</span> matplotlib.pyplot <span style="color: #729fcf;">as</span> plt
 
-plt.style.use(<span style="color: #25ef29;">'ggplot'</span>)
+plt.style.use(<span style="color: #ad7fa8;">'ggplot'</span>)
 
 
-<span style="color: #fefc58;">bar_names</span> = [row[0] <span style="color: #cf4a44;">for</span> row <span style="color: #cf4a44;">in</span> tbl_data]
-<span style="color: #fefc58;">h_index</span> = [row[2] <span style="color: #cf4a44;">for</span> row <span style="color: #cf4a44;">in</span> tbl_data]
-<span style="color: #fefc58;">ind</span> = np.arange(<span style="color: #31d3c4;">len</span>(tbl_data))
-<span style="color: #fefc58;">width</span> = 0.5
+<span style="color: #eeeeec;">bar_names</span> = [row[0] <span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> tbl_data]
+<span style="color: #eeeeec;">h_index</span> = [row[2] <span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> tbl_data]
+<span style="color: #eeeeec;">ind</span> = np.arange(<span style="color: #729fcf;">len</span>(tbl_data))
+<span style="color: #eeeeec;">width</span> = 0.5
 
 plt.bar(ind, h_index, width)
-plt.title(<span style="color: #25ef29;">'Citas'</span>)
-plt.xlabel(<span style="color: #25ef29;">'Sede'</span>)
-plt.ylabel(<span style="color: #25ef29;">'H-index'</span>)
+plt.title(<span style="color: #ad7fa8;">'Citas'</span>)
+plt.xlabel(<span style="color: #ad7fa8;">'Sede'</span>)
+plt.ylabel(<span style="color: #ad7fa8;">'H-index'</span>)
 plt.xticks(ind + width/2., bar_names)
 
 plt.savefig(filename)
-<span style="color: #cf4a44;">return</span>(filename)
-<span style="color: #e81122;">#+END_SRC</span>
+<span style="color: #729fcf;">return</span>(filename)
+<span style="color: #888a85;">#+END_SRC</span>
 </pre>
 </div>
 
