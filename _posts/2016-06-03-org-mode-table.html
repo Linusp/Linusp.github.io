@@ -1,0 +1,579 @@
+---
+layout     : post
+title      : "强大的 Org mode(3): 表格的基本操作及公式、绘图"
+categories : Emacs
+tags       : org-mode
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">Org mode 中的表格</a></li>
+<li><a href="#orgheadline2">表格的创建</a></li>
+<li><a href="#orgheadline3">表格的基本操作</a></li>
+<li><a href="#orgheadline4">表格公式</a></li>
+<li><a href="#orgheadline5">表格绘图</a>
+<ul>
+<li><a href="#orgheadline6">org-plot/gnuplot</a></li>
+<li><a href="#orgheadline7">With source block</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline8">总结</a></li>
+</ul>
+</div>
+</div>
+
+
+<hr  />
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">Org mode 中的表格</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+Org mode 原生支持表格，这是 rst 或者 markdown 所不具备的特点。一个表格的例子如下所示:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #87cefa;">| Name  | Phone | Age |</span>
+<span style="color: #87cefa;">|-------+-------+-----|</span>
+<span style="color: #87cefa;">| Peter |  1234 |  17 |</span>
+<span style="color: #87cefa;">| Anna  |  4321 |  25 |</span>
+</pre>
+</div>
+
+<p>
+表格用 "|" 符号作为列分隔符，而在 Org mode 中，如果某一行文字的 <b>第一个非空白符号</b> 是 "|" 的话，就会被视作是一个表格，而 '-' 符号组成的分隔线之上的部分则被认为是各列的名称(不过列名并不是必须的)。
+</p>
+
+<p>
+Org mode 中的表格除了用来展示数据，还支持表格公式，能在表格中原有数据的基础上进行计算；还能直接提供数据给诸如 gnuplot 这样的程序来绘制图像；此外在 source block 中还可以读取指定表格中的数据用于更复杂的计算。
+</p>
+
+<p>
+除了表格本身的功能外，基于 Org mode 的日程和任务管理功能，可以对任务完成情况进行定期统计，并将统计结果输出成表格。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">表格的创建</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+利用 "第一个非空白符号是 | 的行被视作表格行" 这个特性，手动创建表格也是非常方便的。首先手动完成第一行，确定表格有多少列，然后按下 TAB 键就能自动在下一行插入新一行表格行了，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-create-1.gif" alt="org-table-create-1.gif" />
+</p>
+</div>
+
+<p>
+当然，一个完整的表格一般是有 header (就是表示列名那一行)的，要有 header 的话就需要 "-" 组成的分隔线，有两种方式可以插入分隔线。
+</p>
+
+<p>
+一种办法是新起一行，对齐后输入 "|-" ，即一个列分隔附跟一个连字符，如下所示:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #87cefa;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
+<span style="color: #87cefa;">|-</span>
+</pre>
+</div>
+
+<p>
+然后按 TAB 键，就会补全成为这样的样式了
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #87cefa;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
+<span style="color: #87cefa;">|--------+--------+--------|</span>
+</pre>
+</div>
+
+<p>
+第二种办法是使用 "C-c -" 这个快捷键来快速插入，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-create-2.gif" alt="org-table-create-2.gif" />
+</p>
+</div>
+
+<p>
+除了手动创建表格，还可以通过 "C-c |" 这个快捷键来快速创建指定大小的表格。使用这个快捷键后，会提示输入创建的表格的大小，默认是5x2也就是5列2行的，且其中一行是 header，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-create-3.gif" alt="org-table-create-3.gif" />
+</p>
+</div>
+
+<p>
+第三种创建方法是直接将 buffer 上已有的数据格式化成表格，比如如果是以逗号(,)分隔的 CSV 格式的数据，可以将其拷贝到当前在编辑的 Org mode 文档中，选中，然后使用 "C-c |" 这个快捷键，就能将其转换成表格形式，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-create-4.gif" alt="org-table-create-4.gif" />
+</p>
+</div>
+
+<p>
+这种方法不会自动插入水平分隔线，所以在完成后，可按自己的需要选择添加或者不添加。
+</p>
+
+<p>
+如果数据之间是用空格分隔的，该如何转换呢?选中后使用快捷键"C-u 1 C-c |"即可。
+</p>
+
+<p>
+更进一步的，Org mode 提供了 "org-table-import" 这个命令来将外部文件导入到 Org mode 文档中并用它来创建表格，与之对应的，命令 "org-table-export" 则能将Org mode 文档中的表格导出成文件。文件格式可以是 CSV 的，也可以是以制表符(TAB)或空白字符作为分隔符的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">表格的基本操作</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+<p>
+下表是表格常用操作的快捷键:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">快捷键</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">TAB</td>
+<td class="org-left">切换到下一个单元格，如已是最后一个单元格，则新建一行并跳到该行第一个单元格</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-right</td>
+<td class="org-left">在当前列前插入一列</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-left</td>
+<td class="org-left">删除当前列</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-down</td>
+<td class="org-left">在当前行前插入一行</td>
+</tr>
+
+<tr>
+<td class="org-left">M-S-up</td>
+<td class="org-left">删除当前行</td>
+</tr>
+
+<tr>
+<td class="org-left">C-m</td>
+<td class="org-left">移动到下一行，或新建一行</td>
+</tr>
+
+<tr>
+<td class="org-left">M-up/M-down</td>
+<td class="org-left">将当前行往上/下移动</td>
+</tr>
+
+<tr>
+<td class="org-left">M-left/M-right</td>
+<td class="org-left">将当前列往左/右移动</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c `</td>
+<td class="org-left">编辑当前单元格</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-x C-w</td>
+<td class="org-left">剪切某个区域的表格内容</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-x C-y</td>
+<td class="org-left">拷贝复制的内容到表格</td>
+</tr>
+
+<tr>
+<td class="org-left">S-return</td>
+<td class="org-left">当单元格无内容时，将其上方第一个非空内容拷贝过来;否则拷贝当前内容到下一行并随之移动</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c C-c</td>
+<td class="org-left">强制表格重新排列</td>
+</tr>
+
+<tr>
+<td class="org-left">C-c ^</td>
+<td class="org-left">表格排序</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+这些操作就不再进行图示了，希望读者自行实践。
+</p>
+
+<p>
+快捷键注释(以 Linux 系统为例):
+</p>
+<ol class="org-ol">
+<li><b>M</b> 表示 Alt 键</li>
+<li><b>S</b> 表示 Shift 键</li>
+<li><b>C</b> 表示 Ctrl 键</li>
+<li>up/down/left/right 分别表示 上/下/左/右 四个方向键</li>
+<li>return 表示回车键</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">表格公式</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+<p>
+Org mode 中的表格的另外一个强大之处，在于它支持公式。在表格区域使用快捷键 "C-c '"，就可以对表格公式进行编辑，完成后公式会显示在表格下方，以 "#+TBLFM:" 开头，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-edit-formula.gif" alt="org-table-edit-formula.gif" />
+</p>
+</div>
+
+<p>
+使用 "C-c '" 后能在一个独立的、临时的 buffer 中编辑公式，但我们也可以在表格下方手工添加以 "+TBLFM:" 开头的行，然后直接添加公式。
+</p>
+
+<p>
+上面这个公式表示将第四列的值设为第二列的值与第三列的值的乘积。在编辑好公式并保存后，将光标移动到公式所在行然后使用 "C-c C-c"，就可以应用公式到表格中。如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-formula-eval.gif" alt="org-table-formula-eval.gif" />
+</p>
+</div>
+
+<p>
+在Org mode的表格公式中，用 "@" 来表示行，用 "$" 来表示列，最简单的，"@3$2" 表示的是第三行第二列的位置。使用快捷键 "C-c }" 可以开启表格的横纵坐标显示——若要关闭的话也是用它。如果是用 "C-c '" 来进行公式编辑，在输入表格位置时，会看到表格上对应的位置会在当时高亮，所以建议用这种方式进行编辑。
+</p>
+
+<p>
+如果只给一个坐标，则另一个坐标会被设为"当前行"或者"当前列"，这在批量处理表格内容时会有用。
+</p>
+
+<p>
+如果想表示一个区域的话，用 ".." 来表示。
+</p>
+
+<p>
+下面这个表示左上角为第二行第一列单元格、右下角为第四行第三列单元格的区域，共包含 9 个单元格。
+</p>
+<pre class="example">
+@2$1..@4$3
+</pre>
+
+<p>
+下面这个则表示"当前行"的第一列到第三列的区域:
+</p>
+<pre class="example">
+$1..$3
+</pre>
+
+<p>
+在公式中，可以用 "@#" 表示当前行的行号，用 "$#" 表示当前列的列号，在一些稍复杂点的公式里会有用。
+</p>
+
+<p>
+此外，还可以定义常量、变量，或者给某个单元格命名，然后引用它们。假设其名字为 "name"，那么 "$name" 就可以引用它了。常量的定义可以通过 "org-table-formula-constants"  来进行，这样定义的常量是全局的；如果要定义局部的常量，可以在org文件中添加诸如这样的行:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #e81122;">#+CONSTANTS: pi=3.14 eps=2.4e-6</span>
+</pre>
+</div>
+
+<p>
+还可以在当前表格引用其他表格的域，这需要其他表格被命名为某个名字，如"FOO"，我们要在另一个表格中使用其第三行第四列的域，将其值赋给当前表格的第五行第二列，则可以这样写:
+</p>
+<pre class="example">
+@5$2=remote(FOO, @3$4)
+</pre>
+
+<p>
+下图将被命名为 "fruit_expend" 的表格的第 6 行第 4 列的数据插入到新表格的第二行第二列中:
+<img src="../../../assets/img/org-table-formula-example-1.gif" alt="org-table-formula-example-1.gif" />
+</p>
+
+<p>
+Org mode 的表格公式中，四则运算符都能正常使用，不过略有不同——乘号 "*" 的优先级要比除号 "/" 要高，因此
+</p>
+<pre class="example">
+$3 / $2 * $1
+</pre>
+
+<p>
+会被解释为
+</p>
+<pre class="example">
+$3 / ($2 * $1)
+</pre>
+
+<p>
+Org mode 默认使用的是 Emacs 中自带的 Calc 这个 package 来进行计算，而 Calc 中提供了相当丰富的计算方法，这里列举一二:
+</p>
+<ol class="org-ol">
+<li>基础算术方法: abs, sign, inv, sqrt, min, max，详见 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Arithmetic">Arithmetic Functions</a></li>
+<li>对数方法: ln, exp, log，详见 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Logarithmic-Functions">Logarithmic Functions</a></li>
+<li>三角函数: sin, cos, tahn，详见 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Trigonometric-and-Hyperbolic-Functions">Trigonometric/Hyperbolic Functions</a></li>
+<li>随机数方法: random</li>
+<li>向量/矩阵方法: vunion, vint, vsum, vmean, vmax, vmin, vmedian，详见 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html#Matrix-Functions">Vector/Matrix Functions</a></li>
+</ol>
+
+<p>
+Calc 的内容比较多，这里不做深入展开，有需要的话可以参考 <a href="http://www.gnu.org/software/emacs/manual/html_mono/calc.html">GNU Emacs Calc Manual</a>。
+</p>
+
+<p>
+此外，表格公式还能以 Emacs Lisp 的形式来进行编写，不过要在这种形式的公式前加上单引号 "'"，才能正确求值。在 Emacs Lisp 形式的公式表达式中，传入的参数会被当作字符串，所有需要用格式化选项 "N" 来指明参数类型都是数值。如下图，在不加格式化选项时，公式计算出错，加上 ";N" 后才得到了正确的结果。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-table-formula-with-lisp.gif" alt="org-table-formula-with-lisp.gif" />
+</p>
+</div>
+
+<p>
+所有的格式化选项，必须通过分号 ";" 和公式进行分隔并跟随在公式后面，可用的选项有:
+</p>
+<ul class="org-ul">
+<li>p: 设置计算精度</li>
+<li>n/s/e/f: 设置结果的输出格式
+<ul class="org-ul">
+<li>n3: 输出结果为3位有效数字(1.45)</li>
+<li>s3: 输出结果为科学计数法，3位有效数字(1.45e0)</li>
+<li>e3: 输出结果为工程计数法，3位有效数字(0.145e1)</li>
+<li>f3: 输出结果精确至小数点后3位</li>
+</ul></li>
+<li>D/R: 计算时使用角度制还是弧度制(如三角函数)</li>
+<li>F/S: 分数还是符号(当为 S 时，若结果不为整数，则显示式子本身，如: sqrt(6))</li>
+<li>T/t: 时间计算，要求用于计算的值是"HH:MM[:SS]"的形式，当使用 T 时，输出结果是 "HH:MM:SS" 形式；使用 "t" 时，结果显示为一个数值，默认情况下单位是小时，可以通过变量 org-table-duration-custome-format 来设置</li>
+<li>E: 不使用时，所有空白单元格都会被跳过，不会包含在计算过程中;当使用时，如果还使用了 N ，则用 "0" 填充；否则，在普通公式中，用 "nan" 填充，在 emacs lisp 公式中，用空字符串填充</li>
+<li>N: 使用时，将所有域的值视为数字，对于非数值型，用 0 替代</li>
+<li>L: 只用于 emacs lisp 公式，后续</li>
+</ul>
+
+<p>
+如果需要对表格公式的求值进行调试，可以通过快捷键"C-c {"来开启调试模式(或者关闭它)。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5">表格绘图</h2>
+<div class="outline-text-2" id="text-orgheadline5">
+<p>
+使用 Org mode 文档中的表格数据进行绘图有两种方式，一种是使用 Org mode 提供的 "org-plot/gnuplot" 命令直接绘制图像，另外一种是通过在 source block 中读取表格数据来绘图。前者胜在方便快捷，但需要对 gnuplot 有一定的了解；后者胜在灵活，可以选用自己擅长的可视化方法，而且可以绘制复杂的图形。
+</p>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">org-plot/gnuplot</h3>
+<div class="outline-text-3" id="text-orgheadline6">
+<p>
+第一种方法依赖 gnuplot 这个外部绘图工具，以及 gnuplot-mode 这个 Emacs 插件。
+</p>
+
+<p>
+在依赖满足的情况下，只需要在表格上方添加 "#+PLOT:"， 然后在后面填写要传递给 gnuplot 的参数即可:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #e81122;">#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]" <a href="file:&quot;./plot.png">file:"./plot.png</a>"</span>
+<span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
+<span style="color: #87cefa;">|-----------+-----------+---------|</span>
+<span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
+<span style="color: #87cefa;">| Leeds     |    165.77 |   19.68 |</span>
+<span style="color: #87cefa;">| Sao Paolo |     71.00 |   11.50 |</span>
+<span style="color: #87cefa;">| Stockholm |    134.19 |   14.33 |</span>
+<span style="color: #87cefa;">| Morelia   |    257.56 |   17.67 |</span>
+</pre>
+</div>
+
+<p>
+得到的结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-plot-example.png" alt="org-plot-example.png" width="80%" />
+</p>
+</div>
+
+<p>
+使用这种 Org mode 自带的绘图方式，除了简便以外，还有一个好处就是表格的 header 能被正确地识别做列名，并在图中用来作为各列数据的 label。
+</p>
+
+<p>
+以下是可在 "#+PLOT:" 后面设置的绘图参数
+</p>
+<ul class="org-ul">
+<li>title: 设置图像的标题</li>
+<li>ind: 用于绘制 x 轴的表中的列</li>
+<li>deps: 除 x 轴以外的其他数据在表中的列，若有多列，用括号括起，如 "deps:(2, 3)"</li>
+<li>type: 2d, 3d, or grid</li>
+<li>with: 设置绘制类型，如 lines, points, boxes, impulses, histograms</li>
+<li>file: 如果需要将绘制的图像保存为文件，则使用该属性</li>
+<li>labels: 给定 deps 的标签，默认为表格 header</li>
+</ul>
+
+
+<p>
+详见: <a href="http://orgmode.org/worg/org-tutorials/org-plot.html">Plotting tables in Org-Mode using org-plot</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-3">
+<h3 id="orgheadline7">With source block</h3>
+<div class="outline-text-3" id="text-orgheadline7">
+<p>
+Org mode 有一个非常强大的功能就是可以插入各种语言的 source block，并且能去执行 source block 里的代码，接着将结果插入到当前的 Org mode 文档中来。
+</p>
+
+<p>
+下图展示了在 Org mode 中插入 C++ 的 source block 并执行得到结果的过程:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-src-block-evaluate.gif" alt="org-src-block-evaluate.gif" />
+</p>
+</div>
+
+<p>
+同时，Org mode 中的表格数据是可以作为变量传递到 source block 中的，如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-src-block-read-tbl.gif" alt="org-src-block-read-tbl.gif" />
+</p>
+</div>
+
+<p>
+如上图所示，要将表格数据传递给 source block ，需要两个步骤
+</p>
+<ol class="org-ol">
+<li>用 "#+NAME" 将表格命名为 "citas-data"</li>
+<li>在 source block 的选项中，用 ":var tbl_data=citas-data" 将表格数据赋值给变量 "tbl_data"</li>
+</ol>
+
+
+<p>
+对于下面这个表格，我可以可以用这个方法将数据传递给 source block ，然后用 matplotlib 来绘制图像。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #e81122;">#+NAME: citas-data</span>
+<span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
+<span style="color: #87cefa;">|-----------+-----------+---------|</span>
+<span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
+<span style="color: #87cefa;">| Leeds     |    165.77 |   19.68 |</span>
+<span style="color: #87cefa;">| Sao Paolo |     71.00 |   11.50 |</span>
+<span style="color: #87cefa;">| Stockholm |    134.19 |   14.33 |</span>
+<span style="color: #87cefa;">| Morelia   |    257.56 |   17.67 |</span>
+</pre>
+</div>
+
+<p>
+相应的 source block 为
+</p>
+<div class="org-src-container">
+
+<pre class="src src-org"><span style="color: #e81122;">#+BEGIN_SRC python :results file :var tbl_data=citas-data filename="./org-plot-example2.png"</span>
+<span style="color: #cf4a44;">import</span> numpy <span style="color: #cf4a44;">as</span> np
+<span style="color: #cf4a44;">import</span> matplotlib
+<span style="color: #cf4a44;">import</span> matplotlib.pyplot <span style="color: #cf4a44;">as</span> plt
+
+plt.style.use(<span style="color: #25ef29;">'ggplot'</span>)
+
+
+<span style="color: #fefc58;">bar_names</span> = [row[0] <span style="color: #cf4a44;">for</span> row <span style="color: #cf4a44;">in</span> tbl_data]
+<span style="color: #fefc58;">h_index</span> = [row[2] <span style="color: #cf4a44;">for</span> row <span style="color: #cf4a44;">in</span> tbl_data]
+<span style="color: #fefc58;">ind</span> = np.arange(<span style="color: #31d3c4;">len</span>(tbl_data))
+<span style="color: #fefc58;">width</span> = 0.5
+
+plt.bar(ind, h_index, width)
+plt.title(<span style="color: #25ef29;">'Citas'</span>)
+plt.xlabel(<span style="color: #25ef29;">'Sede'</span>)
+plt.ylabel(<span style="color: #25ef29;">'H-index'</span>)
+plt.xticks(ind + width/2., bar_names)
+
+plt.savefig(filename)
+<span style="color: #cf4a44;">return</span>(filename)
+<span style="color: #e81122;">#+END_SRC</span>
+</pre>
+</div>
+
+<p>
+执行后得到的结果为:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-plot-example2.png" alt="org-plot-example2.png" width="80%" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orgheadline8" class="outline-2">
+<h2 id="orgheadline8">总结</h2>
+<div class="outline-text-2" id="text-orgheadline8">
+<p>
+同 Org mode 中的其他功能一样，表格能很好地和 Org mode 的其他功能一起工作，利用 Org mode ，能够很容易地进行可重现研究(Reproducible Research)，数据、处理过程、结果展示，都可以在 Org mode 中一起呵成，而且比起 IPython Notebook，Org mode 拥有丰富得多的功能，表格就是其中一例。
+</p>
+
+<p>
+以数据分析为例，工作流程可以是这样的:
+</p>
+<ol class="org-ol">
+<li>将收集到的数据整理成 CSV 格式(比如从 excel 中导出)</li>
+<li>在 Org mode 中将 CSV 格式的数据导入并创建一个表格，为其命名</li>
+<li>新建一个 Python 的 source block, 对数据进行清洗、去重，并将结果输出，在 Org mode 中产生一个新的表格，同时将新的表格导出为 CSV 备份</li>
+<li>对清洗后的数据进行分析，新建一个 Python 的 source block，使用 matplotlib 将分析结果绘制成图像并在 Org mode 文档中展示</li>
+<li>对分析结果进行归纳总结</li>
+<li>根据需要，使用 Org mode 自带的功能将文档导出为 HTML 或 PDF 格式，以供他人阅读</li>
+<li>(可选)将该 Org mode 文档分享给其他 Org mode 用户</li>
+</ol>
+
+
+<p>
+Org mode 真的是太棒啦！
+</p>
+</div>
+</div>
