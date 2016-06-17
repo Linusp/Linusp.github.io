@@ -14,7 +14,7 @@ tagline:             '巧者劳而智者忧，无能者无所求，饱食而遨�
 description:         '计算机科学|人工智能|程序设计'
 url:                 http://linusp.github.io
 baseurl:             /
-paginate:            5
+paginate:            10
 
 # About/contact
 author:
