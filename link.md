@@ -4,6 +4,8 @@ title: 链接
 permalink: /link.html
 ---
 
+-------
+
 # 朋友
 
 + [lastmayday](http://error404.sinaapp.com/)
