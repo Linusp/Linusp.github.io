@@ -1,0 +1,158 @@
+---
+layout     : post
+title      : "自然语言处理与深度学习: 集智俱乐部活动笔记"
+categories :
+- NLP
+- Deep Learning
+tags       :
+- Language Model
+-
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">简介</a></li>
+<li><a href="#orgheadline2">自然语言处理的基本任务</a></li>
+<li><a href="#orgheadline3">对语言进行建模的若干方法</a></li>
+</ul>
+</div>
+</div>
+
+
+<hr  />
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+本文为对 2016 年 7 月 3 日集智俱乐部活动「自然语言处理与深度学习」进行的总结。
+</p>
+
+<p>
+集智俱乐部是张江在 2008 年建立的一个从事学术研究、享受科学了去的开放团体，它倡导以平等开放的态度、科学实证的精神，进行跨学科的研究与交流，力图搭建一个中国的 ”没有围墙的研究所”。我于 2014 年结缘集智俱乐部，从中结识到不少优秀又有趣的人。
+</p>
+
+<p>
+集智会不定期第以读书会、讲座等形式进行线下活动，并且这两年的活动主要都聚焦于互联网和人工智能前沿技术上，7 月 3 日这期活动就是如此。
+</p>
+
+<p>
+活动主讲人是是香港理工大学的在读博士李嫣然，其主要研究方向为自然语言的语义表达和语言生成。同时她还是微信公众号「程序媛的日常」的维护者之一小 S，这个公众号提供了高质量的关于机器学习和自然语言处理的文章，从事这方面工作或研究的朋友不妨关注一下。另，后文为了方便，一律用「小 S」来指代「李嫣然」。
+</p>
+
+<p>
+下面是两个公众号的二维码，有兴趣的可以关注一下:
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">集智俱乐部</th>
+<th scope="col" class="org-left">程序媛的日常</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left"><img src="../../../assets/img/qrcode_swarmagents.jpg" alt="qrcode_swarmagents.jpg" /></td>
+<td class="org-left"><img src="../../../assets/img/qrcode_girlswhocode.jpg" alt="qrcode_girlswhocode.jpg" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">自然语言处理的基本任务</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+自然语言是我们日常用于互相沟通的最常见方式，结合个人的观点以及小 S 讲述的内容，「用自然语言进行沟通」可以分解为以下几个步骤:
+</p>
+<ol class="org-ol">
+<li>对于接收到的信息，判断是否是自然语言</li>
+<li>在确定接收到自然语言数据后，对其进行理解</li>
+<li>在理解接收的自然语言数据后，组织好要回复的内容并将其传达给另一方</li>
+</ol>
+
+
+
+<div class="figure">
+<p><img src="../../../assets/img/slap.jpg" alt="slap.jpg" />
+</p>
+</div>
+
+<p>
+好好好，我说人话，别打脸！
+</p>
+
+<p>
+<b>场景一: 接收到非自然语言</b>
+</p>
+<pre class="example">
+—— 小明: 汪汪汪汪喵喵喵
+—— 小红: (说人话，不然滚犊子)
+</pre>
+
+<p>
+<b>场景二: 接收到自然语言，但理解不能</b>
+</p>
+<pre class="example">
+—— 小明: 苟利国家生死已，岂因祸福避趋之，小红你有没有一种钦定的感觉？
+—— 小红: (这个人在说什么……)
+</pre>
+
+<p>
+<b>场景三: 接收到自然语言，理解并回复</b>
+</p>
+<pre class="example">
+—— 小红: 小明，下午放学后你把教室的窗户玻璃擦一擦吧!
+—— 小明: 我擦，我不擦！
+</pre>
+
+<p>
+小 S 将这个过程划分为 Perceive、Understand 和 Communicate 三部分，并为 NLP 主要的研究或应用方向和这三部分进行对应，如下图所示:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nlp_task.png" alt="nlp_task.png" />
+</p>
+</div>
+
+<p>
+Perceive、Understand 和 Communicate 和我之前总结的那三个步骤一一对应，或者说，之前我所说的那三个步骤，是我对 Perceive、Understand 和 Communicate 的理解吧。
+</p>
+
+<ul class="org-ul">
+<li>Language Modeling: 对语言的建模是对整个语言或者特定场景下的语言的特性的一个刻画，所得到的结果通常被称之为「语言模型(Language Model, LM)」</li>
+<li>Representation: 所谓表示一般是对具体的文本的语义、语法上的刻画，比如一个具体的词、一个具体的句子等等</li>
+<li>Machine Translation: 机器翻译，无须多说</li>
+<li>Language Generation: 即根据语义、语法生成有符合自然语言语法并能表达正确语义的文本</li>
+</ul>
+
+
+<p>
+语言建模用来刻画整个语言的特性，所得到的语言模型有很多的应用，其中之一就是用来计算某个「给定句子」在这个语言的出现的概率以判别这个句子是不是一个「合理」的句子。而具体的词和句子等元素的表示，一方面是能用来分析这些元素的语义，另一方面也还反映了其所属语言的一些特性，因而是与 Perceive 和 Understand 都相关。
+</p>
+
+<p>
+Language Generation 则是在理解之后进行的结果的组织，组织成自然语言当然是要给人看的，这是它和 Communicate 之间的关系所在。Machine Translation 作为一个重要的 NLP 应用方向，需要确保源语言句子和目标语言句子具备同样的语义，从目的上来说本身就是为了提高人与人之间的沟通效率的，因此和 Understand、Communicate 的关系也是很明白的。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">对语言进行建模的若干方法</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+<p>
+(待续)
+</p>
+</div>
+</div>
