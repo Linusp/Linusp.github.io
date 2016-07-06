@@ -14,7 +14,19 @@ tags       :
 <ul>
 <li><a href="#orgheadline1">简介</a></li>
 <li><a href="#orgheadline2">自然语言处理的基本任务</a></li>
-<li><a href="#orgheadline3">对语言进行建模的若干方法</a></li>
+<li><a href="#orgheadline3">对语言进行建模的若干方法</a>
+<ul>
+<li><a href="#orgheadline4">语言模型简介</a></li>
+<li><a href="#orgheadline5">N-gram 语言模型</a></li>
+<li><a href="#orgheadline6">基于神经网络的语言模型</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline7">语言的表示方法</a>
+<ul>
+<li><a href="#orgheadline8">词的表示: one-hot 与 embedding</a></li>
+<li><a href="#orgheadline9">句子及更高层级数据的表示: VSM 和 embedding</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -30,11 +42,11 @@ tags       :
 </p>
 
 <p>
-集智俱乐部是张江在 2008 年建立的一个从事学术研究、享受科学了去的开放团体，它倡导以平等开放的态度、科学实证的精神，进行跨学科的研究与交流，力图搭建一个中国的 ”没有围墙的研究所”。我于 2014 年结缘集智俱乐部，从中结识到不少优秀又有趣的人。
+集智俱乐部是张江在 2008 年建立的一个从事学术研究、享受科学乐趣的开放团体，它倡导以平等开放的态度、科学实证的精神，进行跨学科的研究与交流，力图搭建一个中国的 ”没有围墙的研究所”。我于 2014 年结缘集智俱乐部，从中结识到不少优秀又有趣的人。
 </p>
 
 <p>
-集智会不定期第以读书会、讲座等形式进行线下活动，并且这两年的活动主要都聚焦于互联网和人工智能前沿技术上，7 月 3 日这期活动就是如此。
+集智会不定期地以读书会、讲座等形式进行线下活动，并且这两年的活动主要都聚焦于互联网和人工智能前沿技术上，7 月 3 日这期活动就是如此。
 </p>
 
 <p>
@@ -147,12 +159,391 @@ Language Generation 则是在理解之后进行的结果的组织，组织成自
 </div>
 </div>
 
-
 <div id="outline-container-orgheadline3" class="outline-2">
 <h2 id="orgheadline3">对语言进行建模的若干方法</h2>
 <div class="outline-text-2" id="text-orgheadline3">
+</div><div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4">语言模型简介</h3>
+<div class="outline-text-3" id="text-orgheadline4">
 <p>
-(待续)
+语言模型是对语言整体特性的一个刻画，理想情况下，我们当然希望这个模型能够完全刻画「语言整体」，但有几个问题:
 </p>
+<ol class="org-ol">
+<li>从时间角度来看，语言整体一直是在变化的，我们无法建立一个能刻画过去、现在和未来所有时刻语言特性的模型，因此一般的做法是对某个时段的语言数据进行采样</li>
+<li>从语言本身来看，在不同的场景、人群中，同一种语言，其特性也会稍有不同，我们也无法建立一个能刻画所有可能的子语言特性的模型，尽管有人为建立「通用语言模型」而努力，但这种通用性本身也是相对的，绝对通用的语言模型不存在。换言之，在进行语言数据的采样时，按自己的需要，可能还需要将采样范围限制在某些特定的场景或人群中</li>
+</ol>
+
+
+<p>
+按上述两个条件得到的语言数据，被称之为「语料(Corpus)」，理想的情况下，我们希望:
+</p>
+<ol class="org-ol">
+<li>语料中不同时间的语言数据的特性基本稳定</li>
+<li>在限制在特定场景或人群中时，希望数据能尽量涵盖受限条件下语言的各种情况</li>
+</ol>
+
+
+<p>
+第一点要求语料的质量，第二点要求语料的规模，但实际情况中这两者很难一起得到保证。
+</p>
+
+<p>
+有了语料后，我们怎么去得到语言模型呢？换言之，所谓的「特性」该如何量化？
+</p>
+
+<p>
+首先，我们要知道，这个语言模型都涵盖了哪些基本元素，所谓「基本元素」，以英文为例，一般是单词，当然实际上也可以是词组或者字符，但单词是我们认识语言(至少是英文)的比较基本的单元。
+</p>
+
+<p>
+然后呢，对任意的这些基本元素组成的序列，一般来说，就是句子，这个模型能给出其置信度(Confidence)，用来判断这个句子在这个语言下的合理性，通常表现为一个概率。在语音识别以及其他一些应用中，通常会在最后有若干个候选的句子结果，此时就要用置信度来从中选择最合理的结果。比如说下面两个句子，他们的发音基本上是一样的，但我们是可以知道第一个句子其实是更合理的。
+</p>
+
+<ol class="org-ol">
+<li>It's hard to recognize speech</li>
+<li>It's hard to wreck a nice beach</li>
+</ol>
+
+<p>
+总结一下，从给定的语料中可以得到一个语言模型，语言模型包含两部分:
+</p>
+<ol class="org-ol">
+<li>包含语料中出现的基本元素的一个有限集合: \(V = \{ e_{1},e_{2}, ..., e_{n} \}\)</li>
+<li>一个概率分布，对给定的序列 \(W = w_{1}w_{2}...w_{m}\)，可以得到概率 \(P(W)\)，其中 \(w_{i} \in V\)</li>
+</ol>
+
+<p>
+也许我们会想，是不是需要考虑语法结构？毕竟一个合理的句子，应该是大致符合自然语言的语法结构的，但首先我们的自然语言并没有一个精确的、无歧义的语法规则，其次语法规则本身已经是一个更高抽象级别的概念了 —— 简单的就是好的，我们更愿意去寻找一些简单的方法，N-gram 语言模型和神经网络语言模型(Neural Network Language Model, <b>NNLM</b>)就是这样。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-3">
+<h3 id="orgheadline5">N-gram 语言模型</h3>
+<div class="outline-text-3" id="text-orgheadline5">
+<p>
+基于马尔可夫假设，我们可以认为，在句子中每个「基本元素」出现的概率只和其前面的元素有关，这样，对给定句子 \(W=w_{1}w_{2}...w_{m}\)，可以得到其概率为:
+</p>
+
+<p>
+\[P(W) = P(w_{1})\cdot P(w_{2}|w_{1})\cdot P(w_{3}|w_{1}w_{2})... P(w_{m}|w_{1}w_{2}...w_{m-1})\]
+</p>
+
+<p>
+但是这样的条件概率仍然难以计算，因此我们再进一步地假设: 每个「基本元素」只和其前面 \(N-1\) 个元素有关。在这样的假设即 N-1 阶马尔可夫假设下，前面的式子可以进行近似简化(以 \(N=3\) 为例):
+</p>
+
+<p>
+\[\begin{eqnarray}
+     P(W) &=& P(w_{1})\cdot P(w_{2}|w_{1})\cdot P(w_{3}|w_{1}w_{2})\cdot P(w_{4}|w_{1}w_{2}w_{3})... P(w_{m}|w_{1}w_{2}...w_{m-1}) \\
+          &\approx& P(w_{1})\cdot P(w_{2}|w_{1})\cdot P(w_{3}|w_{1}w_{2})\cdot P(w_{4}|w_{2}w_{3})... P(w_{m}|w_{m-2}w_{m-1}))
+  \end{eqnarray}\]
+</p>
+
+<p>
+这样我们就得到了一个 3 阶的「N-gram 语言模型」，又称「Trigram 语言模型」，相应的，1 阶 N-gram 语言模型被称为「Unigram 语言模型」，2 阶 N-gram 语言模型被称为「Bigram 语言模型」，4 阶语言模型则可以简称为「4-gram 语言模型」，依次类推。除了能得到我们期望的概率分布外，大于 1 阶的 N-gram 语言模型还隐式地通过上下文信息一定程度上反映了语言的语法结构。
+</p>
+
+<p>
+这里的「gram」是一个抽象的概念，在不同的粒度下它可以对应不同的单元，比如说我们如果基于字符来建模，这个 gram 就是字符；如果基于词来建模，这个 gram 就是词。一般情况下我们使用词作为 gram ，后文一些示例或讨论，如无特殊说明，默认使用词作为 gram。
+</p>
+
+<p>
+根据上面的式子，我们要做的，就是从语料中得到每个「N-gram」的概率，最简单的办法是用「极大似然估计(Maximum Likelihood Estimation, <b>MLE</b>)」—— 即直接统计每个 N-gram 的在语料中的频次然后除以频次之和作为概率值。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #729fcf;">from</span> __future__ <span style="color: #729fcf;">import</span> division
+<span style="color: #729fcf;">from</span> collections <span style="color: #729fcf;">import</span> Counter
+
+<span style="color: #729fcf;">def</span> <span style="color: #edd400;">build_ngram</span>(corpus, gram_level):
+    <span style="color: #ad7fa8;">"""</span>
+<span style="color: #ad7fa8;">    :param corpus: list of sentence</span>
+<span style="color: #ad7fa8;">    :param gram_level: as it says</span>
+<span style="color: #ad7fa8;">    """</span>
+    <span style="color: #eeeeec;">freqs</span> = Counter()
+    <span style="color: #729fcf;">for</span> sentence <span style="color: #729fcf;">in</span> corpus:
+        <span style="color: #eeeeec;">seq</span> = sentence.strip().split()
+        <span style="color: #729fcf;">for</span> index <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">xrange</span>(<span style="color: #729fcf;">len</span>(seq) - gram_level + 1):
+            <span style="color: #eeeeec;">gram</span> = <span style="color: #729fcf;">tuple</span>(seq[index:index+gram_level])
+            <span style="color: #eeeeec;">freqs</span>[gram] += 1
+
+    <span style="color: #eeeeec;">total_count</span> = <span style="color: #729fcf;">sum</span>(freqs.itervalues())
+    <span style="color: #729fcf;">return</span> {gram: freq / total_count}
+</pre>
+</div>
+
+<p>
+但这样的简单的计算方式是有问题的，在实际应用中，往往因为语料的规模不够，导致一些低频的 N-gram 在语料中未出现，这样在计算句子概率的时候，一个概率为 0 的 N-gram 将导致整个句子的概率为 0，此即「零概率问题」。随着 N 的增大，这个问题会越发的明显。
+</p>
+
+<p>
+零概率问题的解决办法是将语料中一些有的 N-gram 的频次「分」一点给这些未出现的 N-gram，这个叫 「折扣(discount)」；或者用这个未出现的 N-gram 的低阶形式的概率来估计，这个叫做「backoff」。这些方法统称为「平滑(smoothing)」方法。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6">基于神经网络的语言模型</h3>
+<div class="outline-text-3" id="text-orgheadline6">
+<p>
+Bengio 在 2003 年提出的神经概率语言模型(Neural Probabilistic Language Model, <b>NPLM</b>)是影响较大的基于神经网络的语言模型<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>。其模型思想其实和 N-gram 语言模型还是同出一源，即基于 N-1 阶马尔可夫假设，认为句子中某个词是由其前面的 N-1 个词决定的。模型使用的网络结构如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nplm_structure.png" alt="nplm_structure.png" />
+</p>
+</div>
+
+<p>
+这个模型将 N-1 个词的表示拼接起来作为输入，然后去预测下一个词最有可能是哪个。输出层会是一个很大的向量，每一维的值就是每一个可能的词的条件概率，这样要计算一个句子的概率也就没问题了。
+</p>
+
+<p>
+这样基于神经网络的语言模型有什么好处呢？
+</p>
+<ol class="org-ol">
+<li>N-gram 需要显式存储每个 N-gram 的内容和概率，于是模型体积会随着语料的扩充而膨胀，但 NPLM 没有这个问题</li>
+<li>N-gram 需要应用各种平滑方法来解决零概率问题，但 NPLM 不存在这个问题，即使是语料中没出现的 N-gram ，依然能给出非 0 的概率值</li>
+<li>模型中会学习一个固定长度的向量来表示一个词，且向量中各维度的值都是连续实值而非离散的 0/1 ，此即「Word Embedding」的较早形式</li>
+</ol>
+
+<p>
+Bengio 还在论文中提到可以用「循环神经网络(Recurrent Neural Network, <b>RNN</b>)」来减少模型参数数量和捕获更远距离的上下文信息(longer term context)，这些观点无疑是非常具有前瞻性的。
+</p>
+
+<p>
+当然，值得一提的是，现为「IDL 杰出科学家」的徐伟曾在 2000 年独立提出用神经网络构建 Bigram 语言模型的思路<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>。
+</p>
+
+<p>
+在这之后，Tomas Mikolov 于 2010 年提出基于 RNN 的语言模型(Recurrent Neural Network Language Model, <b>RNNLM</b>)<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>，并且顺着这个方向一直发论文发到博士毕业，Bengio 还是厉害啊 —— 话说 Google Scholar 上 Tomas Mikolov 的照片一头长发害近视眼的我以为他是个姑娘呢 :)
+</p>
+
+<p>
+RNNLM 的根本思想和 NPLM 是共通的，不同的地方在于词是逐个输入到模型中的，然后隐藏层有一个具有「记忆功能」的单元将之前的词的信息都记录了下来，然后在输出层去预测下一个词。如果把其中的记忆单元拿掉就变成了一个学习 Bigram 语言模型的前馈神经网络了。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7">语言的表示方法</h2>
+<div class="outline-text-2" id="text-orgheadline7">
+<p>
+在 NLP 的应用场景里，无论我们是要做分类、聚类、摘要、机器翻译，首先我们要将要处理的具体文本转换成模型能够处理的数学形式，并且要求这种表示能够反映文本的独特信息。这就是所谓「Representation」，其实也就是特征提取了。
+</p>
+
+<p>
+说 representation 是 NLP 的核心应该不为过吧，事实上在其他机器学习相关的领域，特征表达都是非常重要的，特征设计、特征筛选在以前甚至现在依然是非常重要的一个学术和应用问题。
+</p>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-3">
+<h3 id="orgheadline8">词的表示: one-hot 与 embedding</h3>
+<div class="outline-text-3" id="text-orgheadline8">
+<p>
+单个字符因为不具有语义，所以一般不对其表示方法作过多探讨(暂不考虑汉语)。词作为我们认识语言的基本单元，表示它们的最简单方法，就是为词进行编号，比如说我有一个包含 1 万个词的词典，第一个词就记为「1」，第二个记为「2」，依次类推。
+</p>
+
+<p>
+这样当然是可以的，在一些简单的任务，比如文本分类上，问题不大，比如说我们可以统计不同 id 的词在两个文本中出现的频次来判断两个文本的相似程度。但问题在于 id 是一个类别变量值，它的值是不能用于比较、不能用于计算的，假想一下我们要构造一个简单的 NNLM ，某次输入的 N-gram 中包含了 id 为 10000 的词，如果直接输入到模型中，这个巨大的值会导致网络产生严重的偏差。
+</p>
+
+<p>
+为了解决这个问题，我们一般用所谓「one-hot representation」来表示一个词，具体做法是，每个词都表示为一个向量，这个向量只有一个维度的值为 1，其他维度的值全为 0，且不同词值为 1 的维度都不同。比如说我们要处理的问题中只包含 5 个词，将这 5 个词编号后，可以分别表示为:
+</p>
+
+<pre class="example">
+第一个词: [1 0 0 0 0]
+第二个词: [0 1 0 0 0]
+第三个词: [0 0 1 0 0]
+第四个词: [0 0 0 1 0]
+第四个词: [0 0 0 0 1]
+</pre>
+
+<p>
+这就是 one-hot 的含义所在，每个词的向量表示中，只有一个位置是「激活的」。
+</p>
+
+<p>
+one-hot 表示应用广泛，但它本身有几个问题:
+</p>
+<ol class="org-ol">
+<li>数据稀疏，一个包含 10000 个词的问题，每个词都要表示为长度 10000 的向量，但只有一个位置是有值的，这将会造成很大的存储开销</li>
+<li>缺乏语义信息，两个词之间无法进行相似性比较</li>
+</ol>
+
+
+<p>
+2003 年 Bengio 提出 NPLM 的时候，在模型中去学习每个词的一个连续向量表示，并经过 Tomas Mikolov 等人的发展<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>，发展出「Word Embedding」这一表示方法。比如说前面那五个词的表示，用 word embedding 表示后，可能是这样子的:
+</p>
+<pre class="example">
+第一个词: [0.2 0.3 0.5]
+第二个词: [0.7 0.1 0.2]
+第三个词: [0.1 0.2 0.3]
+第四个词: [0.2 0.3 0.4]
+第四个词: [0.3 0.4 0.6]
+</pre>
+
+<p>
+这样两个词之间就可以比较了——当然，这种表示下相似值高的两个词，并不一定是具有相同语义的，它只能反映两者经常在相近的上下文环境中出现。但无论如何，one-hot 表示的两大问题，word embedding 都给出了一个解决方案。
+</p>
+
+<p>
+word embedding 反映的词与词之间的相似性，可能在语义层面并不能说是真正的相似(取决于如何定义「相似」了)，但「两个 word embedding 接近的词，它们是相关的」这一点是毋庸置疑的，如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/word_embedding_similarity.png" alt="word_embedding_similarity.png" />
+</p>
+</div>
+
+<p>
+除了能反映同一语言的词之间的关系之外，不同语言之间语义近似或相关的词的 word embedding 也将这种关系反映了出来。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/word_embedding_multilingual.png" alt="word_embedding_multilingual.png" />
+</p>
+</div>
+
+<p>
+此外，word embedding 还能一定程度上反映语言的内在规律(linguistic regularity)，比如说 'king - man + woman = queen' 之类的，当然这个特定在实际应用场景里是很少用到的，而且我没记错的话主题模型也可以做到类似的事情，所以也并不是什么新东西了。
+</p>
+
+<p>
+以上都是从 word embedding 本身来看的一些特点，但根据后来的一些讨论，word embedding 所反映的「相似性」其实要在具体的应用场景下才有确切的意义，像上面提到的 multi-lingual 的相似甚至 multi-modal 的相似，以及 linguistic regularity ，在实际应用中使用得还是较少的。引用小 S 的话，word embedding 更大的意义在于「它已经成为了各种后续或者更高级别粒度的语言表达的基础，这是完全超出相似度的一件事，也是词向量带来的最大贡献」。
+</p>
+
+<p>
+当然除了 one-hot 和 word embedding 外，也还有其他的一些特征表示方法，比如说词性、语法结构等信息，都可以附加到词的特征上去。
+</p>
+
+<p>
+更深入的关于 word embedding 的讨论，推荐这篇文章: <a href="http://yanran.li/peppypapers/2015/08/17/post-word-embedding.html">“后 Word Embedding” 的热点会在哪里？</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline9" class="outline-3">
+<h3 id="orgheadline9">句子及更高层级数据的表示: VSM 和 embedding</h3>
+<div class="outline-text-3" id="text-orgheadline9">
+<p>
+句子、段落和文章，我们都可以把它们视为是词的序列，因此在很多场景下可以用统一的方式来进行表示。当然，在涉及句法结构分析时，基本是以句子为单位的，这里暂时不考虑这种情况。作为词的序列，我们该如何去表示它们呢？理想情况下当然是希望词的顺序啊、语义啊、语法结构啊都能够表达出来，但如果要将这些都反映出来，所使用的特征会比较复杂，光是语义和语法结构就够我们喝一壶了。
+</p>
+
+<p>
+在文本分类、文本相似度量等一些主要的应用场景中，我们使用向量空间模型(Vector Space Model, <b>VSM</b>)来表示一段文本。VSM 经常和词袋模型(Bag Of Words, <b>BOW</b>)联系在一起。而 BOW 假设词和词之间是互相独立的，认为词和词之间的位置信息是不重要的，可以算作是 VSM 的一个前提、假设。
+</p>
+
+<p>
+BOW 的解释也很形象，它假想我们有一个袋子，每遇到一个词就将其丢进袋子中，直到处理完所有文本。在此基础上， VSM 要求用一个向量来表示各个文档，这个向量的长度要与词袋中不同的词的数量一致。比如说我们有下面两段文本:
+</p>
+<pre class="example">
+(1) John likes to watch movies. Mary likes movies too.
+(2) John also likes to watch football games.
+</pre>
+
+<p>
+那么我们得到的词袋中包含的词就是 (John, likes, to, watch, movies, also, football, games, Mary, too) 共 10 个词，这样两段文本可以分别表示为:
+</p>
+<pre class="example">
+(1) [1, 2, 1, 1, 2, 0, 0, 0, 1, 1]
+(2) [1, 1, 1, 1, 0, 1, 1, 1, 0, 0]
+</pre>
+
+<p>
+如上所示，不同位置的值为对应的词在文本中的权重，这里使用的是词频。这样两段文本之间的相似程度可以简单地通过算余弦距离来得到。当然在实际中，我们希望不同维度的值是能反映对应的词在文本中的「重要程度」的，而直接使用词频并不能达到这个目的，事实上有一些常用的词会在很多的文本里都具有较高的频次，但它们本身并不包含重要的信息。所以一般用 TF-IDF(词频-逆文档频率)来作为词的权重。
+</p>
+
+<p>
+VSM 的一个问题是，其特征表示往往会很稀疏(想象一个包含了 100,000 个不同词汇的文本集合)，解决这个问题的一个方法是将一些文档频率很高的词去除，因为这样的词不能为文本与文本之间的区分性作出贡献，这样的方法能有效地降低向量的维度并保留有效的信息。
+</p>
+
+<p>
+VSM 的另外一个问题是缺乏语义信息。比如说下面两个句子，它们表达的意义是不一样的，但在 VSM 中，两者的表示会一模一样
+</p>
+<pre class="example">
+(1) Mary loves John
+(2) John loves Mary
+</pre>
+
+<p>
+这个问题的一个解决办法是使用 N-gram 而非 word 来作为基本单元，比如用 Bigram，上述两句话得到的词袋会是: (Mary loves, loves John, John loves, loves Mary)，对应的，两个句子可以表示为:
+</p>
+<pre class="example">
+(1) [1, 1, 0, 0]
+(2) [0, 0, 1, 1]
+</pre>
+
+<p>
+另外一个办法就是，使用句子级别的 embedding 表示。常用的方法有 RNN 和 CNN 两种。
+</p>
+
+<p>
+RNN 的话比较简单，将句子中的词逐个输入到模型中，结束时取隐藏层的输出即可。这是因为 RNN 隐藏层的输出是由之前的「记忆」和当前的输入计算得到的，可以认为是「整个句子的记忆」，也就是一个句子的特征表示了。如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/sentence_embedding_rnn.png" alt="sentence_embedding_rnn.png" />
+</p>
+</div>
+
+<p>
+CNN 的话是将句子中的词的向量表示拼接成一个矩阵，然后在上面进行卷积，最后得到一个向量表示，如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/sentence_embedding_cnn.png" alt="sentence_embedding_cnn.png" />
+</p>
+</div>
+
+<p>
+CNN 和 RNN 得到的 sentence embedding，同 word embedding 一样，可以进行相似性的对比，语义相近的句子，其向量表示在空间中也会比较接近，如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/sentence_embedding_similarity.png" alt="sentence_embedding_similarity.png" />
+</p>
+</div>
+
+<p>
+所以，既然可以得到 sentence embedding，能不能得到 paragraph embedding 乃至 document embedding 呢？对于前者，Tomas Mikolov 在 2014 年提出了「Paragraph Vector」<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>，后者的话似乎还没见到过。在 Mikolov 的实验中，paragraph vector 在情感分析上和信息检索两个任务上都取得了比其他模型更好的结果。不过和 word embedding 一样，sentence embedding 和 paragraph embedding 的可解释性仍然存在问题。
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Bengio, Yoshua, et al. "A neural probabilistic language model." journal of machine learning research 3.Feb (2003): 1137-1155.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+Xu, Wei, and Alexander I. Rudnicky. "Can artificial neural networks learn language models?." (2000).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+Mikolov, Tomas, et al. "Recurrent neural network based language model." Interspeech. Vol. 2. 2010.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+Mikolov, Tomas, et al. "Distributed representations of words and phrases and their compositionality." Advances in neural information processing systems. 2013.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+Le, Quoc V., and Tomas Mikolov. "Distributed Representations of Sentences and Documents." ICML. Vol. 14. 2014.
+</p></div></div>
+
+
 </div>
 </div>
