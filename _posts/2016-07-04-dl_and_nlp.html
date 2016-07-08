@@ -27,6 +27,19 @@ tags       :
 <li><a href="#orgheadline9">句子及更高层级数据的表示: VSM 和 embedding</a></li>
 </ul>
 </li>
+<li><a href="#orgheadline10">机器翻译: 从 SMT 到 end-to-end</a>
+<ul>
+<li><a href="#orgheadline11">统计机器翻译(Statistical Machine Translation, <b>SMT</b>)</a></li>
+<li><a href="#orgheadline12">端到端(end-to-end)的新方法</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline13">自然语言生成(Natural Language Generation, NLG)</a>
+<ul>
+<li><a href="#orgheadline14">从模板方法到 encoder-decoder</a></li>
+<li><a href="#orgheadline15">对话系统中的自然语言生成</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline16">后记</a></li>
 </ul>
 </div>
 </div>
@@ -269,7 +282,7 @@ Language Generation 则是在理解之后进行的结果的组织，组织成自
             <span style="color: #eeeeec;">freqs</span>[gram] += 1
 
     <span style="color: #eeeeec;">total_count</span> = <span style="color: #729fcf;">sum</span>(freqs.itervalues())
-    <span style="color: #729fcf;">return</span> {gram: freq / total_count}
+    <span style="color: #729fcf;">return</span> {gram: freq / total_count <span style="color: #729fcf;">for</span> gram, freq <span style="color: #729fcf;">in</span> freqs.iteritems()}
 </pre>
 </div>
 
@@ -520,6 +533,390 @@ CNN 和 RNN 得到的 sentence embedding，同 word embedding 一样，可以进
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgheadline10" class="outline-2">
+<h2 id="orgheadline10">机器翻译: 从 SMT 到 end-to-end</h2>
+<div class="outline-text-2" id="text-orgheadline10">
+<p>
+沟通是人类的本能，所以将一种语言翻译成另外一种语言的需求，早在 17 世纪就有人提出来了，但我相信在更早之前，在不同语言的人群交界的地方，就已经有人在尝试做这个事情了。不过直到 1903 年，「机器翻译」这个词才被正式提出来。
+</p>
+
+<p>
+1953 年的时候，Weaver 等人发表了一篇名为《Translation》的文章<sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup>，并在其中提出两个基本的思想:
+</p>
+<ol class="org-ol">
+<li>翻译类似于密码解读的过程</li>
+<li>原文与译文表达的是相同的意思，翻译可以通过将源语言转换成一个「通用语言」，然后再转换为目标语言</li>
+</ol>
+
+<p>
+这里提到的「通用语言」是一种虚构的语言，假定为全人类共同的。这个思想其实和后面要讲到的 Encoder-Decoder 的思想有一些共通之处呢！
+</p>
+
+<p>
+从方法上来说，最早使用的是基于规则的方法，后面出现了基于实例的方法，然后在大概 1999 年，在 IBM 推出了 5 种「基于词的统计翻译模型」并取得非常好的成绩后，统计机器翻译(Statistical Machine Translation, <b>SMT</b>)成为了机器翻译的主流方法，直到现在依然如此，Google、Bing、百度等几家的在线翻译系统，都是基于统计方法的。
+</p>
+</div>
+
+<div id="outline-container-orgheadline11" class="outline-3">
+<h3 id="orgheadline11">统计机器翻译(Statistical Machine Translation, <b>SMT</b>)</h3>
+<div class="outline-text-3" id="text-orgheadline11">
+<p>
+目前主流的机器翻译系统，其基本思想来源于「噪声信道模型」，即认为源语言的句子 \(f\) 是目标语言 \(e\) 经过含噪声的信道编码后得到的，翻译的过程就是要求解出 \(\hat{e}\)
+</p>
+
+<p>
+\[\hat{e} = \mathop{arg\,max}_{e}p(e|f)\]
+</p>
+
+<p>
+然后利用贝叶斯公式，转换为
+</p>
+
+<p>
+\[\hat{e} = \mathop{arg\,max}_{e}p(f|e)p(e)\]
+</p>
+
+<p>
+其中 \(p(f|e)\) 被称为「翻译模型」，\(p(e)\) 则是语言模型。后者可以通过收集目标语言的语料训练得到，但前者怎么办呢？一个简单的思路是，将源语言句子中的每个词都翻译成目标语言对应的词，然后通过重新排列这些词得到符合目标语言语法的句子 —— 后面这个过程称为「词对齐(word alignment)」。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/word_alignment.png" alt="word_alignment.png" />
+</p>
+</div>
+
+<p>
+所以翻译模型会由两部分组成，一部分是词到词的映射，另一部分是对结果进行对齐。整个系统要在所有可能的对齐结果中找到最好的那个。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/phrase_based_smt.png" alt="phrase_based_smt.png" />
+</p>
+</div>
+
+<p>
+这就是传统的统计机器翻译模型的基本原理。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline12" class="outline-3">
+<h3 id="orgheadline12">端到端(end-to-end)的新方法</h3>
+<div class="outline-text-3" id="text-orgheadline12">
+<p>
+2014 年的时候，Kyunghyun Cho<sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup> 和 Sutskever<sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup> 先后提出了一种 End-to-End 即所谓「端到端」的模型，在英语到法语的翻译实验上取得了很好的成绩，前者将其模型命名为 Encoder-Decoder 模型，后者则将其命名为 Sequence-to-Sequence 模型，不过两者其实在结构上基本是一样的。其核心思想都是:
+</p>
+<ol class="org-ol">
+<li>将输入的句子经过一个 RNN 生成一个能反映句子语义的向量，类似计算 sentence embedding 的过程，</li>
+<li>用另一个 RNN ，从输入句子的向量表达中解码出另一个句子</li>
+</ol>
+
+<p>
+第一个过程称之为 encoding，第二个过程称之为 decoding，整个模型非常的简单优雅，不需要词对齐，不需要额外的语言模型，输入英语，直接得到法语，这就是所谓「端到端」。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/seq2seq.png" alt="seq2seq.png" />
+</p>
+</div>
+
+<p>
+Encoder-Decoder 模型虽然在结构上很简单，但它有很重要的两个特点：
+</p>
+<ol class="org-ol">
+<li>大部分序列到序列的预测问题，都可以使用该模型，这个序列甚至没有必要是文本，语音、图像同样可以</li>
+<li>先 encoding 再 decoding 的 encoder-decoder 的结构，可以推广到非 RNN 的模型上去</li>
+</ol>
+
+<p>
+当然，虽然 encoder-decoder 的模型结构简单优美，在一些问题上也还不错，它仍然是有缺点的，回到机器翻译问题上来，将一个句子 encode 成一个向量，真的是合适的么？一方面这个过程相当于进行数据压缩，肯定是会有信息损耗的，而且这种损耗随着句子长度的提高会越来越大；另一方面，翻译的时候并不一定需要完全理解整个句子的含义后才能进行，比如可能在看完句子的前半部分以后就可以进行部分的翻译，每个翻译结果中的词的生成都使用整个句子的语义的话，无疑准确度也会受到限制。
+</p>
+
+<p>
+在这之后，Dzmitry Bahdanau 在 encoder-decoder 模型的基础上增加 attention 机制来解决这个问题<sup><a id="fnr.9" class="footref" href="#fn.9">9</a></sup>，通过双向 RNN 来在 decoder 时得到不同时刻的上下文信息。
+</p>
+
+<p>
+其中 decoder 在每一个 time step 用下面的式子计算条件概率以判断该输出什么词。
+</p>
+
+<p>
+\[p(y_{i}|y_{1}, ..., y_{i-1}, x) = g(y_{i-1}, s_{i}, c_{i})\]
+</p>
+
+<p>
+其中 \(s_{i}\) 是 decoder 的隐藏状态
+</p>
+
+<p>
+\[s_{i}=f(s_{i-1}, y_{i-1}, c_{i})\]
+</p>
+
+<p>
+而 \(c_{i}\) 则是根据从 encoder 中不同时刻的隐藏状态得到的上下文信息，用来决定输出时该聚焦于输入序列的哪些部分。
+</p>
+
+<p>
+\[c_{i}=\sum_{j=1}^{T_{x}}\alpha_{ij}h_{j}\]
+</p>
+
+<p>
+上式中的 \(\alpha_{ij}\) 构成的权值矩阵就是最核心的内容，将其可视化的话，能发现高亮的部分其实相当于是源语言句子和目标语言句子之间的对齐路径
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/attention_alignment.png" alt="attention_alignment.png" />
+</p>
+</div>
+
+<p>
+对照传统的统计机器翻译系统，在 encoder-decoder 模型中，模型本身相当于隐含了语言模型和词到词翻译的两个部分，但却缺乏词对齐部分，而 attention 机制的加入弥补了这个缺陷。
+</p>
+
+<p>
+另外要说的是，attention 机制和 encoder-decoder 一样，更大意义上在于它提供了一种解决问题的思路，而不是说某个具体的模型结构，事实上 attention 机制的实现是多种多样的，不一定要使用 RNN。在应用上，attention 机制在图像、视频上也有很大的应用空间，比如在目标识别时用来聚焦于不同的图像区域。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/attention_image.png" alt="attention_image.png" />
+</p>
+</div>
+
+
+<p>
+2016 年， Kyunghyun Cho 又提出结合了 encoder-decoder 和 attention 的多语言翻译模型<sup><a id="fnr.10" class="footref" href="#fn.10">10</a></sup>，能够接收多用语言的输入，并翻译成多种不同的语言。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/language_transfer.png" alt="language_transfer.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline13" class="outline-2">
+<h2 id="orgheadline13">自然语言生成(Natural Language Generation, NLG)</h2>
+<div class="outline-text-2" id="text-orgheadline13">
+</div><div id="outline-container-orgheadline14" class="outline-3">
+<h3 id="orgheadline14">从模板方法到 encoder-decoder</h3>
+<div class="outline-text-3" id="text-orgheadline14">
+<p>
+说到自然语言生成，我的第一反应是大刘的《诗云》，以及他制作的一款名为「电子诗人」的自动作诗软件。来看一看用电子诗人生成的一首「现代诗」:
+</p>
+
+<blockquote>
+<p>
+作品第75509号——
+</p>
+
+<p>
+我面对着黑色的艺术家和荆棘丛生的波浪
+</p>
+
+<p>
+我看到，剌眼的心灵在午睡，程序代码在猛击着操场
+</p>
+
+<p>
+在这橄榄绿的操场中，没有货车，只有蝴蝶
+</p>
+
+<p>
+我想吸毒，我想软弱地变黄
+</p>
+
+<p>
+我面对着光灿灿的冬雪和双曲线形的霞光
+</p>
+
+<p>
+我看到，青色的乳房在漂荡，肥皂在聆听着海象
+</p>
+
+<p>
+在这弱小的春雨中，没有贝多芬，只有母亲
+</p>
+
+<p>
+我想上升，我想呼吸着歌唱
+</p>
+
+<p>
+我面对着宽大的小船和透明的微波束
+</p>
+
+<p>
+我看到，枯死的渔船在叫，蒸馏水在铲起羊
+</p>
+
+<p>
+在这多孔的青苔中，没有夏娃，只有老师
+</p>
+
+<p>
+我想冬眠，我想可恶地发光
+</p>
+
+<p>
+我面对着多血的史诗和悠远的大火
+</p>
+
+<p>
+我看到，生机勃勃的战舰在沉默，透明裙在爱抚着操场
+</p>
+
+<p>
+在这曲线形的奋斗者中，没有月光舞会，只有风沙 我想摆动，我想粗糙地惊慌
+</p>
+</blockquote>
+
+<p>
+自然语言生成除了上述这种娱乐性质的作用外，目前在自动天气预报、机器翻译、Image Caption 和对话系统中都有应用。
+</p>
+
+<p>
+说到自然语言生成，如果要我们自己实现的话，能很快想到的一个基础的办法，就是模板生成方法。在一些受限环境下，需要返回的文本形式可能比较简单，用模板方法还是可以取得能用的结果的。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nlg_with_template.png" alt="nlg_with_template.png" />
+</p>
+</div>
+
+<p>
+不过模板方法的缺点也是显而易见的:
+</p>
+<ol class="org-ol">
+<li>泛化性极低，换一个场景就要重新设计一个不同的模板，如果要进行通用领域的自然语言生成，模板数量将会多到爆炸</li>
+<li>输出非常死板僵硬，如果是在对话这样的场景下，用户很快就会发现得到的文本是由机器生成的</li>
+<li>并没有真正「理解文本」</li>
+</ol>
+
+
+<p>
+怎么样才算是理想的「自然语言生成」呢？
+</p>
+<blockquote>
+<p>
+Once aware of the communicative goals, machines can understand the meaning of the content (what is important, what is what), and automatically generate natural, meaningful and plausible language.  —— By 小 S
+</p>
+</blockquote>
+
+<p>
+几个重点是：
+</p>
+<ol class="org-ol">
+<li>理解得到的输入(根据不同的场景，可能是文本会图像)</li>
+<li>要生成自然的语言表达，就算是胡说八道，也要一本正经</li>
+</ol>
+
+<p>
+对于一本正经地胡说八道这件事情，其实是可以用语言模型来，用 N-gram 模型的话，随机选一个词，然后找到关联的概率最高的几个 N-gram ，依次类推。另外一种办法是在已有特定语言的「基本句法规则」的情况下，先生成句法结构，然后往里面填充词语。当然，这两种方法都是很简单的，如果直接使用的话生成的文本其实本身没有什么意义，要放到具体的应用场景里的话，这样的方法还必须和其他一些方法结合才行。
+</p>
+
+<p>
+而使用之前提到的 encoder-decoder 框架，在一些场景下，能够做到 end-to-end 的生成，比如 Image Caption。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/image_caption_seq2seq.png" alt="image_caption_seq2seq.png" />
+</p>
+</div>
+
+<p>
+所以说 encoder-decoder 这个想法真的是非常好用的呀！
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline15" class="outline-3">
+<h3 id="orgheadline15">对话系统中的自然语言生成</h3>
+<div class="outline-text-3" id="text-orgheadline15">
+<p>
+对话系统中使用到的技术，大致上可以分成三部分:
+</p>
+<ol class="org-ol">
+<li>基于知识库的检索方法</li>
+<li>基于知识图谱的简单推理</li>
+<li>基于生成模型的自然语言生成方法</li>
+</ol>
+
+<p>
+第一部分是在知识库中直接找到「合适的」现成的文本返回给用户，和自然语言生成基本没什么关系；第二部分涉及到对用户意图的分析，可能会有一些基于模板、规则的生成过程；第三部分，据我所知，好几家做问答的公司，都在尝试用 encoder-decoder 的模型。
+</p>
+
+<p>
+没做过问答，以上都是我瞎编的 :)
+</p>
+
+<p>
+前两部分就不谈了，第三部分使用 encoder-decoder 模型，基本都是基于 RNN 来去实现。这种生成模型虽然能够「理解」用户的问题并且一本正经的胡说八道，但仍然存在一些需要解决的问题。
+</p>
+<ol class="org-ol">
+<li>语义漂移(semantic drift)，直观点来说就是答非所问</li>
+<li>生成的文本在语法上有时并不符合自然语言特性(这真是在胡说八道了……)</li>
+<li>训练语料中的高频句式会频繁出现，典型的如「万能回复」问题，其实也算是语义漂移的一个表现</li>
+<li>生成的文本语言风格可能与实际场景不符合</li>
+</ol>
+
+
+<p>
+本质上 encoder-decoder 也可以认为是一种检索办法，只不过相比基于知识库的检索方法，它是一种模糊的、更细粒度的检索，语义漂移的问题其实就是模型在其巨大的解空间中迷路了，要解决这个问题，一方面是提高方向感，一方面也可以将解空间进行限制。Google 的 Allo 就被设计成使用混合响应策略来解决这个问题。
+</p>
+
+<p>
+所谓的「混合响应策略」，其实就是通过其他的方法来辅助咯，比如获取用户的个人信息作为辅助特征，比如通过知识图谱并将推理结果输入到模型中，再比如确定用户的地理位置和环境因素作为额外的特征。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/allo_mixed_response_strategy.png" alt="allo_mixed_response_strategy.png" />
+</p>
+</div>
+
+<p>
+至于语言风格的问题，可以通过情感分析等手段来获取用户的情绪状态，然后输入到模型中以得到不同风格的响应。
+</p>
+
+<p>
+此外，在对话系统中，一个很典型的问题是「多轮对话问题」—— 大部分对话系统都是「一问一答」的，很少考虑前几轮对话的内容，也就是我们常说的「上下文」。对于这个问题，小 S 的回答是，目前在一块的研究中提到的方法大概有这么几种:
+</p>
+<ol class="org-ol">
+<li>将前几轮的历史对话信息作为额外的输入</li>
+<li>设计多层次的对话系统</li>
+<li>结合用户画像(user profile)来生成文本，取 top-5 的答案再进一步筛选</li>
+</ol>
+
+<p>
+综上，encoder-decoder 模型虽然简单强大，但仍然有自身固有的问题，如果要设计一个良好的对话系统，以目前的情况，还是需要和传统方法进行结合。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgheadline16" class="outline-2">
+<h2 id="orgheadline16">后记</h2>
+<div class="outline-text-2" id="text-orgheadline16">
+<p>
+这应该是我参加集智的活动之中质量最高的一次了，75 页的 slides，覆盖 NLP 几大基本问题的内容和展开，加上小 S 本身在 NLP 这块的造诣，给我带来了很大的收获。又因为自己对 NLP 兴趣浓厚，参加完活动后就兴起了写一个完整笔记的念头，历时五天，查阅了很多的论文，把个中尚未明白的一些细节搞清楚，总算是完成了这篇 1 完多字的笔记。
+</p>
+
+<p>
+希望以后能看到更多这样高质量的活动！
+</p>
+</div>
+</div>
 <div id="footnotes">
 <h2 class="footnotes">&#33050;&#27880;: </h2>
 <div id="text-footnotes">
@@ -542,6 +939,26 @@ Mikolov, Tomas, et al. "Distributed representations of words and phrases and the
 
 <div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
 Le, Quoc V., and Tomas Mikolov. "Distributed Representations of Sentences and Documents." ICML. Vol. 14. 2014.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.6" class="footnum" href="#fnr.6">6</a></sup> <div class="footpara"><p class="footpara">
+Weaver, Warren. "Translation." Machine translation of languages 14 (1955): 15-23.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.7" class="footnum" href="#fnr.7">7</a></sup> <div class="footpara"><p class="footpara">
+Sutskever, Ilya, Oriol Vinyals, and Quoc V. Le. "Sequence to sequence learning with neural networks." Advances in neural information processing systems. 2014.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.8" class="footnum" href="#fnr.8">8</a></sup> <div class="footpara"><p class="footpara">
+Cho, Kyunghyun, et al. "Learning phrase representations using RNN encoder-decoder for statistical machine translation." arXiv preprint arXiv:1406.1078 (2014).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.9" class="footnum" href="#fnr.9">9</a></sup> <div class="footpara"><p class="footpara">
+Bahdanau, Dzmitry, Kyunghyun Cho, and Yoshua Bengio. "Neural machine translation by jointly learning to align and translate." arXiv preprint arXiv:1409.0473 (2014).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.10" class="footnum" href="#fnr.10">10</a></sup> <div class="footpara"><p class="footpara">
+Firat, Orhan, Kyunghyun Cho, and Yoshua Bengio. "Multi-way, multilingual neural machine translation with a shared attention mechanism." arXiv preprint arXiv:1601.01073 (2016).
 </p></div></div>
 
 
