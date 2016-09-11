@@ -45,7 +45,7 @@ nav:
     url : /atom.xml
 
 # Theme Author (Please don't edit this line cause of MIT LICENSE rules)
-theme:
+theme_settings:
   creator:           Rizky Ariestiyansyah
   codename:          Naringu
   link:              https://github.com/ariestiyansyah/naringu
