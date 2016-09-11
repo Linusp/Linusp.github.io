@@ -1,0 +1,46 @@
+---
+layout     : post
+title      : "Github Pages 升级 Jekyll 版本造成博客构建失败"
+categories : 博客
+tags       :
+- Gihub
+- Jekyll
+---
+<hr  />
+
+
+<p>
+8 月底的时候写了一篇在 Windows 下建立 Python 开发环境的文章(嗯，其实是应一些朋友的要求写的)，然后照常 push ，结果收到了一封邮件，告诉我博客构建失败了。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/page_build_failure.png" alt="page_build_failure.png" />
+</p>
+</div>
+
+<p>
+点击邮件给出的<a href="https://help.github.com/articles/troubleshooting-jekyll-builds">链接</a>，里面都是一些常规的排错建议，并没有给我相应的错误信息，看完还是一头雾水。为了确定是不是最近一次 commit 提交的文章内容有什么问题，我把 repo 回滚到了出错前的一个 commit 上，然后 'push -f' ，一秒钟之后又收到了相同的邮件。
+</p>
+
+<p>
+当时感觉有点懵，但是因为手头还有别的事情，于是就丢在那里不管了。直到昨天，我才给 Github 发了封邮件，说了一下我的情况。很快就收到了回复。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/page_build_failure_2.png" alt="page_build_failure_2.png" />
+</p>
+</div>
+
+<p>
+原来是 Github Pages 将 Jekyll 升级到了 3.2.1 ，而在 Jekyll 3.2.1 中，配置文件 _config.yml 中的 "theme" 字段，现在被用作设置 "gem-based theme"，不能用于用户的自定义使用了。
+</p>
+
+<p>
+按照邮件的建议，我把 _config.yml 中原先的 theme 字段改写为 theme_settings ，并将相应的模板文件中的名称也改过来，重新 push 之后没有再报错。
+</p>
+
+<p>
+但我翻了下 Jekyll 的<a href="https://jekyllrb.com/news/releases/">发布历史</a>，并没有找到对这件事情的详细说明……
+</p>
