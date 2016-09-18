@@ -9,7 +9,7 @@ permalink:           /:year/:month/:day/:title.html
 include:             ['_notes']
 
 # Setup
-title:               "Linusp's Blog"
+title:               "ZMonster's Blog"
 tagline:             '巧者劳而智者忧，无能者无所求，饱食而遨游，泛若不系之舟'
 description:         '计算机科学|人工智能|程序设计'
 url:                 http://linusp.github.io
