@@ -6,7 +6,6 @@ markdown:            kramdown
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink:           /:year/:month/:day/:title.html
-include:             ['_notes']
 
 # Setup
 title:               "ZMonster's Blog"
