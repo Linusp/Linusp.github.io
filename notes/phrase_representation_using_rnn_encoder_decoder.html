@@ -1,7 +1,7 @@
 ---
 title: Learning Phrase Representation using RNN Encode-Decoder for Statistical Machine Translation
 author: Linusp
-layout: page
+layout: note
 ---
 <p>
 作者在这篇论文中提出了一种新的模型，并用来进行机器翻译和比较不同语言的短语/词组(phrase)之间的语义近似程度。这个模型由两个 RNN 组成，其中一个(Encoder)用来将输入的序列表示成一个固定长度的向量，另一个(Decoder)则使用这个向量重建出目标序列 —— 在机器翻译任务里，可以认为 Encoder 产生的向量是输入文本的 <b>语义表达</b> ，而 Decoder 则根据这个语义表达产生目标语言的文本。
