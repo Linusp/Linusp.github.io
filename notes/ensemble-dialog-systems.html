@@ -1,0 +1,79 @@
+---
+title: An Ensemble of Retrieval- and Generation-Based Dialog Systems
+author: Linusp
+layout: note
+---
+<hr  />
+
+<p>
+这篇论文在指出基于检索方法(retrieval-based)和基于生成方法(generation-based)的两种对话系统的问题后，提出了一种结合检索方法和生成方法的对话系统，并在 700w 的中文对话数据(来自微博、百度知道、贴吧等)上获得了比两种方法都更好的结果。
+</p>
+
+<p>
+检索方法在一些垂直领域的对话系统中比较常见，这是因为特定领域的对话系统中用户的目的性比较明确，多为查询信息或者提供信息(以完成某种「任务」)，通过检索和人工规则一般就能解决问题。而开放域的闲聊类场景下，如果有足够的数据，用生成方法会是一种比较好的选择。作者关注的开放域中的对话系统，这种场景下也可以应用一些检索方法和人工规则，但检索方法只能根据浅层语义来发现关联的回复，而尝试用人工规则覆盖开放域下的种种不同情况将会导致规则数量爆炸增长；生成方法固然可以生成知识库中没有的回答，但很容易抛出类似「呵呵」、「是吗」这种万能回复，这种语义漂移现象已经被很多将生成方法应用于对话系统的人发现并进行研究了。
+</p>
+
+<p>
+文本的思路是将检索方法和生成方法结合起来，主要思想有两点:
+</p>
+<ol class="org-ol">
+<li>使用生成方法时，使用检索到的回复作为额外的信息</li>
+<li>对检索方法和生成方法给出的结果，在最后进行重新排序</li>
+</ol>
+
+
+
+<div class="figure">
+<p><img src="../assets/img/ensemble-dialog-system.png" alt="ensemble-dialog-system.png" />
+</p>
+</div>
+
+<p>
+具体一点的话，过程是这样的:
+</p>
+<ol class="org-ol">
+<li>对给定的 query \(q\)，首先从知识库中进行检索，得到候选的回复 \(r^{\ast}\)，这个 \(r^{\ast}\) 会有很多个</li>
+<li>将每个候选回复 \(r^{\ast}\) 和 \(q\) 一起输入到生成模型也就是图中的「multiseq2seq generator」中，后文又称之为「biseq2seq」</li>
+<li>\(q\) 和 \(r^{\ast}\) 都是一个句子，它们在 biseq2seq 中经过 encoder 被各自编码成一个向量</li>
+<li>将 \(q\) 和 \(r^{\ast}\) 的向量 <b>拼接</b> 起来，decoder 以其作为输入，生成一个回复 \(r^{​+}\)</li>
+<li>将所有检索出的回复 \(r^{\ast}\) 和生成的回复 \(r^{​+}\) 混合起来，进行重排序，返回最优的一个</li>
+</ol>
+
+
+<p>
+检索阶段没有太多好说的，就是搜索系统用的那一套东西，先根据 query 内容找到知识库中可能有关联的 "问-答" 对 \((q^{\ast}, r^{\ast})\)，然后进行排序，选出 1000 条最好的结果。需要注意的是，在排序时，\(q\) 和 \(q^{\ast}\) 的关联性、\(q\) 和 \(r^{\ast}\) 的关联性会一起被考虑。
+</p>
+
+<p>
+生成阶段，其所谓的「biseq2seq」的结构如下图所示
+</p>
+
+
+<div class="figure">
+<p><img src="../assets/img/biseq2seq.png" alt="biseq2seq.png" />
+</p>
+</div>
+
+<p>
+这个模型里有两个 encoder 和一个 decoder，一个 encoder 用来对 \(q\) 进行编码，另一个 encoder 用来对 \(r^{\ast}\) 进行编码。两个 encoder 输出会拼接成一个向量输入到 decoder 中。不过论文没有就 biseq2seq 的具体数学表示和训练做详细说明，从引用文献里看，biseq2seq 的想法是来自 Barret Zoph 和 Kevin Knight 的一篇论文《Multi-source neural translation》，是 2016 年发表的一篇论文，回头再去了解一下。
+</p>
+
+<p>
+下表是论文中方法和其他一些方法的实验对比结果。
+</p>
+
+
+<div class="figure">
+<p><img src="../assets/img/ensemble-dialog-system-results.png" alt="ensemble-dialog-system-results.png" />
+</p>
+</div>
+
+<p>
+论文中还展示了 biseq2seq 和 seq2seq 在生成回复时的结果对比，从下表来看，biseq2sq 生成的结果确实更有意义一些。
+</p>
+
+
+<div class="figure">
+<p><img src="../assets/img/biseq2seq_vs_seq2seq.png" alt="biseq2seq_vs_seq2seq.png" />
+</p>
+</div>
