@@ -1,0 +1,83 @@
+---
+title: "Memory Networks(arXiv: 1410.3916)"
+author: Linusp
+layout: note
+---
+<hr  />
+
+<p>
+这篇论文是第一篇提出 Memory Network 的论文，和神经元图灵机(Neural Turing Machine)的论文在同一年。不过说实话，我觉得这篇论文的质量很一般，是比不上 NTM 那篇论文的，只不过其中提出来的一些观点和思想在后面逐渐被补充和完善，才有了现在 Memory Network 的名声。
+</p>
+
+<p>
+论文的出发点有这么几个:
+</p>
+<ol class="org-ol">
+<li>大部分 ML 方法都缺乏建立长期记忆(long term memory)的能力以及基于长期记忆的推理和处理 —— RNN 虽然能一定程度上做到，但由于 gradient vanish 的问题，实际上长期记忆在 RNN 中会衰退为短期记忆，LSTM 的提出对此问题有所改善，但效果有限</li>
+<li>作者主要是想进行基于知识库(Knowledge Base，或称知识图谱)的问答，但希望知识库可以作为模型的一部分并在此基础上进行 QA</li>
+<li>NTM 的结构很好，但是它能使用的 memory 还是太小了</li>
+</ol>
+
+<p>
+首先明确一下这里的「Memory」也就是「记忆」的概念。在不同的领域，比如脑科学、认知科学、物理学，对记忆的定义和理解都不一样，我对这些学科不太懂，不知道该对应到其中的哪部分上去。在机器学习/深度学习里，所谓的记忆，只是指「处理过的数据中会对目前的处理过程造成影响的信息」，也就是说，是和时序存在关联的。图像识别里用大量的图片来训练模型，最后能识别出新的图像的类别，这算不算「记忆」呢？按照我们的观点，其实也算，但这种我们更多认为是从大量同类图片中提取出了「模式」，本文讨论的「记忆」并不是这样的，除了有时序关系，还要有一定的因果关系，比如说我前 1 分钟给我看一张搞笑图片，现在给我一张根据这个搞笑图片 PS 过的川普和希拉里的图片，我会 get 到笑点然后拍桌狂笑。
+</p>
+
+<p>
+总结一下的话是两点:
+</p>
+<ol class="org-ol">
+<li>时序性: 信息的输入是时序的，有先有后</li>
+<li>因果性: 先输入的信息对后输入的信息会产生影响，如果将两者调换，那么结果会不一样</li>
+</ol>
+
+<p>
+看到时序性，很自然会想到 RNN，而它也满足第二点，只不过在它里面，「记忆」是隐式存在的，也就是它里面的 hidden state。但众所周知，RNN 因为 gradient vanish 的问题没法对长期记忆进行建模，LSTM 的提出倒是神来之笔，大大提高了 vanilla RNN 这方面的能力，后来 residual network 里的 skip connection 和 LSTM 里的 constant error flow 是很相似的。
+</p>
+
+<p>
+对概念的讨论就这样，先来看看论文的模型，大致如下：
+</p>
+
+
+
+<div class="figure">
+<p><img src="../../../assets/img/memnn_model.png" alt="memnn_model.png" />
+</p>
+</div>
+
+<p>
+整个模型分成五个模块，分别是:
+</p>
+<ol class="org-ol">
+<li>输入模块 I: 用来对输入进行特征提取</li>
+<li>泛化模块 G: 用来将输入根据一定的机制写入到 memory 中去</li>
+<li>记忆模块 memory: 用来存储信息，供后面的处理使用</li>
+<li>响应模块 R: 对特定的问题，用来从 memory 中提取信息并进行推理，得到输出信息</li>
+<li>输出模块 O: 对模块 R 的输出进行处理，表达成自然语言</li>
+</ol>
+
+<p>
+如果读过神经元图灵机那篇论文，应该能一眼看出来模块 G 和模块 R 其实就是 NTM 里面的 write heads 和 read heads，在读写的时候计算 memory 里所有成分和当前数据的相似度，其实就是类似现在的 attention 机制了。然而有一个问题是，如果 memory 超级大，比如像作者说的一样，要将整个 freebase 作为 memory，别说计算 softmax 了，就是遍历 memory 都会是难以承受的，这问题该怎么解决呢？
+</p>
+
+<blockquote>
+<p>
+Consequently, for efficiency at scale, G(and O) need not operate on all memories: they can operate on only a retrieved subset of candidates(only operating on memories that are on the right topic). We explore a simple variant of this in our experiments.
+</p>
+</blockquote>
+
+<p>
+如上，作者的办法是，建立 word 到 memory 的哈希，然后根据 question 来去检索出关联的 memory，只对这部分 memory 进行推理 —— 这其实就是一个倒排索引了……
+</p>
+
+<p>
+在这个模型中，模块 G 和模块 R 是核心所在，真的如作者所说要存储大规模的 memory 并在其基础上进行推理时，模块 G 和模块 R 的具体设计是很重要的，然后作者在后面描述基于 freebase 的 QA 任务时，模块 G 只是填充「下一个空白的 memory cell」，模块 R 则是「根据倒排索引去检索相关的 memory cell」，完全就是一套检索系统，整个训练过程也完全不是端到端的，臭不要脸 :)。直到 15 年 Sukhbaatar 提出了端到端的模型后， Memory Network 才算是真正意义上的完成了，我是这样认为的。
+</p>
+
+<p>
+总之我个人对这篇论文评价不高，虽然它提出的 Memory Network 这个模型的思想是不错的，某种意义上来说，它其实是一个框架而不是一个具体的模型，因为其中的 I/G/R/O 四个模块都是可以用不同 NN 来实现，扩展性很好，这也是后来持续地有 Memory Network 相关的工作的原因， NIPS 2015 还专门有一个 RAM workshop —— 所谓「RAM」是 "RNN-Attention-Memory" 的缩写。
+</p>
+
+<p>
+以上。
+</p>
