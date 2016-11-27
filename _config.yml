@@ -41,7 +41,7 @@ nav:
   - text: 简历
     url : /ZResume/index.html
   - text: Feed
-    url : /atom.xml
+    url : /feed.html
 
 # Theme Author (Please don't edit this line cause of MIT LICENSE rules)
 theme_settings:
