@@ -1,0 +1,487 @@
+---
+layout     : post
+title      : "深度学习在自然语言处理中的应用: 集智俱乐部活动笔记"
+categories :
+- Deep Learning
+- NLP
+tags       :
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">简介</a></li>
+<li><a href="#orgheadline2">深度学习在自然语言处理中的应用</a></li>
+<li><a href="#orgheadline3">可微数据结构(Differentiable Data-structure)</a></li>
+<li><a href="#orgheadline4">语言学习的范式</a></li>
+</ul>
+</div>
+</div>
+
+<hr  />
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1">简介</h2>
+<div class="outline-text-2" id="text-orgheadline1">
+<p>
+本文为对 2016 年 12 月 10 日集智俱乐部公开活动「深度学习与自然语言处理」进行的总结。
+</p>
+
+<p>
+活动主讲人是自然语言处理领域的知名学者吕正东，他先后在 MSRA 和华为诺亚方舟实验室担任过研究员，在顶级会议、期刊上发表过 40 余篇论文，并长期担任一些会议、期刊的审稿人。微博上的「<a href="http://weibo.com/u/2141767181?topnav=1&amp;wvr=6&amp;topsug=1">鲁东东胖</a>」就是他啦，最近他创办了一家人工智能公司，正在进行招聘。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2">深度学习在自然语言处理中的应用</h2>
+<div class="outline-text-2" id="text-orgheadline2">
+<p>
+自然语言处理(Natural Language Processing, <b>NLP</b>)是人工智能中的一个重要分支，从人工智能这个领域刚发展起来的时候就一直是一个重要的研究方向，到现在也发展出了很多的细分领域和非常多的方法，大致上来说，我们可以认为是在 2013 年的时候，伴随着 word2vec 这个 word embedding 的开源工具的出现，正式地将深度学习引进了 NLP 的研究中 —— 当然要认真考据的话，word embedding 的思想早在上世纪 80 年代的时候就已经初露端倪<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>，用神经网络来建模语言的工作也可以追溯到现为 IDL 科学家的徐伟在 2001 年的工作<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>以及 2003 年 Bengio 在 JMLR 上发表的著名论文《A Neural Probabilistic Language Model》，大家去了解 word2vec/word embedding 的时候经常会见到的一张经典的模型图就来自 Bengio 的这篇论文。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nplm_structure.png" alt="nplm_structure.png" />
+</p>
+<p><span class="figure-number">&#22270;1&nbsp;</span> Bengio 的 NPLM</p>
+</div>
+
+<p>
+从不那么严格的大众的角度来看，可以说 word2vec 的出现是深度学习进入 NLP 领域的一个标志性事件，其中的 word embedding 思想带来了更好的文本的表示方法，也催生了各种在更高层级做 embedding 的工作，比如 sentence embedding，比如知识图谱中实体和关系的 embedding(TransE/TransR等)；而 sequence to sequence 思想的提出以及 attention 机制的出现，则在机器翻译(Machine Translation, <b>MT</b>)领域产生了重要的作用。当然除此以外，CNN 和 GAN 乃至强化学习等最开始并不是用于 NLP 的方法，也被引入到 NLP 领域当中，并且取得了不错的结果。
+</p>
+
+<p>
+总得来说，深度学习给 NLP 研究带来的新方法可以列举如下:
+</p>
+<ul class="org-ul">
+<li>以 embedding 为代表的表示学习</li>
+<li>sequence to sequence 模型/encoder-decoder 框架</li>
+<li>注意力机制(Attention Mechanism)</li>
+<li>记忆网络(Memory Network)</li>
+</ul>
+
+<p>
+在 embedding 思想出现前，在各种 NLP 处理中都是用一个离散的值来表示每个词的，这种表示方法称为 one-hot 表示，是一种难以扩展、难以表达语义的方法。embedding 将一个词表示为多维空间中的一个连续实数向量，能在一定程度上反映语义乃至上下位关系。word embedding 的价值不在于它能得出的「男人 - 女人 = 国王 - 王后」这种类比关系，而在于它作为 NLP 中基本处理单元的一个基础表示，可以用来构建更高层级文本单元(句子、段落、篇章)的表示，用来支撑更为复杂的上层操作如文本分类、机器翻译，以及这种思想拓展到其他领域(知识图谱、复杂系统)后带来的强大潜力。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/sentence_embedding_similarity.png" alt="sentence_embedding_similarity.png" />
+</p>
+<p><span class="figure-number">&#22270;2&nbsp;</span> 句子的 embedding 表示</p>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/transr.png" alt="transr.png" />
+</p>
+<p><span class="figure-number">&#22270;3&nbsp;</span> 知识图谱中的 TransR 模型</p>
+</div>
+
+<p>
+当然 word embedding 称不上完美，它还做不到完美地表达语义，但不用对这些问题太过刻薄纠结。我非常同意吕正东老师以及很多 NLP 学者的观点: word embedding 的效果在语言学层面还有尚待改进的地步，在留意这些问题的同时，还应该积极地去使用它去推动更复杂的 NLP 的研究和应用。
+</p>
+
+<p>
+sequence to sequence 或说 encoder-decoder 框架最初是在机器翻译中提出来的，以机器翻译为例，其基本思想是:
+</p>
+<ol class="org-ol">
+<li>将输入的句子经过一个 RNN 生成一个能反映句子语义的向量，类似计算 sentence embedding 的过程，</li>
+<li>用另一个 RNN ，从输入句子的向量表达中解码出另一个句子</li>
+</ol>
+
+<p>
+第一个过程称之为 encoding，第二个过程称之为 decoding，整个模型非常的简单优雅，不需要词对齐，不需要额外的语言模型，输入英语，直接得到法语，这样便成了一个端到端(end-to-end)的模型。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/seq2seq.png" alt="seq2seq.png" />
+</p>
+<p><span class="figure-number">&#22270;4&nbsp;</span> sequence to sequence 框架</p>
+</div>
+
+<p>
+之所以称其为「框架」而不是模型，在于它提出了一种通用的、可扩展的模型设计方式，其中的 encoder 和 decoder 都可以换成其他类型的神经网络结构，从而被广泛应用到不同的领域中，比如语音识别、OCR、自动驾驶、机器翻译、对话、image caption……而在 encoder-decoder 的基础上，为了改进机器翻译系统，attention 机制又被提了出来。
+</p>
+
+<p>
+attention 是一种在根据模型内部状态动态聚焦于输入或输出不同部分的一种机制，比如说做机器翻译时在不同时刻关注源语言文本中不同的词。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/attention_alignment.png" alt="attention_alignment.png" />
+</p>
+<p><span class="figure-number">&#22270;5&nbsp;</span> 神经机器翻译中的 attention 矩阵</p>
+</div>
+
+<p>
+在 image caption 任务中，要为一张图片生成描述性文字，在这里，attention 会根据当前要生成的词去聚焦于图片的不同区域。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/attention_in_image_caption.png" alt="attention_in_image_caption.png" />
+</p>
+<p><span class="figure-number">&#22270;6&nbsp;</span> Image Caption 中的 attention</p>
+</div>
+
+<p>
+memory network 则是一种附带额外存储结构的神经网络模型，通过这个额外的存储结构来记忆更丰富的信息，使得模型具有更强的表达能力和学习能力。在这之中，对这个存储结构中信息的访问，使用的就是 attention 机制；相应的，在机器翻译和 image caption 这些任务中使用 encoder-decoder 模型时，也可以把 encoder 产生的输入的表达当作是 memory，attention 机制是在这个 memory 上挑选合适的内容。总之，在相关的场景中，我们可以认为 memory 是一个可以容纳有用信息的数据结构，而 attention 则是操作这个数据结构的一种方式，这也是这次活动中最主要讨论的内容。
+</p>
+
+<p>
+从应用上来说，深度学习给以下 NLP 任务带来了比较大的推动作用:
+</p>
+<ul class="org-ul">
+<li>机器翻译</li>
+<li>对话系统(Dialogue/Chatbot/Question Answering)</li>
+<li>自动推理</li>
+</ul>
+
+<p>
+当然，这其中最受关注的就是机器翻译和对话系统了，毕竟语言的最终目的是用于进行交流，机器翻译能够让原来语言不同的两个人能够互相交流，而对话系统则能让人和机器以人类熟悉的方式进行交流，备受关注都是理所当然的。机器翻译在 NLP 领域中一直都是比较重要的一个方向，从应用意义上来说是一件能极大提高人类交流效率的事情，从学术意义上来说是一个数据相对充足且定义相对良好的研究问题，在神经机器翻译(Neural Machine Translation, <b>NMT</b>)突破前，就已经有基于统计学方法的统计机器翻译(Statistical Machine Translation, <b>SMT</b>)并且得到广泛应用。随着 encoder-decoder 框架和 attention 机制的提出，NMT 已经大幅超越了传统 SMT，并且在翻译问题上对 attention 机制的改进仍然在继续。
+</p>
+
+<p>
+谈到 NMT，当然离不开 Google 的翻译系统，下图就是 Google 神经机器翻译系统(Google Neural Machine Translation, <b>GNMT</b>) 的模型结构，看起来有点复杂，其实就是 encoder-decoder 结构：左侧框图是 encoder 部分，右侧框图是 decoder 部分，它们之间靠 attention 机制联系起来。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/gnmt.png" alt="gnmt.png" />
+</p>
+<p><span class="figure-number">&#22270;7&nbsp;</span> GNMT 模型结构</p>
+</div>
+
+<p>
+Google 在 NMT 方面的翻译效果，一方面固然来源于新的方法，另一方面也在于 Google 庞大的数据积累和强大的工程能力。数据是深度学习中很重要的成分，我在 Quora 上看到有人用「without data, it's nothing」来评论 NLP 的 Python 工具包 NLTK，在深度学习这块，我觉得也可以这样讲 —— 当然这么讲是强调数据的重要性，并不是说深度学习就不重要了，「巧妇难为无米之炊 」，要做好一桌可口的饭菜，原材料、烹饪工具和厨艺是缺一不可的。
+</p>
+
+<p>
+在对话方面，我们现在已经可以很简单地使用基于 encoder-decoder 的模型来得到一个用于对话的生成模型，在处理单轮对话和某些特定领域的多轮对话上取得不错的结果。最简单的办法，是将 encoder-decoder 框架用到对话领域，仿照机器翻译的方法，将对话看作是一个翻译问题，根据用户的话语来生成对应的回应。区别于传统的基于检索和基于规则、模板的方法，生成模型可以完全是数据驱动的， <b>在有足够丰富数据的情况下</b> ，可以几乎不需要人工介入学习过程内部。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nrm.png" alt="nrm.png" />
+</p>
+<p><span class="figure-number">&#22270;8&nbsp;</span> Neural Responding Machine</p>
+</div>
+
+<p>
+但我们能看出来，对话和翻译本质上是两个不同的事情，翻译是在两个不同语言但具有相同语义的文本之间做转换，对话则不是这样的，它是一个持续的过程，我们会希望它能记忆上下文、能识别实体、能辨别细微的感情等等等等。再加上在对话这个领域，数据的积累还不够，健全的评价标准还有待建立和完善。按照吕老师的看法，对话是比翻译复杂一到两个量级的任务，在真正得到突破前，可能还需要一定时间去提高我们对对话这个任务的认识。基本上来说，这两年在对话任务上所做的工作，也经常使用 encoder-decoder 框架，attention 机制基本也是标配，在多轮对话需要处理上下文时则还会使用如 memory network 之类带额外存储结构的模型来记忆上下文。除此以外，学术界还尝试了很多其他方法来用在对话任务上，比如整合知识图谱来提供精确的回答，比如应用强化学习来让优化对话结果<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/dialogue_with_rl.png" alt="dialogue_with_rl.png" />
+</p>
+<p><span class="figure-number">&#22270;9&nbsp;</span> 强化学习在对话中的应用</p>
+</div>
+
+<p>
+在另外一个应用「自动推理」上，按我的看法，可以分为两部分。我们谈推理的时候，可以是在谈形式逻辑的推理，也可以是自然语言层面的事实、因果、关系的推理，形式逻辑的推理可以用来做定理证明、类比归纳等各种事情，也是人工智能中的一个重要研究领域，这一块的定义是比较明确的；而自然语言推理则很难给出一个公认的定义，对此吕老师的观点是，如果我们在处理一个 NLP 任务时，需要对输入进行多遍处理，那么这个 NLP 任务就可以被认为是一个自然语言推理的任务。比如说 Facebook AI Research(FAIR) 用 memory network 在 bAbI 数据集做的问答<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>，就可以认为是一个推理过程。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/fair_babi.png" alt="fair_babi.png" />
+</p>
+<p><span class="figure-number">&#22270;10&nbsp;</span> FAIR 的 bAbI 数据集</p>
+</div>
+
+<p>
+bAbI 数据集是 FAIR 设计的用来考察对话系统个方面能力的一个数据集，包含了十几种从易到难的推理任务，此后有不少做对话或者推理的工作都通过这个数据集来评判模型的表达能力，比如 15 年 8 月香港中文大学 Baolin Peng 的 Neural Reasoner<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>，下图是 Neural Reasoner 的模型结构，很显然也可以看作是一个 encoder-decoder 的模型。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neural_reasoner.png" alt="neural_reasoner.png" />
+</p>
+<p><span class="figure-number">&#22270;11&nbsp;</span> Neural Reasoner</p>
+</div>
+
+<p>
+不管是形式逻辑的推理，还是自然语言推理，它都是在一定的知识基础上去做推理的，特别是自然语言推理，对于何谓知识何谓推理，都得是在一个具体的场景下才能界定清楚。据吕老师讲，他创立的「深度好奇」就是尝试将自然语言推理的技术应用到法律领域上，比如去做法律条文的理解和推断，想一想还是蛮酷的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3">可微数据结构(Differentiable Data-structure)</h2>
+<div class="outline-text-2" id="text-orgheadline3">
+<p>
+吕老师提出一个新的概念「可微数据结构」，其实并不是一个新的东西，而是对已有的各种模型中具有相同性质的模块或成分的一个统称。前面我们提到了 attention 和 memory network 两个重要的技术，讲到在 NMT 中 attention 其实就是在 encoder 输出的 hidden state 序列上根据当前要计算的输出选取有用的信息，这里这个 hidden state 序列在性质上和 memory network 或者神经元图灵机(Neural Turing Machine, <b>NTM</b>)<sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup>增加的那个额外的存储结构其实是一样的，它们都保留了历史输入的信息并在输出时被反复读取，并且都是以一种模糊、可微的操作来进行处理。回过头来看 LSTM 的 cell state 也是这样的，forget gate 和 input gate 对它进行读写，output gate 则根据 cell state 得到输出。NMT 中的 hidden state 序列、memory network 和 NTM 中的额外存储结构，这就是吕老师称之为可微数据结构的事物 —— 当然，我个人觉得 LSTM 中的 cell state 也算。
+</p>
+
+<p>
+LSTM 中的 cell state 的操作相对还是比较简单，但毫无疑问它是现在这些 memory 一类思想的起源 —— 当然更早还可以追溯到 Hopfield Network，这里就不展开了 —— 我们不妨先从 LSTM 来讨论一下可微数据结构。首先的一点也是最关键的一点，作为一个「数据结构」，它提供了更强的信息存储能力，然后极大地增强了神经网络模型的表达能力和学习能力。LSTM 为什么能大幅地缓解 RNN 的梯度下降问题，提高长程依赖能力？从优化角度来说，是因为其中类似 residual network 中 skip connection 的 constant error flow，使得梯度不再是指数级衰减的，但只有 constant error flow 也不行呀，一味地记住过去的信息不加区分显然也不是合理的，而 forget gate 和 input gate 就起到了对过去信息选择性增强和丢弃的作用。这是我对可微数据结构的认识，它不仅能存储可用的信息，还能在此基础上用来做对信息的筛选，我们说得很多的 attention 机制，其实就是起这个作用的。
+</p>
+
+<p>
+当然，既然说 <b>可微</b> ，那么对这个数据结构的操作，还必须是连续可微的才行。这个限制是为了保证这个数据结构和神经网络模型整合在一起时，不会破坏模型整体可微的的特性，我们都知道，现在大部分的神经网络模型，基本上都是用误差反向传播算法来进行训练的。
+</p>
+
+<p>
+对于可微数据结构，其实我更习惯叫它 memory，虽然是个容易和认知科学、心理学、物理学等各个领域中类似概念混淆的词。一图胜千言，神经元图灵机的结构示意图可以当作是对可微数据结构的一个普适的描述。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/ntm.png" alt="ntm.png" />
+</p>
+<p><span class="figure-number">&#22270;12&nbsp;</span> 神经元图灵机</p>
+</div>
+
+<p>
+我们可以按照其持续作用时间，将可微数据结构或说 memory 粗略地划分成短期记忆(Short Term Memory, <b>STM</b>)、中间记忆(Intermediate Memory)和长期记忆(Long Term Memory, <b>LTM</b>)，我们可以在感性上把它们和心理学上的瞬时记忆、工作记忆和长期记忆类比，当然其中的对应是否合理就不是本篇要讨论的内容了。encoder-decoder 模型中 encoder 产生的 hidden state 序列，是我们所说的短期记忆；而在问答中，模型会在 memory 中存储前几轮对话的信息，这个信息我们可以叫做中间记忆；而在一些基于知识图谱的推理问答任务中，还需要从知识图谱中进行知识的查找和推导，这个知识图谱，我们也可以将其视为 memory，这种独立于具体输入的信息，则叫做长期记忆。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/memory_types.png" alt="memory_types.png" />
+</p>
+<p><span class="figure-number">&#22270;13&nbsp;</span> 可微数据结构: 按持续时间分类</p>
+</div>
+
+<p>
+当然，也可以从结构上来对可微数据结构来分类，比如有像 NTM 中 memory 一样固定大小的 memory，也有像 Neural Stack Machine 这样大小可扩展的 memory<sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup>，再复杂一点的还有像 Deep Memory 这样的层次化的 memory<sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup>。使用什么样结构的 memory ，当然也要视具体任务而定。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neural_stack_machine.png" alt="neural_stack_machine.png" />
+</p>
+<p><span class="figure-number">&#22270;14&nbsp;</span> Neural Stack Machine</p>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/deep_memory.png" alt="deep_memory.png" />
+</p>
+<p><span class="figure-number">&#22270;15&nbsp;</span> Deep Memory</p>
+</div>
+
+<p>
+借鉴计算机概念，我们可以说读写操作的基础是寻址操作，对可微数据结构的寻址是模糊的，我们称之为 soft addressing；而计算机寻址最后得到的是一个精确的地址值，我们称之为 hard addressing。所谓 soft addressing，得到的不是一个精确的地址，而是得到在所有地址上的权重，其中权重高的地址中的数据就是对当前计算更有价值的信息。我们前面说得很多的 attention，本质上就是一种寻址操作，对应的也有所谓 soft attention 和 hard attention。
+</p>
+
+<p>
+我们可以用 Python 代码来进一步解释一下 soft/hard addressing 的区别。假设我们有一个列表
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">import</span> random
+
+<span style="color: #671ebb;">x</span> = [0, 1, 2, 3, 4, 5, 6]
+</pre>
+</div>
+
+<p>
+以读取操作为例，所谓 hard addressing，是直接按下标来取一个元素
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #671ebb;">hard_address</span> = random.randint(0, <span style="color: #000000; background-color: #f8f8ff;">len</span>(x))
+<span style="color: #671ebb;">hard_value</span> = x[hard_address]
+
+<span style="color: #409b1c;">"Hard addressing: {}"</span>.<span style="color: #000000; background-color: #f8f8ff;">format</span>(hard_value)
+</pre>
+</div>
+
+<pre class="example">
+Hard addressing: 2
+</pre>
+
+<p>
+所谓 soft addressing，是先计算出一个权重向量，再按这个权重向量去计算
+</p>
+<div class="org-src-container">
+
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> operator <span style="color: #ff7800; font-weight: bold;">import</span> mul
+
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">gen_weights</span>(length):
+    <span style="color: #671ebb;">weights</span> = [random.random() <span style="color: #ff7800; font-weight: bold;">for</span> _ <span style="color: #ff7800; font-weight: bold;">in</span> <span style="color: #000000; background-color: #f8f8ff;">range</span>(length)]
+    <span style="color: #671ebb;">weights_sum</span> = <span style="color: #000000; background-color: #f8f8ff;">sum</span>(weights)
+    <span style="color: #ff7800; font-weight: bold;">return</span> [w / weights_sum <span style="color: #ff7800; font-weight: bold;">for</span> w <span style="color: #ff7800; font-weight: bold;">in</span> weights]
+
+<span style="color: #671ebb;">soft_addresses</span> = gen_weights(<span style="color: #000000; background-color: #f8f8ff;">len</span>(x))
+<span style="color: #671ebb;">soft_value</span> = <span style="color: #000000; background-color: #f8f8ff;">sum</span>(<span style="color: #000000; background-color: #f8f8ff;">map</span>(mul, soft_addresses, x))
+
+<span style="color: #409b1c;">"Soft addressing: {}"</span>.<span style="color: #000000; background-color: #f8f8ff;">format</span>(soft_value)
+</pre>
+</div>
+
+<pre class="example">
+Soft addressing: 2.62779735016
+</pre>
+
+<p>
+当然，上面的寻址都是随机产生的，实际我们在做 attention 的时候是，一般来说，寻址可以分为按内容寻址和按地址寻址，在大部分场景中，我们使用按内容寻址的方式来对可微数据结构进行读写。需要注意的是，在做 soft addressing/attention 的时候，模型要学习的是「计算权重的函数」即上面代码中的 <code>gen_weights</code> 方法，而不是 <code>soft_addresses</code> 所代表的「每个时刻实际的权重」，以 NMT 为例，decoder 在每个 time step 时计算 attention 时用 decoder 的 hidden state 和 encoder 的 hidden state 做內积然后经过一个非线性变换得到 attention 权重，这里的这个非线性变换的参数就是学习到的。在可微性得到保证的前提下，学习到的寻址方法应当是能增大更有用信息的权重、降低无关信息权重的。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/attention_as_addressing.png" alt="attention_as_addressing.png" />
+</p>
+<p><span class="figure-number">&#22270;16&nbsp;</span> Attention 与 Addressing</p>
+</div>
+
+<p>
+和 word embedding 的意义近似，可微数据结构和寻址方法的存在，可以作为更高层级操作的基础构成，想想图灵机吧，在纸带和读写头的基础上所产生出来的复杂计算，和这个是可以类比的。
+</p>
+
+<p>
+最开始在 NMT 中提出来的 attention 方法，只是对 encoder 的 hidden state 序列进行读操作，今年的 NMT 工作在为了解决 under-translation 和 over-translation 的问题，也开始提出了一些更复杂的 attention 方法，比如将 encoder 的 hidden state 存起来，然后每次不仅去读它们，还会去修改它们<sup><a id="fnr.9" class="footref" href="#fn.9">9</a></sup>，这对 NMT 的结果有显著提高。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/interactive_attention.png" alt="interactive_attention.png" />
+</p>
+<p><span class="figure-number">&#22270;17&nbsp;</span> Interactive Attention</p>
+</div>
+
+<p>
+TODO: location addressing 的处理，NTM, NRAM, CopyNet, Neural Enquirer
+</p>
+
+<p>
+我们前面说可微数据结构对提高神经网络模型的表达能力和学习能力有很大的增强作用，但须知有一利必有一弊，在具体的场景下，该选择什么粒度的 memory 表示、该如何对其进行读写操作、该如何用这些基本操作来表达更复杂操作，都是需要去思考的；再比如 attention 计算的复杂度和 memory 的大小是正相关的，那么具体场景下，肯定是要在表达能力和训练效率之间折衷；另外可微性的要求也是对模型设计和训练的一个挑战，因此也有用 hard attention 加强化学习来设计模型的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4">语言学习的范式</h2>
+<div class="outline-text-2" id="text-orgheadline4">
+<p>
+这里说的「语言学习」，当然是指机器的「语言学习」。首先来看看我们人类的学习过程：我们会有老师或父母教我们字词和语法，这帮助我们学会最基本的表达和理解，这可以算作是监督学习；在有一定的词汇量并掌握基本语法后，我们可以通过大量阅读来更好地理解语言的使用，这是无监督学习；同时我们的学习过程是通过不停地试错来进行的，环境会给予我们各种反馈，比如说你说了一句在用词和语法方面都很糟糕的奇怪的语句，别人会表达出不理解或诧异，因此也可以将我们的学习过程视作强化学习；此外我们可以在掌握常识后基于常识来去对我们未接触过的语言现象或者知识进行快速的掌握，这是基于解释的学习，和最近的 zero-shot 学习类似？
+</p>
+
+<p>
+对于机器的「语言学习」范式，吕老师从不同的方面对其进行了划分：
+</p>
+<ol class="org-ol">
+<li><p>
+学习过程是 end-to-end 还是 step-by-step 的
+</p>
+
+<p>
+所谓端到端，是指整个学习过程直接从最后的输出中得到反馈来进行调整，而 step-by-step 则要对显式地对学习过程中的中间步骤进行调整。以机器翻译为例，神经机器翻译是端到端的，在 encoder-decoder 框架下，输入一个语言，直接去学习另外一个语言的输出，中间过程我们不用做人工干涉；而在统计机器翻译里，我们要得到两个语言之间的语言单元(词或短语)的翻译统计，要统计两个语言各自的词语搭配频率(语言模型)，最后还要学习对齐过程，这些都是分开进行的，只不过最后组合在一起而已。
+</p></li>
+
+<li>学习目标是连续可微的还是离散的</li>
+<li>学习过程中接受的 supervision，是来自人类的标注，还是来自环境的反馈</li>
+<li>是监督学习还是强化学习</li>
+</ol>
+
+<p>
+2、3、4 讲的都是更高层级的对比，我们主要关心的还是 end-to-end 和 step-by-step 的对比。对于大部分问题，如果允许的话，我们都会希望整个学习过程是端到端的，喂进去一头猪，出来一堆火腿肠，这样多好！
+</p>
+
+<p>
+NLP 的学习任务，我们基本上可以将它们划分三个层级，即语法(syntax)、语义(semantics)和语用(pragmatics)。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nlp_phrases.png" alt="nlp_phrases.png" />
+</p>
+<p><span class="figure-number">&#22270;18&nbsp;</span> NLP 层级</p>
+</div>
+
+<p>
+语用对应着真实的、具体的任务场景，从中我们可以得到反馈信息，这反馈信息向下层传递，调整整个学习过程，根据这个我们可以为很多 NLP 任务设计端到端的模型，比如基于 encoder-decoder 的 NMT 和单轮对话，都算是比较成功的案例，以及在复杂情况下的多轮对话，也有通过设计更复杂的模型来做到了端到端的学习，这个前文已经提过了。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/nlp_phrases2.png" alt="nlp_phrases2.png" />
+</p>
+<p><span class="figure-number">&#22270;19&nbsp;</span> NLP 层级(2)</p>
+</div>
+
+<p>
+但我们前面也说过了，端到端的学习过程当然是很好的，但它也有一些问题，它对模型设计的要求会比较高，如果模型设计地不好，导致信息在模型中间传递时出现问题，那么这个模型很可能就不能有效地学习。吕老师提到一个例子，给定一个俄罗斯方块的图像，最后要学习一个模型，预测其中俄罗斯方块类型的数量是偶数还是奇数，设计了一个端到端的模型如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/failed_end2end_task.png" alt="failed_end2end_task.png" />
+</p>
+<p><span class="figure-number">&#22270;20&nbsp;</span> 俄罗斯方块类型奇偶预测</p>
+</div>
+
+<p>
+看起来是很简单的问题，但是结果非常差，是一个失败的例子。对于这种端到端失败的情况，可能的原因有两个，一个是路径很长(比如说模型很深)，另外一个是信息在某一层的时候传递很困难。
+</p>
+
+<p>
+再就是，从我们自身的角度出发，人类的学习过程并不是端到端的，我们一味地在机器的语言学习过程中追求端到端地方式，未必是正确的。
+</p>
+
+<p>
+针对这些问题，吕老师提出，所谓语言学习的新范式，应该是
+</p>
+<ul class="org-ul">
+<li><p>
+监督学习与强化学习的结合
+</p>
+
+<p>
+如果我们能放下对「端到端」的执念，应用强化学习的思想来让机器进行语言学习，我们前文提到的模型设计的困难会减轻很多。
+</p></li>
+
+<li>更具有可解释性的学习</li>
+<li>前文中我们提到的基于解释的学习</li>
+<li>无监督学习和其他方法的结合</li>
+</ul>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">&#33050;&#27880;: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Elman, Jeffrey L. "Finding structure in time." Cognitive science 14.2 (1990): 179-211.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+Xu, Wei, and Alexander I. Rudnicky. "Can artificial neural networks learn language models?." (2000).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
+Li, Jiwei, et al. "Deep Reinforcement Learning for Dialogue Generation." arXiv preprint arXiv:1606.01541 (2016).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.4" class="footnum" href="#fnr.4">4</a></sup> <div class="footpara"><p class="footpara">
+Weston, Jason, et al. "Towards ai-complete question answering: A set of prerequisite toy tasks." arXiv preprint arXiv:1502.05698 (2015).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.5" class="footnum" href="#fnr.5">5</a></sup> <div class="footpara"><p class="footpara">
+Peng, Baolin, et al. "Towards neural network-based reasoning." arXiv preprint arXiv:1508.05508 (2015).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.6" class="footnum" href="#fnr.6">6</a></sup> <div class="footpara"><p class="footpara">
+Graves, Alex, Greg Wayne, and Ivo Danihelka. "Neural turing machines." arXiv preprint arXiv:1410.5401 (2014).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.7" class="footnum" href="#fnr.7">7</a></sup> <div class="footpara"><p class="footpara">
+Grefenstette, Edward, et al. "Learning to transduce with unbounded memory." Advances in Neural Information Processing Systems. 2015.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.8" class="footnum" href="#fnr.8">8</a></sup> <div class="footpara"><p class="footpara">
+Meng, Fandong, et al. "A Deep Memory-based Architecture for Sequence-to-Sequence Learning." arXiv preprint arXiv:1506.06442 (2015).
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.9" class="footnum" href="#fnr.9">9</a></sup> <div class="footpara"><p class="footpara">
+Meng, Fandong, et al. "Interactive Attention for Neural Machine Translation." arXiv preprint arXiv:1610.05011 (2016).
+</p></div></div>
+
+
+</div>
+</div>
