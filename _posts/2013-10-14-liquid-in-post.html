@@ -10,7 +10,7 @@ tags       : Jekyll Liquid
 </p>
 <pre class="example">
 #+begin_example
-{% raw %}{% for post in site.posts %}{% endraw %}
+{% raw %}{% for post in site.posts limit:5 %}{% endraw %}
 {% raw %}{{ post.title }}{% endraw %}
 {% raw %}{% endfor %}{% endraw %}
 #+end_example
@@ -19,7 +19,7 @@ tags       : Jekyll Liquid
 最后得到的内容却会是这样的：
 </p>
 <pre class="example">
-{% for post in site.posts %}
+{% for post in site.posts limit:5 %}
 {{ post.title }}
 {% endfor %}
 </pre>
@@ -109,7 +109,7 @@ tags       : Jekyll Liquid
 </p>
 
 <p>
-也就是说，把 <b>{{ "{%" }}</b> 和 <b>%}</b> 这一对标签的开闭符号分开了，一部分用双引号括起来并用 <b>{{ "{{" }}和}}</b> 包裹起来，另一部分则按照平常的方式书写。同样的， <b>{{ "{{" }}</b> 和 <b>}}</b> 也可以通过这种方式来处理。本文第五个示例就是这么得到的。
+也就是说，把 {{ "{%" }} 和 %} 这一对标签的开闭符号分开了，一部分用双引号括起来并用 {{ "{{" }} 和 }} 包裹起来，另一部分则按照平常的方式书写。同样的， {{ "{{" }} 和 }} 也可以通过这种方式来处理。本文第五个示例就是这么得到的。
 </p>
 
 <p>
