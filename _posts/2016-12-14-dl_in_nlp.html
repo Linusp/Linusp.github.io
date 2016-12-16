@@ -316,7 +316,7 @@ Hard addressing: 2
 </div>
 
 <pre class="example">
-Soft addressing: 2.62779735016
+Soft addressing: 2.59021801647
 </pre>
 
 <p>
@@ -344,10 +344,6 @@ Soft addressing: 2.62779735016
 </p>
 <p><span class="figure-number">&#22270;17&nbsp;</span> Interactive Attention</p>
 </div>
-
-<p>
-TODO: location addressing 的处理，NTM, NRAM, CopyNet, Neural Enquirer
-</p>
 
 <p>
 我们前面说可微数据结构对提高神经网络模型的表达能力和学习能力有很大的增强作用，但须知有一利必有一弊，在具体的场景下，该选择什么粒度的 memory 表示、该如何对其进行读写操作、该如何用这些基本操作来表达更复杂操作，都是需要去思考的；再比如 attention 计算的复杂度和 memory 的大小是正相关的，那么具体场景下，肯定是要在表达能力和训练效率之间折衷；另外可微性的要求也是对模型设计和训练的一个挑战，因此也有用 hard attention 加强化学习来设计模型的。
