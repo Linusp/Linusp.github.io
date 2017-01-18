@@ -10,19 +10,19 @@ tags       :
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">简介</a></li>
-<li><a href="#orgheadline2">深度学习在自然语言处理中的应用</a></li>
-<li><a href="#orgheadline3">可微数据结构(Differentiable Data-structure)</a></li>
-<li><a href="#orgheadline4">语言学习的范式</a></li>
+<li><a href="#org2f60bfd">简介</a></li>
+<li><a href="#org12c012f">深度学习在自然语言处理中的应用</a></li>
+<li><a href="#org889346e">可微数据结构(Differentiable Data-structure)</a></li>
+<li><a href="#org6baef5e">语言学习的范式</a></li>
 </ul>
 </div>
 </div>
 
 <hr  />
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">简介</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org2f60bfd" class="outline-2">
+<h2 id="org2f60bfd">简介</h2>
+<div class="outline-text-2" id="text-org2f60bfd">
 <p>
 本文为对 2016 年 12 月 10 日集智俱乐部公开活动「深度学习与自然语言处理」进行的总结。
 </p>
@@ -33,18 +33,18 @@ tags       :
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">深度学习在自然语言处理中的应用</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-org12c012f" class="outline-2">
+<h2 id="org12c012f">深度学习在自然语言处理中的应用</h2>
+<div class="outline-text-2" id="text-org12c012f">
 <p>
-自然语言处理(Natural Language Processing, <b>NLP</b>)是人工智能中的一个重要分支，从人工智能这个领域刚发展起来的时候就一直是一个重要的研究方向，到现在也发展出了很多的细分领域和非常多的方法，大致上来说，我们可以认为是在 2013 年的时候，伴随着 word2vec 这个 word embedding 的开源工具的出现，正式地将深度学习引进了 NLP 的研究中 —— 当然要认真考据的话，word embedding 的思想早在上世纪 80 年代的时候就已经初露端倪<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>，用神经网络来建模语言的工作也可以追溯到现为 IDL 科学家的徐伟在 2001 年的工作<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>以及 2003 年 Bengio 在 JMLR 上发表的著名论文《A Neural Probabilistic Language Model》，大家去了解 word2vec/word embedding 的时候经常会见到的一张经典的模型图(见图<a href="#orgparagraph1">1</a>)就来自 Bengio 的这篇论文。
+自然语言处理(Natural Language Processing, <b>NLP</b>)是人工智能中的一个重要分支，从人工智能这个领域刚发展起来的时候就一直是一个重要的研究方向，到现在也发展出了很多的细分领域和非常多的方法，大致上来说，我们可以认为是在 2013 年的时候，伴随着 word2vec 这个 word embedding 的开源工具的出现，正式地将深度学习引进了 NLP 的研究中 —— 当然要认真考据的话，word embedding 的思想早在上世纪 80 年代的时候就已经初露端倪<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>，用神经网络来建模语言的工作也可以追溯到现为 IDL 科学家的徐伟在 2001 年的工作<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>以及 2003 年 Bengio 在 JMLR 上发表的著名论文《A Neural Probabilistic Language Model》，大家去了解 word2vec/word embedding 的时候经常会见到的一张经典的模型图(见图<a href="#org1975290">1</a>)就来自 Bengio 的这篇论文。
 </p>
 
 
-<div id="orgparagraph1" class="figure">
+<div id="org1975290" class="figure">
 <p><img src="../../../assets/img/nplm_structure.png" alt="nplm_structure.png" width="60%" />
 </p>
-<p><span class="figure-number">&#22270;1&nbsp;</span> Bengio 的 NPLM</p>
+<p><span class="figure-number">&#22270;1&nbsp; </span>Bengio 的 NPLM</p>
 </div>
 
 <p>
@@ -62,25 +62,25 @@ tags       :
 </ul>
 
 <p>
-在 embedding 思想出现前，在各种 NLP 处理中都是用一个离散的值来表示每个词的，这种表示方法称为 one-hot 表示，是一种难以扩展、难以表达语义的方法。embedding 将一个词表示为多维空间中的一个连续实数向量，能在一定程度上反映语义乃至上下位关系。word embedding 的价值不在于它能得出的「男人 - 女人 = 国王 - 王后」这种类比关系，而在于它作为 NLP 中基本处理单元的一个基础表示，可以用来构建更高层级文本单元(句子、段落、篇章)的表示(见图<a href="#orgparagraph2">2</a>)，用来支撑更为复杂的上层操作如文本分类、机器翻译。
+在 embedding 思想出现前，在各种 NLP 处理中都是用一个离散的值来表示每个词的，这种表示方法称为 one-hot 表示，是一种难以扩展、难以表达语义的方法。embedding 将一个词表示为多维空间中的一个连续实数向量，能在一定程度上反映语义乃至上下位关系。word embedding 的价值不在于它能得出的「男人 - 女人 = 国王 - 王后」这种类比关系，而在于它作为 NLP 中基本处理单元的一个基础表示，可以用来构建更高层级文本单元(句子、段落、篇章)的表示(见图<a href="#orgc5b62c2">2</a>)，用来支撑更为复杂的上层操作如文本分类、机器翻译。
 </p>
 
 
-<div id="orgparagraph2" class="figure">
+<div id="orgc5b62c2" class="figure">
 <p><img src="../../../assets/img/sentence_embedding_similarity.png" alt="sentence_embedding_similarity.png" width="60%" />
 </p>
-<p><span class="figure-number">&#22270;2&nbsp;</span> 句子的 embedding 表示</p>
+<p><span class="figure-number">&#22270;2&nbsp; </span>句子的 embedding 表示</p>
 </div>
 
 <p>
-这种思想还能拓展到其他领域如知识图谱(见图<a href="#orgparagraph3">3</a>)、复杂系统中。
+这种思想还能拓展到其他领域如知识图谱(见图<a href="#orga16d437">3</a>)、复杂系统中。
 </p>
 
 
-<div id="orgparagraph3" class="figure">
+<div id="orga16d437" class="figure">
 <p><img src="../../../assets/img/transr.png" alt="transr.png" />
 </p>
-<p><span class="figure-number">&#22270;3&nbsp;</span> 知识图谱中的 TransR 模型</p>
+<p><span class="figure-number">&#22270;3&nbsp; </span>知识图谱中的 TransR 模型</p>
 </div>
 
 <p>
@@ -96,14 +96,14 @@ sequence to sequence 或说 encoder-decoder 框架最初是在机器翻译中提
 </ol>
 
 <p>
-第一个过程称之为 encoding，第二个过程称之为 decoding，整个模型非常的简单优雅，不需要词对齐，不需要额外的语言模型，输入英语，直接得到法语，这样便成了一个端到端(end-to-end)的模型，如图<a href="#orgparagraph4">4</a>所示。
+第一个过程称之为 encoding，第二个过程称之为 decoding，整个模型非常的简单优雅，不需要词对齐，不需要额外的语言模型，输入英语，直接得到法语，这样便成了一个端到端(end-to-end)的模型，如图<a href="#org7ca6f98">4</a>所示。
 </p>
 
 
-<div id="orgparagraph4" class="figure">
+<div id="org7ca6f98" class="figure">
 <p><img src="../../../assets/img/seq2seq.png" alt="seq2seq.png" />
 </p>
-<p><span class="figure-number">&#22270;4&nbsp;</span> sequence to sequence 框架</p>
+<p><span class="figure-number">&#22270;4&nbsp; </span>sequence to sequence 框架</p>
 </div>
 
 <p>
@@ -111,25 +111,25 @@ sequence to sequence 或说 encoder-decoder 框架最初是在机器翻译中提
 </p>
 
 <p>
-attention 是一种在根据模型内部状态动态聚焦于输入或输出不同部分的一种机制，比如说做机器翻译时在不同时刻关注源语言文本中不同的词，如图<a href="#orgparagraph5">5</a>所示。
+attention 是一种在根据模型内部状态动态聚焦于输入或输出不同部分的一种机制，比如说做机器翻译时在不同时刻关注源语言文本中不同的词，如图<a href="#org8a1df1d">5</a>所示。
 </p>
 
 
-<div id="orgparagraph5" class="figure">
+<div id="org8a1df1d" class="figure">
 <p><img src="../../../assets/img/attention_alignment.png" alt="attention_alignment.png" />
 </p>
-<p><span class="figure-number">&#22270;5&nbsp;</span> 神经机器翻译中的 attention 矩阵</p>
+<p><span class="figure-number">&#22270;5&nbsp; </span>神经机器翻译中的 attention 矩阵</p>
 </div>
 
 <p>
-在 image caption 任务中，要为一张图片生成描述性文字，在这里，attention 会根据当前要生成的词去聚焦于图片的不同区域，见图<a href="#orgparagraph6">6</a>。
+在 image caption 任务中，要为一张图片生成描述性文字，在这里，attention 会根据当前要生成的词去聚焦于图片的不同区域，见图<a href="#org099abf6">6</a>。
 </p>
 
 
-<div id="orgparagraph6" class="figure">
+<div id="org099abf6" class="figure">
 <p><img src="../../../assets/img/attention_in_image_caption.png" alt="attention_in_image_caption.png" />
 </p>
-<p><span class="figure-number">&#22270;6&nbsp;</span> Image Caption 中的 attention</p>
+<p><span class="figure-number">&#22270;6&nbsp; </span>Image Caption 中的 attention</p>
 </div>
 
 <p>
@@ -150,14 +150,14 @@ memory network 则是一种附带额外存储结构的神经网络模型，通�
 </p>
 
 <p>
-谈到 NMT，当然离不开 Google 的翻译系统，图<a href="#orgparagraph7">7</a>就是 Google 神经机器翻译系统(Google Neural Machine Translation, <b>GNMT</b>) 的模型结构，看起来有点复杂，其实就是 encoder-decoder 结构：左侧框图是 encoder 部分，右侧框图是 decoder 部分，它们之间靠 attention 机制联系起来。
+谈到 NMT，当然离不开 Google 的翻译系统，图<a href="#org109704b">7</a>就是 Google 神经机器翻译系统(Google Neural Machine Translation, <b>GNMT</b>) 的模型结构，看起来有点复杂，其实就是 encoder-decoder 结构：左侧框图是 encoder 部分，右侧框图是 decoder 部分，它们之间靠 attention 机制联系起来。
 </p>
 
 
-<div id="orgparagraph7" class="figure">
+<div id="org109704b" class="figure">
 <p><img src="../../../assets/img/gnmt.png" alt="gnmt.png" width="80%" />
 </p>
-<p><span class="figure-number">&#22270;7&nbsp;</span> GNMT 模型结构</p>
+<p><span class="figure-number">&#22270;7&nbsp; </span>GNMT 模型结构</p>
 </div>
 
 <p>
@@ -165,47 +165,47 @@ Google 在 NMT 方面的翻译效果，一方面固然来源于新的方法，�
 </p>
 
 <p>
-在对话方面，我们现在已经可以很简单地使用基于 encoder-decoder 的模型来得到一个用于对话的生成模型，在处理单轮对话和某些特定领域的多轮对话上取得不错的结果。最简单的办法，是将 encoder-decoder 框架用到对话领域，仿照机器翻译的方法，将对话看作是一个翻译问题，根据用户的话语来生成对应的回应。区别于传统的基于检索和基于规则、模板的方法，生成模型可以完全是数据驱动的， <b>在有足够丰富数据的情况下</b> ，可以几乎不需要人工介入学习过程内部。图<a href="#orgparagraph8">8</a>是一个例子。
+在对话方面，我们现在已经可以很简单地使用基于 encoder-decoder 的模型来得到一个用于对话的生成模型，在处理单轮对话和某些特定领域的多轮对话上取得不错的结果。最简单的办法，是将 encoder-decoder 框架用到对话领域，仿照机器翻译的方法，将对话看作是一个翻译问题，根据用户的话语来生成对应的回应。区别于传统的基于检索和基于规则、模板的方法，生成模型可以完全是数据驱动的， <b>在有足够丰富数据的情况下</b> ，可以几乎不需要人工介入学习过程内部。图<a href="#orgb82e77a">8</a>是一个例子。
 </p>
 
 
-<div id="orgparagraph8" class="figure">
+<div id="orgb82e77a" class="figure">
 <p><img src="../../../assets/img/nrm.png" alt="nrm.png" />
 </p>
-<p><span class="figure-number">&#22270;8&nbsp;</span> Neural Responding Machine</p>
+<p><span class="figure-number">&#22270;8&nbsp; </span>Neural Responding Machine</p>
 </div>
 
 <p>
-但我们能看出来，对话和翻译本质上是两个不同的事情，翻译是在两个不同语言但具有相同语义的文本之间做转换，对话则不是这样的，它是一个持续的过程，我们会希望它能记忆上下文、能识别实体、能辨别细微的感情等等等等。再加上在对话这个领域，数据的积累还不够，健全的评价标准还有待建立和完善。按照吕老师的看法，对话是比翻译复杂一到两个量级的任务，在真正得到突破前，可能还需要一定时间去提高我们对对话这个任务的认识。基本上来说，这两年在对话任务上所做的工作，也经常使用 encoder-decoder 框架，attention 机制基本也是标配，在多轮对话需要处理上下文时则还会使用如 memory network 之类带额外存储结构的模型来记忆上下文。除此以外，学术界还尝试了很多其他方法来用在对话任务上，比如整合知识图谱来提供精确的回答，比如应用强化学习来让优化对话结果<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>(见图<a href="#orgparagraph9">9</a>)。
+但我们能看出来，对话和翻译本质上是两个不同的事情，翻译是在两个不同语言但具有相同语义的文本之间做转换，对话则不是这样的，它是一个持续的过程，我们会希望它能记忆上下文、能识别实体、能辨别细微的感情等等等等。再加上在对话这个领域，数据的积累还不够，健全的评价标准还有待建立和完善。按照吕老师的看法，对话是比翻译复杂一到两个量级的任务，在真正得到突破前，可能还需要一定时间去提高我们对对话这个任务的认识。基本上来说，这两年在对话任务上所做的工作，也经常使用 encoder-decoder 框架，attention 机制基本也是标配，在多轮对话需要处理上下文时则还会使用如 memory network 之类带额外存储结构的模型来记忆上下文。除此以外，学术界还尝试了很多其他方法来用在对话任务上，比如整合知识图谱来提供精确的回答，比如应用强化学习来让优化对话结果<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>(见图<a href="#orgeab07f6">9</a>)。
 </p>
 
 
-<div id="orgparagraph9" class="figure">
+<div id="orgeab07f6" class="figure">
 <p><img src="../../../assets/img/dialogue_with_rl.png" alt="dialogue_with_rl.png" />
 </p>
-<p><span class="figure-number">&#22270;9&nbsp;</span> 强化学习在对话中的应用</p>
+<p><span class="figure-number">&#22270;9&nbsp; </span>强化学习在对话中的应用</p>
 </div>
 
 <p>
-在另外一个应用「自动推理」上，按我的看法，可以分为两部分。我们谈推理的时候，可以是在谈形式逻辑的推理，也可以是自然语言层面的事实、因果、关系的推理，形式逻辑的推理可以用来做定理证明、类比归纳等各种事情，也是人工智能中的一个重要研究领域，这一块的定义是比较明确的；而自然语言推理则很难给出一个公认的定义，对此吕老师的观点是，如果我们在处理一个 NLP 任务时，需要对输入进行多遍处理，那么这个 NLP 任务就可以被认为是一个自然语言推理的任务。比如说 Facebook AI Research(FAIR) 用 memory network 在 bAbI 数据集(见图<a href="#orgparagraph10">10</a>)做的问答<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>，就可以认为是一个推理过程。
+在另外一个应用「自动推理」上，按我的看法，可以分为两部分。我们谈推理的时候，可以是在谈形式逻辑的推理，也可以是自然语言层面的事实、因果、关系的推理，形式逻辑的推理可以用来做定理证明、类比归纳等各种事情，也是人工智能中的一个重要研究领域，这一块的定义是比较明确的；而自然语言推理则很难给出一个公认的定义，对此吕老师的观点是，如果我们在处理一个 NLP 任务时，需要对输入进行多遍处理，那么这个 NLP 任务就可以被认为是一个自然语言推理的任务。比如说 Facebook AI Research(FAIR) 用 memory network 在 bAbI 数据集(见图<a href="#orgcc2e080">10</a>)做的问答<sup><a id="fnr.4" class="footref" href="#fn.4">4</a></sup>，就可以认为是一个推理过程。
 </p>
 
 
-<div id="orgparagraph10" class="figure">
+<div id="orgcc2e080" class="figure">
 <p><img src="../../../assets/img/fair_babi.png" alt="fair_babi.png" />
 </p>
-<p><span class="figure-number">&#22270;10&nbsp;</span> FAIR 的 bAbI 数据集</p>
+<p><span class="figure-number">&#22270;10&nbsp; </span>FAIR 的 bAbI 数据集</p>
 </div>
 
 <p>
-bAbI 数据集是 FAIR 设计的用来考察对话系统个方面能力的一个数据集，包含了十几种从易到难的推理任务，此后有不少做对话或者推理的工作都通过这个数据集来评判模型的表达能力，比如 15 年 8 月香港中文大学 Baolin Peng 的 Neural Reasoner<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>，图<a href="#orgparagraph11">11</a>是 Neural Reasoner 的模型结构，很显然也可以看作是一个 encoder-decoder 的模型。
+bAbI 数据集是 FAIR 设计的用来考察对话系统个方面能力的一个数据集，包含了十几种从易到难的推理任务，此后有不少做对话或者推理的工作都通过这个数据集来评判模型的表达能力，比如 15 年 8 月香港中文大学 Baolin Peng 的 Neural Reasoner<sup><a id="fnr.5" class="footref" href="#fn.5">5</a></sup>，图<a href="#orgc9ec6aa">11</a>是 Neural Reasoner 的模型结构，很显然也可以看作是一个 encoder-decoder 的模型。
 </p>
 
 
-<div id="orgparagraph11" class="figure">
+<div id="orgc9ec6aa" class="figure">
 <p><img src="../../../assets/img/neural_reasoner.png" alt="neural_reasoner.png" />
 </p>
-<p><span class="figure-number">&#22270;11&nbsp;</span> Neural Reasoner</p>
+<p><span class="figure-number">&#22270;11&nbsp; </span>Neural Reasoner</p>
 </div>
 
 <p>
@@ -214,9 +214,9 @@ bAbI 数据集是 FAIR 设计的用来考察对话系统个方面能力的一个
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">可微数据结构(Differentiable Data-structure)</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-org889346e" class="outline-2">
+<h2 id="org889346e">可微数据结构(Differentiable Data-structure)</h2>
+<div class="outline-text-2" id="text-org889346e">
 <p>
 吕老师提出一个新的概念「可微数据结构」，其实并不是一个新的东西，而是对已有的各种模型中具有相同性质的模块或成分的一个统称。前面我们提到了 attention 和 memory network 两个重要的技术，讲到在 NMT 中 attention 其实就是在 encoder 输出的 hidden state 序列上根据当前要计算的输出选取有用的信息，这里这个 hidden state 序列在性质上和 memory network 或者神经元图灵机(Neural Turing Machine, <b>NTM</b>)<sup><a id="fnr.6" class="footref" href="#fn.6">6</a></sup>增加的那个额外的存储结构其实是一样的，它们都保留了历史输入的信息并在输出时被反复读取，并且都是以一种模糊、可微的操作来进行处理。回过头来看 LSTM 的 cell state 也是这样的，forget gate 和 input gate 对它进行读写，output gate 则根据 cell state 得到输出。NMT 中的 hidden state 序列、memory network 和 NTM 中的额外存储结构，这就是吕老师称之为可微数据结构的事物 —— 当然，我个人觉得 LSTM 中的 cell state 也算。
 </p>
@@ -230,43 +230,43 @@ LSTM 中的 cell state 的操作相对还是比较简单，但毫无疑问它是
 </p>
 
 <p>
-对于可微数据结构，其实我更习惯叫它 memory，虽然是个容易和认知科学、心理学、物理学等各个领域中类似概念混淆的词。一图胜千言，神经元图灵机的结构示意图可以当作是对可微数据结构的一个普适的描述，如图<a href="#orgparagraph12">12</a>所示。
+对于可微数据结构，其实我更习惯叫它 memory，虽然是个容易和认知科学、心理学、物理学等各个领域中类似概念混淆的词。一图胜千言，神经元图灵机的结构示意图可以当作是对可微数据结构的一个普适的描述，如图<a href="#orgc0dc152">12</a>所示。
 </p>
 
 
-<div id="orgparagraph12" class="figure">
+<div id="orgc0dc152" class="figure">
 <p><img src="../../../assets/img/ntm.png" alt="ntm.png" />
 </p>
-<p><span class="figure-number">&#22270;12&nbsp;</span> 神经元图灵机</p>
+<p><span class="figure-number">&#22270;12&nbsp; </span>神经元图灵机</p>
 </div>
 
 <p>
-我们可以按照其持续作用时间，将可微数据结构或说 memory 粗略地划分成短期记忆(Short Term Memory, <b>STM</b>)、中间记忆(Intermediate Memory)和长期记忆(Long Term Memory, <b>LTM</b>)，我们可以在感性上把它们和心理学上的瞬时记忆、工作记忆和长期记忆类比，当然其中的对应是否合理就不是本篇要讨论的内容了。encoder-decoder 模型中 encoder 产生的 hidden state 序列，是我们所说的短期记忆；而在问答中，模型会在 memory 中存储前几轮对话的信息，这个信息我们可以叫做中间记忆；而在一些基于知识图谱的推理问答任务中，还需要从知识图谱中进行知识的查找和推导，这个知识图谱，我们也可以将其视为 memory，这种独立于具体输入的信息，则叫做长期记忆。如图<a href="#orgparagraph13">13</a>所示。
+我们可以按照其持续作用时间，将可微数据结构或说 memory 粗略地划分成短期记忆(Short Term Memory, <b>STM</b>)、中间记忆(Intermediate Memory)和长期记忆(Long Term Memory, <b>LTM</b>)，我们可以在感性上把它们和心理学上的瞬时记忆、工作记忆和长期记忆类比，当然其中的对应是否合理就不是本篇要讨论的内容了。encoder-decoder 模型中 encoder 产生的 hidden state 序列，是我们所说的短期记忆；而在问答中，模型会在 memory 中存储前几轮对话的信息，这个信息我们可以叫做中间记忆；而在一些基于知识图谱的推理问答任务中，还需要从知识图谱中进行知识的查找和推导，这个知识图谱，我们也可以将其视为 memory，这种独立于具体输入的信息，则叫做长期记忆。如图<a href="#org0004791">13</a>所示。
 </p>
 
 
-<div id="orgparagraph13" class="figure">
+<div id="org0004791" class="figure">
 <p><img src="../../../assets/img/memory_types.png" alt="memory_types.png" />
 </p>
-<p><span class="figure-number">&#22270;13&nbsp;</span> 可微数据结构: 按持续时间分类</p>
+<p><span class="figure-number">&#22270;13&nbsp; </span>可微数据结构: 按持续时间分类</p>
 </div>
 
 <p>
-当然，也可以从结构上来对可微数据结构来分类，比如有像 NTM 中 memory 一样固定大小的 memory，也有像 Neural Stack Machine 这样大小可扩展的 memory<sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup>(见图<a href="#orgparagraph14">14</a>)，再复杂一点的还有像 Deep Memory 这样的层次化的 memory<sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup>(见图<a href="#orgparagraph15">15</a>)。使用什么样结构的 memory ，当然也要视具体任务而定。
+当然，也可以从结构上来对可微数据结构来分类，比如有像 NTM 中 memory 一样固定大小的 memory，也有像 Neural Stack Machine 这样大小可扩展的 memory<sup><a id="fnr.7" class="footref" href="#fn.7">7</a></sup>(见图<a href="#orgd0856a7">14</a>)，再复杂一点的还有像 Deep Memory 这样的层次化的 memory<sup><a id="fnr.8" class="footref" href="#fn.8">8</a></sup>(见图<a href="#org2b23aa3">15</a>)。使用什么样结构的 memory ，当然也要视具体任务而定。
 </p>
 
 
-<div id="orgparagraph14" class="figure">
+<div id="orgd0856a7" class="figure">
 <p><img src="../../../assets/img/neural_stack_machine.png" alt="neural_stack_machine.png" />
 </p>
-<p><span class="figure-number">&#22270;14&nbsp;</span> Neural Stack Machine</p>
+<p><span class="figure-number">&#22270;14&nbsp; </span>Neural Stack Machine</p>
 </div>
 
 
-<div id="orgparagraph15" class="figure">
+<div id="org2b23aa3" class="figure">
 <p><img src="../../../assets/img/deep_memory.png" alt="deep_memory.png" />
 </p>
-<p><span class="figure-number">&#22270;15&nbsp;</span> Deep Memory</p>
+<p><span class="figure-number">&#22270;15&nbsp; </span>Deep Memory</p>
 </div>
 
 <p>
@@ -277,7 +277,6 @@ LSTM 中的 cell state 的操作相对还是比较简单，但毫无疑问它是
 我们可以用 Python 代码来进一步解释一下 soft/hard addressing 的区别。假设我们有一个列表
 </p>
 <div class="org-src-container">
-
 <pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">import</span> random
 
 <span style="color: #671ebb;">x</span> = [0, 1, 2, 3, 4, 5, 6]
@@ -288,7 +287,6 @@ LSTM 中的 cell state 的操作相对还是比较简单，但毫无疑问它是
 以读取操作为例，所谓 hard addressing，是直接按下标来取一个元素
 </p>
 <div class="org-src-container">
-
 <pre class="src src-python"><span style="color: #671ebb;">hard_address</span> = random.randint(0, <span style="color: #000000; background-color: #f8f8ff;">len</span>(x))
 <span style="color: #671ebb;">hard_value</span> = x[hard_address]
 
@@ -297,14 +295,13 @@ LSTM 中的 cell state 的操作相对还是比较简单，但毫无疑问它是
 </div>
 
 <pre class="example">
-Hard addressing: 2
+Hard addressing: 6
 </pre>
 
 <p>
 所谓 soft addressing，是先计算出一个权重向量，再按这个权重向量去计算
 </p>
 <div class="org-src-container">
-
 <pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> operator <span style="color: #ff7800; font-weight: bold;">import</span> mul
 
 <span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">gen_weights</span>(length):
@@ -320,18 +317,18 @@ Hard addressing: 2
 </div>
 
 <pre class="example">
-Soft addressing: 3.46168159678
+Soft addressing: 2.49246559272
 </pre>
 
 <p>
-当然，上面的寻址都是随机产生的，实际我们在做 attention 的时候是，一般来说，寻址可以分为按内容寻址和按地址寻址，在大部分场景中，我们使用按内容寻址的方式来对可微数据结构进行读写。需要注意的是，在做 soft addressing/attention 的时候，模型要学习的是「计算权重的函数」即上面代码中的 <code>gen_weights</code> 方法，而不是 <code>soft_addresses</code> 所代表的「每个时刻实际的权重」，以 NMT 为例，decoder 在每个 time step 时计算 attention 时用 decoder 的 hidden state 和 encoder 的 hidden state 做內积然后经过一个非线性变换得到 attention 权重，这里的这个非线性变换的参数就是学习到的，见图<a href="#orgparagraph16">16</a>。在可微性得到保证的前提下，学习到的寻址方法应当是能增大更有用信息的权重、降低无关信息权重的。
+当然，上面的寻址都是随机产生的，实际我们在做 attention 的时候是，一般来说，寻址可以分为按内容寻址和按地址寻址，在大部分场景中，我们使用按内容寻址的方式来对可微数据结构进行读写。需要注意的是，在做 soft addressing/attention 的时候，模型要学习的是「计算权重的函数」即上面代码中的 <code>gen_weights</code> 方法，而不是 <code>soft_addresses</code> 所代表的「每个时刻实际的权重」，以 NMT 为例，decoder 在每个 time step 时计算 attention 时用 decoder 的 hidden state 和 encoder 的 hidden state 做內积然后经过一个非线性变换得到 attention 权重，这里的这个非线性变换的参数就是学习到的，见图<a href="#orgd019ca7">16</a>。在可微性得到保证的前提下，学习到的寻址方法应当是能增大更有用信息的权重、降低无关信息权重的。
 </p>
 
 
-<div id="orgparagraph16" class="figure">
+<div id="orgd019ca7" class="figure">
 <p><img src="../../../assets/img/attention_as_addressing.png" alt="attention_as_addressing.png" width="80%" />
 </p>
-<p><span class="figure-number">&#22270;16&nbsp;</span> Attention 与 Addressing</p>
+<p><span class="figure-number">&#22270;16&nbsp; </span>Attention 与 Addressing</p>
 </div>
 
 <p>
@@ -339,14 +336,14 @@ Soft addressing: 3.46168159678
 </p>
 
 <p>
-最开始在 NMT 中提出来的 attention 方法，只是对 encoder 的 hidden state 序列进行读操作，今年的 NMT 工作在为了解决 under-translation 和 over-translation 的问题，也开始提出了一些更复杂的 attention 方法，比如将 encoder 的 hidden state 存起来，然后每次不仅去读它们，还会去修改它们<sup><a id="fnr.9" class="footref" href="#fn.9">9</a></sup>，这对 NMT 的结果有显著提高。图<a href="#orgparagraph17">17</a>是一个应用了改进的 attention 方法的模型。
+最开始在 NMT 中提出来的 attention 方法，只是对 encoder 的 hidden state 序列进行读操作，今年的 NMT 工作在为了解决 under-translation 和 over-translation 的问题，也开始提出了一些更复杂的 attention 方法，比如将 encoder 的 hidden state 存起来，然后每次不仅去读它们，还会去修改它们<sup><a id="fnr.9" class="footref" href="#fn.9">9</a></sup>，这对 NMT 的结果有显著提高。图<a href="#orgdb555be">17</a>是一个应用了改进的 attention 方法的模型。
 </p>
 
 
-<div id="orgparagraph17" class="figure">
+<div id="orgdb555be" class="figure">
 <p><img src="../../../assets/img/interactive_attention.png" alt="interactive_attention.png" />
 </p>
-<p><span class="figure-number">&#22270;17&nbsp;</span> Interactive Attention</p>
+<p><span class="figure-number">&#22270;17&nbsp; </span>Interactive Attention</p>
 </div>
 
 <p>
@@ -355,9 +352,9 @@ Soft addressing: 3.46168159678
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4">语言学习的范式</h2>
-<div class="outline-text-2" id="text-orgheadline4">
+<div id="outline-container-org6baef5e" class="outline-2">
+<h2 id="org6baef5e">语言学习的范式</h2>
+<div class="outline-text-2" id="text-org6baef5e">
 <p>
 这里说的「语言学习」，当然是指机器的「语言学习」。首先来看看我们人类的学习过程：我们会有老师或父母教我们字词和语法，这帮助我们学会最基本的表达和理解，这可以算作是监督学习；在有一定的词汇量并掌握基本语法后，我们可以通过大量阅读来更好地理解语言的使用，这是无监督学习；同时我们的学习过程是通过不停地试错来进行的，环境会给予我们各种反馈，比如说你说了一句在用词和语法方面都很糟糕的奇怪的语句，别人会表达出不理解或诧异，因此也可以将我们的学习过程视作强化学习；此外我们可以在掌握常识后基于常识来去对我们未接触过的语言现象或者知识进行快速的掌握，这是基于解释的学习，和最近的 zero-shot 学习类似？
 </p>
@@ -384,36 +381,36 @@ Soft addressing: 3.46168159678
 </p>
 
 <p>
-NLP 的学习任务，我们基本上可以将它们划分三个层级，即语法(syntax)、语义(semantics)和语用(pragmatics)，如图<a href="#orgparagraph18">18</a>所示。
+NLP 的学习任务，我们基本上可以将它们划分三个层级，即语法(syntax)、语义(semantics)和语用(pragmatics)，如图<a href="#org5a793e2">18</a>所示。
 </p>
 
 
-<div id="orgparagraph18" class="figure">
+<div id="org5a793e2" class="figure">
 <p><img src="../../../assets/img/nlp_phrases.png" alt="nlp_phrases.png" width="80%" />
 </p>
-<p><span class="figure-number">&#22270;18&nbsp;</span> NLP 层级</p>
+<p><span class="figure-number">&#22270;18&nbsp; </span>NLP 层级</p>
 </div>
 
 <p>
-语用对应着真实的、具体的任务场景，从中我们可以得到反馈信息，这反馈信息向下层传递，调整整个学习过程(见图<a href="#orgparagraph19">19</a>)，根据这个我们可以为很多 NLP 任务设计端到端的模型，比如基于 encoder-decoder 的 NMT 和单轮对话，都算是比较成功的案例，以及在复杂情况下的多轮对话，也有通过设计更复杂的模型来做到了端到端的学习，这个前文已经提过了。
+语用对应着真实的、具体的任务场景，从中我们可以得到反馈信息，这反馈信息向下层传递，调整整个学习过程(见图<a href="#org869bc24">19</a>)，根据这个我们可以为很多 NLP 任务设计端到端的模型，比如基于 encoder-decoder 的 NMT 和单轮对话，都算是比较成功的案例，以及在复杂情况下的多轮对话，也有通过设计更复杂的模型来做到了端到端的学习，这个前文已经提过了。
 </p>
 
 
-<div id="orgparagraph19" class="figure">
+<div id="org869bc24" class="figure">
 <p><img src="../../../assets/img/nlp_phrases2.png" alt="nlp_phrases2.png" width="80%" />
 </p>
-<p><span class="figure-number">&#22270;19&nbsp;</span> NLP 层级(2)</p>
+<p><span class="figure-number">&#22270;19&nbsp; </span>NLP 层级(2)</p>
 </div>
 
 <p>
-但我们前面也说过了，端到端的学习过程当然是很好的，但它也有一些问题，它对模型设计的要求会比较高，如果模型设计地不好，导致信息在模型中间传递时出现问题，那么这个模型很可能就不能有效地学习。吕老师提到一个例子，给定一个俄罗斯方块的图像，最后要学习一个模型，预测其中俄罗斯方块类型的数量是偶数还是奇数，设计了一个端到端的模型如图<a href="#orgparagraph20">20</a>所示。
+但我们前面也说过了，端到端的学习过程当然是很好的，但它也有一些问题，它对模型设计的要求会比较高，如果模型设计地不好，导致信息在模型中间传递时出现问题，那么这个模型很可能就不能有效地学习。吕老师提到一个例子，给定一个俄罗斯方块的图像，最后要学习一个模型，预测其中俄罗斯方块类型的数量是偶数还是奇数，设计了一个端到端的模型如图<a href="#orgad47db2">20</a>所示。
 </p>
 
 
-<div id="orgparagraph20" class="figure">
+<div id="orgad47db2" class="figure">
 <p><img src="../../../assets/img/failed_end2end_task.png" alt="failed_end2end_task.png" width="80%" />
 </p>
-<p><span class="figure-number">&#22270;20&nbsp;</span> 俄罗斯方块类型奇偶预测</p>
+<p><span class="figure-number">&#22270;20&nbsp; </span>俄罗斯方块类型奇偶预测</p>
 </div>
 
 <p>
