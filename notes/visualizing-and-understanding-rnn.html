@@ -1,0 +1,140 @@
+---
+title: "Visualizing and understanding recurrent networks"
+author: Linusp
+layout: note
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd665d64">作者</a></li>
+<li><a href="#org0f38036">观点</a></li>
+<li><a href="#orgc9a8ad2">数据集</a></li>
+<li><a href="#org5769632">模型/实验/结论</a></li>
+</ul>
+</div>
+</div>
+
+<hr />
+
+<div id="outline-container-orgd665d64" class="outline-2">
+<h2 id="orgd665d64">作者</h2>
+<div class="outline-text-2" id="text-orgd665d64">
+<ul class="org-ul">
+<li>Andrej Karpathy</li>
+<li>Justin Johnson</li>
+<li>Li Fei-Fei</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0f38036" class="outline-2">
+<h2 id="org0f38036">观点</h2>
+<div class="outline-text-2" id="text-org0f38036">
+<ul class="org-ul">
+<li>LSTM 在实践中表现出了非常好的结果，但我们对其性能的来源和限制理解地都还很不够</li>
+<li>过去的一些分析都是靠最终测试集上的全局困惑度来评价 LSTM 的效果，并没有在「真实数据」上进行分析，也不够直观</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc9a8ad2" class="outline-2">
+<h2 id="orgc9a8ad2">数据集</h2>
+<div class="outline-text-2" id="text-orgc9a8ad2">
+<ul class="org-ul">
+<li>托尔斯泰的《战争与和平》文本，共 3,258,246 字</li>
+<li>Linux 内核代码，共 6,206,996 字</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org5769632" class="outline-2">
+<h2 id="org5769632">模型/实验/结论</h2>
+<div class="outline-text-2" id="text-org5769632">
+<p>
+模型:
+</p>
+<ul class="org-ul">
+<li>RNN，分别尝试层数为 1 层、2 层和 3 层，隐层大小分别尝试 64, 128, 256 和 512，共 12 个模型</li>
+<li>LSTM，同 RNN</li>
+<li>GRU，同 RNN</li>
+</ul>
+
+
+<p>
+实验和结论
+</p>
+<ul class="org-ul">
+<li>用上述模型在两个数据集上训练语言模型，最后在测试集上计算交叉熵误差，对比三类共 36 个模型之间的结果</li>
+<li><p>
+对 LSTM/GRU 的 gate 输出分布做可视化分析。如下图所示，图中的小圆圈代表一个神经元，横轴表示该神经元 gate 值超过 0.9 的比例，纵轴是 gate 值小于 0.1 的比例
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/lstm_gru_saturation.png" alt="lstm_gru_saturation.png" />
+</p>
+</div>
+
+<p>
+其中
+</p>
+<ul class="org-ul">
+<li>forget gate 值超过 0.9 的比例很大的神经元，说明它能一直记住比较早之前的信息</li>
+<li>input gate 值超过 0.9 的比例很大的神经元，说明它对当前输入比较敏感</li>
+<li>output gate 的值超过 0.9 的比例很大的神经元，没什么意义，单纯的控制大小</li>
+</ul>
+<p>
+对 LSTM 而言
+</p>
+<ul class="org-ul">
+<li>第一层只有很少一部分 gate 值超过 0.9 或小于 0.1，其比例比较密集地分布在 0 附近，说明大部分都是在 0.1 到 0.9 之间</li>
+<li>有一些神经元 forget gate 值超过 0.9 的比例超级大,也就是说它一直都超过 0.9，一直记着很早以前的东西</li>
+<li>有一些神经元 forget gate 的值小于 0.1 的比例很大，但没有一直都小于 0.1 的，比例最大在 0.8 左右</li>
+<li>input gate 倾向于超过 0.9(相对比例大的神经元更多), output gate 的值分布比较均匀</li>
+</ul>
+<p>
+对 GRU 来说
+</p>
+<ul class="org-ul">
+<li>第一层的 update gate 普遍比较大而 reset gate 普遍比较小，注意本文中的 update gate 相当于 LSTM 中的 input gate</li>
+<li>高层不像第一层那么极端，但总体形式差不多，就是 update gate 大而 reset gate 小这样</li>
+</ul></li>
+
+<li><p>
+分析了 LSTM 在《战争与和平》文本上的错误类型
+</p>
+
+<ul class="org-ul">
+<li>ngram 错误，1-9 阶 ngram 模型能预测正确但 LSTM 预测失败的部分</li>
+</ul>
+<ul class="org-ul">
+<li>罕见词错误: 既由词频不大于 5 的词导致的错误。这部分错误通过扩充数据集和 pretraining 是可以得到缓解的</li>
+
+<li>词建模错误: 在遇到空格、换行、引号等词分隔符后，预测错了下一个词的第一个字符，和前面个动态长期记忆错误不一样的是，这个相当于在前面的词的基础上要选择一个词，而前面那个相当于是已经知道是什么词了，但是要补全它，这两者的信息量是完全不一样的</li>
+
+<li>标点符号预测错</li>
+
+<li>最后剩余的错误称为 boost error，</li>
+</ul></li>
+</ul>
+
+<p>
+结论
+</p>
+<ul class="org-ul">
+<li>多个隐藏层模型比单个隐藏层模型的效果要好</li>
+<li>LSTM 和 GRU 之间难分伯仲，但都显著好于 RNN</li>
+<li>LSTM 表现出了对长程结构的记忆能力，如在处理被引号括起来的长文本时，对开头和结尾的引号有特殊的响应</li>
+<li>在多层的 LSTM/GRU 中，高层的神经元都开始分化，会有一部分倾向于接收新信息，有一部分则倾向于记住旧的信息</li>
+<li>GRU 的第一层几乎不怎么使用旧的信息，即使到高层后也更倾向于使用当前输入</li>
+<li>LSTM 建模长程依赖的能力大大超过 ngram 模型，一个 11MB 的 LSTM 模型效果能略微超过一个 3GB 的 20-gram 模型</li>
+<li>对本身明显包含结构的文本(如内核代码)进行建模，当序列长度在 10 以下时，LSTM 和 20-gram 模型的差异不大，但随着序列变长，两者之间的差距逐渐变大，在 Linux 内核代码上，LSTM 能记忆的最大约 70 左右的距离</li>
+<li>LSTM 在迭代训练的过程中，首先建模了短程依赖，然后在此基础上逐渐地学习到对长程依赖的建模能力，这也是 seq2seq 论文中提到的逆序源语言序列有效的原因，因为这让模型先开始建模短程依赖再去建模长程依赖</li>
+<li>LSTM 并不能完全利用好最近的一些输入，LSTM 的错误中，有 42% 是 0-9 阶的 ngram 模型能够正确预测的</li>
+<li>相信像 Memory Networks 那样，如果能直接对序列中最近的历史进行 attention 操作，那么能够提高 RNNLM 的效果</li>
+<li>增大数据集、无监督预训练能提高 LSTM LM 对罕见词的效果</li>
+<li>增大模型大小，显著减小了 ngram 错误，但对其他类型的错误却没有明显的改善，这说明光是增大模型大小是不够的，可能需要设计更好、更新的结构</li>
+</ul>
+</div>
+</div>
