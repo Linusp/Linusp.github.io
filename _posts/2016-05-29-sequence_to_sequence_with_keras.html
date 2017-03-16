@@ -11,18 +11,18 @@ tags       :
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">Sequence to Sequence Model</a></li>
-<li><a href="#orgheadline2">Keras 简介</a></li>
-<li><a href="#orgheadline3">Pig Latin: Sequence to Sequence 实践</a></li>
+<li><a href="#org3363afb">Sequence to Sequence Model</a></li>
+<li><a href="#org5f25482">Keras 简介</a></li>
+<li><a href="#org321a34e">Pig Latin: Sequence to Sequence 实践</a></li>
 </ul>
 </div>
 </div>
 
-<hr  />
+<hr />
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">Sequence to Sequence Model</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org3363afb" class="outline-2">
+<h2 id="org3363afb">Sequence to Sequence Model</h2>
+<div class="outline-text-2" id="text-org3363afb">
 <p>
 Sequence to Sequence 模型是近几年来比较热门的一个基于 RNN 的模型，现在被广泛运用于机器翻译、自动问答系统等领域，并且取得了不错的效果。该模型最早在 2014 年被 Cho 和 Sutskever 先后提出，前者将该模型命名为 "Encoder-Decoder Model"，后者将其命名为 "Sequence to Sequence Model"，两者有一些细节上的差异，但总体思想大致相同，所以后文不做区分，并简称为 "seq2seq 模型"。
 </p>
@@ -51,9 +51,9 @@ seq2seq 模型利用了 RNN 对时序序列天然的处理能力，试图建立�
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">Keras 简介</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-org5f25482" class="outline-2">
+<h2 id="org5f25482">Keras 简介</h2>
+<div class="outline-text-2" id="text-org5f25482">
 <p>
 Keras 是一个 Python 的深度学习框架，它提供一些深度学习方法的高层抽象，后端则被设计成可切换式的(目前支持 Theano 和 TensorFlow)。4 月份 Keras 发布了 1.0 版本，意味着 Keras 的基础特性已经基本稳定下来，不用担心其中的方法会发生剧烈的变化了。
 </p>
@@ -67,13 +67,12 @@ Keras 是一个 Python 的深度学习框架，它提供一些深度学习方法
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> Sequential
+<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers <span style="color: #ff7800; font-weight: bold;">import</span> Dense
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> keras.models <span style="color: #729fcf;">import</span> Sequential
-<span style="color: #729fcf;">from</span> keras.layers <span style="color: #729fcf;">import</span> Dense
-
-<span style="color: #eeeeec;">model</span> = Sequential()
-model.add(Dense(input_dim=4, output_dim=9, activation=<span style="color: #ad7fa8;">"relu"</span>))
-model.add(Dense(output_dim=3, activation=<span style="color: #ad7fa8;">"softmax"</span>))
+<span style="color: #671ebb;">model</span> = Sequential()
+model.add(Dense(input_dim=4, output_dim=9, activation=<span style="color: #409b1c;">"relu"</span>))
+model.add(Dense(output_dim=3, activation=<span style="color: #409b1c;">"softmax"</span>))
 </pre>
 </div>
 
@@ -86,8 +85,7 @@ model.add(Dense(output_dim=3, activation=<span style="color: #ad7fa8;">"softmax"
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-python">model.<span style="color: #729fcf;">compile</span>(loss=<span style="color: #ad7fa8;">"categorical_crossentropy"</span>, optimizer=<span style="color: #ad7fa8;">"sgd"</span>)
+<pre class="src src-python">model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"categorical_crossentropy"</span>, optimizer=<span style="color: #409b1c;">"sgd"</span>)
 </pre>
 </div>
 
@@ -104,7 +102,6 @@ compile 时需要设定训练时的目标函数和优化方法，而 Keras 中�
 训练时则要求数据是 Numpy 的多维数组形式，保证这一点的情况下使用 "Sequential" 的 "fit" 方法即可，如:
 </p>
 <div class="org-src-container">
-
 <pre class="src src-python">model.fit(IRIS_X, IRIS_Y, nb_epoch=300)
 </pre>
 </div>
@@ -114,7 +111,6 @@ compile 时需要设定训练时的目标函数和优化方法，而 Keras 中�
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-python">model.fit(IRIS_X, IRIS_Y, nb_epoch=300, validation_split=0.1)
 </pre>
 </div>
@@ -136,14 +132,13 @@ Epoch 3/100
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">save_model_to_file</span>(model, struct_file, weights_file):
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">save model structure</span>
+    <span style="color: #671ebb;">model_struct</span> = model.to_json()
+    <span style="color: #000000; background-color: #f8f8ff;">open</span>(struct_file, <span style="color: #409b1c;">'w'</span>).write(model_struct)
 
-<pre class="src src-python"><span style="color: #729fcf;">def</span> <span style="color: #edd400;">save_model_to_file</span>(model, struct_file, weights_file):
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">save model structure</span>
-    <span style="color: #eeeeec;">model_struct</span> = model.to_json()
-    <span style="color: #729fcf;">open</span>(struct_file, <span style="color: #ad7fa8;">'w'</span>).write(model_struct)
-
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">save model weights</span>
-    model.save_weights(weights_file, overwrite=<span style="color: #e6a00f;">True</span>)
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">save model weights</span>
+    model.save_weights(weights_file, overwrite=<span style="color: #3b5bb5;">True</span>)
 </pre>
 </div>
 
@@ -151,23 +146,22 @@ Epoch 3/100
 对于保存下来的模型，当然也有对应的方法来进行读取:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> model_from_json
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> keras.models <span style="color: #729fcf;">import</span> model_from_json
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">load_model</span>(struct_file, weights_file):
-    <span style="color: #eeeeec;">model</span> = model_from_json(<span style="color: #729fcf;">open</span>(struct_file, <span style="color: #ad7fa8;">'r'</span>).read())
-    model.<span style="color: #729fcf;">compile</span>(loss=<span style="color: #ad7fa8;">"categorical_crossentropy"</span>, optimizer=<span style="color: #ad7fa8;">'sgd'</span>)
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">load_model</span>(struct_file, weights_file):
+    <span style="color: #671ebb;">model</span> = model_from_json(<span style="color: #000000; background-color: #f8f8ff;">open</span>(struct_file, <span style="color: #409b1c;">'r'</span>).read())
+    model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"categorical_crossentropy"</span>, optimizer=<span style="color: #409b1c;">'sgd'</span>)
     model.load_weights(weights_file)
 
-    <span style="color: #729fcf;">return</span> model
+    <span style="color: #ff7800; font-weight: bold;">return</span> model
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">Pig Latin: Sequence to Sequence 实践</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-org321a34e" class="outline-2">
+<h2 id="org321a34e">Pig Latin: Sequence to Sequence 实践</h2>
+<div class="outline-text-2" id="text-org321a34e">
 <p>
 Pig Latin 的一种翻译叫做 “儿童黑话”，罗嗦一点的意译是 “故意颠倒英语字母顺序拼凑而成的黑话”，它有很多种变种规则，这里只取其原始的、最简单的两条规则:
 </p>
@@ -199,22 +193,21 @@ Pig Latin 是一个典型的输入和输出都是变长序列的问题，我们�
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> itertools <span style="color: #ff7800; font-weight: bold;">import</span> dropwhile
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> itertools <span style="color: #729fcf;">import</span> dropwhile
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">is_vowel</span>(char):
+    <span style="color: #ff7800; font-weight: bold;">return</span> char <span style="color: #ff7800; font-weight: bold;">in</span> (<span style="color: #409b1c;">'a'</span>, <span style="color: #409b1c;">'e'</span>, <span style="color: #409b1c;">'i'</span>, <span style="color: #409b1c;">'o'</span>, <span style="color: #409b1c;">'u'</span>)
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">is_vowel</span>(char):
-    <span style="color: #729fcf;">return</span> char <span style="color: #729fcf;">in</span> (<span style="color: #ad7fa8;">'a'</span>, <span style="color: #ad7fa8;">'e'</span>, <span style="color: #ad7fa8;">'i'</span>, <span style="color: #ad7fa8;">'o'</span>, <span style="color: #ad7fa8;">'u'</span>)
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">is_consonant</span>(char):
+    <span style="color: #ff7800; font-weight: bold;">return</span> <span style="color: #ff7800; font-weight: bold;">not</span> is_vowel(char)
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">is_consonant</span>(char):
-    <span style="color: #729fcf;">return</span> <span style="color: #729fcf;">not</span> is_vowel(char)
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">pig_latin</span>(word):
-    <span style="color: #729fcf;">if</span> is_vowel(word[0]):
-        <span style="color: #729fcf;">return</span> word + <span style="color: #ad7fa8;">'yay'</span>
-    <span style="color: #729fcf;">else</span>:
-        <span style="color: #eeeeec;">remain</span> = <span style="color: #ad7fa8;">''</span>.join(dropwhile(is_consonant, word))
-        <span style="color: #eeeeec;">removed</span> = word[:<span style="color: #729fcf;">len</span>(word)-<span style="color: #729fcf;">len</span>(remain)]
-        <span style="color: #729fcf;">return</span> remain + removed + <span style="color: #ad7fa8;">'ay'</span>
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">pig_latin</span>(word):
+    <span style="color: #ff7800; font-weight: bold;">if</span> is_vowel(word[0]):
+        <span style="color: #ff7800; font-weight: bold;">return</span> word + <span style="color: #409b1c;">'yay'</span>
+    <span style="color: #ff7800; font-weight: bold;">else</span>:
+        <span style="color: #671ebb;">remain</span> = <span style="color: #409b1c;">''</span>.join(dropwhile(is_consonant, word))
+        <span style="color: #671ebb;">removed</span> = word[:<span style="color: #000000; background-color: #f8f8ff;">len</span>(word)-<span style="color: #000000; background-color: #f8f8ff;">len</span>(remain)]
+        <span style="color: #ff7800; font-weight: bold;">return</span> remain + removed + <span style="color: #409b1c;">'ay'</span>
 </pre>
 </div>
 
@@ -223,22 +216,21 @@ Pig Latin 是一个典型的输入和输出都是变长序列的问题，我们�
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> Sequential
+<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.recurrent <span style="color: #ff7800; font-weight: bold;">import</span> LSTM
+<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.wrappers <span style="color: #ff7800; font-weight: bold;">import</span> TimeDistributed
+<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.core <span style="color: #ff7800; font-weight: bold;">import</span> Dense, RepeatVector
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> keras.models <span style="color: #729fcf;">import</span> Sequential
-<span style="color: #729fcf;">from</span> keras.layers.recurrent <span style="color: #729fcf;">import</span> LSTM
-<span style="color: #729fcf;">from</span> keras.layers.wrappers <span style="color: #729fcf;">import</span> TimeDistributed
-<span style="color: #729fcf;">from</span> keras.layers.core <span style="color: #729fcf;">import</span> Dense, RepeatVector
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">build_model</span>(input_size, max_out_seq_len, hidden_size):
-    <span style="color: #eeeeec;">model</span> = Sequential()
-    model.add(LSTM(input_dim=input_size, output_dim=hidden_size, return_sequences=<span style="color: #e6a00f;">False</span>))
-    model.add(Dense(hidden_size, activation=<span style="color: #ad7fa8;">"relu"</span>))
+<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">build_model</span>(input_size, max_out_seq_len, hidden_size):
+    <span style="color: #671ebb;">model</span> = Sequential()
+    model.add(LSTM(input_dim=input_size, output_dim=hidden_size, return_sequences=<span style="color: #3b5bb5;">False</span>))
+    model.add(Dense(hidden_size, activation=<span style="color: #409b1c;">"relu"</span>))
     model.add(RepeatVector(max_out_seq_len))
-    model.add(LSTM(hidden_size, return_sequences=<span style="color: #e6a00f;">True</span>))
-    model.add(TimeDistributed(Dense(output_dim=input_size, activation=<span style="color: #ad7fa8;">"linear"</span>)))
-    model.<span style="color: #729fcf;">compile</span>(loss=<span style="color: #ad7fa8;">"mse"</span>, optimizer=<span style="color: #ad7fa8;">'adam'</span>)
+    model.add(LSTM(hidden_size, return_sequences=<span style="color: #3b5bb5;">True</span>))
+    model.add(TimeDistributed(Dense(output_dim=input_size, activation=<span style="color: #409b1c;">"linear"</span>)))
+    model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"mse"</span>, optimizer=<span style="color: #409b1c;">'adam'</span>)
 
-    <span style="color: #729fcf;">return</span> model
+    <span style="color: #ff7800; font-weight: bold;">return</span> model
 </pre>
 </div>
 
@@ -296,7 +288,7 @@ zzzm -&gt; omhmay
 </p>
 
 <p>
-完整代码见: <a href="https://github.com/Linusp/soph/blob/master/sequence/pig_latin.py">soph/sequence/pig_latin.py</a>
+完整代码见: <a href="https://github.com/Linusp/soph/blob/master/demos/pig_latin.py">soph/demos/pig_latin.py</a>
 </p>
 </div>
 </div>
