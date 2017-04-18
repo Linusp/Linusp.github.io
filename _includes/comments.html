@@ -4,7 +4,7 @@
   /** CONFIGURATION VARIABLES **/
   var commentitUsername = 'Linusp';
   var commentitRepo = 'Linusp/Linusp.github.io';
-  var commentitPath = '{{ page.path }}';
+  var commentitId = '{{ page.id }}';
 
   /** DON'T EDIT FOLLOWING LINES **/
   (function() {
@@ -22,7 +22,7 @@
 {% for c in sorted_comments %}
   <div class="media">
     <div class="media-left">
-      <img src="{{ c.author.picture }}" alt="{{ c.author.displayName}}" height="73" width="73">
+      <img src="{{ c.author.picture }}" alt="{{ c.author.displayName}}" height="36" width="36">
     </div>
     <div class="media-body">
       <p class="text-muted">
