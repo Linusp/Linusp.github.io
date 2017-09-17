@@ -1,0 +1,533 @@
+---
+layout     : post
+title      : Emacs 的 Python3 开发环境配置
+categories : Emacs
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org17ae8b4">基础配置</a></li>
+<li><a href="#orgdee9213">Emacs + Python3 的问题</a></li>
+<li><a href="#org56179ba">company + jedi-core 的 Python3 配置</a></li>
+<li><a href="#org10dd21d">结合 virtualenv 来使用 flycheck</a></li>
+<li><a href="#org27ebd7d">PEP8 的支持</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org17ae8b4" class="outline-2">
+<h2 id="org17ae8b4">基础配置</h2>
+<div class="outline-text-2" id="text-org17ae8b4">
+<p>
+基础配置就没啥好说的了，就是缩进宽度啦，各种 minor-mode 的添加啦之类的，直接上配置
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">my-python-mode-config</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> python-indent-offset 4
+        python-indent 4
+        indent-tabs-mode nil
+        default-tab-width 4
+
+        <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">&#35774;&#32622; run-python &#30340;&#21442;&#25968;</span>
+        python-shell-interpreter <span style="color: #66cccc;">"ipython"</span>
+        python-shell-interpreter-args <span style="color: #66cccc;">"-i"</span>
+        python-shell-prompt-regexp <span style="color: #66cccc;">"In \\[[0-9]+\\]: "</span>
+        python-shell-prompt-output-regexp <span style="color: #66cccc;">"Out\\[[0-9]+\\]: "</span>
+        python-shell-completion-setup-code <span style="color: #66cccc;">"from IPython.core.completerlib import module_completion"</span>
+        python-shell-completion-module-string-code <span style="color: #66cccc;">"';'.join(module_completion('''%s'''))\n"</span>
+        python-shell-completion-string-code <span style="color: #66cccc;">"';'.join(get_ipython().Completer.all_completions('''%s'''))\n"</span>)
+
+  (add-to-list 'auto-mode-alist '(<span style="color: #66cccc;">"\\.py\\'"</span> . python-mode))
+  (hs-minor-mode t)                     <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#24320;&#21551; hs-minor-mode &#20197;&#25903;&#25345;&#20195;&#30721;&#25240;&#21472;</span>
+  (auto-fill-mode 0)                    <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#20851;&#38381; auto-fill-mode&#65292;&#25298;&#32477;&#33258;&#21160;&#25240;&#34892;</span>
+  (whitespace-mode t)                   <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#24320;&#21551; whitespace-mode &#23545;&#21046;&#34920;&#31526;&#21644;&#34892;&#20026;&#31354;&#26684;&#39640;&#20142;</span>
+  (hl-line-mode t)                      <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#24320;&#21551; hl-line-mode &#23545;&#24403;&#21069;&#34892;&#36827;&#34892;&#39640;&#20142;</span>
+  (pretty-symbols-mode t)               <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#24320;&#21551; pretty-symbols-mode &#23558; lambda &#26174;&#31034;&#25104;&#24076;&#33098;&#23383;&#31526; &#955;</span>
+  (set (make-local-variable 'electric-indent-mode) nil)) <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#20851;&#38381;&#33258;&#21160;&#32553;&#36827;</span>
+
+(add-hook 'python-mode-hook 'my-python-mode-config)
+</pre>
+</div>
+
+<p>
+另外如果是 Emacs 25.1 的话，有一个已知 <a href="https://lists.gnu.org/archive/html/bug-gnu-emacs/2016-08/msg00230.html">bug</a>，会导致执行 <b>run-python</b> 的时候，python shell 里显示一堆乱码，下面的方法能够解决
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(setenv <span style="color: #66cccc;">"IPY_TEST_SIMPLE_PROMPT"</span> <span style="color: #66cccc;">"1"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdee9213" class="outline-2">
+<h2 id="orgdee9213">Emacs + Python3 的问题</h2>
+<div class="outline-text-2" id="text-orgdee9213">
+<p>
+从去年开始，因为工作的原因，日常的开发环境从 Python2 切换成了 Python3，一开始还是有一点不太习惯的，其中 Python 本身的语法差异倒真没有带来太多的不适应，一开始的抗拒主要还是因为不少 Python 的库在对 Python3 的支持上多少有点问题。
+</p>
+
+<p>
+当然，因为公司是用 Python3 的，碰到上述问题的时候就会去找替代方案了，加上主流的一些库也有了对 Python3 的支持，所以现在已经习惯了用 Python3，而且本身是从事 NLP 相关的工作，读写文本的时候不用每次都 encode/decode，还是挺舒服的。
+</p>
+
+<p>
+Python2 还是 Python3 这个就不想讨论了，网上相关的讨论也不少了。我这边的问题主要是，切换成 Python3 后，原来 Python 的配置多少都有点问题，比如语法检查、自动补全等默认都是用系统的 Python 环境的，要处理 Python3 的代码就需要额外做点事情，我这个人实在是懒于是去掉了语法检查、自动补全这些功能，将就着用着最基础的一些功能，倒也不是不能过日子。
+</p>
+
+<p>
+有时候也有考虑重新配置一下 Python 环境，但是一看到 elpy 啊 projectile 这些稍微复杂点的 package 就犯懒，倒是这阵子用一些更小的 package 一点一点地加新功能，貌似倒是已经解决了自己的需求了，加上有些时间没写东西了，想着写点东西，顺便分享下踩到的坑吧。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org56179ba" class="outline-2">
+<h2 id="org56179ba">company + jedi-core 的 Python3 配置</h2>
+<div class="outline-text-2" id="text-org56179ba">
+<p>
+首先是自动补全了，一开始是用 <b>auto-complete</b> 的，不过被 auto-complete 坑过太多次了， <b>company</b> 算是后起之秀，配置起来也挺方便的。
+</p>
+
+<p>
+把 company 装上
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">when</span> (not (<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">company</span> nil <span style="color: #cc99cc; background-color: #2d2d2d;">:noerror</span>))
+  (message <span style="color: #66cccc;">"install company now..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> url-http-attempt-keepalives nil)
+  (package-refresh-contents)
+  (package-install 'company))
+</pre>
+</div>
+
+<p>
+然后在启动 Emacs 的时候开启全局的 company-mode
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'after-init-hook 'global-company-mode)
+</pre>
+</div>
+
+<p>
+company-mode 默认已经配置好了多个语言的 backends，基本上是开箱即用的，查看变量 company-backends 可以看它当前使用的 backends，默认是
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(company-bbdb
+ company-nxml
+ company-css
+ company-eclim
+ company-semantic
+ company-clang
+ company-xcode
+ company-cmake
+ company-capf
+ company-files
+ (company-dabbrev-code company-gtags company-etags company-keywords)
+ company-oddmuse company-dabbrev)
+</pre>
+</div>
+
+<p>
+这些应付一些简单的场景足够用了。
+</p>
+
+<p>
+然后是安装 <b>company-jedi</b>
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">when</span> (not (<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">company-jedi</span> nil <span style="color: #cc99cc; background-color: #2d2d2d;">:noerror</span>))
+  (message <span style="color: #66cccc;">"install company-jedi now..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> url-http-attempt-keepalives nil)
+  (package-refresh-contents)
+  (package-install 'company-jedi))
+</pre>
+</div>
+
+<p>
+company-jedi 是 company 的一个 backend，使用 jedi 这个 Python 的自动补全和静态分析工具。需要注意的是，使用 package-install 安装 company-jedi 就好了，它会安装 <b>jedi-core</b> 这个 package，里面有对 jedi 的封装。说这个是因为用户如果没有看 company-jedi 的说明，有可能会去安装 jedi 这个 Emacs package，但实际上这个 package 是一个 auto-complete 的后端，完全不用。
+</p>
+
+<p>
+到目前为止的操作都是通用的，和 Python2/Python3 都没有关系，但要知道，jedi 的工作原理是根据一个 Python 环境里的标准库及安装的非标准库来进行补全的，也就是说，它需要依赖一个外部的 Python 环境，如果去看 emacs-jedi 的文档，会看到要求用户执行 jedi:install-server 来建立一个 Python 环境，而这个命令实际上会在 ~/.emacs.d/.python-environments 这个目录下建立一个 virtualenv 环境，默认用的是 Python2.7。
+</p>
+
+<p>
+所以如果想为 Python3 配置 jedi，请注意 <b>不要使用 jedi:install-server 这种方式</b> 。
+</p>
+
+<p>
+既然知道了 emacs-jedi 的工作原理，那就好办了，那我就自己在 ~/.emacs.d/.python-environments 这个目录下建立一个 Python3 的 virtualenv 环境呗。
+</p>
+
+<p>
+首先建立 ~/.emacs.d/.python-environments/ 这个目录
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">mkdir -p ~/.emacs.d/.python-environments/
+</pre>
+</div>
+
+<p>
+然后在其中创建 virtualenv 环境，下面的示例中为这个 virtualenv 环境命名为 jedi，取别的名字都可以的
+</p>
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">cd</span> ~/.emacs.d/.python-environments/
+virtualenv -p /usr/bin/python3  --prompt=<span style="color: #66cccc;">"&lt;venv:jedi&gt;"</span> jedi
+</pre>
+</div>
+
+<p>
+然后在这个 virtualenv 环境中安装需要的 Python 依赖，依赖分两部分，一部分是 jedi 相关的几个 Python 包，是自动补全必须的，这些东西都在 jedi-core 这个 Emacs package 里的 setup.py 里写好了，其内容如下
+</p>
+<div class="org-src-container">
+<pre class="src src-python">setup(
+    name=<span style="color: #66cccc;">'jediepcserver'</span>,
+    version=<span style="color: #66cccc;">'0.2.7'</span>,
+    py_modules=[<span style="color: #66cccc;">'jediepcserver'</span>],
+    install_requires=[
+        <span style="color: #66cccc;">"jedi&gt;=0.8.1"</span>,
+        <span style="color: #66cccc;">"epc&gt;=0.0.4"</span>,
+        <span style="color: #66cccc;">"argparse"</span>,
+    ],
+    entry_points={
+        <span style="color: #66cccc;">'console_scripts'</span>: [<span style="color: #66cccc;">'jediepcserver = jediepcserver:main'</span>],
+    },
+    **args
+)
+</pre>
+</div>
+
+<p>
+可以看到，依赖的是 jedi 和 epc 两个 Python 包，我们可以手动安装它们
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">~/.emacs.d/.python-environments/jedi/bin/pip install jedi&gt;=0.8.1 epc&gt;=0.0.4 argparse
+</pre>
+</div>
+
+<p>
+也可以直接使用这个 setup.py 来安装
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">~/.emacs.d/.python-environments/jedi/bin/pip install --upgrade ~/.emacs.d/elpa/jedi-core-20170319.2107/
+</pre>
+</div>
+
+<p>
+其次是需要用于补全的 Python 的非标准库，比如说我经常用 sklearn、tensorflow 之类的工具，我想在写相关的代码的时候能补全，那么要在我们刚才建立好的 virtualenv 环境里安装好这些 Python 包。
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">~/.emacs.d/.python-environments/jedi/bin/pip install <span style="color: #ffcc66;">tensorflow</span>==1.3.0 <span style="color: #ffcc66;">scipy</span>==0.19.1 <span style="color: #ffcc66;">numy</span>==1.13.1 scikit-learn==0.19.0
+</pre>
+</div>
+
+<p>
+至此外部的设置都已经好了，然后就是要在 Emacs 里设置来使用我们刚才建立好的这个 virtualenv 环境
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> jedi:environment-root <span style="color: #66cccc;">"jedi"</span>)
+(<span style="color: #99cc99; font-weight: bold;">setq</span> jedi:server-command (jedi:-env-server-command))
+</pre>
+</div>
+
+<p>
+然后设置当打开 Python 代码文件的时候，启动 jedi
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">config/enable-jedi</span> ()
+  (add-to-list 'company-backends 'company-jedi))
+(add-hook 'python-mode-hook 'jedi:setup)
+(add-hook 'python-mode-hook 'config/enable-jedi)
+</pre>
+</div>
+
+<p>
+还有一些补全的细节可以设置，如
+</p>
+<ul class="org-ul">
+<li><p>
+输入句点符号 "." 的时候自动弹出补全列表，这个主要是方便用来选择 Python package 的子模块或者方法
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> jedi:complete-on-dot t)
+</pre>
+</div></li>
+
+<li><p>
+补全时能识别简写，这个是说如果我写了 "import tensorflow as tf" ，那么我再输入 "tf." 的时候能自动补全
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> jedi:use-shortcuts t)
+</pre>
+</div></li>
+
+<li><p>
+设置补全时需要的最小字数(默认就是 3)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> compandy-minimum-prefix-length 3)
+</pre>
+</div></li>
+
+<li><p>
+设置弹出的补全列表的外观
+</p>
+
+<p>
+让补全列表里的各项左右对齐
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> company-tooltip-align-annotations t)
+</pre>
+</div>
+
+<p>
+如果开启这个，那么补全列表会是下面这个样子
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/company-aligned-tooltip.png" alt="company-aligned-tooltip.png" />
+</p>
+</div>
+
+<p>
+默认是这个样子
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/company-default-tooltip.png" alt="company-default-tooltip.png" />
+</p>
+</div>
+
+<p>
+补全列表里的项按照使用的频次排序，这样经常使用到的会放在前面，减少按键次数
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> company-transformers '(company-sort-by-occurrence))
+</pre>
+</div>
+
+<p>
+在弹出的补全列表里移动时可以前后循环，默认如果移动到了最后一个是没有办法再往下移动的
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> company-selection-wrap-around t)
+</pre>
+</div></li>
+
+<li><p>
+对默认快捷键做一些修改
+</p>
+
+<p>
+默认使用 M-n 和 M-p 来在补全列表里移动，改成 C-n 和 C-p
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(define-key company-active-map (kbd <span style="color: #66cccc;">"M-n"</span>) nil)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"M-p"</span>) nil)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"C-n"</span>) 'company-select-next)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"C-p"</span>) 'company-select-previous)
+</pre>
+</div>
+
+<p>
+设置让 TAB 也具备相同的功能
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(define-key company-active-map (kbd <span style="color: #66cccc;">"TAB"</span>) 'company-complete-common-or-cycle)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"&lt;tab&gt;"</span>) 'company-complete-common-or-cycle)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"S-TAB"</span>) 'company-select-previous)
+(define-key company-active-map (kbd <span style="color: #66cccc;">"&lt;backtab&gt;"</span>) 'company-select-previous)
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org10dd21d" class="outline-2">
+<h2 id="org10dd21d">结合 virtualenv 来使用 flycheck</h2>
+<div class="outline-text-2" id="text-org10dd21d">
+<p>
+首先我们要安装 <b>flycheck</b> 这个实时语法检查工具
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">when</span> (not (<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">flycheck</span> nil <span style="color: #cc99cc; background-color: #2d2d2d;">:noerror</span>))
+  (message <span style="color: #66cccc;">"install flycheck now..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> url-http-attempt-keepalives nil)
+  (package-refresh-contents)
+  (package-install 'flycheck))
+</pre>
+</div>
+
+<p>
+在 python-mode 里启用也很简单
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">config/enable-flycheck</span> ()
+  (flycheck-mode t))
+(add-hook 'python-mode-hook 'config/enable-flycheck)
+</pre>
+</div>
+
+<p>
+flycheck 使用 pylint 来对代码进行语法和代码规范的检查，实际上会使用 <b>executable-find</b> 这个方法来确定使用的 pylint
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defcustom</span> <span style="color: #ffcc66;">flycheck-executable-find</span> #'executable-find
+  <span style="color: #cc99cc;">"Function to search for executables.</span>
+
+<span style="color: #cc99cc;">The value of this option is a function which is given the name or</span>
+<span style="color: #cc99cc;">path of an executable and shall return the full path to the</span>
+<span style="color: #cc99cc;">executable, or nil if the executable does not exit.</span>
+
+<span style="color: #cc99cc;">The default is the standard `</span><span style="color: #6699cc;">executable-find</span><span style="color: #cc99cc;">' function which</span>
+<span style="color: #cc99cc;">searches `</span><span style="color: #6699cc;">exec-path</span><span style="color: #cc99cc;">'.  You can customize this option to search</span>
+<span style="color: #cc99cc;">for checkers in other environments such as bundle or NixOS</span>
+<span style="color: #cc99cc;">sandboxes."</span>
+  <span style="color: #cc99cc; background-color: #2d2d2d;">:group</span> 'flycheck
+  <span style="color: #cc99cc; background-color: #2d2d2d;">:type</span> '(choice (const <span style="color: #cc99cc; background-color: #2d2d2d;">:tag</span> <span style="color: #66cccc;">"Search executables in `</span><span style="color: #6699cc;">exec-path</span><span style="color: #66cccc;">'"</span> executable-find)
+                 (<span style="color: #99cc99; font-weight: bold;">function</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:tag</span> <span style="color: #66cccc;">"Search executables with a custom function"</span>))
+  <span style="color: #cc99cc; background-color: #2d2d2d;">:package-version</span> '(flycheck . <span style="color: #66cccc;">"0.25"</span>)
+  <span style="color: #cc99cc; background-color: #2d2d2d;">:risky</span> t)
+</pre>
+</div>
+
+<p>
+而 executable-find 的工作原理是从 exec-path 这个变量里包含的的路径下寻找对应的可执行程序
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">executable-find</span> (command)
+  <span style="color: #cc99cc;">"Search for COMMAND in `</span><span style="color: #6699cc;">exec-path</span><span style="color: #cc99cc;">' and return the absolute file name.</span>
+<span style="color: #cc99cc;">Return nil if COMMAND is not found anywhere in `</span><span style="color: #6699cc;">exec-path</span><span style="color: #cc99cc;">'."</span>
+  <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">Use 1 rather than file-executable-p to better match the behavior of</span>
+  <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">call-process.</span>
+  (locate-file command exec-path exec-suffixes 1))
+</pre>
+</div>
+
+<p>
+如果只是为了支持 Python3，那么我们可以自己建立一个 Python3 的 virtualenv，然后将其路径加到 exec-path 的最前面
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">push</span> <span style="color: #66cccc;">"&lt;YOUR PYTHON3 VENV&gt;/bin/"</span> exec-path)
+</pre>
+</div>
+
+<p>
+当然记得在里面安装 pylint，不然还是会用系统环境也就是 Python2 环境里的 pylint。
+</p>
+
+<p>
+这种方法可以 work，但是会有不方便的地方，比如说我有时候也有可能会写 Python2 代码，遇到 Python3 已经不兼容的语法，上述方法会导致 flycheck 认为是语法错误。另外一个就是，比较良好的开发习惯，是用 virtualenv 隔离开每个项目的依赖，不同项目的同一个依赖可能会版本不一样，这样的话 flycheck 如果只使用静态的环境就没有办法应付。
+</p>
+
+<p>
+当然，上一节的自动补全用的是一个统一的 virtualenv 环境，也会有类似的问题，不过要改起来会麻烦一些，所以先略过。
+</p>
+
+<p>
+flycheck 的这个问题倒是好解决，既然我每个项目都会有一个独立的 virtualenv，那么能不能做到我打开对应项目的代码的时候就使用对应的 virtualenv 环境呢，比如说将对应的路径添加到 exec-path 这个列表的前面？
+</p>
+
+<p>
+答案是可以的，方法是使用 <b>auto-virtualenvwrapper</b>,这个 package 可以根据当前的文件寻找当前目录或者上级目录中的 virtualenv 环境，然后启用。
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">when</span> (not (<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">auto-virtualenvwrapper</span> nil <span style="color: #cc99cc; background-color: #2d2d2d;">:noerror</span>))
+  (message <span style="color: #66cccc;">"install auto-virtualenvwrapper now..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> url-http-attempt-keepalives nil)
+  (package-refresh-contents)
+  (package-install 'auto-virtualenvwrapper))
+</pre>
+</div>
+
+<p>
+然后设置一下在 python-mode 里启用它
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'python-mode-hook #'auto-virtualenvwrapper-activate)
+</pre>
+</div>
+
+<p>
+可以做到切换 buffer 的时候自动切换对应的 virtualenv 环境
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'window-configuration-change-hook #'auto-virtualenvwrapper-activate)
+</pre>
+</div>
+
+<p>
+然后我们要保证 flycheck 会在这个 virtualenv 环境里去寻找 pylint，也就是说，我们要临时修改一下 exec-path 的值
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">declare-function</span> python-shell-calculate-exec-path <span style="color: #66cccc;">"python"</span>)
+
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">flycheck-virtualenv-executable-find</span> (executable)
+  <span style="color: #cc99cc;">"Find an EXECUTABLE in the current virtualenv if any."</span>
+  (<span style="color: #99cc99; font-weight: bold;">if</span> (<span style="color: #99cc99; font-weight: bold;">bound-and-true-p</span> python-shell-virtualenv-root)
+      (<span style="color: #99cc99; font-weight: bold;">let</span> ((exec-path (python-shell-calculate-exec-path)))
+        (executable-find executable))
+    (executable-find executable)))
+
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">flycheck-virtualenv-setup</span> ()
+  <span style="color: #cc99cc;">"Setup Flycheck for the current virtualenv."</span>
+  (<span style="color: #99cc99; font-weight: bold;">setq-local</span> flycheck-executable-find #'flycheck-virtualenv-executable-find))
+</pre>
+</div>
+
+<p>
+注：上述代码来自<a href="https://github.com/lunaryorn/old-emacs-configuration/blob/master/lisp/flycheck-virtualenv.el">lunaryorn 的配置</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org27ebd7d" class="outline-2">
+<h2 id="org27ebd7d">PEP8 的支持</h2>
+<div class="outline-text-2" id="text-org27ebd7d">
+<p>
+上面配置好的 flycheck 所做的语法检查和静态分析，对于不符合 PEP8 规范的语句已经会做一些提示了，不过说实话，一些东西我们可能并不想在上面化太多精力，运算符前后一个空格啦、函数之间空两行啦、类内方法之间空一行啦之类的，其实可以靠 <b>py-autopep8</b> 来格式化代码自动完成。
+</p>
+
+<p>
+安装相应的 Emacs package
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">when</span> (not (<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">py-autopep8</span> nil <span style="color: #cc99cc; background-color: #2d2d2d;">:noerror</span>))
+  (message <span style="color: #66cccc;">"install autopep8 now..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> url-http-attempt-keepalives nil)
+  (package-refresh-contents)
+  (package-install 'py-autopep8))
+</pre>
+</div>
+
+<p>
+当然它其实是使用的 Python 的 autopep8 这个外部工具，所以也需要安装它
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">pip install autopep8
+</pre>
+</div>
+
+<p>
+然后在 python-mode 里启用就好了，下面的配置会让 Emacs 每次在保存 Python 文件的时候自动调用 autopep8 进行格式化
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
+</pre>
+</div>
+
+<p>
+当然我们也可以额外设置一些参数，比如默认的一个标准是每行最大字符数为 80，如果超过了，格式化的时候会将该行折行。下面的配置可以设置为 100
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> py-autopep8-options '(<span style="color: #66cccc;">"--max-line-length=100"</span>))
+</pre>
+</div>
+</div>
+</div>
