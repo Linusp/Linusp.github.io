@@ -22,6 +22,10 @@ permalink: /link.html
 + [52nlp](http://52nlp.cn/)
 + [Rachel Zhang](http://blog.csdn.net/abcjennifer)
 
+# Emacser
+
++ [MacPlay](https://macplay.github.io/)
+
 # 其他
 
 + [Snake](http://www.snakehacker.me/)
