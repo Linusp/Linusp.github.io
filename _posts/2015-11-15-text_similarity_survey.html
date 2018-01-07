@@ -7,32 +7,31 @@ tags       :
 - 相似度量
 - 文本相似
 ---
-
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">距离度量与相似度量</a></li>
-<li><a href="#orgheadline2">文本相似度量方法一览</a></li>
-<li><a href="#orgheadline3">String Based Methods</a>
+<li><a href="#org681fedd">距离度量与相似度量</a></li>
+<li><a href="#orgf530886">文本相似度量方法一览</a></li>
+<li><a href="#orgd5ee168">String Based Methods</a>
 <ul>
-<li><a href="#orgheadline4">Character Based Methods</a></li>
-<li><a href="#orgheadline5">Term Based Methods</a></li>
+<li><a href="#orga6ab31d">Character Based Methods</a></li>
+<li><a href="#orgda83040">Term Based Methods</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline6">Corpus Based Methods</a>
+<li><a href="#org7b7a384">Corpus Based Methods</a>
 <ul>
-<li><a href="#orgheadline7">Language Model</a></li>
-<li><a href="#orgheadline8">Topic Model</a></li>
+<li><a href="#orgf98ef20">Language Model</a></li>
+<li><a href="#orge4d8871">Topic Model</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">距离度量与相似度量</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org681fedd" class="outline-2">
+<h2 id="org681fedd">距离度量与相似度量</h2>
+<div class="outline-text-2" id="text-org681fedd">
 <p>
 距离度量或相似度量是被广泛应用的概念，简单来说，可以这么认为:
 </p>
@@ -70,9 +69,9 @@ tags       :
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">文本相似度量方法一览</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-orgf530886" class="outline-2">
+<h2 id="orgf530886">文本相似度量方法一览</h2>
+<div class="outline-text-2" id="text-orgf530886">
 <p>
 此处的“文本”一词涵盖以下两个对象:
 </p>
@@ -113,9 +112,9 @@ tags       :
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">String Based Methods</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-orgd5ee168" class="outline-2">
+<h2 id="orgd5ee168">String Based Methods</h2>
+<div class="outline-text-2" id="text-orgd5ee168">
 <p>
 要比较两个文本的相似性，比较直观的方法是逐个字符比对，看看有多少个字符是一致的 —— String Based 的方法就是从这种思路中发展出来的。其中以字符为单位去比较的方法被统称为 Character Based，而以词为单位的则被称为 Term Based。
 </p>
@@ -125,9 +124,9 @@ Character Based 的方法普遍用来进行较短文本、小规模的比较，�
 </p>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">Character Based Methods</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-orga6ab31d" class="outline-3">
+<h3 id="orga6ab31d">Character Based Methods</h3>
+<div class="outline-text-3" id="text-orga6ab31d">
 <ul class="org-ul">
 <li><p>
 最长公共子序列(Longest Common Subsequence, LCS)
@@ -188,9 +187,9 @@ Hamming 距离用于 <b>长度相同</b> 的序列之间的比较，思想非常
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">Term Based Methods</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-orgda83040" class="outline-3">
+<h3 id="orgda83040">Term Based Methods</h3>
+<div class="outline-text-3" id="text-orgda83040">
 <p>
 Term Based 方法中的 term 不一定是词，也可以是关键词、短语，当选定”词“作为 term 时，可以用 Bag-of-Words Model(BOW) 来更精确地描述此时的模型。为了表述上的方便，本系列文章将此处的 term 视为词。
 </p>
@@ -220,23 +219,23 @@ Dice 系数和 Jaccard 相似性起初被用于生态学上，作为一种判断
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-2">
-<h2 id="orgheadline6">Corpus Based Methods</h2>
-<div class="outline-text-2" id="text-orgheadline6">
+<div id="outline-container-org7b7a384" class="outline-2">
+<h2 id="org7b7a384">Corpus Based Methods</h2>
+<div class="outline-text-2" id="text-org7b7a384">
 <p>
 Corpus Based 方法通过对大量文档的统计分析得到语义上的相似，这里 “大量文档” 就是 Corpus 即语料了。
 </p>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">Language Model</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-orgf98ef20" class="outline-3">
+<h3 id="orgf98ef20">Language Model</h3>
+<div class="outline-text-3" id="text-orgf98ef20">
 <p>
 常见的语言模型(Language Model, LM)都基于马尔可夫假设(Markov Assumption)，即认为语言中每个词只与其前面长度为 N-1 个词有关 —— 这 N-1 个词其实就构成了该词的上文，同时由于每个词都会成为其他词的上文，下文信息也会得到表现。也就是说，语言模型统计的其实是语言中每个词的一定程度的上下文情况。基于语言模型的这个特点，以及下面这样一个假设:
 </p>
 
 <pre class="example">
-具有相同(或相近)上下文的词，其语义是相近的。
+   具有相同(或相近)上下文的词，其语义是相近的。
 </pre>
 
 <p>
@@ -249,9 +248,9 @@ Corpus Based 方法通过对大量文档的统计分析得到语义上的相似�
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-3">
-<h3 id="orgheadline8">Topic Model</h3>
-<div class="outline-text-3" id="text-orgheadline8">
+<div id="outline-container-orge4d8871" class="outline-3">
+<h3 id="orge4d8871">Topic Model</h3>
+<div class="outline-text-3" id="text-orge4d8871">
 <p>
 主题模型与向量空间模型有共同的一点是也是基于 BOW 模型的，也就是说，并不像语言模型一样考虑词与词之间的顺序、位置，而只是通过词与词的共现(Co-occurrence)来反映词与词之间的相似性。
 </p>
