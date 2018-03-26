@@ -1,0 +1,1743 @@
+---
+layout     : post
+title      : "强大的 Org mode(4): 使用 capture 功能快速记录"
+categories : Emacs
+tags       : org-mode
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgbfd201a">简介</a></li>
+<li><a href="#org956d738">最小配置</a></li>
+<li><a href="#org1a3d856">capture 模板的五个部分</a>
+<ul>
+<li><a href="#org790881e">用于快速选择模板的 key</a></li>
+<li><a href="#org5cd657e">描述模板的 description</a></li>
+<li><a href="#org0a0d598">设置新增内容类型的 type</a></li>
+<li><a href="#orgbc6c4bb">设置新增内容写入位置的 target</a></li>
+<li><a href="#org8af60bf">设置新增内容模板的 template</a></li>
+</ul>
+</li>
+<li><a href="#orgaaa3d30">capture 模板示例</a>
+<ul>
+<li><a href="#orgb608172">用 org-capture 来做任务管理</a></li>
+<li><a href="#org361d36d">用 org-capture 来记录日志</a></li>
+<li><a href="#org2d1ad24">用 org-capture 收集灵感、记录笔记</a></li>
+<li><a href="#org12c36ad">用 org-capture 记录账单</a></li>
+<li><a href="#org0a98a5a">用 org-capture 来记录联系人信息</a></li>
+<li><a href="#org17ea029">用 org-capture 来管理密码</a></li>
+<li><a href="#org8223868">用 org-capture 来新建博客文章</a></li>
+<li><a href="#orgb0f8460">用 org-capture 来做网页内容收集</a></li>
+<li><a href="#org1c39a08">用 org-capture 来新建 Anki 卡片</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgbfd201a" class="outline-2">
+<h2 id="orgbfd201a">简介</h2>
+<div class="outline-text-2" id="text-orgbfd201a">
+<p>
+<a href="https://orgmode.org/manual/Capture.html">Capture</a> 是 Org mode 中非常重要的一个功能，使用它可以让我们快速地新建内容到特定的 Org mode 文件中去，具体一点，可以有下面这些场景
+</p>
+
+<ul class="org-ul">
+<li><p>
+新建一条笔记到 inbox.org 中，将剪贴板中的内容自动插入，并且附上当时的时间
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-note.gif" alt="org-capture-note.gif" />
+</p>
+</div></li>
+
+<li><p>
+新增一条日志，按照「年-月-日」的层级结构插入到 journal.org 中，如下图所示
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-journal.gif" alt="org-capture-journal.gif" />
+</p>
+</div></li>
+
+<li><p>
+以表格的形式，新增一条消费支出记录到用于存放备忘信息的 memo.org 中
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-2.gif" alt="org-capture-2.gif" />
+</p>
+</div></li>
+
+<li><p>
+新增一条任务到 task.org 中，并且开始计时
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-task.gif" alt="org-capture-task.gif" />
+</p>
+</div></li>
+
+<li><p>
+新增一个代码片段到 snippet.org 中
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-snip.gif" alt="org-capture-snip.gif" />
+</p>
+</div></li>
+
+<li>&#x2026;</li>
+</ul>
+
+<p>
+上述看似很不一样的操作，只需要在配置里设置不同的 capture 模板即可，模板里支持的元素很多，甚至能在模板里写 elisp 代码来做到已有模板元素不能做到的事情。在写好模板并加载后，我们只需要调用 org-capture 这个函数，就能在弹出的临时 buffer 里选择对应的模板来记录不同的内容，而不用耗费精力去记忆应该打开哪个文件。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-buffer.png" alt="org-capture-buffer.png" />
+</p>
+</div>
+
+<p>
+此外，使用 capture 后将会打开一个临时的 buffer，在我们编辑好内容后轻按 C-c C-c，它就会消失无踪，因此对我们原先在做的事情的打断非常轻微。
+</p>
+
+<p>
+总结一下就是：
+</p>
+<ol class="org-ol">
+<li>capture 可以预先设置记录内容的模板和存储入口</li>
+<li>capture 提供统一的输入入口</li>
+<li>capture 用完即走，不干扰当前工作流</li>
+</ol>
+
+<p>
+如果你是一个 Org mode 用户，应该会用 Org mode 来做笔记记录、日志记录、任务管理这些事情，而这些事情，用 capture 来作为输入是非常自然而方便的，我也在这里建议，在 Org mode 环境里时，应当使用 capture 来作为主要的输入方式。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org956d738" class="outline-2">
+<h2 id="org956d738">最小配置</h2>
+<div class="outline-text-2" id="text-org956d738">
+<p>
+capture 功能包含在 org 包里，所以只要安装了 org，那么直接就是能使用 capture 功能的。不过不做配置的话，那么
+</p>
+
+<ul class="org-ul">
+<li>没有快捷键可以触发功能</li>
+<li>默认只有一个用于创建任务的 Task 模板可选，并且存储在变量 org-default-notes-file 指定的文件里</li>
+</ul>
+
+<p>
+<b>FIXME: 模板的概念和作用？</b>
+</p>
+
+<p>
+默认的模板是在 org-capture-select-template 中定义的，其逻辑是，当执行 org-capture 命令的时候，如果检查到没有配置任何模板，就会使用一个默认的模板来保证不会出错，这个默认的模板如下所示
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">'(<span style="color: #66cccc;">"t"</span> <span style="color: #66cccc;">"Task"</span> entry (file+headline <span style="color: #66cccc;">""</span> <span style="color: #66cccc;">"Tasks"</span>) <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %?\n  %u\n  %a"</span>)
+</pre>
+</div>
+
+<p>
+但是呢，如果我们连 org-default-notes-file 都没有设置，它会默认存储到 ~/.notes 中去，然后会由于这个文件不是 Org 文件而报错……
+</p>
+
+<p>
+所以，假如我们想真正地使用起 org-capture 来，最小的配置工作，应该包含下述事情
+</p>
+<ul class="org-ul">
+<li>为 org-capture 命令设置一个快捷键</li>
+<li>设置 org-default-notes-file 变量的值为一个 Org 文件，比如说 ~/org/inbox.org</li>
+</ul>
+
+<p>
+按照这个要求，可以得到最小的 org-capture 的配置如下
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #66cccc;">"C-c c"</span>) 'org-capture)
+(<span style="color: #99cc99; font-weight: bold;">setq</span> org-default-notes-file <span style="color: #66cccc;">"~/org/inbox.org"</span>)
+</pre>
+</div>
+
+<p>
+这样，我们就能新建任务到 ~/org/inbox.org 这个文件中了，见下图示例
+</p>
+
+<p>
+../../../assets/img
+  <img src="../../../assets/img/org-capture-minimum.gif" alt="org-capture-minimum.gif" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1a3d856" class="outline-2">
+<h2 id="org1a3d856">capture 模板的五个部分</h2>
+<div class="outline-text-2" id="text-org1a3d856">
+<p>
+上一节讲到，默认的 capture 模板是下面这个样子的
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">'(<span style="color: #66cccc;">"t"</span> <span style="color: #66cccc;">"Task"</span> entry (file+headline <span style="color: #66cccc;">""</span> <span style="color: #66cccc;">"Tasks"</span>) <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %?\n  %u\n  %a"</span>)
+</pre>
+</div>
+
+<p>
+后面我们要自己添加新的模板，也是这个格式。这个模板包含五个部分，分别是
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">模板组成</th>
+<th scope="col" class="org-left">对应默认模板中的内容</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">key</td>
+<td class="org-left">"t"</td>
+<td class="org-left">用来选择模板的字符</td>
+</tr>
+
+<tr>
+<td class="org-left">description</td>
+<td class="org-left">"Task"</td>
+<td class="org-left">展示用的模板描述</td>
+</tr>
+
+<tr>
+<td class="org-left">type</td>
+<td class="org-left">entry</td>
+<td class="org-left">新增内容的类型</td>
+</tr>
+
+<tr>
+<td class="org-left">target</td>
+<td class="org-left">(file+headline "" "Tasks")</td>
+<td class="org-left">新增内容的存储位置</td>
+</tr>
+
+<tr>
+<td class="org-left">template</td>
+<td class="org-left">"* TODO %?\n  %u\n  %a"</td>
+<td class="org-left">新增内容的模板</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+下面针对这五部分进行详细说明。
+</p>
+</div>
+
+<div id="outline-container-org790881e" class="outline-3">
+<h3 id="org790881e">用于快速选择模板的 key</h3>
+<div class="outline-text-3" id="text-org790881e">
+<p>
+对应前面默认模板里的 "t"，这个 key 可以是一个或两个字符，用来在执行 org-capture 的时候选择模板 —— 两个字符的情况是用来给模板分组的，第一个字符表示分组名，第二个字符用来选择这个分组下的实际模板。在我们有很多模板的时候，分组是非常有用的，一来可以让执行 org-capture 时显示的可选项更少，而来可以用来组织相近性质的模板以便管理。模板分组稍后一点会做详细说明，此处就先不展开了。
+</p>
+
+
+<p>
+另外，经验证，这里的 key 是支持中文的 XD
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5cd657e" class="outline-3">
+<h3 id="org5cd657e">描述模板的 description</h3>
+<div class="outline-text-3" id="text-org5cd657e">
+<p>
+对应前面默认模板里的 "Task"，这个就是用来对模板进行描述的，方便我们正确地选择模板。
+</p>
+
+<p>
+key 和 description 这两部分会在执行 org-capture 进入模板选择 buffer 后，会显示的内容，其他模板内容在模板选择 buffer 中都是不显示的，如下所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-buffer.png" alt="org-capture-buffer.png" />
+</p>
+</div>
+
+<p>
+这两部分，务必要注意
+</p>
+<ul class="org-ul">
+<li>不同模板的 key 不能是一样的</li>
+<li>description 应当尽量清晰以减轻自己的记忆负担</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0a0d598" class="outline-3">
+<h3 id="org0a0d598">设置新增内容类型的 type</h3>
+<div class="outline-text-3" id="text-org0a0d598">
+<p>
+对应前面默认模板里的 "entry"，这个用来设置新增内容的类型，可选的类型如下表所示
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">entry</td>
+<td class="org-left">带有 headline 的一个 Org mode 节点</td>
+</tr>
+
+<tr>
+<td class="org-left">item</td>
+<td class="org-left">一个列表项</td>
+</tr>
+
+<tr>
+<td class="org-left">checkitem</td>
+<td class="org-left">一个 checkbox 列表项</td>
+</tr>
+
+<tr>
+<td class="org-left">table-line</td>
+<td class="org-left">一个表格行</td>
+</tr>
+
+<tr>
+<td class="org-left">plain</td>
+<td class="org-left">普通文本</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+根据不同的 type，org-capture 会尝试将新增内容添加到文件中不同类型的数据的后面，比如
+</p>
+<ul class="org-ul">
+<li>如果 type 是 item/checkitem，那么会找到目标位置后最近的一个列表，并将新增列表项添加到这个列表的后面</li>
+<li>如果 type 是 table-line，那么会找到目标位置后最近的一个表格，并将新增行添加到表格的后面</li>
+</ul>
+
+<p>
+因此对于不同的 type，要求后面的内容模板是按照一定的格式来编写的，下面是不同的 type 对应内容模板的简单示例
+</p>
+<ul class="org-ul">
+<li><p>
+type 为 entry 时，内容模板示例
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #66cccc;">"* headline"</span>
+</pre>
+</div>
+
+<p>
+也就是说，template 的形式上必须是一个 headline
+</p></li>
+
+<li><p>
+type 为 item 时
+</p>
+
+<p>
+如果内容模板为空，会插入一个普通列表项，并且等待输入；如果有需要自定义的内容，那么才需要去写内容模板。
+</p>
+
+<p>
+而此时的内容模板不需要在形式上是一个列表项，也就是说
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #66cccc;">"- item"</span>
+</pre>
+</div>
+
+<p>
+和
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #66cccc;">"item"</span>
+</pre>
+</div>
+
+<p>
+的效果是一样的，都会在 target 对应的位置里插入下面这样一个列表项
+</p>
+
+<div class="org-src-container">
+<pre class="src src-org">- item
+</pre>
+</div></li>
+
+<li><p>
+type 为 checkitem 时
+</p>
+
+<p>
+与 type 为 item 时行为大部分一样，仅有一点区别，就是在内容模板为空的时候，它会插入一个 checkbox 列表项。
+</p>
+
+<p>
+也就是说，如果内容模板不为空，那么它其实是不保证插入的是 checkbox 列表项的，需要我们自己来保证。
+</p>
+
+<p>
+相应的内容模板应该是类似下面的格式
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #66cccc;">"[ ] item"</span>
+</pre>
+</div></li>
+
+<li><p>
+type 为 table-line，内容模板示例
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp"><span style="color: #66cccc;">"| colum 1 | colum 2 | colum3 |"</span>
+</pre>
+</div>
+
+<p>
+就是说，内容模板必须是一个表格的行
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgbc6c4bb" class="outline-3">
+<h3 id="orgbc6c4bb">设置新增内容写入位置的 target</h3>
+<div class="outline-text-3" id="text-orgbc6c4bb">
+<p>
+对应前面默认模板里的 "(file+headline "" "Tasks")"，target 用来指定
+</p>
+<ul class="org-ul">
+<li>新增内容要写入到哪个文件</li>
+<li>新增内容要写入到文件的什么地方</li>
+</ul>
+
+<p>
+如前面的默认模板所示，target 部分用一个 list 来表示，其中第一个元素用来表示 target 的类型，可用的类型如下表所示
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">type</th>
+<th scope="col" class="org-left">description</th>
+<th scope="col" class="org-left">example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">file</td>
+<td class="org-left">文件</td>
+<td class="org-left">(file "path/to/file")</td>
+</tr>
+
+<tr>
+<td class="org-left">id</td>
+<td class="org-left">特定 ID 的某个 headline</td>
+<td class="org-left">(id "id of existing Org entry")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+headline</td>
+<td class="org-left">文件的某个唯一的 headline</td>
+<td class="org-left">(file+headline "path/to/file" "node headline")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+olp</td>
+<td class="org-left">文件中的 headline 路径</td>
+<td class="org-left">(file+olp "path/to/file" "Level 1 heading" "Level 2" &#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">file+regexp</td>
+<td class="org-left">文件中被正则匹配的 headline</td>
+<td class="org-left">(file+regexp  "path/to/file" "regexp to find location")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+datetree</td>
+<td class="org-left">文件中当日所在的 datetree</td>
+<td class="org-left">(file+datetree "path/to/file")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+datetree+prompt</td>
+<td class="org-left">文件中的 datetree，弹出日期选择</td>
+<td class="org-left">(file+datetree+prompt "path/to/file")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+weektree</td>
+<td class="org-left">文件中当日所在的 weektree</td>
+<td class="org-left">(file+weektree "path/to/file")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+weektree+prompt</td>
+<td class="org-left">文件中的 weektree，弹出日期选择</td>
+<td class="org-left">(file+weektree+prompt "path/to/file")</td>
+</tr>
+
+<tr>
+<td class="org-left">file+function</td>
+<td class="org-left">文件中被函数匹配的位置</td>
+<td class="org-left">(file+function "path/to/file" function-finding-location)</td>
+</tr>
+
+<tr>
+<td class="org-left">clock</td>
+<td class="org-left">当前正在计时中的任务所在的位置</td>
+<td class="org-left">(clock)</td>
+</tr>
+
+<tr>
+<td class="org-left">function</td>
+<td class="org-left">自定义函数匹配的位置</td>
+<td class="org-left">(function function-finding-location)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+(翻译有点生硬，如有疑惑，请执行 「M-x describe-variable」并输入「org-capture-templates」查看对应的文档)
+</p>
+
+<p>
+其中 file+headline 是比较常用的，用来记录笔记、创建任务一般用这个就好了。不过这个要求 headline 在文件中是唯一的，如果不是唯一的话，最好使用 file+olp，指定对应 headline 在文件中的完整路径。
+</p>
+
+<p>
+而 file+datetree、file+weektree 这两种用来创建日志是非常合适的，记录的内容能按年-月-日的层级结构组织好，方便回顾和管理。
+</p>
+
+<p>
+如果有自己的特殊需求，那么 file+function、function 这两个也提供了极大的自由扩展的空间。
+</p>
+
+<p>
+需要注意的是，上述与文件相关的 target 类型，如果指定了文件名，那么将会优先使用这个文件名而不是变量 org-default-notes-file 指定的文件 —— 反之，如果文件部分留空，那么就会默认使用 org-default-notes-file 指定的文件了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8af60bf" class="outline-3">
+<h3 id="org8af60bf">设置新增内容模板的 template</h3>
+<div class="outline-text-3" id="text-org8af60bf">
+<p>
+对应前面默认模板里的 "* TODO %?\n  %u\n  %a"，这部分的内容是实际上新增内容的模板，通过设置它，我们可以在新增内容时
+</p>
+<ul class="org-ul">
+<li>自动插入时间、链接、剪贴板内容、文件内容</li>
+<li>交互式地要求输入特定内容，如 tag、headline 属性或其他自定义的字段</li>
+<li>自动插入外部应用传入的特定信息，如浏览器上当前网页的链接、选中的文本等</li>
+</ul>
+
+<p>
+这部分的配置，其中的内容可以分为两类
+</p>
+<ul class="org-ul">
+<li>普通的文本，将会原样出现在新增内容中，如默认模板里的 "* TODO"、"\n"、"  "</li>
+<li><p>
+以 % 开头的特殊标记，如 "%?" 和 "%a"，将会在最后根据类型自动扩展成不同的内容
+</p>
+
+<p>
+这些特殊标记包括这些
+</p>
+<ul class="org-ul">
+<li><p>
+时间、日期相关
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%&lt;&#x2026;&gt;</td>
+<td class="org-left">自定义格式的 timestamp，如: %&lt;%Y-%m-%d&gt;，会得到 <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-03-04 日&gt;</span></span></td>
+</tr>
+
+<tr>
+<td class="org-left">%t</td>
+<td class="org-left">当前仅包含日期的 timestamp，如: <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-03-04 日&gt;</span></span></td>
+</tr>
+
+<tr>
+<td class="org-left">%T</td>
+<td class="org-left">当前包含日期和时间的 timestamp，如: <span class="timestamp-wrapper"><span class="timestamp">&lt;2018-03-04 日 19:26&gt;</span></span></td>
+</tr>
+
+<tr>
+<td class="org-left">%u</td>
+<td class="org-left">当前包含日期的未激活的 timestamp，如: <span class="timestamp-wrapper"><span class="timestamp">[2018-03-04 日]</span></span></td>
+</tr>
+
+<tr>
+<td class="org-left">%U</td>
+<td class="org-left">当前包含日期和时间的未激活的 timestamp，如: <span class="timestamp-wrapper"><span class="timestamp">[2018-03-04 日 19:26]</span></span></td>
+</tr>
+
+<tr>
+<td class="org-left">%^t</td>
+<td class="org-left">类似 %t，但是弹出日历让用户选择日期</td>
+</tr>
+
+<tr>
+<td class="org-left">%^T</td>
+<td class="org-left">类似 %T，但是弹出日历让用户选择日期和时间</td>
+</tr>
+
+<tr>
+<td class="org-left">%^u</td>
+<td class="org-left">类似 %u，但是弹出日历让用户选择日期</td>
+</tr>
+
+<tr>
+<td class="org-left">%^U</td>
+<td class="org-left">类似 %U，但是弹出日历让用户选择日期和时间</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+注: 激活(active)和未激活(inactive)的 timestamp 的区别在于，后者不会出现在 agenda 中 —— 所以如果是新建一个 headline 到 org-agenda-files 中并且不希望它出现在 agenda 列表中时，应当使用未激活的 timestamp。
+</p></li>
+
+<li><p>
+剪贴板相关
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%c</td>
+<td class="org-left">当前 kill ring 中的第一条内容</td>
+</tr>
+
+<tr>
+<td class="org-left">%x</td>
+<td class="org-left">当前系统剪贴板中的内容</td>
+</tr>
+
+<tr>
+<td class="org-left">%^C</td>
+<td class="org-left">交互式地选择 kill ring 或剪贴板中的内容</td>
+</tr>
+
+<tr>
+<td class="org-left">%^L</td>
+<td class="org-left">类似 %^C，但是将选中的内容作为链接插入</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+标签相关
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%^g</td>
+<td class="org-left">交互式地输入标签，并用 target 所在文件中的标签进行补全</td>
+</tr>
+
+<tr>
+<td class="org-left">%^G</td>
+<td class="org-left">类似 %^g，但用所有 org-agenda-files 涉及文件中的标签进行补全</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+文件相关
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%[file]</td>
+<td class="org-left">插入文件 <i>file</i> 中的内容</td>
+</tr>
+
+<tr>
+<td class="org-left">%f</td>
+<td class="org-left">执行 org-capture 时当前 buffer 对应的文件名</td>
+</tr>
+
+<tr>
+<td class="org-left">%F</td>
+<td class="org-left">类似 %f，但输入该文件的绝对路径</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+任务相关
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%k</td>
+<td class="org-left">当前在计时的任务的标题</td>
+</tr>
+
+<tr>
+<td class="org-left">%K</td>
+<td class="org-left">当前在计时的任务的链接</td>
+</tr>
+</tbody>
+</table></li>
+
+<li><p>
+外部链接的信息
+</p>
+
+<p>
+这里的链接不仅仅指如 <a href="http://www.google.com">http://www.google.com</a> 这样的网页链接，还包括文件、邮箱、新闻组、IRC 会话等，详情见 Org mode 手册的 <a href="https://orgmode.org/manual/External-links.html">External links</a> 一节。
+</p>
+
+<p>
+当然在 capture 里我们用不到所有类型的外部链接，从<a href="https://orgmode.org/manual/Template-expansion.html">文档</a>和 <a href="https://code.orgmode.org/bzg/org-mode/src/master/lisp/org-capture.el#L321">docstring</a> 来看，在 capture 里能用的外部链接只有下面几种
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">link type</th>
+<th scope="col" class="org-left">description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">bbdb</td>
+<td class="org-left"><a href="https://www.emacswiki.org/emacs/CategoryBbdb">BBDB</a> 联系人数据库记录链接</td>
+</tr>
+
+<tr>
+<td class="org-left">irc</td>
+<td class="org-left">IRC 会话链接</td>
+</tr>
+
+<tr>
+<td class="org-left">vm</td>
+<td class="org-left"><a href="https://www.emacswiki.org/emacs/CategoryViewMail">View Mail</a> 邮件阅读器中的消息、目录链接</td>
+</tr>
+
+<tr>
+<td class="org-left">wl</td>
+<td class="org-left"><a href="https://www.emacswiki.org/emacs/WanderLust">Wunder Lust</a> 邮件/新闻阅读器中的消息、目录链接</td>
+</tr>
+
+<tr>
+<td class="org-left">mh</td>
+<td class="org-left"><a href="https://www.emacswiki.org/emacs/MH-E">MH-E</a> 邮件用户代理中的消息、目录链接</td>
+</tr>
+
+<tr>
+<td class="org-left">mew</td>
+<td class="org-left"><a href="https://www.emacswiki.org/emacs/Mew">MEW</a> 邮件阅读器中的消息链接</td>
+</tr>
+
+<tr>
+<td class="org-left">rmail</td>
+<td class="org-left">Emacs 的默认邮件阅读器 <a href="https://www.emacswiki.org/emacs/Rmail">Rmail</a> 中的消息链接</td>
+</tr>
+
+<tr>
+<td class="org-left">gnus</td>
+<td class="org-left"><a href="http://www.gnus.org/">GNUS</a> 邮件/新闻阅读器中的群组、消息等资源链接</td>
+</tr>
+
+<tr>
+<td class="org-left">eww/w3/w3m</td>
+<td class="org-left">在eww/w3/w3m 中存储的网页链接</td>
+</tr>
+
+<tr>
+<td class="org-left">calendar</td>
+<td class="org-left">日历链接</td>
+</tr>
+
+<tr>
+<td class="org-left">org-protocol</td>
+<td class="org-left">遵循 org-protocol 协议的外部应用链接</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+注: <a href="https://orgmode.org/manual/Template-expansion.html">文档</a>的内容来自 <a href="https://code.orgmode.org/bzg/org-mode">org-mode 仓库</a> 中的 doc/org.texi，从 commit 历史来看，可能是过时的；但奇怪的是 org-protocol 明明是支持的，docstring 里却完全没有提及……
+</p>
+
+<p>
+这些外部链接，大部分都会在 Emacs 中通过 <b>org-store-link-pros</b> 记录起来，其中会包含这些链接的各个属性，而在 capture 的模板里面，就支持以 <b>%:keyword</b> 的形式来访问这些属性，比如 vm/wl/mh/mew/rmail/gnus 消息中的发件人名称、发件人地址之类的。因为邮件阅读器这块我个人不怎么用，需要详细了解的请查阅<a href="https://orgmode.org/manual/Template-expansion.html">文档</a>，而 calendar 完全可以用前面的「时间、日期相关」中的 %t、%T 等标记来替代，因此这里只详细说一下 eww 和 org-protocol。
+</p>
+
+<p>
+eww 可用的特殊标记有如下三个
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%:type</td>
+<td class="org-left">固定值，eww</td>
+</tr>
+
+<tr>
+<td class="org-left">%:link</td>
+<td class="org-left">页面的链接</td>
+</tr>
+
+<tr>
+<td class="org-left">%:description</td>
+<td class="org-left">页面的标题，如无则为页面的链接</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+org-protocol 可用的特殊标记有如下六个
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">标记</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">%:type</td>
+<td class="org-left">链接的类型，如 http/https/ftp 等</td>
+</tr>
+
+<tr>
+<td class="org-left">%:link</td>
+<td class="org-left">链接地址，在 org-protocol 里的 url 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">%:description</td>
+<td class="org-left">链接的标题，在 org-protocol 里的 title 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">%:annotation</td>
+<td class="org-left">靠 url 和 title 完成的 org 格式的链接</td>
+</tr>
+
+<tr>
+<td class="org-left">%:initial</td>
+<td class="org-left">链接上选中的文本，在 org-protocol 里的 body 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">%:query</td>
+<td class="org-left">org-protocol 上除掉开头和子协议部分的剩下部分</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+此外，在内容模板中还支持自定义函数来插入内容，以 <i>%(sexp)</i> 的形式，比如说我们可以自己写一个 <b>get-current-time</b> 函数来插入当前的时间，那么内容模板可以是这个样子的
+</p>
+
+<pre class="example">
+"%(get-current-time)"
+</pre>
+
+<p>
+而在内容模板中使用自定义函数时，可以将上面 eww 和 org-protocol 的这些特殊标记作为函数的参数，比如一个场景是，用 org-protocol 捕获的网页 title 中包含中括号，会导致下面这样的内容模板出错
+</p>
+<pre class="example">
+"[[%:link][%:description]]"
+</pre>
+
+<p>
+这个时候可以定一个一个函数来将 %:description 中的中括号替换成下划线
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">replace-bracket-in-title</span> (title)
+  <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">blablabla</span>
+  )
+</pre>
+</div>
+
+<p>
+那么上面那个内容模板可以改成这样
+</p>
+<pre class="example">
+"[[%:link][%(replace-bracket-in-title \"%:description\")]]"
+</pre></li>
+
+<li><p>
+其他
+</p>
+
+<p>
+还有一些特殊标记，不太好归类，就在这里罗列一下。
+</p>
+
+<p>
+"%i" 可以插入一段初始化内容，通常是 <b>org-store-link-plist</b> 中 "initial" 属性的值；如果没有的话，会使用当前 buffer 中被选中的内容；都没有的话就什么也不插入。
+</p>
+
+<p>
+"%<sup>prop</sup>p" 会提示输入内容，这将会在新增内容中插入一个 property 到 target 中，并且这个 property 的名字是 prop，值则是我们输入的文本。
+</p>
+
+<p>
+"%<sup>prompt</sup>" 则会用 prompt 作为提示符要求我们输入，并且用我们输入的文本替换模板中相应的内容。比如说 "%{姓名}" 会用 "姓名" 作为提示符要求输入。当有多个标记时，可以用 "%\N" 来插入第 N 个提示输入标记产生的内容，举个例子，下面的内容模板
+</p>
+
+<pre class="example">
+"- name: %^{姓名}\n- age: %^{年龄}\n\n%\1的年龄是%\2"
+</pre>
+
+<p>
+会要求我们输入姓名和年龄，假如我们输入姓名是 "张三"，年龄是 "25"，那么最后得到的内容是
+</p>
+<pre class="example">
+- name: 张三
+- age: 25
+
+张三的年龄是25
+</pre>
+
+<p>
+"%?" 是一个更特殊的标记，它不会产生任何内容，当所有其他的特殊标记都展开完毕或者输入完毕后，光标将会停留在这个标记所在的位置。
+</p></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaaa3d30" class="outline-2">
+<h2 id="orgaaa3d30">capture 模板示例</h2>
+<div class="outline-text-2" id="text-orgaaa3d30">
+<p>
+所有的 capture 模板都应当以 list 的形式记录在变量 <b>org-capture-templates</b> 中，下面的示例可能会存在模板的 key 冲突的情况，请根据自己的情况来选用或参考示例。
+</p>
+
+<p>
+在开始之前，我们先将 org-capture-templates 设置为空
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> org-capture-templates nil)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb608172" class="outline-3">
+<h3 id="orgb608172">用 org-capture 来做任务管理</h3>
+<div class="outline-text-3" id="text-orgb608172">
+<p>
+GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建任务的做法，下面是一个新建书籍阅读任务的示例
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"r"</span> <span style="color: #66cccc;">"Book Reading Task"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/task.org"</span> <span style="color: #66cccc;">"Reading"</span> <span style="color: #66cccc;">"Book"</span>)
+               <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %^{&#20070;&#21517;}\n%u\n%a\n"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-in</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-resume</span> t))
+</pre>
+</div>
+
+<p>
+上面的两个属性 ":clock-in" 和 ":clock-resume" 在之前没有讲过，是用来对新建内容的行为做一些设置的，不影响内容本身。可用的这些属性一共有 14 个，这里及后面只对涉及到的做说明，其他的请查阅<a href="https://orgmode.org/manual/Template-elements.html#Template-elements">文档</a>。
+</p>
+
+<p>
+":clock-in" 设置为 t 的时候，会在新建内容时开始计时，这在 GTD 这种场景下是挺有用的。但有可能我们在新建内容时，本来就有一个任务在计时，这种情况下原来的计时会中断掉，这个时候将 ":clock-resume" 设置为 t，可以在新任务完成后，自动恢复原来任务的计时状态。
+</p>
+
+<p>
+有些时候我们会对我们需要做的任务做分类，比如上面有一个阅读任务，可能还有工作任务、写作任务，这个时候我们可以利用前面说到的模板分组来更好地进行管理。
+</p>
+
+<p>
+在做模板分组前，我们的 org-capture 的任务模板可能是这样的
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"r"</span> <span style="color: #66cccc;">"Book Reading Task"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/task.org"</span> <span style="color: #66cccc;">"Reading"</span> <span style="color: #66cccc;">"Book"</span>)
+               <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %^{&#20070;&#21517;}\n%u\n%a\n"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-in</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-resume</span> t))
+(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"w"</span> <span style="color: #66cccc;">"Work Task"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/task.org"</span> <span style="color: #66cccc;">"Work"</span>)
+               <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %^{&#20219;&#21153;&#21517;}\n%u\n%a\n"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-in</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-resume</span> t))
+</pre>
+</div>
+
+<p>
+在这个基础上，假设我们要添加一个模板，用来记录从网页上收集的资源、文章的时候，遵循使用描述中关键词的首字母作为选择键的原则，我会希望新建这样一个 capture 模板
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"w"</span> <span style="color: #66cccc;">"Web Collections"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/inbox.org"</span> <span style="color: #66cccc;">"Web"</span>)
+               <span style="color: #66cccc;">"* %U %:annotation\n\n%:initial\n\n%?"</span>))
+</pre>
+</div>
+
+<p>
+但这个时候的模板选择键 "w" 和之前任务里的 "Work Task" 就冲突了，为了解决冲突，我只好在其中一个使用小写的 "w" 字母而在另外一个中使用大写的字母 "W"。当我们的模板数量更多时，这种 capture 模板选择键冲突的情况可能会更多。
+</p>
+
+<p>
+虽然并不是非常大的问题，但使用模板分组，能尽量地减少这种情况，让我们的模板更加清爽一些
+</p>
+
+<p>
+上述情况，我们可以将任务相关的 capture 模板分到一组里，如下所示：
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates '(<span style="color: #66cccc;">"t"</span> <span style="color: #66cccc;">"Tasks"</span>))
+(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"tr"</span> <span style="color: #66cccc;">"Book Reading Task"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/task.org"</span> <span style="color: #66cccc;">"Reading"</span> <span style="color: #66cccc;">"Book"</span>)
+               <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %^{&#20070;&#21517;}\n%u\n%a\n"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-in</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-resume</span> t))
+(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"tw"</span> <span style="color: #66cccc;">"Work Task"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/task.org"</span> <span style="color: #66cccc;">"Work"</span>)
+               <span style="color: #66cccc;">"* </span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;"> %^{&#20219;&#21153;&#21517;}\n%u\n%a\n"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-in</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:clock-resume</span> t))
+</pre>
+</div>
+
+<p>
+和前面未分组的模板，有两个不同
+</p>
+<ul class="org-ul">
+<li><p>
+多了一个只有 key 和 description 而没有 entry/target/template 的 capture 模板，也就是
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates '(<span style="color: #66cccc;">"t"</span> <span style="color: #66cccc;">"Tasks"</span>))
+</pre>
+</div>
+
+<p>
+这个模板至关重要，它设定了一组模板的名称和选择键前缀。如果缺失了这个模板，那么后面两个模板是不会起作用的。
+</p></li>
+
+<li>原来的两个任务模板，其选择键多了一个前缀 "t"</li>
+</ul>
+
+<p>
+一图胜千言，在建立分组前，执行 M-x org-capture 时，弹出的模板选择 buffer 是这个样子的
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-buffer-no-group.png" alt="org-capture-buffer-no-group.png" />
+</p>
+</div>
+
+<p>
+建立分组后，在模板选择 buffer 里看到的是这个样子
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-buffer-group-1.png" alt="org-capture-buffer-group-1.png" />
+</p>
+</div>
+
+<p>
+这里只会显示模板的 group 的 key 和 description，等我们按下 t 后才会出来组内所有模板的列表
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-buffer-group-2.png" alt="org-capture-buffer-group-2.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org361d36d" class="outline-3">
+<h3 id="org361d36d">用 org-capture 来记录日志</h3>
+<div class="outline-text-3" id="text-org361d36d">
+<p>
+这个之前也提到过，就是用来做日志记录、日记写作一类的事情，新增的内容和过去的内容都按时间顺序排列，方便我们进行回顾。
+</p>
+
+<p>
+做日志记录时，比较推荐用 file+datetree 或者 file+weektree 这两个 target type，当然也不是绝对的，比如说下面这个 capture 模板也是满足基本要求的
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"j"</span> <span style="color: #66cccc;">"Journal"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/journal.org"</span>)
+               <span style="color: #66cccc;">"* %U - %^{heading}\n  %?"</span>))
+</pre>
+</div>
+
+<p>
+上述模板在每次执行后，在 journal.org 的尾部插入下面这样的内容
+</p>
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #cccccc; background-color: #2d2d2d; font-weight: bold; text-decoration: underline;">* </span><span style="color: #6699cc; text-decoration: underline;">[2018-03-24 &#20845; 21:42]</span><span style="color: #cccccc; background-color: #2d2d2d; font-weight: bold; text-decoration: underline;"> - &#26576;&#20214;&#20107;&#24773;&#30340;&#35760;&#24405;</span>
+
+  &#20855;&#20307;&#30340;&#35760;&#24405; blablabla
+</pre>
+</div>
+
+<p>
+就是如果想要快速地找到某一天或者某一个月的记录，会稍微费力一点，使用 file+datetree 的话，新增的记录会按照「年-月-日」的层次组织起来；而使用 file+weektree 的话，新增的记录会按「年-周-日」的层次组织，下图是两者的对比
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-datetree-and-weektree.png" alt="org-capture-datetree-and-weektree.png" />
+</p>
+</div>
+
+<p>
+我个人目前是使用 file+datetree 的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2d1ad24" class="outline-3">
+<h3 id="org2d1ad24">用 org-capture 收集灵感、记录笔记</h3>
+<div class="outline-text-3" id="text-org2d1ad24">
+<p>
+这类模板也比较简单，基本上用 file+headline 的 target，然后视情况而定预先设置 tag 什么的。
+</p>
+
+<p>
+我个人有一个 capture 模板，用来快速记录未归类的东西，然后会在后面使用 refile 来将这些东西迁移到任务或者笔记中
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"i"</span> <span style="color: #66cccc;">"Inbox"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/inbox.org"</span>)
+               <span style="color: #66cccc;">"* %U - %^{heading} %^g\n %?\n"</span>))
+</pre>
+</div>
+
+<p>
+笔记则用另外一个 capture 模板
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"n"</span> <span style="color: #66cccc;">"Notes"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/notes/inbox.org"</span>)
+               <span style="color: #66cccc;">"* %^{heading} %t %^g\n  %?\n"</span>))
+</pre>
+</div>
+
+<p>
+可以看到两个模板其实差不多，无非就是写入的文件不一样。实际上的不同之处在于，在我的笔记本 ~/Dropbox/org/notes/inbox.org 中，我设置了一些文件级别的 tag，如下所示
+</p>
+<div class="org-src-container">
+<pre class="src src-org"><span style="color: #99cc99;">#+TITLE:</span> <span style="color: #f99157; font-size: 144%; font-weight: bold;">&#31508;&#35760;&#26412;</span>
+<span style="color: #999999; font-style: italic;">#+STARTUP: hideall</span>
+<span style="color: #999999; font-style: italic;">#+TAGS: [coding: shell python]</span>
+<span style="color: #999999; font-style: italic;">#+TAGS: [shell: grep tail sed ssh]</span>
+<span style="color: #999999; font-style: italic;">#+TAGS: [python: ipython pandas numpy]</span>
+</pre>
+</div>
+
+<p>
+这样在特殊标记 %^g 展开的时候，就可以用上面设置的 tag 进行补全。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org12c36ad" class="outline-3">
+<h3 id="org12c36ad">用 org-capture 记录账单</h3>
+<div class="outline-text-3" id="text-org12c36ad">
+<p>
+在 Org mode 中利用表格来记录账单是非常合适的一个方式，记录好后利用表格公式(见我的上一篇文章)可以很方便地进行计算、绘图什么的。
+</p>
+
+<p>
+下面是我用来记录账单的 capture 模板，利用自定义的函数，来将同一个月的支出记录在同一张表里
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"b"</span> <span style="color: #66cccc;">"Billing"</span> plain
+               (file+function <span style="color: #66cccc;">"~/Dropbox/org/billing.org"</span> find-month-tree)
+               <span style="color: #66cccc;">" | %U | %^{&#31867;&#21035;} | %^{&#25551;&#36848;} | %^{&#37329;&#39069;} |"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:kill-buffer</span> t))))
+</pre>
+</div>
+
+<p>
+其中的函数 find-month-tree，用来做类似 file+datetree 的事情，不过层级结构只到月为止，其实现如下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-year-and-month</span> ()
+  (list (format-time-string <span style="color: #66cccc;">"%Y&#24180;"</span>) (format-time-string <span style="color: #66cccc;">"%m&#26376;"</span>)))
+
+
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">find-billing-month-tree</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">let*</span> ((path (get-year-and-month))
+         (level 1)
+         end)
+    (<span style="color: #99cc99; font-weight: bold;">unless</span> (derived-mode-p 'org-mode)
+      (<span style="color: #f2777a; background-color: #ffe4b5; font-weight: bold;">error</span> <span style="color: #66cccc;">"Target buffer \"%s\" should be in Org mode"</span> (current-buffer)))
+    (goto-char (point-min))             <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#31227;&#21160;&#21040; buffer &#30340;&#24320;&#22987;&#20301;&#32622;</span>
+    <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">&#20808;&#23450;&#20301;&#34920;&#31034;&#24180;&#20221;&#30340; headline&#65292;&#20877;&#23450;&#20301;&#34920;&#31034;&#26376;&#20221;&#30340; headline</span>
+    (<span style="color: #99cc99; font-weight: bold;">dolist</span> (heading path)
+      (<span style="color: #99cc99; font-weight: bold;">let</span> ((re (format org-complex-heading-regexp-format
+                        (regexp-quote heading)))
+            (cnt 0))
+        (<span style="color: #99cc99; font-weight: bold;">if</span> (re-search-forward re end t)
+            (goto-char (point-at-bol))  <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#22914;&#26524;&#25214;&#21040;&#20102; headline &#23601;&#31227;&#21160;&#21040;&#23545;&#24212;&#30340;&#20301;&#32622;</span>
+          (<span style="color: #99cc99; font-weight: bold;">progn</span>                        <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#21542;&#21017;&#23601;&#26032;&#24314;&#19968;&#20010; headline</span>
+            (<span style="color: #99cc99; font-weight: bold;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
+            (<span style="color: #99cc99; font-weight: bold;">if</span> (/= (point) (point-min)) (org-end-of-subtree t t))
+            (insert (make-string level ?*) <span style="color: #66cccc;">" "</span> heading <span style="color: #66cccc;">"\n"</span>))))
+      (<span style="color: #99cc99; font-weight: bold;">setq</span> level (1+ level))
+      (<span style="color: #99cc99; font-weight: bold;">setq</span> end (<span style="color: #99cc99; font-weight: bold;">save-excursion</span> (org-end-of-subtree t t))))
+    (org-end-of-subtree)))
+</pre>
+</div>
+
+<p>
+效果如下图所示
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/org-capture-billing.gif" alt="org-capture-billing.gif" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0a98a5a" class="outline-3">
+<h3 id="org0a98a5a">用 org-capture 来记录联系人信息</h3>
+<div class="outline-text-3" id="text-org0a98a5a">
+<p>
+联系人会有一些常见的属性比如姓名、手机号、邮箱、住址之类的，简单起见可以用表格来做，比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"c"</span> <span style="color: #66cccc;">"Contacts"</span> table-line (file <span style="color: #66cccc;">"~/Dropbox/org/contacts.org"</span>)
+               <span style="color: #66cccc;">"| %U | %^{&#22995;&#21517;} | %^{&#25163;&#26426;&#21495;}| %^{&#37038;&#31665;} |"</span>))
+</pre>
+</div>
+
+<p>
+不过在一些场景下用表格来做可能会不太方便，比如说我们想对联系人进行一些细致的描述之类的，这种情况下一个表格行太长就不太方便了。
+</p>
+
+<p>
+因此因外一个方案是，将每个联系人的信息记录为一个 headline 中，联系人的具体属性作为 headline 的 property 进行记录，如果要进行什么描述说明的话就作为 headline 下属的内容就好，如下所示：
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"c"</span> <span style="color: #66cccc;">"Contacts"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/contacts.org"</span>)
+               <span style="color: #66cccc;">"* %^{&#22995;&#21517;} %^{&#25163;&#26426;&#21495;}p %^{&#37038;&#31665;}p %^{&#20303;&#22336;}p\n\n  %?"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17ea029" class="outline-3">
+<h3 id="org17ea029">用 org-capture 来管理密码</h3>
+<div class="outline-text-3" id="text-org17ea029">
+<p>
+和记录联系人类似，如果只是单纯地记录密码，那么可以直接用表格。不过作为一个密码管理方案，我们可能要考虑以下事情
+</p>
+<ul class="org-ul">
+<li>org 文件本质上是文本文件，怎么保证密码的安全性？</li>
+<li>当我需要新建密码时，是否能在 org-capture 中直接来生成密码？</li>
+</ul>
+
+<p>
+以上两点都是可以解决的。安全方面，Org mode 支持对文件、headline、headline 中正文等不同层级的加密，详情见 <a href="https://orgmode.org/worg/org-tutorials/encrypting-files.html">Encrypting org Files.</a>，这里只讲最简单的文件级加密。
+</p>
+
+<p>
+首先我们在 Emacs 中先新建好一个后缀为 cpt 的 org 文件，比如 passwords.org.cpt —— 在一个正常的 org 文件后再附加上 cpt 这个后缀，就会被当作一个加密文件，在创建这个文件的时候会要求我们输入加密用的密码，我们只需要把这个主密码记住就好了。
+</p>
+
+<p>
+然后我们要写一个函数来要求输入密码，当输入密码为空时，我们就自动生成一个密码 —— 简单起见这里限定生成的密码长度是 16 位，只用字母和数字组成，如下所示。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">random-alphanum</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">let*</span> ((charset <span style="color: #66cccc;">"abcdefghijklmnopqrstuvwxyz0123456789"</span>)
+         (x (random 36)))
+    (char-to-string (elt charset x))))
+
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">create-password</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">let</span> ((value <span style="color: #66cccc;">""</span>))
+    (<span style="color: #99cc99; font-weight: bold;">dotimes</span> (number 16 value)
+      (<span style="color: #99cc99; font-weight: bold;">setq</span> value (concat value (random-alphanum))))))
+
+
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-or-create-password</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">setq</span> password (read-string <span style="color: #66cccc;">"Password: "</span>))
+  (<span style="color: #99cc99; font-weight: bold;">if</span> (string= password <span style="color: #66cccc;">""</span>)
+      (create-password)
+    password))
+</pre>
+</div>
+
+<p>
+然后新建一个模板如下就可以了。
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"p"</span> <span style="color: #66cccc;">"Passwords"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/passwords.org.cpt"</span>)
+               <span style="color: #66cccc;">"* %U - %^{title} %^G\n\n  - &#29992;&#25143;&#21517;: %^{&#29992;&#25143;&#21517;}\n  - &#23494;&#30721;: %(get-or-create-password)"</span>
+               <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> 1 <span style="color: #cc99cc; background-color: #2d2d2d;">:kill-buffer</span> t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8223868" class="outline-3">
+<h3 id="org8223868">用 org-capture 来新建博客文章</h3>
+<div class="outline-text-3" id="text-org8223868">
+<p>
+我是直接使用 Org mode 的原生支持的 project 来写博客的，写好后将整个 project 导出成 html，放置到配置好的 jekyll 目录下。Org mode 的 project 要求设置一个目录，这个目录下的 org 文件都会被当作 project 中的文章，比如说我的博客对应的 project 设置是这样的
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> org-publish-project-alist
+      '((<span style="color: #66cccc;">"blog-org"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:base-directory</span> <span style="color: #66cccc;">"~/Dropbox/org/blog/"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:base-extension</span> <span style="color: #66cccc;">"org"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:publishing-directory</span> <span style="color: #66cccc;">"~/Projects/github-pages/"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:recursive</span> t
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:htmlized-source</span> t
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:section-numbers</span> nil
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:publishing-function</span> org-html-publish-to-html
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:headline-levels</span> 4
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:html-extension</span> <span style="color: #66cccc;">"html"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:body-only</span> t     <span style="color: #999999; font-style: italic;">; </span><span style="color: #999999; font-style: italic;">Only export section between &lt;body&gt; &lt;/body&gt;</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:table-of-contents</span> nil
+         )
+        (<span style="color: #66cccc;">"blog-static"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:base-directory</span> <span style="color: #66cccc;">"~/Dropbox/org/blog/"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:base-extension</span> <span style="color: #66cccc;">"css</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">js</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">png</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">jpg</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">gif</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">pdf</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">mp3</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">ogg</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">swf</span><span style="color: #ffcc66;">\\</span><span style="color: #cc99cc;">|</span><span style="color: #66cccc;">php"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:publishing-directory</span> <span style="color: #66cccc;">"~/Projects/github-pages/"</span>
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:recursive</span> t
+         <span style="color: #cc99cc; background-color: #2d2d2d;">:publishing-function</span> org-publish-attachment
+         )
+        (<span style="color: #66cccc;">"blog"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:components</span> (<span style="color: #66cccc;">"blog-org"</span> <span style="color: #66cccc;">"blog-static"</span>))))
+</pre>
+</div>
+
+<p>
+那么我每次新写文章的时候，就需要用 C-x C-f(find-file) 去在这个目录下新建一个文件，这个过程，是可以用 org-capture 来优化的。
+</p>
+
+<p>
+为了方便示例我们把问题简化一下，我需要的是执行 org-capture 后，自动在一个固定的目录下，产生一个命名类似 2018-03-25.org 的文件，并在文件中写入一些固定的内容。
+</p>
+
+<p>
+用 org-capture 我们可以这么做
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             `(<span style="color: #66cccc;">"b"</span> <span style="color: #66cccc;">"Blog"</span> plain (file ,(concat <span style="color: #66cccc;">"~/Dropbox/org/blog/"</span>
+                                               (format-time-string <span style="color: #66cccc;">"%Y-%m-%d.org"</span>)))
+               ,(concat <span style="color: #66cccc;">"#+startup: showall\n"</span>
+                        <span style="color: #66cccc;">"#+options: toc:nil\n"</span>
+                        <span style="color: #66cccc;">"#+begin_export html\n"</span>
+                        <span style="color: #66cccc;">"---\n"</span>
+                        <span style="color: #66cccc;">"layout     : post\n"</span>
+                        <span style="color: #66cccc;">"title      : %^{&#26631;&#39064;}\n"</span>
+                        <span style="color: #66cccc;">"categories : %^{&#31867;&#21035;}\n"</span>
+                        <span style="color: #66cccc;">"tags       : %^{&#26631;&#31614;}\n"</span>
+                        <span style="color: #66cccc;">"---\n"</span>
+                        <span style="color: #66cccc;">"#+end_export\n"</span>
+                        <span style="color: #66cccc;">"#+TOC: headlines 2\n"</span>)))
+</pre>
+</div>
+
+<p>
+注意，这里和前面的模板有一些不同
+</p>
+<ul class="org-ul">
+<li><b>`("b" "Blog"</b> 这里开头的符号不是单引号</li>
+<li>target 和 template 两部分中有一个 concat 函数的调用，在其前面有一个逗号</li>
+</ul>
+
+<p>
+这里涉及到 emacs-lisp 的一些语法细节，想要详细了解的可以查看相关文档： <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Backquote.html">Backquote - GNU Emacs Lisp Reference Manual</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb0f8460" class="outline-3">
+<h3 id="orgb0f8460">用 org-capture 来做网页内容收集</h3>
+<div class="outline-text-3" id="text-orgb0f8460">
+<p>
+结合 org-protocol，我们可以在外部程序中发送数据到 Emacs 中并触发 org-capture，是非常方便的一个功能。
+</p>
+
+<p>
+由于 org-protocol 本身还有很多细节，展开来讲的话内容会很多，这里就只重点讲一下和 org-capture 相关的部分。
+</p>
+
+<p>
+首先我们要知道 org-protocol 其实是定义了一个类似通信协议一样的东西，因此我们需要启动 Emacs server 来让外部程序可以访问，在配置文件中加入下面这行配置即可
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(server-start)
+</pre>
+</div>
+
+<p>
+要启用 org-protocol 的话，还需要在 Emacs 之外做一些设置，本文不准备在这里做过多说明，详情可以参考 <a href="https://github.com/sprig/org-capture-extension">org-capture-extension</a> 这个项目，里面对 Linux/OSX/Windows 三个操作系统上的设置都做了详细说明。
+</p>
+
+<p>
+在 Emacs 中我们需要加载一下 org-protocol
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">org-protocol</span>)
+</pre>
+</div>
+
+<p>
+当用 org-protocol 触发 org-capture 时，它会设置 org-store-link-plist 这个变量，根据外部传入的数据设置其中的一些属性。从 <b>org-protocol-do-capture</b> 这个函数的源代码中，我们可以发现这么一段
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(org-store-link-props <span style="color: #cc99cc; background-color: #2d2d2d;">:type</span> type
+                      <span style="color: #cc99cc; background-color: #2d2d2d;">:link</span> url
+                      <span style="color: #cc99cc; background-color: #2d2d2d;">:description</span> title
+                      <span style="color: #cc99cc; background-color: #2d2d2d;">:annotation</span> orglink
+                      <span style="color: #cc99cc; background-color: #2d2d2d;">:initial</span> region
+                      <span style="color: #cc99cc; background-color: #2d2d2d;">:query</span> parts)
+</pre>
+</div>
+
+<p>
+也就是说，在 org-store-link-plist 中的属性有六个，分别如下
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">属性</th>
+<th scope="col" class="org-left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">type</td>
+<td class="org-left">链接的类型，如 http/https/ftp 等，是靠正则 (string-match "^\\([a-z]+\\):" url) 解析出来的</td>
+</tr>
+
+<tr>
+<td class="org-left">link</td>
+<td class="org-left">链接地址，在 org-protocol 里的 url 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">description</td>
+<td class="org-left">链接的标题，在 org-protocol 里的 title 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">annotation</td>
+<td class="org-left">靠 link 和 description 完成的 org 格式的链接</td>
+</tr>
+
+<tr>
+<td class="org-left">initial</td>
+<td class="org-left">链接上选中的文本，在 org-protocol 里的 body 字段</td>
+</tr>
+
+<tr>
+<td class="org-left">query</td>
+<td class="org-left">org-protocol 上除掉开头和子协议部分的剩下部分</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+这和我们前面「<a href="#org1a3d856">capture 模板的五个部分</a>」中提到的 org-protocol 在内容模板中可用的六个特殊标记，是一一对应的。
+</p>
+
+<p>
+利用这六个属性及对应的六个特殊标记，我们就可以方便地做网页内容的收集了。
+</p>
+
+<p>
+我们先为 org-protocol 相关的 capture 模板设立一个分组
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates '(<span style="color: #66cccc;">"p"</span> <span style="color: #66cccc;">"Protocol"</span>))
+</pre>
+</div>
+
+<p>
+最简单的情况是用 org-capture 来做网页书签管理，相应的 capture 模板会比较简单，只需要记录下网页的标题和链接即可，如下所示：
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"pb"</span> <span style="color: #66cccc;">"Protocol Bookmarks"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/web.org"</span> <span style="color: #66cccc;">"Bookmarks"</span>)
+               <span style="color: #66cccc;">"* %U - %:annotation"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:immediate-finish</span> t <span style="color: #cc99cc; background-color: #2d2d2d;">:kill-buffer</span> t))
+</pre>
+</div>
+
+<p>
+再进一步的，我们可以选中网页上的内容，通过 org-protocol 和 org-capture 快速记录到笔记中
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"pn"</span> <span style="color: #66cccc;">"Protocol Bookmarks"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/web.org"</span> <span style="color: #66cccc;">"Notes"</span>)
+               <span style="color: #66cccc;">"* %U - %:annotation %^g\n\n  %?"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> 1 <span style="color: #cc99cc; background-color: #2d2d2d;">:kill-buffer</span> t))
+</pre>
+</div>
+
+<p>
+当然，上面的 capture 模板会有一个问题，假如说一个网页上，有多处我觉得有价值的内容，我都选中了然后通过 org-protocol 调用了 org-capture，那么实际上是会产生多条记录的。这种情况如果能将同一个网页的内容都按顺序放置到同一个 headline 里面，显然是更加合理的。对上面的 capture 模板稍作调整，得到的下面的模板就能满足这个需求：
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             '(<span style="color: #66cccc;">"pa"</span> <span style="color: #66cccc;">"Protocol Annotation"</span> entry
+               (file+function <span style="color: #66cccc;">"~/Dropbox/org/web.org"</span> org-capture-template-goto-link)
+               <span style="color: #66cccc;">"* %U - %?\n\n  %:initial"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> 1))
+</pre>
+</div>
+
+<p>
+这里用了 file+function，函数 org-capture-template-goto-link 的定义参考了 reddit 上的<a href="https://www.reddit.com/r/emacs/comments/7m6nwo/file_orgcapture_item_under_existing_heading_if_it/">这篇帖子</a>。
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">org-capture-template-goto-link</span> ()
+  (org-capture-put <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span> (list 'file+headline
+                                 (nth 1 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span>))
+                                 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:annotation</span>)))
+  (org-capture-put-target-region-and-position)
+  (widen)
+  (<span style="color: #99cc99; font-weight: bold;">let</span> ((hd (nth 2 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span>))))
+    (goto-char (point-min))
+    (<span style="color: #99cc99; font-weight: bold;">if</span> (re-search-forward
+         (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
+        (org-end-of-subtree)
+      (goto-char (point-max))
+      (<span style="color: #99cc99; font-weight: bold;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
+      (insert <span style="color: #66cccc;">"* "</span> hd <span style="color: #66cccc;">"\n"</span>))))
+</pre>
+</div>
+
+<p>
+此外，结合 abo-abo 的 <a href="https://github.com/abo-abo/orca">orca</a> 工具，我们还可以针对不同的网站域名，来自动地将网页收集内容进行归类，可以应用的场景有
+</p>
+<ul class="org-ul">
+<li>在 arxiv、google scholar 上用 org-protocol 触发 org-capture 时，自动新增内容到记录待读论文列表的 papers.org 中</li>
+<li>在淘宝、京东、亚马逊网站上用 org-protocol 触发 org-capture 时，自动新增内容到记录心愿单列表的 wishlist.org 中</li>
+<li>&#x2026;</li>
+</ul>
+
+<p>
+而结合 <a href="https://github.com/alphapapa/org-protocol-capture-html">org-protocol-capture-html</a> 这个工具，我们可以在用 org-protocol 触发 org-capture 时，将网页内容全文转换成 org 文件存储到特定目录中，打造一个类似<a href="https://baike.baidu.com/item/%E7%A8%8D%E5%90%8E%E9%98%85%E8%AF%BB">稍后阅读</a>的工具。
+</p>
+</div>
+</div>
+<div id="outline-container-org1c39a08" class="outline-3">
+<h3 id="org1c39a08">用 org-capture 来新建 Anki 卡片</h3>
+<div class="outline-text-3" id="text-org1c39a08">
+<p>
+利用 <a href="https://github.com/louietan/anki-editor">anki-editor</a>，我们可以在 org 文件中创建卡片并同步到 Anki 软件中。这里就以 anki-editor 中的卡片结构，来展示如何用 org-capture 创建 Anki 卡片。
+</p>
+
+<p>
+最简单的例子，是新建单词卡，用来辅助记忆我们学习到的一些新的单词。那么对应的 capture 模板是这个样子的：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
+             `(<span style="color: #66cccc;">"v"</span> <span style="color: #66cccc;">"Vocabulary"</span> entry
+               (file+headline <span style="color: #66cccc;">"~/Dropbox/org/anki.org"</span> <span style="color: #66cccc;">"Vocabulary"</span>)
+               ,(concat <span style="color: #66cccc;">"* %^{heading} :note:\n"</span>
+                        <span style="color: #66cccc;">"%(generate-anki-note-body)\n"</span>)))
+</pre>
+</div>
+
+<p>
+其中的 generate-anki-note-body 函数如下
+</p>
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">generate-anki-note-body</span> ()
+  (<span style="color: #99cc99; font-weight: bold;">interactive</span>)
+  (message <span style="color: #66cccc;">"Fetching note types..."</span>)
+  (<span style="color: #99cc99; font-weight: bold;">let</span> ((note-types
+         (sort (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span> <span style="color: #66cccc;">"modelNames"</span> 5)
+               #'string-lessp))
+        note-type fields)
+    (<span style="color: #99cc99; font-weight: bold;">setq</span> note-type (completing-read <span style="color: #66cccc;">"Choose a note type: "</span> note-types))
+    (message <span style="color: #66cccc;">"Fetching note fields..."</span>)
+    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span>
+                  <span style="color: #66cccc;">"modelFieldNames"</span> 5
+                  `((modelName . ,note-type))))
+    (concat <span style="color: #66cccc;">"  :PROPERTIES:\n"</span>
+            <span style="color: #66cccc;">"  :ANKI_NOTE_TYPE: "</span> note-type <span style="color: #66cccc;">"\n"</span>
+            <span style="color: #66cccc;">"  :END:\n\n"</span>
+            (mapconcat (<span style="color: #99cc99; font-weight: bold;">lambda</span> (str) (concat <span style="color: #66cccc;">"** "</span> str))
+                       fields
+                       <span style="color: #66cccc;">"\n\n"</span>))))
+</pre>
+</div>
+
+<p>
+这个函数的定义是抄了 anki-editor 中的代码，做了一些修改得到的。
+</p>
+</div>
+</div>
+</div>
