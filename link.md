@@ -25,6 +25,8 @@ permalink: /link.html
 # Emacser
 
 + [MacPlay](https://macplay.github.io/)
++ [(power up)](http://kevinjiang.info/)
++ [深度识医](https://lengyueyang.github.io/)
 
 # 其他
 
