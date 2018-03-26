@@ -20,15 +20,15 @@ title: 主页
 <div class="pagination">
   {% if paginator.previous_page %}
     {% if paginator.page == 2 %}
-    <a class="pagination-item newer" href="{{ site.baseurl }}">上一页</a>
+    <a class="pagination-item newer" href="/">上一页</a>
     {% else %}
-    <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">上一页</a>
+    <a class="pagination-item newer" href="/page{{paginator.previous_page}}">上一页</a>
     {% endif %}
   {% else %}
     <span class="pagination-item newer">上一页</span>
   {% endif %}
   {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">下一页</a>
+    <a class="pagination-item older" href="/page{{paginator.next_page}}">下一页</a>
   {% else %}
     <span class="pagination-item older">Older</span>
   {% endif %}
