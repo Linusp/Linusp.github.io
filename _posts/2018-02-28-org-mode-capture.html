@@ -140,10 +140,6 @@ capture 功能包含在 org 包里，所以只要安装了 org，那么直接就
 </ul>
 
 <p>
-<b>FIXME: 模板的概念和作用？</b>
-</p>
-
-<p>
 默认的模板是在 org-capture-select-template 中定义的，其逻辑是，当执行 org-capture 命令的时候，如果检查到没有配置任何模板，就会使用一个默认的模板来保证不会出错，这个默认的模板如下所示
 </p>
 
@@ -1718,12 +1714,12 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
   (<span style="color: #99cc99; font-weight: bold;">interactive</span>)
   (message <span style="color: #66cccc;">"Fetching note types..."</span>)
   (<span style="color: #99cc99; font-weight: bold;">let</span> ((note-types
-         (sort (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span> <span style="color: #66cccc;">"modelNames"</span> 5)
+         (sort (anki-editor--anki-connect-invoke-result <span style="color: #66cccc;">"modelNames"</span> 5)
                #'string-lessp))
         note-type fields)
     (<span style="color: #99cc99; font-weight: bold;">setq</span> note-type (completing-read <span style="color: #66cccc;">"Choose a note type: "</span> note-types))
     (message <span style="color: #66cccc;">"Fetching note fields..."</span>)
-    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span>
+    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (anki-editor--anki-connect-invoke-result
                   <span style="color: #66cccc;">"modelFieldNames"</span> 5
                   `((modelName . ,note-type))))
     (concat <span style="color: #66cccc;">"  :PROPERTIES:\n"</span>
