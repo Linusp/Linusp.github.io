@@ -24,9 +24,12 @@ permalink: /link.html
 
 # Emacser
 
++ [Emacs China](https://emacs-china.org/)
 + [MacPlay](https://macplay.github.io/)
 + [(power up)](http://kevinjiang.info/)
 + [深度识医](https://lengyueyang.github.io/)
++ [M-x Chris-An-Emacser](https://chriszheng.science/)
++ [rekols](https://blog.rekols.com/)
 
 # 其他
 
