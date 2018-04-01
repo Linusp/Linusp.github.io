@@ -10,21 +10,21 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">起因</a></li>
-<li><a href="#orgheadline2">过程</a></li>
-<li><a href="#orgheadline3">成果</a></li>
+<li><a href="#orga68b643">起因</a></li>
+<li><a href="#org4904ddf">过程</a></li>
+<li><a href="#org1959484">成果</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">起因</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-orga68b643" class="outline-2">
+<h2 id="orga68b643">起因</h2>
+<div class="outline-text-2" id="text-orga68b643">
 <p>
 我通过Github Pages有了自己的一个静态博客，并且开始正儿八经地写博客。
 </p>
 
 <p>
-但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
+但我碰到了一个问题：每次我需要写博客，我要先打开emacs，按下C-x C-f，然后输入一长串路径名和文件名(org文件)，然后手动输入YAML Front Matter[1]。路径名每次都是一样的，YAML Front Matter也是一样的，这都是重复性的工作，并且我又是一个很懒的人，所以我就想偷懒了。
 </p>
 
 <p>
@@ -33,9 +33,9 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">过程</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-org4904ddf" class="outline-2">
+<h2 id="org4904ddf">过程</h2>
+<div class="outline-text-2" id="text-org4904ddf">
 <p>
 用elisp写脚本？这事我听说过，但我没做过，也就是说我也是大姑娘上轿头一回了。
 </p>
@@ -45,7 +45,7 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 </p>
 
 <p>
-基本形式没太大问题，将shell脚本Shebang<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &#x2013;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
+基本形式没太大问题，将shell脚本Shebang[2]后面的 <b>/bin/bash</b> 改成 <b>/usr/bin/emacs &#x2013;script</b> ，其他的东西嘛，随便就行不是么？（想当年某次实习招聘的时候我跟面试官说我会shell脚本，结果只会堆命令的真相还是被不留情面地揭穿了（╯‵□′）╯︵┴─┴ ）
 </p>
 
 <p>
@@ -57,16 +57,14 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 之所以用elisp，就是想简化publish么，但是在elisp script里写上的
 </p>
 <div class="org-src-container">
-
-<pre class="src src-lisp">(org-publish-project <span style="color: #ad7fa8;">"blog-linusp"</span>)
+<pre class="src src-lisp">(org-publish-project <span style="color: #66cccc;">"blog-linusp"</span>)
 </pre>
 </div>
 <p>
 完全不起作用。细想一下应该是shell脚本没有加载我的emacs相关配置。当时真是一筹莫展啊，后来发现其实这是一件不复杂的事情，在之前加上一句
 </p>
 <div class="org-src-container">
-
-<pre class="src src-lisp">(load-file <span style="color: #ad7fa8;">"~/.emacs"</span>)
+<pre class="src src-lisp">(load-file <span style="color: #66cccc;">"~/.emacs"</span>)
 </pre>
 </div>
 <p>
@@ -81,37 +79,32 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 </p>
 
 <p>
-照例google，然后发现Xah Lee<sup><a id="fnr.3" class="footref" href="#fn.3">3</a></sup>的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
+照例google，然后发现Xah Lee[3]的博客上就有这个内容，原文点<a href="http://ergoemacs.org/emacs/elisp_command_line_argv.html">我</a>。
 </p></li>
 <li><p>
 运行脚本后，发现总会有一堆的Loading message，就像下面这样：
 </p>
-<img src="/assets/img/2013-10-09-loading-message.png" /></li>
-</ol>
-<div id="table-of-contents">
-<h2>&#30446;&#24405;</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#orgheadline1">起因</a></li>
-<li><a href="#orgheadline2">过程</a></li>
-<li><a href="#orgheadline3">成果</a></li>
-</ul>
-</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/2013-10-09-loading-message.png" alt="2013-10-09-loading-message.png" />
+</p>
 </div>
 
 <p>
-（╯‵□′）╯︵┴─┴ 
+（╯‵□′）╯︵┴─┴
 </p>
 
 <p>
 经google，该问题没有太好的解决问题，凑合吧。
-</p>
+</p></li>
+</ol>
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">成果</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-org1959484" class="outline-2">
+<h2 id="org1959484">成果</h2>
+<div class="outline-text-2" id="text-org1959484">
 <p>
 嘛，虽然代码写得比较丑陋，至少能用，功能上达到了我的预期目标，所以代码的问题，以后再说吧。
 </p>
@@ -120,66 +113,58 @@ excerpt    : "为了简化在借助Github Pages建立的博客写博客的过程
 附脚本代码
 </p>
 <div class="org-src-container">
-
 <pre class="src src-lisp">#!/usr/bin/emacs --script
 
-(<span style="color: #729fcf;">require</span> '<span style="color: #e6a00f;">calendar</span>)
-(<span style="color: #729fcf;">defun</span> <span style="color: #edd400;">blog</span> (action <span style="color: #8ae234;">&amp;rest</span> rst)
-  (<span style="color: #729fcf;">cond</span> ((string-equal action <span style="color: #ad7fa8;">"post"</span>)
-     (<span style="color: #729fcf;">if</span> (equal rst nil)
-         (print <span style="color: #ad7fa8;">"Please input title"</span>)
-       (<span style="color: #729fcf;">let</span> ((post-file (concat (format-time-string <span style="color: #ad7fa8;">"%Y-%m-%d"</span>)
-                     <span style="color: #ad7fa8;">"-"</span>
+(<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">calendar</span>)
+(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">blog</span> (action <span style="color: #6699cc;">&amp;rest</span> rst)
+  (<span style="color: #99cc99; font-weight: bold;">cond</span> ((string-equal action <span style="color: #66cccc;">"post"</span>)
+     (<span style="color: #99cc99; font-weight: bold;">if</span> (equal rst nil)
+         (print <span style="color: #66cccc;">"Please input title"</span>)
+       (<span style="color: #99cc99; font-weight: bold;">let</span> ((post-file (concat (format-time-string <span style="color: #66cccc;">"%Y-%m-%d"</span>)
+                     <span style="color: #66cccc;">"-"</span>
                      (car rst)
-                     <span style="color: #ad7fa8;">".org"</span>)))
-         (<span style="color: #729fcf;">progn</span>
-           (<span style="color: #729fcf;">with-temp-file</span> (concat <span style="color: #ad7fa8;">"~/blog/org/_posts/"</span>
+                     <span style="color: #66cccc;">".org"</span>)))
+         (<span style="color: #99cc99; font-weight: bold;">progn</span>
+           (<span style="color: #99cc99; font-weight: bold;">with-temp-file</span> (concat <span style="color: #66cccc;">"~/blog/org/_posts/"</span>
                        post-file)
-         (insert (concat <span style="color: #ad7fa8;">"#+begin_html\n"</span>
-                 <span style="color: #ad7fa8;">"---\n"</span>
-                 <span style="color: #ad7fa8;">"layout     : post\n"</span>
-                 <span style="color: #ad7fa8;">"title      : \n"</span>
-                 <span style="color: #ad7fa8;">"categories : \n"</span>
-                 <span style="color: #ad7fa8;">"tags       : \n"</span>
-                 <span style="color: #ad7fa8;">"excerpt    : \n"</span>
-                 <span style="color: #ad7fa8;">"---\n"</span>
-                 <span style="color: #ad7fa8;">"#+end_html\n"</span>)))
-#+TOC: headlines 2
-           (print (format <span style="color: #ad7fa8;">"Create post file %s in post directory"</span> post-file))
-           (shell-command (concat <span style="color: #ad7fa8;">"emacs "</span>
-                      <span style="color: #ad7fa8;">"~/blog/org/_posts/"</span>
+         (insert (concat <span style="color: #66cccc;">"#+begin_html\n"</span>
+                 <span style="color: #66cccc;">"---\n"</span>
+                 <span style="color: #66cccc;">"layout     : post\n"</span>
+                 <span style="color: #66cccc;">"title      : \n"</span>
+                 <span style="color: #66cccc;">"categories : \n"</span>
+                 <span style="color: #66cccc;">"tags       : \n"</span>
+                 <span style="color: #66cccc;">"excerpt    : \n"</span>
+                 <span style="color: #66cccc;">"---\n"</span>
+                 <span style="color: #66cccc;">"#+end_html\n"</span>)))
+           (print (format <span style="color: #66cccc;">"Create post file %s in post directory"</span> post-file))
+           (shell-command (concat <span style="color: #66cccc;">"emacs "</span>
+                      <span style="color: #66cccc;">"~/blog/org/_posts/"</span>
                       post-file))))))
-     ((string-equal action <span style="color: #ad7fa8;">"publish"</span>)
-      (<span style="color: #729fcf;">progn</span><span style="color: #ffff00; background-color: #ff0000; font-weight: bold;"> </span>
-        (org-publish-project <span style="color: #ad7fa8;">"blog-linusp"</span>)
-        (print <span style="color: #ad7fa8;">"Project has been published!"</span>)))
-    (t (print <span style="color: #ad7fa8;">"Action: post/publish"</span>))))
+     ((string-equal action <span style="color: #66cccc;">"publish"</span>)
+      (<span style="color: #99cc99; font-weight: bold;">progn</span>
+        (org-publish-project <span style="color: #66cccc;">"blog-linusp"</span>)
+        (print <span style="color: #66cccc;">"Project has been published!"</span>)))
+    (t (print <span style="color: #66cccc;">"Action: post/publish"</span>))))
 
-(load-file <span style="color: #ad7fa8;">"~/.emacs.d/site-lisp/xml-rpc.el"</span>)
-(load-file <span style="color: #ad7fa8;">"~/.emacs.d/site-lisp/wc-mode.el"</span>)
-(load-file <span style="color: #ad7fa8;">"~/.emacs.d/myplugins/org.el"</span>)
+(load-file <span style="color: #66cccc;">"~/.emacs.d/site-lisp/xml-rpc.el"</span>)
+(load-file <span style="color: #66cccc;">"~/.emacs.d/site-lisp/wc-mode.el"</span>)
+(load-file <span style="color: #66cccc;">"~/.emacs.d/myplugins/org.el"</span>)
 
 (blog (elt argv 0) (elt argv 1))
+
 </pre>
 </div>
-</div>
-</div>
-<div id="footnotes">
-<h2 class="footnotes">&#33050;&#27880;: </h2>
-<div id="text-footnotes">
 
-<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
-<a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
-</p></div></div>
+<p>
+[1] <a href="http://jekyllrb.com/docs/frontmatter/">YAML Front Matter</a>是用来告诉Jekyll使用什么模板并可以附带一些其他信息的文件头
+</p>
 
-<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
-Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
-</p></div></div>
+<p>
+[2] Shebang是一个由'#'和'!'构成的字符串，在文件中存在Shebang的情况下，类Unix操作系统的程序载入器会分析Shebang后的内容，将这些内容作为解释器指令，并调用该指令，并将载有Shebang的文件路径作为该解释器的参数——来自<a href="http://zh.wikipedia.org/wiki/Shebang">维基百科</a>
+</p>
 
-<div class="footdef"><sup><a id="fn.3" class="footnum" href="#fnr.3">3</a></sup> <div class="footpara"><p class="footpara">
-Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
-</p></div></div>
-
-
+<p>
+[3] Xah Lee是一位emacs大牛，emacs wiki上可是都有他的专门的页面哦
+</p>
 </div>
 </div>
