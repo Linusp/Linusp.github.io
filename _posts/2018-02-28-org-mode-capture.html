@@ -1027,8 +1027,12 @@ org-protocol 可用的特殊标记有如下六个
 </p>
 
 <pre class="example">
-"- name: %^{姓名}\n- age: %^{年龄}\n\n%\1的年龄是%\2"
+"- name: %^{姓名}\n- age: %^{年龄}\n\n%\\1的年龄是%\\2"
 </pre>
+
+<p>
+(注: 此处的反斜线「\」需要转义，否则「\1」会被视作值为 1 的 ASCII 码特殊字符，感谢 Emacs China 网友 <a href="https://emacs-china.org/u/slack-py">slack-py</a> 指出该问题)
+</p>
 
 <p>
 会要求我们输入姓名和年龄，假如我们输入姓名是 "张三"，年龄是 "25"，那么最后得到的内容是
