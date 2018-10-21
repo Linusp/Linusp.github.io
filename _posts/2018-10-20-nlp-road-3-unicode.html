@@ -1,0 +1,593 @@
+---
+layout     : post
+title      : "NLP哪里跑: Unicode相关的一些小知识和工具"
+categories : NLP
+tags       : NLP
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org60c6ab9">一、Unicode 简介</a></li>
+<li><a href="#org0a25915">二、Unicode 在 NLP 中的应用</a>
+<ul>
+<li><a href="#orgfc9e56a">根据 Unihan 数据来从文本中筛选中文字符</a></li>
+<li><a href="#org80f5aa7">用 category 属性判断标点、数字、货币单位等</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org60c6ab9" class="outline-2">
+<h2 id="org60c6ab9">一、Unicode 简介</h2>
+<div class="outline-text-2" id="text-org60c6ab9">
+<p>
+我们都知道，所有的数据，在计算机上都是以数字（严格来说是二进制）的形式存在的，文字也是如此，只不过咱们的编辑器、浏览器对这些数字做了特殊处理，将其对应的形状展示出来了而已。在这个基础上，不同的操作系统、平台、应用为了能够正常地交流，就必须约定一个统一的「计算机中的数字」到「实际文字」的对应关系（即编码标准），比方说数字 97 对应小写英文字母「a」、33528 对应「言」字之类的 —— 没错，所谓的编码标准，就相当于一个大的索引表，每个文字在这个索引表里都有一个对应的索引号（也就是我们刚才说到的数字）。
+</p>
+
+<p>
+在计算机系统发展早期，其实是并没有这样一个统一的编码系统的，美国一开始就用了 0-127 的值来编码，包括了大小写字母、数字、标点符号以及一些特殊符号，这就是“美国信息交换标准代码(American Standard Code for Information Interchange, <b>ASCII</b>)”。显然 ASCII 是不适用于中文的，所以后来我国推出过 GB2312 标准，收录了 6763 个汉字，并在之后经过扩展有了 GBK 和 GB18030 多个编码标准；另外一方面，港澳台地区又独立发展出了繁体的 BIG5 编码……这些编码都是互相不兼容的，这就会导致使用编码 A 的网站，被使用编码 B 的计算机访问后显示为乱码的状况，而这里只提到了中英文的编码体系，实际上很多国家都有过自己的标准，而且很多是还在使用的。
+</p>
+
+<p>
+基于这种状况，后来计算机领域产生了一个叫做 Unicode 的统一编码，又称「万国码」，收录了世界上各个国家大部分的文字，并且仍然在不断增修，今年六月份发布了第十一个正式版本。目前使用最广泛的是 Unicode 实现是 UTF-8 编码。
+</p>
+
+<p>
+本文无意就编码标准和编码实现的关系、不同编码之间的同异这类问题做太多展开，只是说一下在做自然语言处理的工作时会涉及到的一些小知识以及相关的工具。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0a25915" class="outline-2">
+<h2 id="org0a25915">二、Unicode 在 NLP 中的应用</h2>
+<div class="outline-text-2" id="text-org0a25915">
+<p>
+也许读者会疑惑，编码标准不就是字符和索引值的对应嘛，和 NLP 有什么关系呢？
+</p>
+
+<p>
+是这样的，Unicode 这个标准，并不是单纯做好所有文字的索引，它还对文字分门别类做了很多的整理，比如说同一个语系的文字会放在索引表的邻近区域，而一个文字是否是数字或标点、数学符号这些信息也都在 Unicode 标准中有记录，并且所有这些数据都是公开的。如果能善加利用这些信息的话，能帮助到咱们在 NLP 工作中对文字进行处理的部分。
+</p>
+
+<p>
+这里不准备对 Unicode 数据做系统、全面的说明，如有兴趣，可以前往 <a href="http://unicode.org/charts/">http://unicode.org/charts/</a> 查看完整的 Unicode 数据，这里就以几个例子来讲讲我个人的一些认识和经验吧。
+</p>
+</div>
+
+<div id="outline-container-orgfc9e56a" class="outline-3">
+<h3 id="orgfc9e56a">根据 Unihan 数据来从文本中筛选中文字符</h3>
+<div class="outline-text-3" id="text-orgfc9e56a">
+<p>
+Unicode 中中文数据的部分被称为「Unihan 数据库」，在<a href="http://unicode.org/charts/unihangridindex.html">这个页面</a>可以看到 Unihan 中数据的范围。根据 Unihan 数据，我们可以得知在 Unicode 编码里，中文的索引值的范围包括以下几部分:
+</p>
+<ul class="org-ul">
+<li>U+3400 - U+4DB5: 「U+」表示这是 Unicode 编码，3400 是十六进制表示，换算成十进制是 13312，下同</li>
+<li>U+4E00 - U+9FCC</li>
+<li>U+F900 - U+FAD9</li>
+<li>U+20000 - U+2A6D6</li>
+<li>U+2A700 - U+2B734</li>
+<li>U+2B740 - U+2B81D</li>
+<li>U+2B820 - U+2CEA1</li>
+<li>U+2F800 - U+2FA1D</li>
+</ul>
+
+<p>
+根据这个我们能很容易地写出一个检查某个字符是不是中文字符的方法来，如下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese_char</span>(char):
+    <span style="color: #ffcc66;">char_idx</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">ord</span>(char)
+    <span style="color: #99cc99; font-weight: bold;">if</span> 0x3400 &lt;= char_idx &lt;= 0x4DB5 <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0xF900 &lt;= char_idx &lt;= 0xFAD9 <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x4E00 &lt;= char_idx &lt;= 0x9FCC <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x20000 &lt;= char_idx &lt;= 0x2A6D6 <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x2A700 &lt;= char_idx &lt;= 0x2B734 <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x2B740 &lt;= char_idx &lt;= 0x2B81D <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x2B820 &lt;= char_idx &lt;= 0x2CEA1 <span style="color: #99cc99; font-weight: bold;">or</span> \
+       0x2F800 &lt;= char_idx &lt;= 0x2FA1D:
+        <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #6699cc;">True</span>
+
+    <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #6699cc;">False</span>
+</pre>
+</div>
+
+<p>
+或者写个正则
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> re
+
+<span style="color: #ffcc66;">CHINESE_CHAR_PAT</span> = re.<span style="color: #cc99cc; background-color: #2d2d2d;">compile</span>(
+    r<span style="color: #66cccc;">'['</span>
+    r<span style="color: #66cccc;">'\u3400-\u4DB5'</span>
+    r<span style="color: #66cccc;">'\u4E00-\u9FCC'</span>
+    r<span style="color: #66cccc;">'\uF900-\uFAD9'</span>
+    r<span style="color: #66cccc;">'\u20000-\u2A6D6'</span>
+    r<span style="color: #66cccc;">'\u2A700-\u2B734'</span>
+    r<span style="color: #66cccc;">'\u2B740-\u2B81D'</span>
+    r<span style="color: #66cccc;">'\u2B820-\u2CEA1'</span>
+    r<span style="color: #66cccc;">'\u2F800-\u2FA1D'</span>
+    r<span style="color: #66cccc;">']'</span>
+)
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese_char</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #cc99cc; background-color: #2d2d2d;">bool</span>(CHINESE_CHAR_PAT.match(char))
+</pre>
+</div>
+
+<p>
+以上都是笨办法，因为实际上我们并不需要去记中文的编码范围，而且由于 Unicode 是在扩展的，如果将来扩充了，那么扩充进来的新的字可能就没有办法用上面的方法检查了。前面提到，Unicode 标准做了多方面的整理，而这些整理结果都作为属性附加到每个 Unicode 字符上了。
+</p>
+
+<p>
+首先，每个 Unicode 字符都会被赋予一个名字，下面是一部分对照表
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Unicode</th>
+<th scope="col" class="org-left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">a</td>
+<td class="org-left">LATIN SMALL LETTER A</td>
+</tr>
+
+<tr>
+<td class="org-left">9</td>
+<td class="org-left">DIGIT NINE</td>
+</tr>
+
+<tr>
+<td class="org-left">我</td>
+<td class="org-left">CJK UNIFIED IDEOGRAPH-6211</td>
+</tr>
+
+<tr>
+<td class="org-left">α</td>
+<td class="org-left">GREEK SMALL LETTER ALPHA</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+对于中文，我们只要取其 name，然后判断是否包含 CJK 这个关键词就行了。要怎么获取 Unicode 字符的 name 呢？用 Python 标准库里的 <b>unicodedata</b> 模块即可
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
+
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> unicodedata.name(char).startswith(<span style="color: #66cccc;">'CJK'</span>)
+</pre>
+</div>
+
+<p>
+而除了 name，Unicode 字符还有 block 和 script 两个属性：block 其实就是我们前面提到的连续编码区域，不过会有一个名字；script 是指每个文字的书写体系，可能会包含多个 block，详情见 <a href="https://www.unicode.org/standard/supported.html">文档</a>。
+</p>
+
+<p>
+前面提到的汉字的编码区域和 block 名称的对应关系如下表所示
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Block Name</th>
+<th scope="col" class="org-left">Block Range</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">CJK Unified Ideographs Extension A</td>
+<td class="org-left">U+3400 - U+4DB5</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Unified Ideographs</td>
+<td class="org-left">U+4E00 - U+9FCC</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Compatibility Ideographs</td>
+<td class="org-left">U+F900 - U+FAD9</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Unified Ideographs Extension B</td>
+<td class="org-left">U+20000 - U+2A6D6</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Unified Ideographs Extension C</td>
+<td class="org-left">U+2A700 - U+2B734</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Unified Ideographs Extension D</td>
+<td class="org-left">U+2B740 - U+2B81D</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Unified Ideographs Extension E</td>
+<td class="org-left">U+2B820 - U+2CEA1</td>
+</tr>
+
+<tr>
+<td class="org-left">CJK Compatibility Ideographs Supplement</td>
+<td class="org-left">U+2F800 - U+2FA1D</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+汉字对应的 script 名字是 Han，直接包括了上述所有 block。使用 Python 的 <a href="https://pypi.org/project/regex/">regex</a> 这个工具，可以直接在正则表达式中使用 block 和 script。仍以汉字判断为例，可以这么写
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> regex
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese_char</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #cc99cc; background-color: #2d2d2d;">bool</span>(regex.match(r<span style="color: #66cccc;">'\p{script=han}'</span>, char))
+</pre>
+</div>
+
+<p>
+可惜在标准库 unicodedata 中并没有访问 Unicode 字符的 block、script 等属性的方法。
+</p>
+
+<p>
+对于其他语言的文字，将上述方法中的参数（编码区域、script 等）稍作修改也是可行的，不再赘述。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org80f5aa7" class="outline-3">
+<h3 id="org80f5aa7">用 category 属性判断标点、数字、货币单位等</h3>
+<div class="outline-text-3" id="text-org80f5aa7">
+<p>
+Unicode 数据中，每个 Unicode 字符还有一个叫做 category 的属性，这个属性和字从属的语言无关。category 一共有 Letter、Mark、Number、Punctuation、Symbol、Seperator、Other 七大类，然后每个大类下还有一些小类，总体上是一个二级分类结构。因此在 Unicode 中有两个字母来组合表示一个 Unicode 字符的类型信息，我们可以用 <b>unicodedata.category</b> 来得到这个信息
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
+
+<span style="color: #99cc99; font-weight: bold;">for</span> char <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #66cccc;">'1&#22825;&#12290;'</span>:
+    <span style="color: #99cc99; font-weight: bold;">print</span>(char, unicodedata.category(char))
+</pre>
+</div>
+
+<p>
+结果为
+</p>
+<pre class="example">
+1 Nd
+天 Lo
+。 Po
+
+</pre>
+
+<p>
+类型码和分类信息的对照表如下
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">类型码</th>
+<th scope="col" class="org-left">类型信息</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Lu</td>
+<td class="org-left">Letter, uppercase</td>
+</tr>
+
+<tr>
+<td class="org-left">Ll</td>
+<td class="org-left">Letter, lowercase</td>
+</tr>
+
+<tr>
+<td class="org-left">Lt</td>
+<td class="org-left">Letter, titlecase</td>
+</tr>
+
+<tr>
+<td class="org-left">Lm</td>
+<td class="org-left">Letter, modifier</td>
+</tr>
+
+<tr>
+<td class="org-left">Lo</td>
+<td class="org-left">Letter, other</td>
+</tr>
+
+<tr>
+<td class="org-left">Mn</td>
+<td class="org-left">Mark, nonspacing</td>
+</tr>
+
+<tr>
+<td class="org-left">Mc</td>
+<td class="org-left">Mark, spacing combining</td>
+</tr>
+
+<tr>
+<td class="org-left">Me</td>
+<td class="org-left">Mark, enclosing</td>
+</tr>
+
+<tr>
+<td class="org-left">Nd</td>
+<td class="org-left">Number, decimal digit</td>
+</tr>
+
+<tr>
+<td class="org-left">Nl</td>
+<td class="org-left">Number, letter</td>
+</tr>
+
+<tr>
+<td class="org-left">No</td>
+<td class="org-left">Number, other</td>
+</tr>
+
+<tr>
+<td class="org-left">Pc</td>
+<td class="org-left">Punctuation, connector</td>
+</tr>
+
+<tr>
+<td class="org-left">Pd</td>
+<td class="org-left">Punctuation, dash</td>
+</tr>
+
+<tr>
+<td class="org-left">Ps</td>
+<td class="org-left">Punctuation, open</td>
+</tr>
+
+<tr>
+<td class="org-left">Pe</td>
+<td class="org-left">Punctuation, close</td>
+</tr>
+
+<tr>
+<td class="org-left">Pi</td>
+<td class="org-left">Punctuation, initial quote (may behave like Ps or Pe depending on usage)</td>
+</tr>
+
+<tr>
+<td class="org-left">Pf</td>
+<td class="org-left">Punctuation, final quote (may behave like Ps or Pe depending on usage)</td>
+</tr>
+
+<tr>
+<td class="org-left">Po</td>
+<td class="org-left">Punctuation, other</td>
+</tr>
+
+<tr>
+<td class="org-left">Sm</td>
+<td class="org-left">Symbol, math</td>
+</tr>
+
+<tr>
+<td class="org-left">Sc</td>
+<td class="org-left">Symbol, currency</td>
+</tr>
+
+<tr>
+<td class="org-left">Sk</td>
+<td class="org-left">Symbol, modifier</td>
+</tr>
+
+<tr>
+<td class="org-left">So</td>
+<td class="org-left">Symbol, other</td>
+</tr>
+
+<tr>
+<td class="org-left">Zs</td>
+<td class="org-left">Separator, space</td>
+</tr>
+
+<tr>
+<td class="org-left">Zl</td>
+<td class="org-left">Separator, line</td>
+</tr>
+
+<tr>
+<td class="org-left">Zp</td>
+<td class="org-left">Separator, paragraph</td>
+</tr>
+
+<tr>
+<td class="org-left">Cc</td>
+<td class="org-left">Other, control</td>
+</tr>
+
+<tr>
+<td class="org-left">Cf</td>
+<td class="org-left">Other, format</td>
+</tr>
+
+<tr>
+<td class="org-left">Cs</td>
+<td class="org-left">Other, surrogate</td>
+</tr>
+
+<tr>
+<td class="org-left">Co</td>
+<td class="org-left">Other, private use</td>
+</tr>
+
+<tr>
+<td class="org-left">Cn</td>
+<td class="org-left">Other, not assigned (including noncharacters)</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+如上，标点符号的类型码都是 P 开头的，根据这个就能把标点筛出来了
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_punctuation_char</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> unicodedata.category(char).startswith(<span style="color: #66cccc;">'P'</span>)
+</pre>
+</div>
+
+<p>
+类似的，货币单位符号的类型码为 Sc，可以直接判断
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_currency_char</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> unicodedata.category(char) == <span style="color: #66cccc;">'Sc'</span>
+</pre>
+</div>
+
+<p>
+类型码 N 开头的是数字字符，除了我们常见的十个阿拉伯数字外，像罗马数字、带圆圈的数字序号等都被涵盖在内。
+</p>
+
+<p>
+此外类型信息也可以在 regex 这个工具里使用，例如
+</p>
+<ul class="org-ul">
+<li><p>
+找到文本中所有数字
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">regex.findall(r<span style="color: #66cccc;">'\p{N}'</span>, <span style="color: #66cccc;">'&#31532;&#9321;&#39033;'</span>)
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+['⑩']
+
+</pre></li>
+
+<li><p>
+找到各种括号表示开始的那一个
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">regex.findall(r<span style="color: #66cccc;">'\p{Ps}'</span>, <span style="color: #66cccc;">'&#12300;Unicode&#12301;&#65288;&#21448;&#21517;&#19975;&#22269;&#30721;&#65289;&#35265;&#12298;&#26631;&#20934;&#12299;'</span>)
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+['「', '（', '《']
+
+</pre>
+
+<p>
+或找到表示结束那一个
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">regex.findall(r<span style="color: #66cccc;">'\p{Pe}'</span>, <span style="color: #66cccc;">'&#12300;Unicode&#12301;&#65288;&#21448;&#21517;&#19975;&#22269;&#30721;&#65289;&#35265;&#12298;&#26631;&#20934;&#12299;'</span>)
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+['」', '）', '》']
+
+</pre></li>
+</ul>
+
+<p>
+根据这张类型表，我们也可以写出一个用于文本预处理的简单清洗函数来，用来把一些奇奇怪怪的字符都从文本里去掉
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> regex
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">clean_text</span>(text):
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#21435;&#38500;&#26126;&#30830;&#26080;&#24847;&#20041;&#30340;&#23383;&#31526;</span>
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">1. Zl: Separator, line</span>
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">2. Zp: Separator, paragraph</span>
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">3. Cc, Cf, Cs, Co, Cn</span>
+    <span style="color: #ffcc66;">text</span> = regex.sub(r<span style="color: #66cccc;">'[\p{Zl}\p{Zp}\p{C}]'</span>, <span style="color: #66cccc;">''</span>, text)
+
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#23558;&#31354;&#30333;&#31526;&#24402;&#19968;&#21270;</span>
+    <span style="color: #ffcc66;">text</span> = regex.sub(r<span style="color: #66cccc;">'\p{Zs}'</span>, <span style="color: #66cccc;">' '</span>, text)
+    <span style="color: #99cc99; font-weight: bold;">return</span> text
+</pre>
+</div>
+
+<p>
+我们还可以根据数字类型 Unicode 字符的 name 来将其归一化到阿拉伯数字上，先看看数字类型的 Unicode 字符的 name 吧
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
+
+<span style="color: #ffcc66;">chars</span> = [<span style="color: #66cccc;">'&#9321;'</span>, <span style="color: #66cccc;">'1'</span>, <span style="color: #66cccc;">'&#8546;'</span>, <span style="color: #66cccc;">'&#12345;'</span>, <span style="color: #66cccc;">'&#9367;'</span>]
+<span style="color: #99cc99; font-weight: bold;">for</span> char <span style="color: #99cc99; font-weight: bold;">in</span> chars:
+    <span style="color: #99cc99; font-weight: bold;">print</span>(<span style="color: #66cccc;">'{}: {}'</span>.<span style="color: #cc99cc; background-color: #2d2d2d;">format</span>(char, unicodedata.name(char)))
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<pre class="example">
+⑩: CIRCLED NUMBER TEN
+1: DIGIT ONE
+Ⅲ: ROMAN NUMERAL THREE
+〹: HANGZHOU NUMERAL TWENTY
+⒗: NUMBER SIXTEEN FULL STOP
+
+</pre>
+
+<p>
+可以看到，在 NUMBER/DIGIT/NUMERAL 后面的那个单词，就是对应数值的英文单词，只要把这个英文单词提取出来就得到了一个统一的表示，然后再将其转换成阿拉伯数字即可。
+</p>
+</div>
+</div>
+</div>
