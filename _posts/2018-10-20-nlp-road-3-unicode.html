@@ -19,6 +19,7 @@ tags       : NLP
 </div>
 </div>
 
+
 <div id="outline-container-org60c6ab9" class="outline-2">
 <h2 id="org60c6ab9">一、Unicode 简介</h2>
 <div class="outline-text-2" id="text-org60c6ab9">
@@ -101,16 +102,9 @@ Unicode 中中文数据的部分被称为「Unihan 数据库」，在<a href="ht
 <pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> re
 
 <span style="color: #ffcc66;">CHINESE_CHAR_PAT</span> = re.<span style="color: #cc99cc; background-color: #2d2d2d;">compile</span>(
-    r<span style="color: #66cccc;">'['</span>
-    r<span style="color: #66cccc;">'\u3400-\u4DB5'</span>
-    r<span style="color: #66cccc;">'\u4E00-\u9FCC'</span>
-    r<span style="color: #66cccc;">'\uF900-\uFAD9'</span>
-    r<span style="color: #66cccc;">'\u20000-\u2A6D6'</span>
-    r<span style="color: #66cccc;">'\u2A700-\u2B734'</span>
-    r<span style="color: #66cccc;">'\u2B740-\u2B81D'</span>
-    r<span style="color: #66cccc;">'\u2B820-\u2CEA1'</span>
-    r<span style="color: #66cccc;">'\u2F800-\u2FA1D'</span>
-    r<span style="color: #66cccc;">']'</span>
+    r<span style="color: #66cccc;">'[\u3400-\u4DB5\u4E00-\u9FCC\uF900-\uFAD9'</span>
+    r<span style="color: #66cccc;">'\u20000-\u2A6D6\u2A700-\u2B734\u2B740-\u2B81D'</span>
+    r<span style="color: #66cccc;">'\u2B820-\u2CEA1\u2F800-\u2FA1D]'</span>
 )
 
 <span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese_char</span>(char):
@@ -169,7 +163,6 @@ Unicode 中中文数据的部分被称为「Unihan 数据库」，在<a href="ht
 
 <div class="org-src-container">
 <pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> unicodedata
-
 
 <span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_chinese</span>(char):
     <span style="color: #99cc99; font-weight: bold;">return</span> unicodedata.name(char).startswith(<span style="color: #66cccc;">'CJK'</span>)
