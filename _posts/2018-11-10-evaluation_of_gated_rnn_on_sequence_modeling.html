@@ -1,0 +1,109 @@
+---
+title: "论文笔记：Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling"
+author: Linusp
+layout: post
+categories: 论文笔记
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org978c74f">作者</a></li>
+<li><a href="#org2c223b1">观点</a></li>
+<li><a href="#org91bed9a">数据集</a></li>
+<li><a href="#orgcc13f36">模型/实验/结论</a></li>
+<li><a href="#orge0aa3d3">概念和术语</a></li>
+<li><a href="#org0f12ce6">总结</a></li>
+</ul>
+</div>
+</div>
+
+<hr />
+
+<div id="outline-container-org978c74f" class="outline-2">
+<h2 id="org978c74f">作者</h2>
+<div class="outline-text-2" id="text-org978c74f">
+<ul class="org-ul">
+<li>Junyoung Chung</li>
+<li>Caglar Gulcehre</li>
+<li>KyungHyun Cho</li>
+<li>Yoshua Bengio</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2c223b1" class="outline-2">
+<h2 id="org2c223b1">观点</h2>
+<div class="outline-text-2" id="text-org2c223b1">
+<ul class="org-ul">
+<li>RNN 在很多机器学习任务尤其是变长输入输出的任务上效果拔群</li>
+<li>经典 RNN 有两个主要的问题: 梯度消失, 长期记忆急速衰减。</li>
+<li>解决 RNN 难以训练的尝试有两种: 一种是设计更好的学习方法(Bengio 2013)，另外一种是设计更复杂的激活函数</li>
+<li>LSTM 不会每次都重写 memory，而是可以通过 input/forget gate 在需要的时候尽量地保留原来的 memory</li>
+<li>LSTM/GRU 中额外增加的 cell state，让它们能记住较早之前的某些特定输入，同时让误差反向传播时不会衰减地太快</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org91bed9a" class="outline-2">
+<h2 id="org91bed9a">数据集</h2>
+<div class="outline-text-2" id="text-org91bed9a">
+<ul class="org-ul">
+<li>polyphonic music dataset(Boulanger-Lewandowski et al. 2012)
+
+<ul class="org-ul">
+<li>Nottingham: <a href="http://abc.sourceforge.net/NMD/">http://abc.sourceforge.net/NMD/</a></li>
+<li>JSB Chorales: <a href="http://www.jsbchorales.net/index.shtml">http://www.jsbchorales.net/index.shtml</a></li>
+<li>MuseData: <a href="http://musedata.stanford.edu/">http://musedata.stanford.edu/</a></li>
+<li>Piano-midi: <a href="http://www.piano-midi.de/">http://www.piano-midi.de/</a></li>
+</ul></li>
+
+<li>Ubisoft Datasets</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgcc13f36" class="outline-2">
+<h2 id="orgcc13f36">模型/实验/结论</h2>
+<div class="outline-text-2" id="text-orgcc13f36">
+<p>
+实验: 在上述几个数据集上，分别使用经典 RNN、LSTM、GRU 进行训练，并记录 NLL 的变化情况。
+</p>
+
+<p>
+结论: LSTM/GRU 在收敛速度和最后的结果上，都要比经典 RNN 要好，但 LSTM 和 GRU 在不同的数据集和任务上虽然互有优劣但差异不大，具体使用 LSTM 还是 GRU 还要视情况而定。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge0aa3d3" class="outline-2">
+<h2 id="orge0aa3d3">概念和术语</h2>
+<div class="outline-text-2" id="text-orge0aa3d3">
+<ul class="org-ul">
+<li><p>
+polyphonic music:
+</p>
+
+<p>
+(来自维基百科)
+</p>
+
+<p>
+复音音乐/复调音乐/和弦，一种“多声部音乐”。作品中含有两条以上（含）独立旋律，通过技术性处理，和谐地结合在一起，这样的音乐就叫做复音音乐。
+</p>
+
+<p>
+复音音乐第一个“音”字表示旋律，中国音乐界习惯将“复音音乐”称为“复调音乐”，主要是着眼于曲调一词，但“复调音乐”容易与二十世纪的“复调性音乐”一词混淆。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0f12ce6" class="outline-2">
+<h2 id="org0f12ce6">总结</h2>
+<div class="outline-text-2" id="text-org0f12ce6">
+<p>
+实验很粗暴，结论很简单。
+</p>
+</div>
+</div>

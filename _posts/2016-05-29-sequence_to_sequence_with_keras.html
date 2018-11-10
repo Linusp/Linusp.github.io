@@ -1,12 +1,20 @@
----
+<div class="HTML">
+<p>
+&#x2014;
 layout     : post
 title      : "使用 Keras 实现简单的 Sequence to Sequence 模型"
-categories :
-- Deep Learning
+categories : 论文笔记
 tags       :
-- Keras
-- Sequence to Sequence
----
+</p>
+<ul class="org-ul">
+<li>Keras</li>
+<li>Sequence to Sequence</li>
+</ul>
+<p>
+&#x2014;
+</p>
+
+</div>
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
@@ -67,12 +75,12 @@ Keras 是一个 Python 的深度学习框架，它提供一些深度学习方法
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> Sequential
-<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers <span style="color: #ff7800; font-weight: bold;">import</span> Dense
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> keras.models <span style="color: #99cc99; font-weight: bold;">import</span> Sequential
+<span style="color: #99cc99; font-weight: bold;">from</span> keras.layers <span style="color: #99cc99; font-weight: bold;">import</span> Dense
 
-<span style="color: #671ebb;">model</span> = Sequential()
-model.add(Dense(input_dim=4, output_dim=9, activation=<span style="color: #409b1c;">"relu"</span>))
-model.add(Dense(output_dim=3, activation=<span style="color: #409b1c;">"softmax"</span>))
+<span style="color: #ffcc66;">model</span> = Sequential()
+model.add(Dense(input_dim=4, output_dim=9, activation=<span style="color: #66cccc;">"relu"</span>))
+model.add(Dense(output_dim=3, activation=<span style="color: #66cccc;">"softmax"</span>))
 </pre>
 </div>
 
@@ -85,7 +93,7 @@ model.add(Dense(output_dim=3, activation=<span style="color: #409b1c;">"softmax"
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"categorical_crossentropy"</span>, optimizer=<span style="color: #409b1c;">"sgd"</span>)
+<pre class="src src-python">model.<span style="color: #cc99cc; background-color: #2d2d2d;">compile</span>(loss=<span style="color: #66cccc;">"categorical_crossentropy"</span>, optimizer=<span style="color: #66cccc;">"sgd"</span>)
 </pre>
 </div>
 
@@ -132,13 +140,13 @@ Epoch 3/100
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">save_model_to_file</span>(model, struct_file, weights_file):
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">save_model_to_file</span>(model, struct_file, weights_file):
     <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">save model structure</span>
-    <span style="color: #671ebb;">model_struct</span> = model.to_json()
-    <span style="color: #000000; background-color: #f8f8ff;">open</span>(struct_file, <span style="color: #409b1c;">'w'</span>).write(model_struct)
+    <span style="color: #ffcc66;">model_struct</span> = model.to_json()
+    <span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(struct_file, <span style="color: #66cccc;">'w'</span>).write(model_struct)
 
     <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">save model weights</span>
-    model.save_weights(weights_file, overwrite=<span style="color: #3b5bb5;">True</span>)
+    model.save_weights(weights_file, overwrite=<span style="color: #6699cc;">True</span>)
 </pre>
 </div>
 
@@ -146,14 +154,14 @@ Epoch 3/100
 对于保存下来的模型，当然也有对应的方法来进行读取:
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> model_from_json
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> keras.models <span style="color: #99cc99; font-weight: bold;">import</span> model_from_json
 
-<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">load_model</span>(struct_file, weights_file):
-    <span style="color: #671ebb;">model</span> = model_from_json(<span style="color: #000000; background-color: #f8f8ff;">open</span>(struct_file, <span style="color: #409b1c;">'r'</span>).read())
-    model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"categorical_crossentropy"</span>, optimizer=<span style="color: #409b1c;">'sgd'</span>)
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">load_model</span>(struct_file, weights_file):
+    <span style="color: #ffcc66;">model</span> = model_from_json(<span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(struct_file, <span style="color: #66cccc;">'r'</span>).read())
+    model.<span style="color: #cc99cc; background-color: #2d2d2d;">compile</span>(loss=<span style="color: #66cccc;">"categorical_crossentropy"</span>, optimizer=<span style="color: #66cccc;">'sgd'</span>)
     model.load_weights(weights_file)
 
-    <span style="color: #ff7800; font-weight: bold;">return</span> model
+    <span style="color: #99cc99; font-weight: bold;">return</span> model
 </pre>
 </div>
 </div>
@@ -193,21 +201,21 @@ Pig Latin 是一个典型的输入和输出都是变长序列的问题，我们�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> itertools <span style="color: #ff7800; font-weight: bold;">import</span> dropwhile
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> itertools <span style="color: #99cc99; font-weight: bold;">import</span> dropwhile
 
-<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">is_vowel</span>(char):
-    <span style="color: #ff7800; font-weight: bold;">return</span> char <span style="color: #ff7800; font-weight: bold;">in</span> (<span style="color: #409b1c;">'a'</span>, <span style="color: #409b1c;">'e'</span>, <span style="color: #409b1c;">'i'</span>, <span style="color: #409b1c;">'o'</span>, <span style="color: #409b1c;">'u'</span>)
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_vowel</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> char <span style="color: #99cc99; font-weight: bold;">in</span> (<span style="color: #66cccc;">'a'</span>, <span style="color: #66cccc;">'e'</span>, <span style="color: #66cccc;">'i'</span>, <span style="color: #66cccc;">'o'</span>, <span style="color: #66cccc;">'u'</span>)
 
-<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">is_consonant</span>(char):
-    <span style="color: #ff7800; font-weight: bold;">return</span> <span style="color: #ff7800; font-weight: bold;">not</span> is_vowel(char)
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">is_consonant</span>(char):
+    <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #99cc99; font-weight: bold;">not</span> is_vowel(char)
 
-<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">pig_latin</span>(word):
-    <span style="color: #ff7800; font-weight: bold;">if</span> is_vowel(word[0]):
-        <span style="color: #ff7800; font-weight: bold;">return</span> word + <span style="color: #409b1c;">'yay'</span>
-    <span style="color: #ff7800; font-weight: bold;">else</span>:
-        <span style="color: #671ebb;">remain</span> = <span style="color: #409b1c;">''</span>.join(dropwhile(is_consonant, word))
-        <span style="color: #671ebb;">removed</span> = word[:<span style="color: #000000; background-color: #f8f8ff;">len</span>(word)-<span style="color: #000000; background-color: #f8f8ff;">len</span>(remain)]
-        <span style="color: #ff7800; font-weight: bold;">return</span> remain + removed + <span style="color: #409b1c;">'ay'</span>
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">pig_latin</span>(word):
+    <span style="color: #99cc99; font-weight: bold;">if</span> is_vowel(word[0]):
+        <span style="color: #99cc99; font-weight: bold;">return</span> word + <span style="color: #66cccc;">'yay'</span>
+    <span style="color: #99cc99; font-weight: bold;">else</span>:
+        <span style="color: #ffcc66;">remain</span> = <span style="color: #66cccc;">''</span>.join(dropwhile(is_consonant, word))
+        <span style="color: #ffcc66;">removed</span> = word[:<span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(word)-<span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(remain)]
+        <span style="color: #99cc99; font-weight: bold;">return</span> remain + removed + <span style="color: #66cccc;">'ay'</span>
 </pre>
 </div>
 
@@ -216,21 +224,21 @@ Pig Latin 是一个典型的输入和输出都是变长序列的问题，我们�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #ff7800; font-weight: bold;">from</span> keras.models <span style="color: #ff7800; font-weight: bold;">import</span> Sequential
-<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.recurrent <span style="color: #ff7800; font-weight: bold;">import</span> LSTM
-<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.wrappers <span style="color: #ff7800; font-weight: bold;">import</span> TimeDistributed
-<span style="color: #ff7800; font-weight: bold;">from</span> keras.layers.core <span style="color: #ff7800; font-weight: bold;">import</span> Dense, RepeatVector
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> keras.models <span style="color: #99cc99; font-weight: bold;">import</span> Sequential
+<span style="color: #99cc99; font-weight: bold;">from</span> keras.layers.recurrent <span style="color: #99cc99; font-weight: bold;">import</span> LSTM
+<span style="color: #99cc99; font-weight: bold;">from</span> keras.layers.wrappers <span style="color: #99cc99; font-weight: bold;">import</span> TimeDistributed
+<span style="color: #99cc99; font-weight: bold;">from</span> keras.layers.core <span style="color: #99cc99; font-weight: bold;">import</span> Dense, RepeatVector
 
-<span style="color: #ff7800; font-weight: bold;">def</span> <span style="color: #000000; background-color: #f8f8ff; font-weight: bold;">build_model</span>(input_size, max_out_seq_len, hidden_size):
-    <span style="color: #671ebb;">model</span> = Sequential()
-    model.add(LSTM(input_dim=input_size, output_dim=hidden_size, return_sequences=<span style="color: #3b5bb5;">False</span>))
-    model.add(Dense(hidden_size, activation=<span style="color: #409b1c;">"relu"</span>))
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">build_model</span>(input_size, max_out_seq_len, hidden_size):
+    <span style="color: #ffcc66;">model</span> = Sequential()
+    model.add(LSTM(input_dim=input_size, output_dim=hidden_size, return_sequences=<span style="color: #6699cc;">False</span>))
+    model.add(Dense(hidden_size, activation=<span style="color: #66cccc;">"relu"</span>))
     model.add(RepeatVector(max_out_seq_len))
-    model.add(LSTM(hidden_size, return_sequences=<span style="color: #3b5bb5;">True</span>))
-    model.add(TimeDistributed(Dense(output_dim=input_size, activation=<span style="color: #409b1c;">"linear"</span>)))
-    model.<span style="color: #000000; background-color: #f8f8ff;">compile</span>(loss=<span style="color: #409b1c;">"mse"</span>, optimizer=<span style="color: #409b1c;">'adam'</span>)
+    model.add(LSTM(hidden_size, return_sequences=<span style="color: #6699cc;">True</span>))
+    model.add(TimeDistributed(Dense(output_dim=input_size, activation=<span style="color: #66cccc;">"linear"</span>)))
+    model.<span style="color: #cc99cc; background-color: #2d2d2d;">compile</span>(loss=<span style="color: #66cccc;">"mse"</span>, optimizer=<span style="color: #66cccc;">'adam'</span>)
 
-    <span style="color: #ff7800; font-weight: bold;">return</span> model
+    <span style="color: #99cc99; font-weight: bold;">return</span> model
 </pre>
 </div>
 

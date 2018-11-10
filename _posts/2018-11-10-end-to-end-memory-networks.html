@@ -1,0 +1,123 @@
+---
+title: "论文笔记：End-to-End Memory Networks"
+author: Linusp
+layout: post
+categories: 论文笔记
+---
+<hr />
+
+<p>
+这篇论文是在看 <a href="hmn_for_qa.html">Hierarchical Memory Networks for Answer Selection on Unknown Words</a> 时追过去的 —— 这篇论文里有些东西讲的不明不白，还好它里面说明一些思想来自哪里。
+</p>
+
+<p>
+论文标题为 "End-to-End Memory Networks" ，很显然这篇论文是基于 Memory Networks 来做了一些工作，按照惯例，论文在开头说了一些原始的 Memory Networks 的缺点:
+</p>
+<ol class="org-ol">
+<li>Memory Networks 难以进行 BP 训练</li>
+<li>Memory Networks 需要更多的 supervision(这个没太懂，回头把 Memory Networks 再看一下)</li>
+</ol>
+
+<p>
+模型的基本结构如下图所示。
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/memn2n_single_layer.png" alt="memn2n_single_layer.png" />
+</p>
+</div>
+
+<p>
+模型的输入包含两部分，一个是图左端那个「Sentences」，即由多个句子组成的内容，这些句子会被输入到网络中并储存为「memory」，可以认为是在检索/问答时的历史信息或者说上下文；另一部分是 query 或说 question，就是图中下端那个 q，也是一个句子。模型最后的输出也是一个句子。
+</p>
+
+<p>
+模型的输出，按照我对这张图的理解，应该是一个经过 softmax 的 d 维向量(d 是 vocabulary 的大小)，但是这样的话就只能输出一个词了？从后面的实验部分来看确实是这样的，总感觉这样的话并不是很适用于常规的 QA 任务了。
+</p>
+
+<p>
+输入的 Sentences，首先通过 embedding 矩阵 A 得到 input memory。其实就是将每一个句子 encode 成一个向量，也就是图上的 \(m_{i}\)，这些 \(m_{i}\) 组合起来就得到 input memory，也就是涂上标为 <b>Input</b> 的那块矩形 M。问题 q 同样通过 embedding 矩阵 B 来 encode 成一个向量 u，然后用 u 和 M 內积得到一个权值向量:
+</p>
+
+<p>
+\[p=softmax(u^{T}M)\]
+</p>
+
+<p>
+接着，输入的 Sentences 通过另外一个 embedding 矩阵 C 得到另外一个 memory 表示，也就是图上标为 <b>Output</b> 的那块矩形 C，然后用上一步得到的权值向量来对 C 进行加权求和:
+</p>
+
+<p>
+\[o=\sum_{i}p_{i}c_{i}\]
+</p>
+
+<p>
+对于这部分，我的理解是，u 和 M 的內积相当于一个 attention，得到 attention 后，就用来在用于输出的 memory 也就是 C 中进行检索得到输出结果。不过还是有些地方不太明白，比如说反映在网络结构上，u 和 M 的內积是怎么体现的？输入连接两个 embedding 矩阵又是怎么体现的？
+</p>
+
+<p>
+在得到输出向量 o 后，按理来说直接 softmax 就可以得到结果吧，但是这里却和 question 的向量 u 做了一个加法才进行 softmax，不是很懂，也许和 ResNet 的那个 residual connection 是同样的思想？但是 2015 年 3 月份(这篇论文的发表时间)的时候 ResNet 还没有正式发表吧。
+</p>
+
+<p>
+以上就是单层时的情况，多层的时候就用前一层的(未经过 softmax 的)输出作为本层的输入向量 u，即
+</p>
+
+<p>
+\[u^{k+1} = o^{k}+u^{k}\]
+</p>
+
+<p>
+一图胜千言:
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/memn2n_multi_layer.png" alt="memn2n_multi_layer.png" />
+</p>
+</div>
+
+<p>
+在多层结构的时候，作者又对 "weight typing" 做了不同的尝试 —— 不知道「weight typing」该怎么翻译，且看下文吧。
+</p>
+
+<p>
+可以看到，在上面的多层网络结构中，每一层都有一个 A 和 C，对 A 和 C 的处理，有两种方式:
+</p>
+<ol class="org-ol">
+<li>Adjacent: 将前一层的输出 embedding 矩阵 C 作为本层的输入 embedding 矩阵 A: \(A^{k+1}=C^{k}\)</li>
+<li>Layer-wise: 像 RNN 一样，所有输入 embedding 矩阵 A 共享参数: \(A^{1}=A^{2}=...=A^{K}\)，输出矩阵 C 同理</li>
+</ol>
+
+<p>
+在对句子的 encode 上，也有两种不同的处理方式:
+</p>
+<ol class="org-ol">
+<li>BoW: 简单的将句子中每个词的 embedding 累加起来: \(m_{i}=\sum_{j}Ax_{ij}\)，u 和 \(c_{i}\) 的计算同理</li>
+<li>position encoding: \(m_{i}=\sum_{j}l_{j}\cdot Ax_{ij}\)，这里的 \(l_{j}\) 就是所谓的反映了词序的 position encoding，它和后面的值进行 element-wise 的乘法而不是內积，而这个 position encoding 的计算方法是: \(l_{kj}=(1-j/J)-(k/d)(1-2j/J)\)，其中 j 是词在句子中的位置，J 是句子的长度，k 是这个词的 vocabulary id，d 是 vocabulary 的大小。</li>
+</ol>
+
+<p>
+此外就是 Sentences 中的句子之间也是有次序的，为了反映这个次序，又在计算 \(m_{i}\) 和 \(c_{i}\) 时加了一个额外的叫做 temporal encoding 的东西，分别记为 \(T_{A}(i)\) 和 \(T_{C}(i)\):
+</p>
+
+<p>
+\[m_{i}=\sum_{j}Axij + T_{A}(i)\]
+</p>
+
+<p>
+但是并没有说 \(T_{A}(i)\) 和 \(T_{C}(i)\) 是如何表现的，只是带了一句: Both \(T_{A}\) and \(T_{C}\) are learnd during training。另外，在模型中，句子的次序对真实的次序而言是倒序的。
+</p>
+
+<p>
+作者提出这个模型除了用在 QA 上外，还在语言模型上做了实验。在做语言模型时，是没有 question/query 的，所以 u 被设置为一个常量的向量(值都为 0.1)；然后每个 \(m_{i}\) 和 \(c_{i}\) 都是对应一个词而不是一个句子了，因为 LM 是 word-level 的问题嘛。
+</p>
+
+<p>
+最后总结一下，本文的主要贡献是增强了原始的 Memory Networks，让其称为一个端到端的模型，能更方便地使用 BP 方法进行训练。
+</p>
+
+<p>
+就酱！
+</p>
