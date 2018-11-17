@@ -1,0 +1,223 @@
+---
+layout     : post
+title      : "论文笔记：Word Embedding based Edit Distance"
+categories : 论文笔记
+tags       :
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd7d2ee1">作者</a></li>
+<li><a href="#org7c7ca76">观点</a></li>
+<li><a href="#org1c36287">数据集</a></li>
+<li><a href="#org1af4fe4">模型/方法/结论</a></li>
+<li><a href="#org265043b">相关工作</a></li>
+<li><a href="#orgf7273e0">概念和术语</a></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgd7d2ee1" class="outline-2">
+<h2 id="orgd7d2ee1">作者</h2>
+<div class="outline-text-2" id="text-orgd7d2ee1">
+<p>
+Yilin Niu, Chao Qiao, Hang Li, and Minlie Huang
+</p>
+
+<p>
+看这篇论文才知道李航去今日头条 AI 实验室了……
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7c7ca76" class="outline-2">
+<h2 id="org7c7ca76">观点</h2>
+<div class="outline-text-2" id="text-org7c7ca76">
+<ul class="org-ul">
+<li>近年来深度学习被广泛应用到文本相似计算中，但这些方法一般都需要在标注数据上做有监督训练，而标注数据的收集、构建的代码是很高的</li>
+<li><p>
+在特定条件下，WED 可以退化为编辑距离或者 jaccard 系数的变种
+</p>
+
+<pre class="example">
+One can easily verify that WED degenerates to ED and a variant of Jaccard under certain condition.
+</pre>
+
+<p>
+不过论文并没有细说这些方法之间是怎么转换的。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1c36287" class="outline-2">
+<h2 id="org1c36287">数据集</h2>
+<div class="outline-text-2" id="text-org1c36287">
+<ul class="org-ul">
+<li>Quora: The dataset released from Quora contains 400k question pairs in community questionanswering labeled as matched or not-matched, 40w 样本</li>
+<li>MSRP: The dataset for paraphrase detection released from Microsoft Research, 5.8k 句子对</li>
+<li>CPC: The dataset referred to as Crowdsourced Paraphrase Collection (CPC), 2.6k 对复述句子</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org1af4fe4" class="outline-2">
+<h2 id="org1af4fe4">模型/方法/结论</h2>
+<div class="outline-text-2" id="text-org1af4fe4">
+<p>
+记 \(S_{A}=(w_{A}^{1}, w_{A}^{2}, ..., w_{A}^{l_{A}})\) 和 \(S_{B}=(w_{B}^{1}, w_{B}^{2}, ..., w_{B}^{l_{B}})\) 为两个句子，其中 \(w_{A}^{i}\) 表示句子 \(S_{A}\) 中第 \(i\) 个词，\(w_{B}^{j}\) 表示句子 \(S_{B}\) 中第 \(j\) 个词。
+</p>
+
+<p>
+在计算编辑距离时，以 \(S_{A}\) 为基准句子，计算 \(S_{B}\) 相对 \(S_{A}\) 的编辑距离，即认为 \(S_{B}\) 是 \(S_{A}\) 经过删除、插入、替换后得到的新的句子。
+</p>
+
+<p>
+然后定义 \(c_{i,j}\) 为 \((w_{A}^{1}, w_{A}^{2}, ..., w_{A}^{i})\) 经过编辑变换成 \((w_{B}^{1}, w_{B}^{2}, ..., w_{B}^{j})\) 所需的最小操作代价。
+</p>
+
+<p>
+那么就有
+</p>
+
+<p>
+\[\begin{eqnarray}c_{i,j} = \begin{cases}
+  c_{i,j-1}+i(w_{B}^{j}) \\
+  c_{i-1,j}+d(w_{A}^{i})\\
+  c_{i-1,j-1}+s(w_{A}^{i}, w_{B}^{j})
+  \end{cases}\end{eqnarray}\]
+</p>
+
+<p>
+其中 \(i(w_{B}^{j})\) 表示插入 \(w_{B}^{j}\) 的代价；\(d(w_{A}^{i})\) 表示删除 \(w_{A}^{i}\) 的代码。这两者在传统的编辑距离里往往值是 1，在生物信息学的序列对比上，删除的代码可能会再适当地高一点。
+</p>
+
+<p>
+\(s(w_{A}^{i}, w_{B}^{j})\) 则表示将 \(w_{A}^{i}\) 替换为 \(w_{B}^{j}\) 的代价，当两者想等时代码就是 0 ，当两者不相等时这个代价就要大于 0。替换操作在不同的地方使用的代价会不一样，有些地方当作和插入、删除一样，即 1，本文的方法则是将替换视作先删除后插入两次操作，所以代价是 2。
+</p>
+
+<p>
+所谓的结合 embedding，就是对这三个代价函数做了修改，使之利用词的 embedding 信息。
+</p>
+
+<p>
+对插入操作，定义代价为：
+</p>
+
+<p>
+\[i(w_{B}^{j})=1 - \lambda \cdot max_{w_{A}^{k}\in S_{A}, w_{A}^{k} \neq w_{A}^{i}} (sim(w_{A}^{k}, w_{B}^{j}) + \mu)\]
+</p>
+
+<p>
+对删除操作，定义代价为：
+</p>
+
+<p>
+\[d(w_{A}^{i})=1 - \lambda \cdot max_{w_{B}^{k}\in S_{B}, w_{B}^{k} \neq w_{B}^{j}} (sim(w_{A}^{i}, w_{B}^{k}) + \mu)\]
+</p>
+
+<p>
+对替换操作，定义代价为：
+</p>
+
+<p>
+\[s(w_{A}^{i}, w_{B}^{j})=2 - 2 sim(w_{A}^{i}, w_{B}^{j})\]
+</p>
+
+<p>
+第三个替换操作的定义很好理解，但是前面两个感觉有点疑惑呀……
+</p>
+
+<p>
+能想到的解释是这样的
+</p>
+<ul class="org-ul">
+<li>当插入新的词时，如果词和句子 A 中的词有相似的，那么对语义的影响就不是那么大</li>
+<li>当删除句子 A 中的词时，如果句子 B 中还有词和这个删除的词相似，那么对语义的影响也不会那么大</li>
+</ul>
+
+<p>
+但是 LCS 的好处在于每个词是一一对应的，而这里在计算插入和删除的时候并没有保证有序的一一对应关系呀。
+</p>
+
+<p>
+和其他方法的对比
+</p>
+<ul class="org-ul">
+<li>ED: 经典编辑距离</li>
+<li>TF-IDF: 基于 tfidf 的 cosine 相似</li>
+<li>Embedding: 基于 embedding 的 cosine 相似</li>
+<li>Jaccard: jaccard 系数</li>
+<li>Autoencoder: 这个应该是指语言模型一类的，但是为什么引用的是 Hinton 2006 年的论文……</li>
+<li><p>
+BOW+MLP: 有监督方法，给定两个句子，先将句子中的 embedding 加和，然后拼接起来输入到 MLP
+</p>
+
+<p>
+分两种情况：一层 MLP 和三层 MLP
+</p></li>
+
+<li><p>
+LSTM+MLP: 用 LSTM 编码句子，然后拼接起来输入到 MLP
+</p>
+
+<p>
+分两种情况：一层 MLP 和三层 MLP
+</p></li>
+</ul>
+
+
+<p>
+对比结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/wed_results.png" alt="wed_results.png" />
+</p>
+</div>
+
+<p>
+结论：
+</p>
+<ul class="org-ul">
+<li>本文的方法要优于这几种无监督方法：编辑距离、基于TFIDF的 cosine、基于 word embedding 的 cosine 方法、jaccard 系数</li>
+<li>对比两个有监督方法(BOW/LSTM+3层MLP)，发现大概在 30k 这个数据量以上，有监督的方法才会显著好于 WED 方法</li>
+<li><p>
+在 Quora 数据集上做了一些采样来分析错误，发现超过 50% 的错误在于没有区分开关键词和非关键词，所以如果有机制能给关键词更高的权重，那么 WED 应该还会有更高的效果 —— 比如说用 TF/IDF 来给每个词加权？
+</p>
+
+<p>
+嗯，没有给一些例子呀……
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org265043b" class="outline-2">
+<h2 id="org265043b">相关工作</h2>
+<div class="outline-text-2" id="text-org265043b">
+<ul class="org-ul">
+<li>Learning semantic representations using convolutional neural networks for web search, 2014</li>
+<li>Convolutional neural network architectures for matching natural language sentences, 2014</li>
+<li>Text matching as image recognition, 2016</li>
+<li>A deep architecture for semantic matching with multiple positional sentence representations, 2016</li>
+<li>A decomposable attention model for natural language inference, 2016</li>
+<li>编辑距离：Navarro 2001, Jurafsky and Martin 2009</li>
+<li>jaccard 系数：Tan et al 2005</li>
+<li>基于 word embedding 的 cosine 相似：Mitchell and Lapata 2008, Milajevs et al 2014</li>
+<li>基于 TFIDF 的 cosine 相似：Buckley, 1988</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf7273e0" class="outline-2">
+<h2 id="orgf7273e0">概念和术语</h2>
+<div class="outline-text-2" id="text-orgf7273e0">
+<ul class="org-ul">
+<li>WED: Word Embedding based Edit Distance 缩写（不应该是 WEED 吗）</li>
+</ul>
+</div>
+</div>
