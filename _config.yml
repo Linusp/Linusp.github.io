@@ -32,8 +32,6 @@ nav:
     url : /tags.html
   - text: 归档
     url : /archive.html
-  - text: 笔记
-    url : /notes.html
   - text: 链接
     url : /link.html
   - text: 关于
