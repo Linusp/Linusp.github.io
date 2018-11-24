@@ -1374,7 +1374,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(add-to-list 'org-capture-templates
              '(<span style="color: #66cccc;">"c"</span> <span style="color: #66cccc;">"Contacts"</span> entry (file <span style="color: #66cccc;">"~/Dropbox/org/contacts.org"</span>)
-               <span style="color: #66cccc;">"* %^{&#22995;&#21517;} %^{&#25163;&#26426;&#21495;}p %^{&#37038;&#31665;}p %^{&#20303;&#22336;}p\n\n  %?"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> t))
+               <span style="color: #66cccc;">"* %^{&#22995;&#21517;} %^{&#25163;&#26426;&#21495;}p %^{&#37038;&#31665;}p %^{&#20303;&#22336;}p\n\n  %?"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">:empty-lines</span> 1))
 </pre>
 </div>
 </div>
@@ -1718,16 +1718,15 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 <pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">generate-anki-note-body</span> ()
   (<span style="color: #99cc99; font-weight: bold;">interactive</span>)
   (message <span style="color: #66cccc;">"Fetching note types..."</span>)
-  (<span style="color: #99cc99; font-weight: bold;">let</span> ((note-types
-         (sort (anki-editor--anki-connect-invoke-result <span style="color: #66cccc;">"modelNames"</span> 5)
-               #'string-lessp))
-        note-type fields)
+  (<span style="color: #99cc99; font-weight: bold;">let</span> ((note-types (sort (anki-editor-note-types) #'string-lessp))
+        (decks (sort (anki-editor-deck-names) #'string-lessp))
+        deck note-type fields)
+    (<span style="color: #99cc99; font-weight: bold;">setq</span> deck (completing-read <span style="color: #66cccc;">"Choose a deck: "</span> decks))
     (<span style="color: #99cc99; font-weight: bold;">setq</span> note-type (completing-read <span style="color: #66cccc;">"Choose a note type: "</span> note-types))
     (message <span style="color: #66cccc;">"Fetching note fields..."</span>)
-    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (anki-editor--anki-connect-invoke-result
-                  <span style="color: #66cccc;">"modelFieldNames"</span> 5
-                  `((modelName . ,note-type))))
+    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span> <span style="color: #66cccc;">"modelFieldNames"</span> `((modelName . ,note-type))))
     (concat <span style="color: #66cccc;">"  :PROPERTIES:\n"</span>
+            <span style="color: #66cccc;">"  :ANKI_DECK: "</span> deck <span style="color: #66cccc;">"\n"</span>
             <span style="color: #66cccc;">"  :ANKI_NOTE_TYPE: "</span> note-type <span style="color: #66cccc;">"\n"</span>
             <span style="color: #66cccc;">"  :END:\n\n"</span>
             (mapconcat (<span style="color: #99cc99; font-weight: bold;">lambda</span> (str) (concat <span style="color: #66cccc;">"** "</span> str))
@@ -1737,7 +1736,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </div>
 
 <p>
-这个函数的定义是抄了 anki-editor 中的代码，做了一些修改得到的。
+这个函数的定义是抄了 anki-editor(version:20180729) 中的代码，做了一些修改得到的。
 </p>
 </div>
 </div>
