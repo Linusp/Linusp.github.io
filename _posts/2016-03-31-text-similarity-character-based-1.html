@@ -1,32 +1,33 @@
 ---
 layout     : post
 title      : "文本相似度量方法(2): LCS 和编辑距离"
-categories : 算法
+categories : NLP
 tags       :
 - LCS
 - 编辑距离
 - 序列比对
+- NLP
 ---
 
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">最长公共子序列</a>
+<li><a href="#org1b0e74a">最长公共子序列</a>
 <ul>
-<li><a href="#orgheadline2">问题定义</a></li>
-<li><a href="#orgheadline3">求解方法</a></li>
-<li><a href="#orgheadline4">数学表示与相似度量</a></li>
+<li><a href="#org9e2d67b">问题定义</a></li>
+<li><a href="#org18f7859">求解方法</a></li>
+<li><a href="#org8809000">数学表示与相似度量</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline5">编辑距离</a>
+<li><a href="#orge053564">编辑距离</a>
 <ul>
-<li><a href="#orgheadline6">所谓编辑距离</a></li>
-<li><a href="#orgheadline7">求解方法</a></li>
-<li><a href="#orgheadline8">从编辑距离到相似度量</a></li>
+<li><a href="#org2f0b3ce">所谓编辑距离</a></li>
+<li><a href="#org1c231e3">求解方法</a></li>
+<li><a href="#org8b04415">从编辑距离到相似度量</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline9">一点看法</a></li>
+<li><a href="#org984262a">一点看法</a></li>
 </ul>
 </div>
 </div>
@@ -34,12 +35,13 @@ tags       :
 本文是<a href="http://linusp.github.io/2015/11/15/text_similarity_survey.html">《文本相似度量方法(1): 概览》</a> 一文的后续，着重讲述最长公共子序列(Longest Common Subsequence, LCS)和编辑距离的原理和实现。
 </p>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">最长公共子序列</h2>
-<div class="outline-text-2" id="text-orgheadline1">
-</div><div id="outline-container-orgheadline2" class="outline-3">
-<h3 id="orgheadline2">问题定义</h3>
-<div class="outline-text-3" id="text-orgheadline2">
+<div id="outline-container-org1b0e74a" class="outline-2">
+<h2 id="org1b0e74a">最长公共子序列</h2>
+<div class="outline-text-2" id="text-org1b0e74a">
+</div>
+<div id="outline-container-org9e2d67b" class="outline-3">
+<h3 id="org9e2d67b">问题定义</h3>
+<div class="outline-text-3" id="text-org9e2d67b">
 <p>
 对给定序列 A 和 B, 满足以下条件的一个序列 C 被称为 A 和 B 的公共子序列:
 </p>
@@ -73,9 +75,9 @@ tags       :
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">求解方法</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-org18f7859" class="outline-3">
+<h3 id="org18f7859">求解方法</h3>
+<div class="outline-text-3" id="text-org18f7859">
 <p>
 LCS 是一个比较经典的算法问题，了解动态规划的读者应该对它不会陌生。
 </p>
@@ -104,32 +106,27 @@ LCS 是一个比较经典的算法问题，了解动态规划的读者应该对�
 上述过程很明显是一个递归过程，所以可以简单地实现出来。
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">lcs</span>(a, b):
+    <span style="color: #99cc99; font-weight: bold;">if</span> <span style="color: #99cc99; font-weight: bold;">not</span> a <span style="color: #99cc99; font-weight: bold;">or</span> <span style="color: #99cc99; font-weight: bold;">not</span> b:
+        <span style="color: #99cc99; font-weight: bold;">return</span> []
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">lcs</span>(a, b):
-    <span style="color: #729fcf;">if</span> <span style="color: #729fcf;">not</span> a <span style="color: #729fcf;">or</span> <span style="color: #729fcf;">not</span> b:
-        <span style="color: #729fcf;">return</span> []
-
-    <span style="color: #eeeeec;">res</span> = []
-    <span style="color: #729fcf;">if</span> a[0] == b[0]:
+    <span style="color: #ffcc66;">res</span> = []
+    <span style="color: #99cc99; font-weight: bold;">if</span> a[0] == b[0]:
         res.append(a[0])
         res.extend(lcs(a[1:], b[1:]))
-    <span style="color: #729fcf;">else</span>:
-        <span style="color: #eeeeec;">lcs_one</span> = lcs(a[1:], b)
-        <span style="color: #eeeeec;">lcs_two</span> = lcs(a, b[1:])
-        <span style="color: #eeeeec;">res</span> = lcs_one <span style="color: #729fcf;">if</span> <span style="color: #729fcf;">len</span>(lcs_one) &gt; <span style="color: #729fcf;">len</span>(lcs_two) <span style="color: #729fcf;">else</span> lcs_two
+    <span style="color: #99cc99; font-weight: bold;">else</span>:
+        <span style="color: #ffcc66;">lcs_one</span> = lcs(a[1:], b)
+        <span style="color: #ffcc66;">lcs_two</span> = lcs(a, b[1:])
+        <span style="color: #ffcc66;">res</span> = lcs_one <span style="color: #99cc99; font-weight: bold;">if</span> <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(lcs_one) &gt; <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(lcs_two) <span style="color: #99cc99; font-weight: bold;">else</span> lcs_two
 
-    <span style="color: #729fcf;">return</span> res
+    <span style="color: #99cc99; font-weight: bold;">return</span> res
 
-<span style="color: #eeeeec;">res</span> = lcs(<span style="color: #ad7fa8;">'hello world'</span>, <span style="color: #ad7fa8;">'hero word'</span>)
-<span style="color: #729fcf;">print</span> <span style="color: #ad7fa8;">''</span>.join(res)
+<span style="color: #ffcc66;">res</span> = lcs(<span style="color: #66cccc;">'hello world'</span>, <span style="color: #66cccc;">'hero word'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> <span style="color: #66cccc;">''</span>.join(res)
 </pre>
 </div>
-
-<pre class="example">
-heo word
-</pre>
 
 <p>
 上述代码可以解决问题，看起来行数也不多，但其实还是有问题的，那就是递归树的存在导致了大量的重复计算、以及可能存在的栈溢出风险。举个栗子，计算 "hello" 和 "hero" 的过程如下图所示:
@@ -162,43 +159,38 @@ heo word
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-
-<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
-
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">lcs</span>(a, b):
-    <span style="color: #eeeeec;">m</span>, <span style="color: #eeeeec;">n</span> = <span style="color: #729fcf;">len</span>(a), <span style="color: #729fcf;">len</span>(b)
-
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">&#20026;&#20415;&#20110;&#35745;&#31639;&#65292;&#20026; D &#22810;&#22686;&#21152;&#19968;&#34892;&#19968;&#21015;</span>
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">&#20854;&#20013;&#31532;&#19968;&#34892;&#21644;&#31532;&#19968;&#21015;&#20013;&#30340;&#20803;&#32032;&#20445;&#25345;&#20026;&#31354;&#23383;&#31526;&#20018;</span>
-    <span style="color: #eeeeec;">D</span> = np.zeros((m+1, n+1), dtype=<span style="color: #729fcf;">object</span>)
-    <span style="color: #eeeeec;">D</span>[:] = <span style="color: #ad7fa8;">''</span>                   <span style="color: #888a85;"># </span><span style="color: #888a85;">&#21021;&#22987;&#21270;&#20026;&#31354;&#23383;&#31526;&#20018;</span>
-
-    <span style="color: #729fcf;">for</span> idx_a, ch_a <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(a, 1):
-        <span style="color: #729fcf;">for</span> idx_b, ch_b <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(b, 1):
-            <span style="color: #888a85;"># </span><span style="color: #888a85;">&#33509; D &#19981;&#22686;&#21152;&#19968;&#34892;&#19968;&#21015;&#65292;&#19979;&#26631; idx_a-1/idx_b-1 &#35201;&#21028;&#26029;&#26159;&#21542;&#38750;&#36127;</span>
-            <span style="color: #729fcf;">if</span> ch_a == ch_b:
-                <span style="color: #eeeeec;">D</span>[idx_a, idx_b] = D[idx_a-1, idx_b-1] + ch_a
-            <span style="color: #729fcf;">else</span>:
-                <span style="color: #eeeeec;">lcs_one</span> = D[idx_a, idx_b-1]
-                <span style="color: #eeeeec;">lcs_two</span> = D[idx_a-1, idx_b]
-                <span style="color: #729fcf;">if</span> <span style="color: #729fcf;">len</span>(lcs_one) &gt; <span style="color: #729fcf;">len</span>(lcs_two):
-                    <span style="color: #eeeeec;">D</span>[idx_a, idx_b] = lcs_one
-                <span style="color: #729fcf;">else</span>:
-                    <span style="color: #eeeeec;">D</span>[idx_a, idx_b] = lcs_two
-
-    <span style="color: #729fcf;">return</span> D[m, n]
+<span style="color: #99cc99; font-weight: bold;">import</span> numpy <span style="color: #99cc99; font-weight: bold;">as</span> np
 
 
-<span style="color: #729fcf;">print</span> lcs(<span style="color: #ad7fa8;">'hello'</span>, <span style="color: #ad7fa8;">'hero'</span>)
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">lcs</span>(a, b):
+    <span style="color: #ffcc66;">m</span>, <span style="color: #ffcc66;">n</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(a), <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(b)
+
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#20026;&#20415;&#20110;&#35745;&#31639;&#65292;&#20026; D &#22810;&#22686;&#21152;&#19968;&#34892;&#19968;&#21015;</span>
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#20854;&#20013;&#31532;&#19968;&#34892;&#21644;&#31532;&#19968;&#21015;&#20013;&#30340;&#20803;&#32032;&#20445;&#25345;&#20026;&#31354;&#23383;&#31526;&#20018;</span>
+    <span style="color: #ffcc66;">D</span> = np.zeros((m+1, n+1), dtype=<span style="color: #cc99cc; background-color: #2d2d2d;">object</span>)
+    <span style="color: #ffcc66;">D</span>[:] = <span style="color: #66cccc;">''</span>                   <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#21021;&#22987;&#21270;&#20026;&#31354;&#23383;&#31526;&#20018;</span>
+
+    <span style="color: #99cc99; font-weight: bold;">for</span> idx_a, ch_a <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(a, 1):
+        <span style="color: #99cc99; font-weight: bold;">for</span> idx_b, ch_b <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(b, 1):
+            <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#33509; D &#19981;&#22686;&#21152;&#19968;&#34892;&#19968;&#21015;&#65292;&#19979;&#26631; idx_a-1/idx_b-1 &#35201;&#21028;&#26029;&#26159;&#21542;&#38750;&#36127;</span>
+            <span style="color: #99cc99; font-weight: bold;">if</span> ch_a == ch_b:
+                <span style="color: #ffcc66;">D</span>[idx_a, idx_b] = D[idx_a-1, idx_b-1] + ch_a
+            <span style="color: #99cc99; font-weight: bold;">else</span>:
+                <span style="color: #ffcc66;">lcs_one</span> = D[idx_a, idx_b-1]
+                <span style="color: #ffcc66;">lcs_two</span> = D[idx_a-1, idx_b]
+                <span style="color: #99cc99; font-weight: bold;">if</span> <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(lcs_one) &gt; <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(lcs_two):
+                    <span style="color: #ffcc66;">D</span>[idx_a, idx_b] = lcs_one
+                <span style="color: #99cc99; font-weight: bold;">else</span>:
+                    <span style="color: #ffcc66;">D</span>[idx_a, idx_b] = lcs_two
+
+    <span style="color: #99cc99; font-weight: bold;">return</span> D[m, n]
+
+
+<span style="color: #99cc99; font-weight: bold;">print</span> lcs(<span style="color: #66cccc;">'hello'</span>, <span style="color: #66cccc;">'hero'</span>)
 </pre>
 </div>
-
-<pre class="example">
-heo
-</pre>
 
 <p>
 当然实际上我们不会去用一个二维数组来保存计算过程中用到的(非最长)公共子序列，这样虽然很直观，但是在内存使用上有点丑陋。标准的做法是只记录这些公共子序列的长度，计算完整个长度矩阵后，再从最后的位置回溯取得 LCS 。
@@ -583,42 +575,29 @@ heo
 先把子序列长度矩阵的计算方法实现:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> numpy <span style="color: #99cc99; font-weight: bold;">as</span> np
 
-<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
 
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">lcs_matrix</span>(a, b):
+    <span style="color: #ffcc66;">m</span>, <span style="color: #ffcc66;">n</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(a), <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(b)
+    <span style="color: #ffcc66;">matrix</span> = np.zeros((m+1, n+1), dtype=<span style="color: #cc99cc; background-color: #2d2d2d;">int</span>)
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">lcs_matrix</span>(a, b):
-    <span style="color: #eeeeec;">m</span>, <span style="color: #eeeeec;">n</span> = <span style="color: #729fcf;">len</span>(a), <span style="color: #729fcf;">len</span>(b)
-    <span style="color: #eeeeec;">matrix</span> = np.zeros((m+1, n+1), dtype=<span style="color: #729fcf;">int</span>)
-
-    <span style="color: #729fcf;">for</span> idx_a, ch_a <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(a, 1):
-        <span style="color: #729fcf;">for</span> idx_b, ch_b <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(b, 1):
-            <span style="color: #729fcf;">if</span> ch_a == ch_b:
-                <span style="color: #eeeeec;">matrix</span>[idx_a, idx_b] = matrix[idx_a-1, idx_b-1] + 1
-            <span style="color: #729fcf;">else</span>:
-                <span style="color: #eeeeec;">matrix</span>[idx_a, idx_b] = <span style="color: #729fcf;">max</span>(
+    <span style="color: #99cc99; font-weight: bold;">for</span> idx_a, ch_a <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(a, 1):
+        <span style="color: #99cc99; font-weight: bold;">for</span> idx_b, ch_b <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(b, 1):
+            <span style="color: #99cc99; font-weight: bold;">if</span> ch_a == ch_b:
+                <span style="color: #ffcc66;">matrix</span>[idx_a, idx_b] = matrix[idx_a-1, idx_b-1] + 1
+            <span style="color: #99cc99; font-weight: bold;">else</span>:
+                <span style="color: #ffcc66;">matrix</span>[idx_a, idx_b] = <span style="color: #cc99cc; background-color: #2d2d2d;">max</span>(
                     matrix[idx_a, idx_b-1],
                     matrix[idx_a-1, idx_b]
                 )
 
-    <span style="color: #729fcf;">return</span> matrix
+    <span style="color: #99cc99; font-weight: bold;">return</span> matrix
 
 
-<span style="color: #729fcf;">print</span> lcs_matrix(<span style="color: #ad7fa8;">'GCGGACTG'</span>, <span style="color: #ad7fa8;">'GCCCTAGCG'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> lcs_matrix(<span style="color: #66cccc;">'GCGGACTG'</span>, <span style="color: #66cccc;">'GCCCTAGCG'</span>)
 </pre>
 </div>
-
-<pre class="example">
-[[0 0 0 0 0 0 0 0 0 0]
- [0 1 1 1 1 1 1 1 1 1]
- [0 1 2 2 2 2 2 2 2 2]
- [0 1 2 2 2 2 2 3 3 3]
- [0 1 2 2 2 2 2 3 3 4]
- [0 1 2 2 2 2 3 3 3 4]
- [0 1 2 3 3 3 3 3 4 4]
- [0 1 2 3 3 4 4 4 4 4]
- [0 1 2 3 3 4 4 5 5 5]]
-</pre>
 
 <p>
 根据长度矩阵的计算规则，可以按照以下步骤来反推出 LCS:
@@ -635,34 +614,33 @@ heo
 用代码实现出来大概是这样:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> numpy <span style="color: #99cc99; font-weight: bold;">as</span> np
 
-<pre class="src src-python"><span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
 
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">lcs_backtrace</span>(a, b, matrix):
+    <span style="color: #ffcc66;">idx_a</span>, <span style="color: #ffcc66;">idx_b</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(a) - 1, <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(b) - 1
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">lcs_backtrace</span>(a, b, matrix):
-    <span style="color: #eeeeec;">idx_a</span>, <span style="color: #eeeeec;">idx_b</span> = <span style="color: #729fcf;">len</span>(a) - 1, <span style="color: #729fcf;">len</span>(b) - 1
-
-    <span style="color: #eeeeec;">lcs_list</span> = []
-    <span style="color: #729fcf;">while</span> matrix[idx_a+1, idx_b+1] &gt; 0:
-        <span style="color: #729fcf;">if</span> a[idx_a] == b[idx_b]:
+    <span style="color: #ffcc66;">lcs_list</span> = []
+    <span style="color: #99cc99; font-weight: bold;">while</span> matrix[idx_a+1, idx_b+1] &gt; 0:
+        <span style="color: #99cc99; font-weight: bold;">if</span> a[idx_a] == b[idx_b]:
             lcs_list.append(a[idx_a])
-            <span style="color: #eeeeec;">idx_a</span> -= 1
-            <span style="color: #eeeeec;">idx_b</span> -= 1
-        <span style="color: #729fcf;">else</span>:
-            <span style="color: #eeeeec;">upper_value</span> = matrix[idx_a, idx_b+1]
-            <span style="color: #eeeeec;">left_value</span> = matrix[idx_a+1, idx_b]
-            <span style="color: #729fcf;">if</span> upper_value &gt; left_value:
-                <span style="color: #eeeeec;">idx_a</span> -= 1
-            <span style="color: #729fcf;">else</span>:
-                <span style="color: #eeeeec;">idx_b</span> -= 1
+            <span style="color: #ffcc66;">idx_a</span> -= 1
+            <span style="color: #ffcc66;">idx_b</span> -= 1
+        <span style="color: #99cc99; font-weight: bold;">else</span>:
+            <span style="color: #ffcc66;">upper_value</span> = matrix[idx_a, idx_b+1]
+            <span style="color: #ffcc66;">left_value</span> = matrix[idx_a+1, idx_b]
+            <span style="color: #99cc99; font-weight: bold;">if</span> upper_value &gt; left_value:
+                <span style="color: #ffcc66;">idx_a</span> -= 1
+            <span style="color: #99cc99; font-weight: bold;">else</span>:
+                <span style="color: #ffcc66;">idx_b</span> -= 1
 
     lcs_list.reverse()
-    <span style="color: #729fcf;">return</span> lcs_list
+    <span style="color: #99cc99; font-weight: bold;">return</span> lcs_list
 
 
-<span style="color: #eeeeec;">a</span> = <span style="color: #ad7fa8;">'GCGGACTG'</span>
-<span style="color: #eeeeec;">b</span> = <span style="color: #ad7fa8;">'GCCCTAGCG'</span>
-<span style="color: #eeeeec;">matrix</span> = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+<span style="color: #ffcc66;">a</span> = <span style="color: #66cccc;">'GCGGACTG'</span>
+<span style="color: #ffcc66;">b</span> = <span style="color: #66cccc;">'GCCCTAGCG'</span>
+<span style="color: #ffcc66;">matrix</span> = np.array([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                    [0, 1, 2, 2, 2, 2, 2, 2, 2, 2],
                    [0, 1, 2, 2, 2, 2, 2, 3, 3, 3],
@@ -670,23 +648,19 @@ heo
                    [0, 1, 2, 2, 2, 2, 3, 3, 3, 4],
                    [0, 1, 2, 3, 3, 3, 3, 3, 4, 4],
                    [0, 1, 2, 3, 3, 4, 4, 4, 4, 4],
-                   [0, 1, 2, 3, 3, 4, 4, 5, 5, 5]], dtype=<span style="color: #729fcf;">int</span>)
-<span style="color: #729fcf;">print</span> lcs_backtrace(a, b, matrix)
+                   [0, 1, 2, 3, 3, 4, 4, 5, 5, 5]], dtype=<span style="color: #cc99cc; background-color: #2d2d2d;">int</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> lcs_backtrace(a, b, matrix)
 </pre>
 </div>
-
-<pre class="example">
-['G', 'C', 'C', 'T', 'G']
-</pre>
 
 <p>
 需要注意的是，LCS 结果可能并不唯一。
 </p>
 </div>
 </div>
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">数学表示与相似度量</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org8809000" class="outline-3">
+<h3 id="org8809000">数学表示与相似度量</h3>
+<div class="outline-text-3" id="text-org8809000">
 <p>
 上述求解方法可以用数学语言表示如下:
 </p>
@@ -719,12 +693,13 @@ heo
 </div>
 
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5">编辑距离</h2>
-<div class="outline-text-2" id="text-orgheadline5">
-</div><div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">所谓编辑距离</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-orge053564" class="outline-2">
+<h2 id="orge053564">编辑距离</h2>
+<div class="outline-text-2" id="text-orge053564">
+</div>
+<div id="outline-container-org2f0b3ce" class="outline-3">
+<h3 id="org2f0b3ce">所谓编辑距离</h3>
+<div class="outline-text-3" id="text-org2f0b3ce">
 <p>
 编辑距离最早由俄罗斯科学家 <a href="https://en.wikipedia.org/wiki/Vladimir_Levenshtein">Levenshtein</a> 提出，故又称 "Levenshtein 距离"。其定义为: 给定两个字符串 A 和 B，将 A 通过删除、插入、替换操作转换为 B 所需要的最少操作次数。
 </p>
@@ -748,9 +723,9 @@ heo
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">求解方法</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-org1c231e3" class="outline-3">
+<h3 id="org1c231e3">求解方法</h3>
+<div class="outline-text-3" id="text-org1c231e3">
 <p>
 编辑距离的核心过程 LCS 在我看来是一样的，可以看一下它的数学描述:
 </p>
@@ -767,50 +742,45 @@ heo
 按照其数学描述，可以实现如下:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
-
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">edit_distance</span>(a, b):
-    <span style="color: #eeeeec;">m</span>, <span style="color: #eeeeec;">n</span> = <span style="color: #729fcf;">len</span>(a), <span style="color: #729fcf;">len</span>(b)
-    <span style="color: #eeeeec;">dis_matrix</span> = np.zeros((m+1, n+1), dtype=<span style="color: #729fcf;">int</span>)
-
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">&#21021;&#22987;&#21270;&#36317;&#31163;&#30697;&#38453;&#30340;&#31532; 0 &#34892;&#21644;&#31532; 0 &#21015;</span>
-    <span style="color: #eeeeec;">dis_matrix</span>[0, :] = np.arange(n+1)
-    <span style="color: #eeeeec;">dis_matrix</span>[:, 0] = np.arange(m+1)
-
-    <span style="color: #888a85;"># </span><span style="color: #888a85;">&#24320;&#22987;&#35745;&#31639;</span>
-    <span style="color: #729fcf;">for</span> idx_a, ch_a <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(a, 1):
-        <span style="color: #729fcf;">for</span> idx_b, ch_b <span style="color: #729fcf;">in</span> <span style="color: #729fcf;">enumerate</span>(b, 1):
-            <span style="color: #eeeeec;">cur_dis</span> = <span style="color: #e6a00f;">None</span>
-
-            <span style="color: #eeeeec;">dis_left</span> = dis_matrix[idx_a, idx_b-1]
-            <span style="color: #eeeeec;">dis_upper</span> = dis_matrix[idx_a-1, idx_b]
-            <span style="color: #eeeeec;">dis_upper_left</span> = dis_matrix[idx_a-1, idx_b-1]
-            <span style="color: #729fcf;">if</span> ch_a == ch_b:
-                <span style="color: #eeeeec;">cur_dis</span> = <span style="color: #729fcf;">min</span>(dis_left+1, dis_upper+1, dis_upper_left)
-            <span style="color: #729fcf;">else</span>:
-                <span style="color: #eeeeec;">cur_dis</span> = <span style="color: #729fcf;">min</span>(dis_left+1, dis_upper+1, dis_upper_left + 1)
-
-            <span style="color: #eeeeec;">dis_matrix</span>[idx_a, idx_b] = cur_dis
-
-    <span style="color: #729fcf;">return</span> dis_matrix[m, n]
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">import</span> numpy <span style="color: #99cc99; font-weight: bold;">as</span> np
 
 
-<span style="color: #729fcf;">print</span> edit_distance(<span style="color: #ad7fa8;">'kitten'</span>, <span style="color: #ad7fa8;">'sitting'</span>)
-</pre>
-</div>
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">edit_distance</span>(a, b):
+    <span style="color: #ffcc66;">m</span>, <span style="color: #ffcc66;">n</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(a), <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(b)
+    <span style="color: #ffcc66;">dis_matrix</span> = np.zeros((m+1, n+1), dtype=<span style="color: #cc99cc; background-color: #2d2d2d;">int</span>)
 
-<pre class="example">
-3
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#21021;&#22987;&#21270;&#36317;&#31163;&#30697;&#38453;&#30340;&#31532; 0 &#34892;&#21644;&#31532; 0 &#21015;</span>
+    <span style="color: #ffcc66;">dis_matrix</span>[0, :] = np.arange(n+1)
+    <span style="color: #ffcc66;">dis_matrix</span>[:, 0] = np.arange(m+1)
+
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#24320;&#22987;&#35745;&#31639;</span>
+    <span style="color: #99cc99; font-weight: bold;">for</span> idx_a, ch_a <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(a, 1):
+        <span style="color: #99cc99; font-weight: bold;">for</span> idx_b, ch_b <span style="color: #99cc99; font-weight: bold;">in</span> <span style="color: #cc99cc; background-color: #2d2d2d;">enumerate</span>(b, 1):
+            <span style="color: #ffcc66;">cur_dis</span> = <span style="color: #6699cc;">None</span>
+
+            <span style="color: #ffcc66;">dis_left</span> = dis_matrix[idx_a, idx_b-1]
+            <span style="color: #ffcc66;">dis_upper</span> = dis_matrix[idx_a-1, idx_b]
+            <span style="color: #ffcc66;">dis_upper_left</span> = dis_matrix[idx_a-1, idx_b-1]
+            <span style="color: #99cc99; font-weight: bold;">if</span> ch_a == ch_b:
+                <span style="color: #ffcc66;">cur_dis</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">min</span>(dis_left+1, dis_upper+1, dis_upper_left)
+            <span style="color: #99cc99; font-weight: bold;">else</span>:
+                <span style="color: #ffcc66;">cur_dis</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">min</span>(dis_left+1, dis_upper+1, dis_upper_left + 1)
+
+            <span style="color: #ffcc66;">dis_matrix</span>[idx_a, idx_b] = cur_dis
+
+    <span style="color: #99cc99; font-weight: bold;">return</span> dis_matrix[m, n]
+
+
+<span style="color: #99cc99; font-weight: bold;">print</span> edit_distance(<span style="color: #66cccc;">'kitten'</span>, <span style="color: #66cccc;">'sitting'</span>)
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgheadline8" class="outline-3">
-<h3 id="orgheadline8">从编辑距离到相似度量</h3>
-<div class="outline-text-3" id="text-orgheadline8">
+<div id="outline-container-org8b04415" class="outline-3">
+<h3 id="org8b04415">从编辑距离到相似度量</h3>
+<div class="outline-text-3" id="text-org8b04415">
 <p>
 与 LCS 不同的是，编辑距离衡量的是差异性，所以用编辑距离来表示相似程度，按照如下式子进行转换:
 </p>
@@ -822,9 +792,9 @@ heo
 </div>
 </div>
 
-<div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9">一点看法</h2>
-<div class="outline-text-2" id="text-orgheadline9">
+<div id="outline-container-org984262a" class="outline-2">
+<h2 id="org984262a">一点看法</h2>
+<div class="outline-text-2" id="text-org984262a">
 <p>
 LCS 和编辑距离都是基于相似的动态规划方法来进行求解，它们之间是有很强的共性的。不过 LCS 强调的是 "公共子序列" 这个概念，而编辑距离强调删除、插入、替换这三种编辑操作。实际上还有扩充的编辑距离，比较经典的是 Damerau-Levenshtein 距离，它在 Levenshtein 距离定义的三种编辑操作之外还加入了 "交换相邻字符" 这个操作，因为在输入时将邻近字符的顺序搞错的事情实在是蛮常见的(代码里的 typo 多是这种类型 XD)。
 </p>
@@ -841,24 +811,23 @@ LCS 和编辑距离都是基于相似的动态规划方法来进行求解，它�
 在应用上，LCS 主要被应用于版本控制和 diff 工具中，下面是摘自 Git 源代码中的一个片段
 </p>
 <div class="org-src-container">
-
-<pre class="src src-C"><span style="color: #729fcf;">for</span> (i = 1, baseend = base; i &lt; origbaselen + 1; i++) {
-  <span style="color: #729fcf;">for</span> (j = 1, newend = new; j &lt; lennew + 1; j++) {
-    <span style="color: #729fcf;">if</span> (match_string_spaces(baseend-&gt;line, baseend-&gt;len,
+<pre class="src src-C"><span style="color: #99cc99; font-weight: bold;">for</span> (i = 1, baseend = base; i &lt; origbaselen + 1; i++) {
+  <span style="color: #99cc99; font-weight: bold;">for</span> (j = 1, newend = new; j &lt; lennew + 1; j++) {
+    <span style="color: #99cc99; font-weight: bold;">if</span> (match_string_spaces(baseend-&gt;line, baseend-&gt;len,
                             newend-&gt;line, newend-&gt;len, flags)) {
       lcs[i][j] = lcs[i - 1][j - 1] + 1;
       directions[i][j] = MATCH;
-    } <span style="color: #729fcf;">else</span> <span style="color: #729fcf;">if</span> (lcs[i][j - 1] &gt;= lcs[i - 1][j]) {
+    } <span style="color: #99cc99; font-weight: bold;">else</span> <span style="color: #99cc99; font-weight: bold;">if</span> (lcs[i][j - 1] &gt;= lcs[i - 1][j]) {
       lcs[i][j] = lcs[i][j - 1];
       directions[i][j] = NEW;
-    } <span style="color: #729fcf;">else</span> {
+    } <span style="color: #99cc99; font-weight: bold;">else</span> {
       lcs[i][j] = lcs[i - 1][j];
       directions[i][j] = BASE;
     }
-    <span style="color: #729fcf;">if</span> (newend-&gt;next)
+    <span style="color: #99cc99; font-weight: bold;">if</span> (newend-&gt;next)
       newend = newend-&gt;next;
   }
-  <span style="color: #729fcf;">if</span> (baseend-&gt;next)
+  <span style="color: #99cc99; font-weight: bold;">if</span> (baseend-&gt;next)
     baseend = baseend-&gt;next;
 }
 </pre>
