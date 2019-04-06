@@ -8,9 +8,7 @@
 
 ** 模板使用
 
-   本站模板修改自[[http://themes.jekyllbootstrap.com/][Jekyll Bootstrap的twitter主题]]，去除了里面一些我自认为冗余多的东西，并对布局等一些细节做出了符合自己使用习惯的修改。如果您想使用我修改后的模板，首先这是对我的一种肯定，我很高兴，很欢迎。以下是对于正确使用模板的一些说明。
-
-   以下文件、目录是可用的模板的组成部分，
+   以下文件、目录是可用的模板的组成部分
    + _config.yml : 网站设置文件，包含以下内容
      - permalink: 通过 *permalink* 可以对文章链接进行设置，在我的设置中它的值是 */:year/:month/:day/:title.html* ，这将使我的文章链接表现为 *http://linusp.github.io/2013/09/30/static-blog-way.html* 这样的形式——这同时需要本地的文章以 *2014-09-30-static-blog-way.org* 或 *2014-09-30-static-blog-way.md* 的形式保存到 _post目录下，具体细节可参照[[http://jekyllrb.com/docs/permalinks/][Jekyll的文档]]
      - markdown: 设置Jekyll渲染网站时使用的解析器
@@ -19,12 +17,14 @@
      - url : 网站地址， *请替换成自己的网站地址*
      - nav : 导航菜单条目，可以参照我的配置文件来新增或去除导航条目，相应的页面的描述和链接将会出现在导航栏中
 
-   + _layouts : 网站主要模板，包含default.html、post.html、page.html三个模板，它们的作用分别是:
+   + _includes: 一些可复用的网页内容模板，包括评论、导航栏等
+   + _layouts : 网站主要模板，包含default.html、post.html、page.html、note.html 四个模板，它们的作用分别是:
      - default.html : 根模板(不知道这个词是否使用恰当)，其他模板都是从它继承而来
      - post.html : 文章模板
      - page.html : 页面模板
+     - note.html : 笔记页模板，和 post.html 基本一样，做了一些微调，比如去除了日期信息
    + _posts : 本地文章存储目录， *请只复制或创建该目录，而不要复制其下的内容*
-   + assets : css/图片存储目录，可自定义， *若进行了自定义，请修改模板default.html中的相关内容*
+   + assets : css/图片存储目录，可自定义， *若进行了自定义，请修改 _includes 目录中的模板*
    + index.html : 网站首页，仅展示文章列表
    + 预设页面 : 404.html, about.md, archive.html, categories.html, link.md, tags.html——404.html在请求不存在的链接时展现，其他预设页面是 *_config.yml* 中进行了设置的页面
    + sitemap.xml : 网站地图， *请进行修改*
@@ -32,7 +32,6 @@
 
    除此以外的东西，都是网站模板不需要的额外的东西，可以根据自己的喜好与习惯进行增删。
 
-   本来这个模板都是按照自己的需求来进行更改的，并没有考虑到别人会来使用，不过最近发现有朋友使用了我的模板，倍感荣幸之于对于没有说清楚而导致对方使用不当感到不安，因此在readme中新增一节作出详细说明。
 ** 写作流程
 
    本人的这个博客，使用的是Jekyll，不过这里的"使用Jekyll"仅仅是指Jekyll的结构和模板，实际上我在本地对博客的写作和管理是使用Emacs + git。目前我的写作+发布流程是这样的：
