@@ -1,0 +1,1186 @@
+---
+layout     : post
+title      : "图数据库 Neo4j 的部署、数据导入和简单使用"
+categories :
+- 数据库
+tags       :
+- NLP
+- 知识图谱
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd44bad5">Neo4j 简介</a></li>
+<li><a href="#org18b6dfc">Neo4j 的部署</a></li>
+<li><a href="#org572aeb1">数据加载</a>
+<ul>
+<li><a href="#org02654fb">使用 neo4j-import 用 csv 数据创建实体和关系</a></li>
+<li><a href="#org2889849">使用 LOAD CSV 加载 csv 数据</a></li>
+<li><a href="#orgf5b3f23">使用 Cypher 语句创建数据</a></li>
+</ul>
+</li>
+<li><a href="#org88f2801">Cypher 查询语言</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd44bad5" class="outline-2">
+<h2 id="orgd44bad5">Neo4j 简介</h2>
+<div class="outline-text-2" id="text-orgd44bad5">
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j.jpg" alt="neo4j.jpg" width="400" align="right" />
+</p>
+</div>
+
+
+<p>
+Neo4j 是一个流行的、Java 编写的图数据库 —— 所谓图数据库是一种 NoSQL 数据库，相比于 MySQL 之类的关系数据库(RDBMS)，能更灵活地表示数据，这种灵活性体现在多方面：
+</p>
+
+<ol class="org-ol">
+<li>像所有 NoSQL 数据库一样可以灵活地设计、扩展 schema</li>
+<li>更适合表示实体之间的关系，特别是当实体之间存在大量的、复杂的关系的时候</li>
+</ol>
+
+<p>
+图数据库强调实体和关系两个基本概念，虽然说在关系数据库中也可以表示实体和关系，但如果关系的种类繁多且实体之间通过关系构成复杂的结构的时候，用图数据库可能会更合适一些。此外，图数据库会对一些常见的图操作进行支持，典型的比如查询最短路径，如果用关系数据库来做就很比较麻烦。
+</p>
+
+<p>
+目前的图数据库有很多种，根据一些<a href="https://db-engines.com/en/ranking/graph+dbms">排行数据</a>，Neo4j 应该是其中最流行、使用最多的了。
+</p>
+
+<p>
+Neo4j 由一个商业公司在开发、维护，并提供 GPLv3 协议的开源社区版本，当然相比他们商业授权的闭源版本，开源版本缺少一些特性，但基本功能都是完整的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org18b6dfc" class="outline-2">
+<h2 id="org18b6dfc">Neo4j 的部署</h2>
+<div class="outline-text-2" id="text-org18b6dfc">
+<p>
+最简单的办法是从 Neo4j 的<a href="https://neo4j.com/download-center/#releases">下载中心</a>下载 Neo4j Server，解压后运行即可。可以看到下载页有三个不同的版本
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_downloads.png" alt="neo4j_downloads.png" width="600" />
+</p>
+</div>
+
+<ul class="org-ul">
+<li>Enterprise Server: 企业版，需要付费获得授权，提供高可用、热备份等特性</li>
+<li>Community Server: 社区开源版，只能单点运行，在性能上较企业版可能差一些</li>
+<li>Neo4j Desktop: 顾名思义，是一个桌面版的客户端，可以用其连接 Neo4j Server 进行操作、管理，不过其中也内置了一个本地的 Neo4j Server，用户可以直接通过 Neo4j Desktop 来创建数据库并启动</li>
+</ul>
+
+<p>
+对于仅仅想了解一下 Neo4j 的人来说，不妨下载 Neo4j Desktop 体验一下，本文则仅讨论 Neo4j Community Server。
+</p>
+
+<p>
+目前 Neo4j Server 的版本是 3.5.x，虽然更旧的版本也能用，但建议使用 3.5.0 之后的版本，因为更早的版本是不支持全文索引的。
+</p>
+
+<p>
+以 Linux 为例，假如下载的是最新的 3.5.5 版本，那么解压运行即可
+</p>
+
+<p>
+我的做法是解压放到 /opt 目录下，并把对应的目录加到环境变量 PATH 里
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">tar xzvf neo4j-community-3.5.5-unix.tar.gz
+mv neo4j-community-3.5.5 /opt/neo4j/
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">PATH</span>=$<span style="color: #ffcc66;">PATH</span>:/opt/neo4j/bin
+</pre>
+</div>
+
+<p>
+这样之后就能使用 <code class="src src-sh">neo4j start</code> 来启动服务了。
+</p>
+
+<p>
+另外一种办法是通过 docker 来启动服务，这个就更简单了，直接利用官方提供的镜像即可。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">docker pull neo4j:3.5.5
+mkdir $<span style="color: #ffcc66;">HOME</span>/neo4j/data -p
+docker run -p 7474:7474 -p 7687:7687 -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data/:/data neo4j
+</pre>
+</div>
+
+<p>
+这之后就可以通过 <a href="http://localhost:7474/browser/">http://localhost:7474/browser/</a> 这个地址访问 Neo4j Server 的 WebUI，可以在上面查询、修改数据。
+</p>
+
+<p>
+然后有一些 Server 设置，可以根据自己的情况适当地进行修改，完整的配置见<a href="https://neo4j.com/docs/operations-manual/current/configuration/">文档</a>，这里罗列一些个人认为重要的
+</p>
+
+<ul class="org-ul">
+<li><p>
+认证方式设置
+</p>
+
+<p>
+默认情况下启动的 neo4j，会要求在访问时通过用户名密码进行认证，初始的用户名密码为 <b>neo4j/neo4j</b> ，但是会在第一次认证之后要求更换密码，有点不太方便。
+</p>
+
+<p>
+一个办法是彻底关闭用户名密码认证，如果是非 docker 模式部署的，直接改 /opt/neo4j/conf/neo4j.conf 这个文件，加上这行配置
+</p>
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #ffcc66;">dbms.security.auth_enabled</span>=false
+</pre>
+</div>
+
+<p>
+如果是 docker 模式部署的，则在启动容器时，设置环境变量 <code>NEO4J_AUTH</code> 为 none
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -p 7474:7474 <span style="color: #66cccc;">\</span>
+       -p 7687:7687 <span style="color: #66cccc;">\</span>
+       -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data/:/data <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4J_AUTH</span>=none <span style="color: #66cccc;">\</span>
+       neo4j
+</pre>
+</div>
+
+<p>
+另外一个办法是主动设置好密码，如果是非 docker 模式部署，需要在初次启动通过 <code>neo4j-admin</code> 这个命令来设置
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">neo4j-admin set-initial-password neo4j_password
+</pre>
+</div>
+
+<p>
+如果是 docker 模式部署，则在启动容器时通过环境变量 <code>NEO4J_AUTH</code> 来设置
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -p 7474:7474 <span style="color: #66cccc;">\</span>
+       -p 7687:7687 <span style="color: #66cccc;">\</span>
+       -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data/:/data <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4J_AUTH</span>=neo4j/neo4j_password <span style="color: #66cccc;">\</span>
+       neo4j
+</pre>
+</div></li>
+
+<li><p>
+内存设置
+</p>
+
+<p>
+这块有三项设置，分别是
+</p>
+<ul class="org-ul">
+<li>dbms.memory.heap.initial_size</li>
+<li>dbms.memory.heap.max_size</li>
+<li>dbms.memory.pagecache.size</li>
+</ul>
+
+<p>
+前两者决定了查询语言运行时候可用的内存，第三个则用于缓存数据和索引以提高查询效率。
+</p>
+
+<p>
+非 docker 模式部署的，可以直接在 /opt/neo4j/conf/neo4j.conf 里修改，比如说这样
+</p>
+<div class="org-src-container">
+<pre class="src src-conf"><span style="color: #ffcc66;">dbms.memory.heap.initial_size</span>=1G
+<span style="color: #ffcc66;">dbms.memory.heap.max_size</span>=2G
+<span style="color: #ffcc66;">dbms.memory.pagecache.size</span>=4G
+</pre>
+</div>
+
+<p>
+docker 模式部署则还是在启动容器时通过环境变量来设置，如下所示
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -p 7474:7474 <span style="color: #66cccc;">\</span>
+       -p 7687:7687 <span style="color: #66cccc;">\</span>
+       -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data/:/data <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4j_dbms_memory_heap_initial__size</span>=1G <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4j_dbms_memory_heap_max__size</span>=2G <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4j_dbms_memory_pagecache_size</span>=4G <span style="color: #66cccc;">\</span>
+       neo4j
+</pre>
+</div></li>
+
+<li>其他
+
+<ul class="org-ul">
+<li><p>
+dbms.security.allow_csv_import_from_file_urls
+</p>
+
+<p>
+设置为 true，这样在执行 <code>LOAD CSV</code> 语句时，可以使用远程而非本地的 csv 文件。
+</p>
+
+<p>
+docker 的话这样：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -d -p 7474:7474 <span style="color: #66cccc;">\</span>
+       -p 7687:7687 <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4J_dbms_security_allow__csv__import__from__file__urls</span>=true <span style="color: #66cccc;">\</span>
+       -v /home/emonster/data/neo4j/:/data <span style="color: #66cccc;">\</span>
+       neo4j
+</pre>
+</div>
+
+<p>
+这个之后会具体再聊一下。
+</p></li>
+
+<li><p>
+dbms.connectors.default_listen_address
+</p>
+
+<p>
+这个不设置的话，部署起来的 server 就只能监听本地的请求，如果是在生产中用 Neo4j Server 的话，要设置成
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">dbms.connectors.default_listen_address=0.0.0.0
+</pre>
+</div>
+
+<p>
+docker 的话默认已经设置好了，不用自己再单独设置。
+</p></li>
+</ul></li>
+</ul>
+
+
+<p>
+所有的配置项及其值可以用如下查询语言查询
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #d9d9d9;">call</span> <span style="color: #d9d9d9;">dbms</span>.<span style="color: #d9d9d9;">listConfig</span>()
+</pre>
+</div>
+
+<p>
+如果要查询单独某项的值，比如 "dbms.connectors.default_listen_address"，则这样
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #d9d9d9;">call</span> <span style="color: #d9d9d9;">dbms</span>.<span style="color: #d9d9d9;">listConfig</span>(<span style="color: #66cccc;">"dbms.connectors.default_listen_address"</span>)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org572aeb1" class="outline-2">
+<h2 id="org572aeb1">数据加载</h2>
+<div class="outline-text-2" id="text-org572aeb1">
+<p>
+为方便说明，我准备了一份豆瓣电影的图谱数据（说是图谱其实结构很简单）放在 Github 上，可以先将其 clone 到本地
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">git clone https://github.com/Linusp/kg-example
+</pre>
+</div>
+
+<p>
+在这个项目下的 movie 目录里有按照 Neo4j 支持的格式整理好的实体、关系数据
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">(shell) $ cd kg-example
+(shell) $ tree movie
+movie
+&#9500;&#9472;&#9472; actor.csv
+&#9500;&#9472;&#9472; composer.csv
+&#9500;&#9472;&#9472; Country.csv
+&#9500;&#9472;&#9472; director.csv
+&#9500;&#9472;&#9472; district.csv
+&#9500;&#9472;&#9472; Movie.csv
+&#9492;&#9472;&#9472; Person.csv
+
+0 directories, 7 files
+</pre>
+</div>
+
+<p>
+上述数据包含三类实体数据：
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">实体类型</th>
+<th scope="col" class="org-left">数据文件</th>
+<th scope="col" class="org-right">数量</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Movie</td>
+<td class="org-left">Movie.csv</td>
+<td class="org-right">4587</td>
+<td class="org-left">电影实体</td>
+</tr>
+
+<tr>
+<td class="org-left">Person</td>
+<td class="org-left">Person.csv</td>
+<td class="org-right">22937</td>
+<td class="org-left">人员实体</td>
+</tr>
+
+<tr>
+<td class="org-left">Country</td>
+<td class="org-left">Country.csv</td>
+<td class="org-right">84</td>
+<td class="org-left">国家实体</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+此外还包含四类关系数据
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">关系类型</th>
+<th scope="col" class="org-left">主语实体类型</th>
+<th scope="col" class="org-left">宾语实体类型</th>
+<th scope="col" class="org-left">数据文件</th>
+<th scope="col" class="org-right">数量</th>
+<th scope="col" class="org-left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">actor</td>
+<td class="org-left">Movie</td>
+<td class="org-left">Person</td>
+<td class="org-left">actor.csv</td>
+<td class="org-right">35257</td>
+<td class="org-left">电影的主演</td>
+</tr>
+
+<tr>
+<td class="org-left">composer</td>
+<td class="org-left">Movie</td>
+<td class="org-left">Person</td>
+<td class="org-left">composer.csv</td>
+<td class="org-right">8345</td>
+<td class="org-left">电影的编剧</td>
+</tr>
+
+<tr>
+<td class="org-left">director</td>
+<td class="org-left">Movie</td>
+<td class="org-left">Person</td>
+<td class="org-left">director.csv</td>
+<td class="org-right">5015</td>
+<td class="org-left">电影的导演</td>
+</tr>
+
+<tr>
+<td class="org-left">district</td>
+<td class="org-left">Movie</td>
+<td class="org-left">Country</td>
+<td class="org-left">district.csv</td>
+<td class="org-right">6227</td>
+<td class="org-left">电影的制片国家/地区</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+下图是这份数据加载到 Neo4j 后的部分可视化示例
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/movie_graph.png" alt="movie_graph.png" width="800" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-org02654fb" class="outline-3">
+<h3 id="org02654fb">使用 neo4j-import 用 csv 数据创建实体和关系</h3>
+<div class="outline-text-3" id="text-org02654fb">
+<p>
+使用 <code>neo4j-import</code> 命令行工具导入 csv 数据是几种数据加载方式中最快的一种，但它不能导入数据到已有的数据库中，每次执行都是产生一个全新的数据库，因此必须在一条命令里将数据库中要包含的数据全部都制定好。
+</p>
+
+<p>
+可以用下面的命令来导入豆瓣电影图谱数据
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">neo4j-import --into graph.db --id-type string <span style="color: #66cccc;">\</span>
+             --nodes:Person movie/Person.csv    <span style="color: #66cccc;">\</span>
+             --nodes:Movie movie/Movie.csv <span style="color: #66cccc;">\</span>
+             --nodes:Country movie/Country.csv <span style="color: #66cccc;">\</span>
+             --relationships:actor movie/actor.csv <span style="color: #66cccc;">\</span>
+             --relationships:composer movie/composer.csv <span style="color: #66cccc;">\</span>
+             --relationships:director movie/director.csv <span style="color: #66cccc;">\</span>
+             --relationships:district movie/district.csv
+</pre>
+</div>
+
+<p>
+上述命令会在当前目录下生成一个 graph.db 目录，就是最终产生的一个全新的数据库。要启用这个数据库，必须将其放置到 Neo4j Server 的 data 目录下：
+</p>
+<ul class="org-ul">
+<li><p>
+如果当前 Neo4j Server 正在运行，需要先停掉它
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">neo4j stop
+</pre>
+</div></li>
+
+<li><p>
+删除或备份原有的数据库
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">mv /opt/neo4j/data/databases/graph.db /opt/neo4j/data/databases/graph.db.bak
+</pre>
+</div></li>
+
+<li><p>
+将产生的 graph.db 放置到 server 的 data 目录下
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">cp graph.db /opt/neo4j/data/databases/ -r
+</pre>
+</div></li>
+
+<li><p>
+重新启动 Neo4j Server
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">neo4j start
+</pre>
+</div></li>
+</ul>
+
+<p>
+实体和关系一共 8 万多条，在我的个人电脑上一共花费 3s 多
+</p>
+<pre class="example">
+IMPORT DONE in 3s 692ms.
+Imported:
+  27608 nodes
+  54844 relationships
+  91628 properties
+Peak memory usage: 524.24 MB
+</pre>
+
+<p>
+如果是以 docker 的方式来使用 Neo4j，则稍有不同，需要在执行的时候将 movie 目录和输出结果所在的目录都挂载到容器里。假设说我们希望最终输出结果到 $HOME/neo4j/data 目录下，那么，先创建这个目录
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">mkdir $<span style="color: #ffcc66;">HOME</span>/neo4j/data/databases -p
+</pre>
+</div>
+
+<p>
+然后执行
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -v $<span style="color: #ffcc66;">PWD</span>/movie:/movie:ro -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data:/data/ <span style="color: #66cccc;">\</span>
+       neo4j neo4j-import --into /data/databases/graph.db --id-type string <span style="color: #66cccc;">\</span>
+             --nodes:Person /movie/Person.csv    <span style="color: #66cccc;">\</span>
+             --nodes:Movie /movie/Movie.csv <span style="color: #66cccc;">\</span>
+             --nodes:Country /movie/Country.csv <span style="color: #66cccc;">\</span>
+             --relationships:actor /movie/actor.csv <span style="color: #66cccc;">\</span>
+             --relationships:composer /movie/composer.csv <span style="color: #66cccc;">\</span>
+             --relationships:director /movie/director.csv <span style="color: #66cccc;">\</span>
+             --relationships:district /movie/district.csv
+</pre>
+</div>
+
+<p>
+然后再用 docker 启动 Neo4j Server，并让其使用刚刚产生的数据库
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">docker run -p 7474:7474 <span style="color: #66cccc;">\</span>
+       -p 7687:7687 <span style="color: #66cccc;">\</span>
+       -v $<span style="color: #ffcc66;">HOME</span>/neo4j/data/:/data <span style="color: #66cccc;">\</span>
+       -e <span style="color: #ffcc66;">NEO4J_AUTH</span>=neo4j/neo4j_password <span style="color: #66cccc;">\</span>
+       neo4j
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2889849" class="outline-3">
+<h3 id="org2889849">使用 LOAD CSV 加载 csv 数据</h3>
+<div class="outline-text-3" id="text-org2889849">
+<p>
+用 <code>LOAD CSV</code> 语句同样可以加载 csv 数据，不过和 <code>neo4j-import</code> 不一样，本质上它只是负责从 csv 文件中读取数据，如果要将读取到的数据写入到数据库中，还必须通过 <code>CREATE</code> 语句。也正因如此，用 <code>LOAD CSV</code> 语句来加载数据，不需要将 Neo4j Server 停掉。
+</p>
+
+<p>
+用 <code>LOAD CSV</code> 语句将豆瓣电影图谱加载到数据库中的做法是下面这样的
+</p>
+
+<ul class="org-ul">
+<li><p>
+从 Movie.csv 中加载电影数据并创建 Movie 实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/Movie.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #6699cc;">:Movie</span> {
+       <span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"id:ID"</span>],
+       <span style="color: #d9d9d9;">title</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"title"</span>],
+       <span style="color: #d9d9d9;">url</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"url"</span>],
+       <span style="color: #d9d9d9;">cover</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"cover"</span>],
+       <span style="color: #d9d9d9;">rate</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"rate"</span>],
+       <span style="color: #ffcc66;">category:</span><span style="color: #99cc99; font-weight: bold;">split</span>(<span style="color: #d9d9d9;">line</span>[<span style="color: #66cccc;">"category:String[]"</span>], <span style="color: #66cccc;">";"</span>),
+       <span style="color: #ffcc66;">language:</span><span style="color: #99cc99; font-weight: bold;">split</span>(<span style="color: #d9d9d9;">line</span>[<span style="color: #66cccc;">"language:String[]"</span>], <span style="color: #66cccc;">";"</span>),
+       <span style="color: #d9d9d9;">showtime</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"showtime"</span>],
+       <span style="color: #d9d9d9;">length</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"length"</span>],
+       <span style="color: #ffcc66;">othername:</span><span style="color: #99cc99; font-weight: bold;">split</span>(<span style="color: #d9d9d9;">line</span>[<span style="color: #66cccc;">"othername:String[]"</span>], <span style="color: #66cccc;">";"</span>)
+       })
+</pre>
+</div>
+
+<p>
+其中 "using periodic commit 1000" 表示每读取 1000 行数据就写入一次。
+</p></li>
+
+<li><p>
+从 Person.csv 中加载人员数据并创建 Person 实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/Person.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #6699cc;">:Person</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"id:ID"</span>], <span style="color: #d9d9d9;">name</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"name"</span>]})
+</pre>
+</div></li>
+
+<li><p>
+从 Country.csv 中加载国家数据并创建 Country 实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/Country.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #6699cc;">:Country</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"id:ID"</span>], <span style="color: #d9d9d9;">name</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">"name"</span>]})
+</pre>
+</div></li>
+
+<li><p>
+创建关系
+</p>
+
+<p>
+每个关系的 csv 文件都是如下格式（以 actor.csv 为例）
+</p>
+<pre class="example">
+":START_ID",":END_ID"
+"5ec851a8b7b7bbf0c9f42bbee021be00","3a20ded16ebce312f56a562e1bef7f05"
+"5ec851a8b7b7bbf0c9f42bbee021be00","8101549e05e6c1afbea62890117c01c6"
+"5ec851a8b7b7bbf0c9f42bbee021be00","111a3c7f6b769688da55828f36bbd604"
+"5ec851a8b7b7bbf0c9f42bbee021be00","5cc5d969f42ce5d8e3937e37d77b89b5"
+"5ec851a8b7b7bbf0c9f42bbee021be00","a5e6012efc56f0ca07184b9b88eb2373"
+"5ec851a8b7b7bbf0c9f42bbee021be00","435c8172c14c24d6cd123c529a0c2a76"
+"5ec851a8b7b7bbf0c9f42bbee021be00","5dfb355a385bcfe9b6056b8d322bfecb"
+"5ec851a8b7b7bbf0c9f42bbee021be00","5076a2f7479462dcc4637b6fe3226095"
+"5ec851a8b7b7bbf0c9f42bbee021be00","c7103a9ad17cf56fd572657238e49fff"
+</pre></li>
+</ul>
+
+<p>
+在创建关系的时候实际上是根据两个 id 查询到对应的实体，然后再为其建立关系。虽然我在准备这份数据时，已经保证了每个实体的 id 都是全局唯一的，但在没有创建索引的情况下，用这个 id 来查询实体会以遍历的形式进行，效率很差，所以在创建关系前，先创建一下索引。
+</p>
+
+<p>
+为 Movie 实体的 id 属性创建索引
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> <span style="color: #d9d9d9;">INDEX</span> <span style="color: #cc99cc; background-color: #2d2d2d;">ON</span> <span style="color: #6699cc;">:Movie</span>(<span style="color: #d9d9d9;">id</span>)
+</pre>
+</div>
+
+<p>
+为 Person 实体的 id 属性创建索引
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> <span style="color: #d9d9d9;">INDEX</span> <span style="color: #cc99cc; background-color: #2d2d2d;">ON</span> <span style="color: #6699cc;">:Person</span>(<span style="color: #d9d9d9;">id</span>)
+</pre>
+</div>
+
+<p>
+为 Country 实体的 id 属性创建索引
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> <span style="color: #d9d9d9;">INDEX</span> <span style="color: #cc99cc; background-color: #2d2d2d;">ON</span> <span style="color: #6699cc;">:Country</span>(<span style="color: #d9d9d9;">id</span>)
+</pre>
+</div>
+
+<p>
+然后继续用 <code>LOAD CSV</code> 来创建关系
+</p>
+<ul class="org-ul">
+<li><p>
+从 actor.csv 中加载数据并创建 actor 关系
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/actor.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Movie</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":START_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":END_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>)
+</pre>
+</div></li>
+
+<li><p>
+从 composer.csv 中加载数据创建 composer 关系
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/composer.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Movie</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":START_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":END_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:composer</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>)
+</pre>
+</div></li>
+
+<li><p>
+从 director.csv 中加载数据创建 director 关系
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/director.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Movie</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":START_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":END_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:director</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>)
+</pre>
+</div></li>
+
+<li><p>
+从 district.csv 中加载数据并创建 district 关系
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">USING PERIODIC COMMIT</span> 1000
+<span style="color: #cc99cc; background-color: #2d2d2d;">LOAD CSV</span> <span style="color: #cc99cc; background-color: #2d2d2d;">with</span> <span style="color: #d9d9d9;">headers</span> <span style="color: #99cc99; font-weight: bold;">from</span> <span style="color: #66cccc;">'https://raw.githubusercontent.com/Linusp/kg-example/master/movie/district.csv'</span> <span style="color: #99cc99; font-weight: bold;">as</span> <span style="color: #d9d9d9;">line</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Movie</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":START_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Country</span> {<span style="color: #d9d9d9;">id</span><span style="color: #6699cc;">:line</span>[<span style="color: #66cccc;">":END_ID"</span>]})
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:district</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>)
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgf5b3f23" class="outline-3">
+<h3 id="orgf5b3f23">使用 Cypher 语句创建数据</h3>
+<div class="outline-text-3" id="text-orgf5b3f23">
+<p>
+严格来说，上面的 <code>LOAD CSV</code> 的方式，也是在用 Cypher 语句，不过说到底它还是要依赖一个外部的 CSV 文件，自由度没那么高。而 Neo4j Server 本身还提供 RESTful API，利用这个 API 就可以进行编程来完成更复杂的需求。
+</p>
+
+<p>
+以创建实体为例来说明一下 Neo4j Server 的 RESTful API。假设说我们要创建三个 Person 实体，简单起见，我们假设每个 Person 实体需要有 id, name, age 三个属性，比如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">[
+    {
+        <span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person1"</span>,
+        <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#24352;&#24535;&#26114;"</span>,
+        <span style="color: #66cccc;">"age"</span>: 23
+    },
+    {
+        <span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person2"</span>,
+        <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#21016;&#25991;&#20992;"</span>,
+        <span style="color: #66cccc;">"age"</span>: 18
+    },
+    {
+        <span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person3"</span>,
+        <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#23385;&#23376;&#23567;"</span>,
+        <span style="color: #66cccc;">"age"</span>: 22
+    }
+]
+</pre>
+</div>
+
+<p>
+通过 RESTful API，可以一次性创建这三个 Person 实体
+</p>
+<div class="org-src-container">
+<pre class="src src-restclient"><span style="color: #99cc99; font-weight: bold;">POST</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">http://neo4j:neo4j_password@localhost:7474/db/data/cypher</span>
+<span style="color: #ffcc66;">Content-Type</span>: <span style="color: #66cccc;">application/json</span>
+{
+    <span style="color: #66cccc;">"query"</span>: <span style="color: #66cccc;">"UNWIND {values} as data CREATE (:Person {id: data.id, name: data.name, age: data.age})"</span>,
+    <span style="color: #66cccc;">"params"</span>: {
+        <span style="color: #66cccc;">"values"</span>: [
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person1"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#24352;&#24535;&#26114;"</span>, <span style="color: #66cccc;">"age"</span>: 23},
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person2"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#21016;&#25991;&#20992;"</span>, <span style="color: #66cccc;">"age"</span>: 18},
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person3"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#23385;&#23376;&#23567;"</span>, <span style="color: #66cccc;">"age"</span>: 22}
+        ]
+    }
+}
+</pre>
+</div>
+
+<p>
+这种通过带参数的 query 进行批量写入的方式，和 MySQL 等数据库的接口很相似，不过在 Cypher 中可以通过 <code>UNWIND</code> 语句做一些复杂的事情。详见<a href="https://neo4j.com/docs/cypher-manual/current/clauses/unwind/">文档</a>。
+</p>
+
+
+<p>
+用 Python 来做的话大概是这个样子
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> requests
+
+<span style="color: #ffcc66;">url</span> = <span style="color: #66cccc;">"http://neo4j:neo4j_password@localhost:7474/db/data/cypher"</span>
+<span style="color: #ffcc66;">payload</span> = {
+    <span style="color: #66cccc;">"query"</span>: (
+        <span style="color: #66cccc;">"UNWIND {values} as data "</span>
+        <span style="color: #66cccc;">"CREATE (:Person {id: data.id, name: data.name, age: data.age})"</span>
+    ),
+    <span style="color: #66cccc;">"params"</span>: {
+        <span style="color: #66cccc;">"values"</span>: [
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person1"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#24352;&#24535;&#26114;"</span>, <span style="color: #66cccc;">"age"</span>: 23},
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person2"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#21016;&#25991;&#20992;"</span>, <span style="color: #66cccc;">"age"</span>: 18},
+            {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person3"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#23385;&#23376;&#23567;"</span>, <span style="color: #66cccc;">"age"</span>: 22}
+        ]
+    }
+}
+requests.post(url, json=payload)
+</pre>
+</div>
+
+
+<p>
+或者也可以使用 Neo4j 官方的 Python 客户端
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> neo4j
+
+<span style="color: #ffcc66;">client</span> = neo4j.GraphDatabase.driver(
+    <span style="color: #66cccc;">'bolt://localhost:7687'</span>, auth=(<span style="color: #66cccc;">'neo4j'</span>, <span style="color: #66cccc;">'neo4j_password'</span>)
+)
+<span style="color: #99cc99; font-weight: bold;">with</span> client.session() <span style="color: #99cc99; font-weight: bold;">as</span> session:
+    <span style="color: #ffcc66;">query</span> = (
+        <span style="color: #66cccc;">"UNWIND {values} as data "</span>
+        <span style="color: #66cccc;">"create (:Person {id: data.id, name: data.name, age: data.age})"</span>
+    )
+    <span style="color: #ffcc66;">values</span> = [
+        {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person1"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#24352;&#24535;&#26114;"</span>, <span style="color: #66cccc;">"age"</span>: 23},
+        {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person2"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#21016;&#25991;&#20992;"</span>, <span style="color: #66cccc;">"age"</span>: 18},
+        {<span style="color: #66cccc;">"id"</span>: <span style="color: #66cccc;">"person3"</span>, <span style="color: #66cccc;">"name"</span>: <span style="color: #66cccc;">"&#23385;&#23376;&#23567;"</span>, <span style="color: #66cccc;">"age"</span>: 22}
+    ]
+    session.run(query, {<span style="color: #66cccc;">'values'</span>: values})
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org88f2801" class="outline-2">
+<h2 id="org88f2801">Cypher 查询语言</h2>
+<div class="outline-text-2" id="text-org88f2801">
+<p>
+此处仅记录我个人认为常用或重要的部分，完整内容请参考<a href="https://neo4j.com/docs/cypher-manual/current/">官方文档</a>。
+</p>
+
+<p>
+在 Cypher 中，用小括号来表示一个实体，用中括号来表示关系，这个是 Cypher 语言中最基础的表示了。
+</p>
+
+<p>
+实体的各种表示方式如下：
+</p>
+<ul class="org-ul">
+<li><p>
+表示一个 Person 类型的实体，并记其名字为 <code>a</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Person</span>)
+</pre>
+</div></li>
+
+<li><p>
+表示一个 id 值为 "person1" 的实体，并记其名字为 <code>a</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">a</span> {<span style="color: #ffcc66;">id:</span><span style="color: #66cccc;">"person1"</span>})
+</pre>
+</div></li>
+
+<li><p>
+表示任意一个实体，并记其名字为 <code>a</code> ，之后可以通过 <code>WHERE</code> 语句来对其进行约束
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">a</span>)
+</pre>
+</div></li>
+
+<li><p>
+表示一个任意的匿名实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">()
+</pre>
+</div></li>
+</ul>
+
+<p>
+关系的各种表示方式如下
+</p>
+<ul class="org-ul">
+<li><p>
+表示一个 actor 类型的实体，并记其名字为 <code>r</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">[<span style="color: #d9d9d9;">r</span><span style="color: #6699cc;">:actor</span>]
+</pre>
+</div></li>
+
+<li><p>
+表示任意一个实体，并记其名字为 <code>r</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">[<span style="color: #d9d9d9;">r</span>]
+</pre>
+</div></li>
+
+<li><p>
+表示一个任意的匿名实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">[]
+</pre>
+</div></li>
+</ul>
+
+<p>
+在上面的基础之上，即可方便地表示图数据中的一条实际的边，比如说
+</p>
+<ul class="org-ul">
+<li><p>
+表示命名为 <code>m</code> 的 Movie 类型实体到命名为 <code>p</code> 的 Person 类型实体、匿名的边
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">m</span><span style="color: #6699cc;">:Movie</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>)
+</pre>
+</div>
+
+<p>
+这里的 "-&gt;" 表示关系的方向是从 <code>m</code> 到 <code>p</code> 的
+</p></li>
+
+<li><p>
+同上，但要求关系类型为 actor
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">m</span><span style="color: #6699cc;">:Movie</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>)
+</pre>
+</div></li>
+
+<li><p>
+同上，并记关系的名字为 <code>r</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">m</span><span style="color: #6699cc;">:Movie</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #d9d9d9;">r</span><span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>)
+</pre>
+</div></li>
+
+<li><p>
+更复杂的表示：Person <code>p</code> 是 Movie <code>m1</code> 的主演，同时也是 Movie <code>m2</code> 的导演
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher">(<span style="color: #d9d9d9;">m</span>1<span style="color: #6699cc;">:Movie</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #d9d9d9;">r</span>1<span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">&lt;-</span>[<span style="color: #d9d9d9;">r</span>2<span style="color: #6699cc;">:director</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>(<span style="color: #d9d9d9;">m</span>2<span style="color: #6699cc;">:Movie</span>)
+</pre>
+</div></li>
+</ul>
+
+<p>
+掌握上述表示方法后，就可以用其来进行数据的创建、查询、修改和删除操作也就是俗称的 CRUD 了。
+</p>
+
+<ul class="org-ul">
+<li><p>
+查询实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span> {<span style="color: #ffcc66;">name:</span><span style="color: #66cccc;">"&#40644;&#28196;"</span>}) <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+或者
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+结果如下图所示
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_match_1.png" alt="neo4j_match_1.png" />
+</p>
+</div>
+
+<p>
+当然也可以不带筛选条件
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span> <span style="color: #99cc99; font-weight: bold;">LIMIT</span> 10
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_match_2.png" alt="neo4j_match_2.png" />
+</p>
+</div>
+
+<p>
+（没错，我非常心机地把结果排成了整齐的两排哈哈）
+</p></li>
+
+<li><p>
+创建实体
+</p>
+
+<p>
+语法类似这样
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">create</span> (<span style="color: #6699cc;">:Person</span> {<span style="color: #ffcc66;">id:</span><span style="color: #66cccc;">"ac1d6226"</span>, <span style="color: #ffcc66;">name:</span><span style="color: #66cccc;">"&#29579;&#22823;&#38180;"</span>})
+</pre>
+</div></li>
+
+<li><p>
+修改实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">id</span>=<span style="color: #66cccc;">"ac1d6226"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">SET</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#22823;&#38180;"</span>
+</pre>
+</div></li>
+
+<li><p>
+删除实体
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">id</span>=<span style="color: #66cccc;">"ac1d6226"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">DELETE</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+注意，删除实体时，如果这个实体还有和其他实体有关联关系，那么会无法删除，需要先将其关联关系解除才可以。
+</p></li>
+
+<li><p>
+查询关系
+</p>
+
+<p>
+查询 actor 类型的关系，不对起点、终点做任何约束
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">m</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #d9d9d9;">r</span><span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> * <span style="color: #99cc99; font-weight: bold;">LIMIT</span> 10
+</pre>
+</div>
+
+<p>
+结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_match_3.png" alt="neo4j_match_3.png" />
+</p>
+</div>
+
+<p>
+查询 actor 类型的关系，对起点（或终点）做约束，比如说，查询主演是黄渤的所有电影
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">m</span><span style="color: #6699cc;">:Movie</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #d9d9d9;">r</span><span style="color: #6699cc;">:actor</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> *
+</pre>
+</div>
+
+<p>
+结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_match_4.png" alt="neo4j_match_4.png" />
+</p>
+</div></li>
+
+<li><p>
+创建关系
+</p>
+
+<p>
+语法如下，要求涉及到的两个实体 <code>a</code> 和 <code>b</code> 是已经存在的。
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Person</span> {<span style="color: #ffcc66;">id:</span><span style="color: #66cccc;">"person_id_a"</span>}), <span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span> {<span style="color: #ffcc66;">id:</span><span style="color: #66cccc;">"person_id_b"</span>})
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:KNOWS</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>)
+</pre>
+</div>
+
+<p>
+之前导入的豆瓣电影图谱其实缺少人和人之间的关系，比如说宁浩和黄渤彼此都认识，可以加上这个关系
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Person</span>), (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">a</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #99cc99; font-weight: bold;">and</span> <span style="color: #d9d9d9;">b</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#23425;&#28009;"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">CREATE</span> (<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">&lt;-</span>[<span style="color: #6699cc;">:knows</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">b</span>), (<span style="color: #d9d9d9;">b</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:knows</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-&gt;</span>(<span style="color: #d9d9d9;">a</span>)
+</pre>
+</div></li>
+
+<li><p>
+删除关系
+</p>
+
+<p>
+先用 <code>MATCH</code> 语句进行查询，并为其中的关系命名，然后在 DELETE 语句中用这个关系的名字即可。
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Person</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #d9d9d9;">r</span><span style="color: #6699cc;">:knows</span>]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>(<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">a</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #99cc99; font-weight: bold;">and</span> <span style="color: #d9d9d9;">b</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#23425;&#28009;"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">DELETE</span> <span style="color: #d9d9d9;">r</span>
+</pre>
+</div></li>
+
+<li><p>
+查询两个节点之间的最短路径
+</p>
+
+<p>
+查询黄渤和汤姆·克鲁斯之间的最短路径
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">a</span><span style="color: #6699cc;">:Person</span>), (<span style="color: #d9d9d9;">b</span><span style="color: #6699cc;">:Person</span>), <span style="color: #d9d9d9;">p</span>=<span style="color: #99cc99; font-weight: bold;">shortestpath</span>((<span style="color: #d9d9d9;">a</span>)<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>[<span style="color: #6699cc;">:actor</span>*]<span style="color: #ff1493; background-color: #292929; font-weight: bold;">-</span>(<span style="color: #d9d9d9;">b</span>))
+<span style="color: #cc99cc; background-color: #2d2d2d;">WHERE</span> <span style="color: #d9d9d9;">a</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #99cc99; font-weight: bold;">and</span> <span style="color: #d9d9d9;">b</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#27748;&#22982;&#183;&#20811;&#40065;&#26031;"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_match_5.png" alt="neo4j_match_5.png" />
+</p>
+</div></li>
+</ul>
+
+<p>
+CRUD 之外，索引的创建也是很重要的，如果没有创建索引或者索引设计有问题，那么可能会导致查询效率特别差。我最早开始用 Neo4j 的时候，在批量导入数据时没有建索引，导致不到五十万的数据量（包括实体和关系）的导入需要近一个小时，而在正确设置了索引之后，十几秒就完成了。对于比较慢的查询，可以用 <code>PROFILE</code> 语句来检查性能瓶颈。
+</p>
+
+<p>
+以本文用来做示例的豆瓣电影图谱来说，如果没有给 Person.name 建立索引，那么下面这个查询语句就会很慢
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">where</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+用 <code>PROFILE</code> 语句做一下分析，只需要再原来的 query 前加上 <b>PROFILE</b> 这个关键词即可。
+</p>
+<div class="org-src-container">
+<pre class="src src-cypher"><span style="color: #d9d9d9;">PROFILE</span> <span style="color: #cc99cc; background-color: #2d2d2d;">MATCH</span> (<span style="color: #d9d9d9;">p</span><span style="color: #6699cc;">:Person</span>) <span style="color: #cc99cc; background-color: #2d2d2d;">where</span> <span style="color: #d9d9d9;">p</span>.<span style="color: #d9d9d9;">name</span>=<span style="color: #66cccc;">"&#40644;&#28196;"</span> <span style="color: #cc99cc; background-color: #2d2d2d;">RETURN</span> <span style="color: #d9d9d9;">p</span>
+</pre>
+</div>
+
+<p>
+分析结果如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_profile_1.png" alt="neo4j_profile_1.png" />
+</p>
+</div>
+
+<p>
+从上图来看，这个查询语句的逻辑是遍历了一下所有 Person 实体，挨个比较哪个实体的 name 是「黄渤」，这无疑是极其低效的。而在创建了索引后，PROFILE 的结果是下图这个样子：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/neo4j_profile_2.png" alt="neo4j_profile_2.png" />
+</p>
+</div>
+
+<p>
+关于索引可以展开更多内容，准备另外写一篇，这里只是强调一下 <code>PROFILE</code> 语句的作用。
+</p>
+</div>
+</div>
