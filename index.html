@@ -11,8 +11,12 @@ title: 主页
         {{ post.title }}
       </a>
     </h1>
-    <span class="post-date">{{ post.date | date_to_string }}</span><br>
-    <p>{{ post.excerpt | strip_html | truncate: 500 }}</p>
+    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+    {% if post.desc %}
+    <p>{{ post.desc }}</p>
+    {% else %}
+    <p>{{ post.excerpt | strip_html | truncate: 100 }}</p>
+    {% endif %}
   </div>
   {% endfor %}
 </div>
