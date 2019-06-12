@@ -11,35 +11,39 @@ tags       :
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">NLTK 与 Stanford NLP</a></li>
-<li><a href="#orgheadline2">安装和配置</a>
+<li><a href="#org41c2012">NLTK 与 Stanford NLP</a></li>
+<li><a href="#orgfd01eb6">安装和配置</a>
 <ul>
-<li><a href="#orgheadline3">注意事项</a></li>
-<li><a href="#orgheadline4">StanfordSegmenter</a></li>
-<li><a href="#orgheadline5">StanfordTokenizer</a></li>
-<li><a href="#orgheadline6">StanfordNERTagger 和 StanfordPOSTagger</a></li>
-<li><a href="#orgheadline7">StanfordParser, StanfordDependencyParser</a></li>
-<li><a href="#orgheadline8">StanfordNeuralDependencyParser</a></li>
+<li><a href="#org7b691ca">注意事项</a></li>
+<li><a href="#org2ef10c1">StanfordSegmenter</a></li>
+<li><a href="#org739e6d8">StanfordTokenizer</a></li>
+<li><a href="#org60ef4fc">StanfordNERTagger 和 StanfordPOSTagger</a></li>
+<li><a href="#org4d4e736">StanfordParser, StanfordDependencyParser</a></li>
+<li><a href="#org26cbf24">StanfordNeuralDependencyParser</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline9">基本使用</a>
+<li><a href="#orge518db9">基本使用</a>
 <ul>
-<li><a href="#orgheadline10">使用 StanfordSegmenter 和 StanfordTokenizer 进行分词</a></li>
-<li><a href="#orgheadline11">使用 StanfordNERTagger 进行命名实体识别</a></li>
-<li><a href="#orgheadline12">使用 StanfordPOSTagger 进行词性标注</a></li>
-<li><a href="#orgheadline13">使用 StanfordParser 进行句法分析</a></li>
-<li><a href="#orgheadline14">使用 StanfordDependencyParser 进行依存句法分析</a></li>
+<li><a href="#org054e3c8">使用 StanfordSegmenter 和 StanfordTokenizer 进行分词</a></li>
+<li><a href="#org964bac5">使用 StanfordNERTagger 进行命名实体识别</a></li>
+<li><a href="#org18aa32e">使用 StanfordPOSTagger 进行词性标注</a></li>
+<li><a href="#org52fb103">使用 StanfordParser 进行句法分析</a></li>
+<li><a href="#org20dbdb8">使用 StanfordDependencyParser 进行依存句法分析</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<hr  />
+<hr />
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">NLTK 与 Stanford NLP</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<p>
+<b>注意：本文仅适用于 nltk&lt;3.2.5 及 2016-10-31 之前的 Stanford 工具包，在 nltk 3.2.5 及之后的版本中，StanfordSegmenter 等接口相当于已经被废弃，按照官方建议，应当转为使用 nltk.parse.CoreNLPParser 这个接口，详情见 <a href="https://github.com/nltk/nltk/wiki/Stanford-CoreNLP-API-in-NLTK">wiki</a>。</b>
+</p>
+
+<div id="outline-container-org41c2012" class="outline-2">
+<h2 id="org41c2012">NLTK 与 Stanford NLP</h2>
+<div class="outline-text-2" id="text-org41c2012">
 <p>
 NLTK 是一款著名的 Python 自然语言处理(Natural Language Processing, NLP)工具包，在其收集的大量公开数据集、模型上提供了全面、易用的接口，涵盖了分词、词性标注(Part-Of-Speech tag, POS-tag)、命名实体识别(Named Entity Recognition, NER)、句法分析(Syntactic Parse)等各项 NLP 领域的功能。
 </p>
@@ -77,9 +81,9 @@ Date:   Tue Aug 3 12:20:20 2004 +0000
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">安装和配置</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-orgfd01eb6" class="outline-2">
+<h2 id="orgfd01eb6">安装和配置</h2>
+<div class="outline-text-2" id="text-orgfd01eb6">
 <p>
 NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作者是知名 NLP 博主 52nlp，见 <a href="http://www.52nlp.cn/python%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86%E5%AE%9E%E8%B7%B5-%E5%9C%A8nltk%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%96%AF%E5%9D%A6%E7%A6%8F%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D%E5%99%A8">相关文章</a>。而 NLTK 3.1 及之前则只有以下几个类:
 </p>
@@ -96,9 +100,9 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 </p>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">注意事项</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-org7b691ca" class="outline-3">
+<h3 id="org7b691ca">注意事项</h3>
+<div class="outline-text-3" id="text-org7b691ca">
 <p>
 需要注意这么几点:
 </p>
@@ -115,6 +119,7 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 <li>nltk/tag/stanford.py</li>
 <li>nltk/parse/stanford.py</li>
 </ul>
+
 <p>
 如果不想了解这些细节，可以参考 NLTK 官方 <a href="https://github.com/nltk/nltk/wiki/Installing-Third-Party-Software#stanford-tagger-ner-tokenizer-and-parser">wiki 页面</a>上的内容，但需要注意的是，StanfordSegmenter 和 StanfordNeuralDependencyParser 这两者的配置和其他的都不一样，而 wiki 页面上并未覆盖到这部分内容。
 </p></li>
@@ -123,9 +128,9 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">StanfordSegmenter</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org2ef10c1" class="outline-3">
+<h3 id="org2ef10c1">StanfordSegmenter</h3>
+<div class="outline-text-3" id="text-org2ef10c1">
 <ol class="org-ol">
 <li>从 <a href="http://nlp.stanford.edu/software/segmenter.html">http://nlp.stanford.edu/software/segmenter.html</a> 处下载 <i>stanford-segmenter-2015-12-09.zip</i> (version 3.6.0)</li>
 <li>将 stanford-segmenter-2015-12-09.zip 解压, 并将解压目录中的 <i>stanford-segmenter-3.6.0.jar</i> 拷贝为 <i>stanford-segmenter.jar</i></li>
@@ -137,9 +142,8 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 例:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_SEGMENTER_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford/segmenter"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">CLASSPATH</span>=<span style="color: #ad7fa8;">"$CLASSPATH:$STANFORD_SEGMENTER_PATH/stanford-segmenter.jar:$STANFORD_SEGMENTER_PATH/slf4j-api.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_SEGMENTER_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford/segmenter"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">CLASSPATH</span>=<span style="color: #66cccc;">"$CLASSPATH:$STANFORD_SEGMENTER_PATH/stanford-segmenter.jar:$STANFORD_SEGMENTER_PATH/slf4j-api.jar"</span>
 </pre>
 </div></li>
 </ol>
@@ -154,9 +158,9 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">StanfordTokenizer</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org739e6d8" class="outline-3">
+<h3 id="org739e6d8">StanfordTokenizer</h3>
+<div class="outline-text-3" id="text-org739e6d8">
 <ol class="org-ol">
 <li>从 <a href="http://nlp.stanford.edu/software/tagger.html">http://nlp.stanford.edu/software/tagger.html</a> 中下载 <i>stanford-postagger-full-2015-12-09.zip</i> (version 3.6.0)</li>
 <li>将 <i>stanford-postagger-full-2015-12-09.zip</i> 解压</li>
@@ -165,9 +169,8 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_POSTAGGER_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford/postagger"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">CLASSPATH</span>=<span style="color: #ad7fa8;">"$CLASSPATH:$STANFORD_POSTAGGER_PATH/stanford-postagger.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_POSTAGGER_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford/postagger"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">CLASSPATH</span>=<span style="color: #66cccc;">"$CLASSPATH:$STANFORD_POSTAGGER_PATH/stanford-postagger.jar"</span>
 </pre>
 </div>
 
@@ -175,17 +178,16 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 或
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_POSTAGGER</span>=<span style="color: #ad7fa8;">"$HOME/stanford/postagger/stanford-postagger.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_POSTAGGER</span>=<span style="color: #66cccc;">"$HOME/stanford/postagger/stanford-postagger.jar"</span>
 </pre>
 </div></li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">StanfordNERTagger 和 StanfordPOSTagger</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-org60ef4fc" class="outline-3">
+<h3 id="org60ef4fc">StanfordNERTagger 和 StanfordPOSTagger</h3>
+<div class="outline-text-3" id="text-org60ef4fc">
 <p>
 在 NLTK 里，StanfordNERTagger 和 StanfordPOSTagger 都继承自 StanfordTagger ，在设置上有共同之处，因此放到一起来讲一下。
 </p>
@@ -199,10 +201,9 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_NER_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford/ner"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_POSTAGGER_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford/postagger"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">CLASSPATH</span>=<span style="color: #ad7fa8;">"$CLASSPATH:$STANFORD_NER_PATH/stanford-ner.jar:$STANFORD_POSTAGGER_PATH/stanford-postagger.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_NER_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford/ner"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_POSTAGGER_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford/postagger"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">CLASSPATH</span>=<span style="color: #66cccc;">"$CLASSPATH:$STANFORD_NER_PATH/stanford-ner.jar:$STANFORD_POSTAGGER_PATH/stanford-postagger.jar"</span>
 </pre>
 </div>
 
@@ -210,17 +211,16 @@ NLTK 3.2 之后加入了用于中文分词的 StanfordSegmenter 这个类，作�
 同时将 <i>stanford-ner-2015-12-09.zip</i> 解压后目录中的 <i>classifiers</i> 目录和 <i>stanford-postagger-full-2015-12-09.zip</i> 解压后目录中的 <i>models</i> 目录加入到环境变量 STANFORD_MODELS 中去
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_MODELS</span>=<span style="color: #ad7fa8;">"$STANFORD_NER_PATH/classifiers:$STANFORD_POSTAGGER_PATH/models"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_MODELS</span>=<span style="color: #66cccc;">"$STANFORD_NER_PATH/classifiers:$STANFORD_POSTAGGER_PATH/models"</span>
 </pre>
 </div></li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">StanfordParser, StanfordDependencyParser</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-org4d4e736" class="outline-3">
+<h3 id="org4d4e736">StanfordParser, StanfordDependencyParser</h3>
+<div class="outline-text-3" id="text-org4d4e736">
 <p>
 StanfordParser 和 StanfordDependencyParser 都继承自 GenericStanfordParser ，使用 stanford-parser.jar 来提供句法分析功能。
 </p>
@@ -232,9 +232,8 @@ StanfordParser 和 StanfordDependencyParser 都继承自 GenericStanfordParser �
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_PARSER_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford/parser"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">CLASSPATH</span>=<span style="color: #ad7fa8;">"$CLASSPATH:$STANFORD_PARSER_PATH/stanford-parser.jar:$STANFORD_PARSER_PATH/stanford-parser-3.6.0-models.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_PARSER_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford/parser"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">CLASSPATH</span>=<span style="color: #66cccc;">"$CLASSPATH:$STANFORD_PARSER_PATH/stanford-parser.jar:$STANFORD_PARSER_PATH/stanford-parser-3.6.0-models.jar"</span>
 </pre>
 </div>
 
@@ -242,18 +241,17 @@ StanfordParser 和 StanfordDependencyParser 都继承自 GenericStanfordParser �
 或者将 <i>stanford-parser.jar</i> 加入到环境变量 STANFORD_PARSER 中，将 <i>stanford-parser-3.6.0-models.jar</i> 加入到环境变量 STANFORD_MODELS 中
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_PARSER</span>=<span style="color: #ad7fa8;">"$STANFORD_PARSER_PATH/stanford-parser.jar"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_MODELS</span>=<span style="color: #ad7fa8;">"$STANFORD_MODELS:$STANFORD_PARSER_PATH/stanford-parser-3.6.0.models.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_PARSER</span>=<span style="color: #66cccc;">"$STANFORD_PARSER_PATH/stanford-parser.jar"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_MODELS</span>=<span style="color: #66cccc;">"$STANFORD_MODELS:$STANFORD_PARSER_PATH/stanford-parser-3.6.0.models.jar"</span>
 </pre>
 </div></li>
 </ol>
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-3">
-<h3 id="orgheadline8">StanfordNeuralDependencyParser</h3>
-<div class="outline-text-3" id="text-orgheadline8">
+<div id="outline-container-org26cbf24" class="outline-3">
+<h3 id="org26cbf24">StanfordNeuralDependencyParser</h3>
+<div class="outline-text-3" id="text-org26cbf24">
 <p>
 StanfordNeuralDependencyParser 虽然也继承自 GenericStanfordParser，并且用来进行句法分析，但它使用的 Stanford CoreNLP 中的功能和模型，不依赖 Stanford Parser 这个(子)工具包。
 </p>
@@ -265,9 +263,8 @@ StanfordNeuralDependencyParser 虽然也继承自 GenericStanfordParser，并且
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_CORENLP_PATH</span>=<span style="color: #ad7fa8;">"$HOME/stanford-corenlp-full-2015-12-09"</span>
-<span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">CLASSPATH</span>=<span style="color: #ad7fa8;">"$CLASSPATH:$STANFORD_CORENLP_PATH/stanford-corenlp-3.6.0.jar:$STANFORD_CORENLP_PATH/stanford-corenlp-3.6.0-models.jar"</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_CORENLP_PATH</span>=<span style="color: #66cccc;">"$HOME/stanford-corenlp-full-2015-12-09"</span>
+<span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">CLASSPATH</span>=<span style="color: #66cccc;">"$CLASSPATH:$STANFORD_CORENLP_PATH/stanford-corenlp-3.6.0.jar:$STANFORD_CORENLP_PATH/stanford-corenlp-3.6.0-models.jar"</span>
 </pre>
 </div>
 
@@ -275,8 +272,7 @@ StanfordNeuralDependencyParser 虽然也继承自 GenericStanfordParser，并且
 或者可以更简单地将解压目录设置为环境变量 STANFORD_CORENLP 的值
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell"><span style="color: #729fcf;">export</span> <span style="color: #eeeeec;">STANFORD_CORENLP</span>=$<span style="color: #eeeeec;">STANFORD_CORENLP_PATH</span>
+<pre class="src src-shell"><span style="color: #cc99cc; background-color: #2d2d2d;">export</span> <span style="color: #ffcc66;">STANFORD_CORENLP</span>=$<span style="color: #ffcc66;">STANFORD_CORENLP_PATH</span>
 </pre>
 </div></li>
 </ol>
@@ -284,36 +280,31 @@ StanfordNeuralDependencyParser 虽然也继承自 GenericStanfordParser，并且
 </div>
 </div>
 
-<div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9">基本使用</h2>
-<div class="outline-text-2" id="text-orgheadline9">
-</div><div id="outline-container-orgheadline10" class="outline-3">
-<h3 id="orgheadline10">使用 StanfordSegmenter 和 StanfordTokenizer 进行分词</h3>
-<div class="outline-text-3" id="text-orgheadline10">
+<div id="outline-container-orge518db9" class="outline-2">
+<h2 id="orge518db9">基本使用</h2>
+<div class="outline-text-2" id="text-orge518db9">
+</div>
+<div id="outline-container-org054e3c8" class="outline-3">
+<h3 id="org054e3c8">使用 StanfordSegmenter 和 StanfordTokenizer 进行分词</h3>
+<div class="outline-text-3" id="text-org054e3c8">
 <p>
 StanfordSegmenter 是 52nlp 实现的对 Stanford Segmenter 的封装，用来进行中文分词。
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tokenize <span style="color: #99cc99; font-weight: bold;">import</span> StanfordSegmenter
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">from</span> nltk.tokenize <span style="color: #729fcf;">import</span> StanfordSegmenter
-
-<span style="color: #eeeeec;">segmenter</span> = StanfordSegmenter(
-    path_to_sihan_corpora_dict=<span style="color: #ad7fa8;">"/home/linusp/stanford/segmenter/data/"</span>,
-    path_to_model=<span style="color: #ad7fa8;">"/home/linusp/stanford/segmenter/data/pku.gz"</span>,
-    path_to_dict=<span style="color: #ad7fa8;">"/home/linusp/stanford/segmenter/data/dict-chris6.ser.gz"</span>
+<span style="color: #ffcc66;">segmenter</span> = StanfordSegmenter(
+    path_to_sihan_corpora_dict=<span style="color: #66cccc;">"/home/linusp/stanford/segmenter/data/"</span>,
+    path_to_model=<span style="color: #66cccc;">"/home/linusp/stanford/segmenter/data/pku.gz"</span>,
+    path_to_dict=<span style="color: #66cccc;">"/home/linusp/stanford/segmenter/data/dict-chris6.ser.gz"</span>
 )
-<span style="color: #eeeeec;">res</span> = segmenter.segment(u<span style="color: #ad7fa8;">"&#21271;&#28023;&#24050;&#25104;&#20026;&#20013;&#22269;&#23545;&#22806;&#24320;&#25918;&#20013;&#21319;&#36215;&#30340;&#19968;&#39063;&#26126;&#26143;"</span>)
-<span style="color: #729fcf;">print</span> <span style="color: #729fcf;">type</span>(res)
-<span style="color: #729fcf;">print</span> res.encode(<span style="color: #ad7fa8;">'utf-8'</span>)
+<span style="color: #ffcc66;">res</span> = segmenter.segment(u<span style="color: #66cccc;">"&#21271;&#28023;&#24050;&#25104;&#20026;&#20013;&#22269;&#23545;&#22806;&#24320;&#25918;&#20013;&#21319;&#36215;&#30340;&#19968;&#39063;&#26126;&#26143;"</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> <span style="color: #cc99cc; background-color: #2d2d2d;">type</span>(res)
+<span style="color: #99cc99; font-weight: bold;">print</span> res.encode(<span style="color: #66cccc;">'utf-8'</span>)
 </pre>
 </div>
-
-<pre class="example">
-&lt;type 'unicode'&gt;
-北海 已 成为 中国 对外开放 中 升起 的 一 颗 明星
-</pre>
 
 <p>
 StanfordSegmenter 的初始化参数说明:
@@ -340,42 +331,32 @@ StanfordSegmenter 的初始化参数说明:
 StanfordTokenizer 可以用来进行英文的分词，使用起来比较简单
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tokenize <span style="color: #99cc99; font-weight: bold;">import</span> StanfordTokenizer
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">from</span> nltk.tokenize <span style="color: #729fcf;">import</span> StanfordTokenizer
-
-<span style="color: #eeeeec;">tokenizer</span> = StanfordTokenizer()
-<span style="color: #eeeeec;">sent</span> = <span style="color: #ad7fa8;">"Good muffins cost $3.88\nin New York.  Please buy me\ntwo of them.\nThanks."</span>
-<span style="color: #729fcf;">print</span> tokenizer.tokenize(sent)
-</pre>
-</div>
-
-<pre class="example">
-[u'Good', u'muffins', u'cost', u'$', u'3.88', u'in', u'New', u'York', u'.', u'Please', u'buy', u'me', u'two', u'of', u'them', u'.', u'Thanks', u'.']
+<span style="color: #ffcc66;">tokenizer</span> = StanfordTokenizer()
+<span style="color: #ffcc66;">sent</span> = <span style="color: #66cccc;">"Good muffins cost $3.88\nin New York.  Please buy me\ntwo of them.\nThanks."</span>
+<span style="color: #99cc99; font-weight: bold;">print</span> tokenizer.tokenize(sent)
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgheadline11" class="outline-3">
-<h3 id="orgheadline11">使用 StanfordNERTagger 进行命名实体识别</h3>
-<div class="outline-text-3" id="text-orgheadline11">
+<div id="outline-container-org964bac5" class="outline-3">
+<h3 id="org964bac5">使用 StanfordNERTagger 进行命名实体识别</h3>
+<div class="outline-text-3" id="text-org964bac5">
 <p>
 所谓命名实体识别，是用来识别并标注文本中的人名、地名、组织机构名等单元，这些单元既是 "命名实体"。
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tag <span style="color: #99cc99; font-weight: bold;">import</span> StanfordNERTagger
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">from</span> nltk.tag <span style="color: #729fcf;">import</span> StanfordNERTagger
-
-<span style="color: #eeeeec;">eng_tagger</span> = StanfordNERTagger(<span style="color: #ad7fa8;">'english.all.3class.distsim.crf.ser.gz'</span>)
-<span style="color: #729fcf;">print</span> eng_tagger.tag(<span style="color: #ad7fa8;">'Rami Eid is studying at Stony Brook University in NY'</span>.split())
+<span style="color: #ffcc66;">eng_tagger</span> = StanfordNERTagger(<span style="color: #66cccc;">'english.all.3class.distsim.crf.ser.gz'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> eng_tagger.tag(<span style="color: #66cccc;">'Rami Eid is studying at Stony Brook University in NY'</span>.split())
 </pre>
 </div>
-
-<pre class="example">
-[(u'Rami', u'PERSON'), (u'Eid', u'PERSON'), (u'is', u'O'), (u'studying', u'O'), (u'at', u'O'), (u'Stony', u'ORGANIZATION'), (u'Brook', u'ORGANIZATION'), (u'University', u'ORGANIZATION'), (u'in', u'O'), (u'NY', u'O')]
-</pre>
 
 <p>
 StanfordNERTagger 在初始化时需要指定所使用的模型，在 <i>stanford-ner-2015-12-09.zip</i> 解压后的 <i>classifiers</i> 目录中，有几个可用的英语 NER 模型:
@@ -397,36 +378,21 @@ StanfordNERTagger 在初始化时需要指定所使用的模型，在 <i>stanfor
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tag <span style="color: #99cc99; font-weight: bold;">import</span> StanfordNERTagger
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">from</span> nltk.tag <span style="color: #729fcf;">import</span> StanfordNERTagger
-
-<span style="color: #eeeeec;">chi_tagger</span> = StanfordNERTagger(<span style="color: #ad7fa8;">'chinese.misc.distsim.crf.ser.gz'</span>)
-<span style="color: #eeeeec;">sent</span> = u<span style="color: #ad7fa8;">'&#21271;&#28023; &#24050; &#25104;&#20026; &#20013;&#22269; &#23545;&#22806;&#24320;&#25918; &#20013; &#21319;&#36215; &#30340; &#19968; &#39063; &#26126;&#26143;'</span>
-<span style="color: #729fcf;">for</span> word, tag <span style="color: #729fcf;">in</span>  chi_tagger.tag(sent.split()):
-    <span style="color: #729fcf;">print</span> word.encode(<span style="color: #ad7fa8;">'utf-8'</span>), tag
-</pre>
-</div>
-
-<pre class="example">
-北海 GPE
-已 O
-成为 O
-中国 GPE
-对外开放 O
-中 O
-升起 O
-的 O
-一 O
-颗 O
-明星 O
+<span style="color: #ffcc66;">chi_tagger</span> = StanfordNERTagger(<span style="color: #66cccc;">'chinese.misc.distsim.crf.ser.gz'</span>)
+<span style="color: #ffcc66;">sent</span> = u<span style="color: #66cccc;">'&#21271;&#28023; &#24050; &#25104;&#20026; &#20013;&#22269; &#23545;&#22806;&#24320;&#25918; &#20013; &#21319;&#36215; &#30340; &#19968; &#39063; &#26126;&#26143;'</span>
+<span style="color: #99cc99; font-weight: bold;">for</span> word, tag <span style="color: #99cc99; font-weight: bold;">in</span>  chi_tagger.tag(sent.split()):
+    <span style="color: #99cc99; font-weight: bold;">print</span> word.encode(<span style="color: #66cccc;">'utf-8'</span>), tag
 </pre>
 </div>
 </div>
+</div>
 
-<div id="outline-container-orgheadline12" class="outline-3">
-<h3 id="orgheadline12">使用 StanfordPOSTagger 进行词性标注</h3>
-<div class="outline-text-3" id="text-orgheadline12">
+<div id="outline-container-org18aa32e" class="outline-3">
+<h3 id="org18aa32e">使用 StanfordPOSTagger 进行词性标注</h3>
+<div class="outline-text-3" id="text-org18aa32e">
 <p>
 所谓词性标注，是根据句子中的上下文信息，给句中每个词确定一个最为合适的词性标记，比如动词、名词、人称代词等。
 </p>
@@ -435,48 +401,28 @@ StanfordNERTagger 在初始化时需要指定所使用的模型，在 <i>stanfor
 和 StanfordNERTagger 一样，StanfordPOSTagger 需要的输入也是一个已经分好词的句子，下面是一个英文的词性标注实例:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.tag <span style="color: #99cc99; font-weight: bold;">import</span> StanfordPOSTagger
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> nltk.tag <span style="color: #729fcf;">import</span> StanfordPOSTagger
-
-<span style="color: #eeeeec;">eng_tagger</span> = StanfordPOSTagger(<span style="color: #ad7fa8;">'english-bidirectional-distsim.tagger'</span>)
-<span style="color: #729fcf;">print</span> eng_tagger.tag(<span style="color: #ad7fa8;">'What is the airspeed of an unladen swallow ?'</span>.split())
+<span style="color: #ffcc66;">eng_tagger</span> = StanfordPOSTagger(<span style="color: #66cccc;">'english-bidirectional-distsim.tagger'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> eng_tagger.tag(<span style="color: #66cccc;">'What is the airspeed of an unladen swallow ?'</span>.split())
 </pre>
 </div>
-
-<pre class="example">
-[(u'What', u'WP'), (u'is', u'VBZ'), (u'the', u'DT'), (u'airspeed', u'NN'), (u'of', u'IN'), (u'an', u'DT'), (u'unladen', u'JJ'), (u'swallow', u'VB'), (u'?', u'.')]
-</pre>
 
 <p>
 如果之前配置时下载的是 <i>stanford-postagger-full-xxxx-xx-xx.zip</i> ，在解压后，其中的 models 目录是包含有两个中文模型的，分别是 <i>chinese-distsim.tagger</i> 和 <i>chinese-nodistsim.tagger</i> ，可以直接使用。
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">coding: utf-8</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tag <span style="color: #99cc99; font-weight: bold;">import</span> StanfordPOSTagger
 
-<pre class="src src-python"><span style="color: #888a85;"># </span><span style="color: #888a85;">coding: utf-8</span>
-<span style="color: #729fcf;">from</span> nltk.tag <span style="color: #729fcf;">import</span> StanfordPOSTagger
-
-<span style="color: #eeeeec;">chi_tagger</span> = StanfordPOSTagger(<span style="color: #ad7fa8;">'chinese-distsim.tagger'</span>)
-<span style="color: #eeeeec;">sent</span> = u<span style="color: #ad7fa8;">'&#21271;&#28023; &#24050; &#25104;&#20026; &#20013;&#22269; &#23545;&#22806;&#24320;&#25918; &#20013; &#21319;&#36215; &#30340; &#19968; &#39063; &#26126;&#26143;'</span>
-<span style="color: #729fcf;">for</span> _, word_and_tag <span style="color: #729fcf;">in</span>  chi_tagger.tag(sent.split()):
-    <span style="color: #eeeeec;">word</span>, <span style="color: #eeeeec;">tag</span> = word_and_tag.split(<span style="color: #ad7fa8;">'#'</span>)
-    <span style="color: #729fcf;">print</span> word.encode(<span style="color: #ad7fa8;">'utf-8'</span>), tag
+<span style="color: #ffcc66;">chi_tagger</span> = StanfordPOSTagger(<span style="color: #66cccc;">'chinese-distsim.tagger'</span>)
+<span style="color: #ffcc66;">sent</span> = u<span style="color: #66cccc;">'&#21271;&#28023; &#24050; &#25104;&#20026; &#20013;&#22269; &#23545;&#22806;&#24320;&#25918; &#20013; &#21319;&#36215; &#30340; &#19968; &#39063; &#26126;&#26143;'</span>
+<span style="color: #99cc99; font-weight: bold;">for</span> _, word_and_tag <span style="color: #99cc99; font-weight: bold;">in</span>  chi_tagger.tag(sent.split()):
+    <span style="color: #ffcc66;">word</span>, <span style="color: #ffcc66;">tag</span> = word_and_tag.split(<span style="color: #66cccc;">'#'</span>)
+    <span style="color: #99cc99; font-weight: bold;">print</span> word.encode(<span style="color: #66cccc;">'utf-8'</span>), tag
 </pre>
 </div>
-
-<pre class="example">
-北海 NR
-已 AD
-成为 VV
-中国 NR
-对外开放 NN
-中 LC
-升起 VV
-的 DEC
-一 CD
-颗 M
-明星 NN
-</pre>
 
 <p>
 这个中文的词性标注输出的结果有点奇怪……
@@ -484,25 +430,20 @@ StanfordNERTagger 在初始化时需要指定所使用的模型，在 <i>stanfor
 </div>
 </div>
 
-<div id="outline-container-orgheadline13" class="outline-3">
-<h3 id="orgheadline13">使用 StanfordParser 进行句法分析</h3>
-<div class="outline-text-3" id="text-orgheadline13">
+<div id="outline-container-org52fb103" class="outline-3">
+<h3 id="org52fb103">使用 StanfordParser 进行句法分析</h3>
+<div class="outline-text-3" id="text-org52fb103">
 <p>
 句法分析在分析单个词的词性的基础上，尝试分析词与词之间的关系，并用这种关系来表示句子的结构。实际上，句法结构可以分为两种，一种是短语结构，另一种是依存结构。前者按句子顺序来提取句法结构，后者则按词与词之间的句法关系来提取句子结构。这里说的句法分析得到的是短语结构。
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.parse.stanford <span style="color: #99cc99; font-weight: bold;">import</span> StanfordParser
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> nltk.parse.stanford <span style="color: #729fcf;">import</span> StanfordParser
-
-<span style="color: #eeeeec;">eng_parser</span> = StanfordParser(model_path=u<span style="color: #ad7fa8;">'edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz'</span>)
-<span style="color: #729fcf;">print</span> <span style="color: #729fcf;">list</span>(eng_parser.parse(<span style="color: #ad7fa8;">"the quick brown fox jumps over the lazy dog"</span>.split()))
+<span style="color: #ffcc66;">eng_parser</span> = StanfordParser(model_path=u<span style="color: #66cccc;">'edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(eng_parser.parse(<span style="color: #66cccc;">"the quick brown fox jumps over the lazy dog"</span>.split()))
 </pre>
 </div>
-
-<pre class="example">
-[Tree('ROOT', [Tree('NP', [Tree('NP', [Tree('DT', ['the']), Tree('JJ', ['quick']), Tree('JJ', ['brown']), Tree('NN', ['fox'])]), Tree('NP', [Tree('NP', [Tree('NNS', ['jumps'])]), Tree('PP', [Tree('IN', ['over']), Tree('NP', [Tree('DT', ['the']), Tree('JJ', ['lazy']), Tree('NN', ['dog'])])])])])])]
-</pre>
 
 <p>
 得到的结果是一个 list, 其中的元素是 Tree 类型的，在上面这个例子中，这个 list 的长度是 1 ，调用 Tree 的 draw 方法可以将句法树绘制出来。
@@ -526,34 +467,22 @@ StanfordNERTagger 在初始化时需要指定所使用的模型，在 <i>stanfor
 </div>
 </div>
 
-<div id="outline-container-orgheadline14" class="outline-3">
-<h3 id="orgheadline14">使用 StanfordDependencyParser 进行依存句法分析</h3>
-<div class="outline-text-3" id="text-orgheadline14">
+<div id="outline-container-org20dbdb8" class="outline-3">
+<h3 id="org20dbdb8">使用 StanfordDependencyParser 进行依存句法分析</h3>
+<div class="outline-text-3" id="text-org20dbdb8">
 <p>
 见上一节，依存句法分析得到的是句子的依存结构。
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.parse.stanford <span style="color: #99cc99; font-weight: bold;">import</span> StanfordDependencyParser
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> nltk.parse.stanford <span style="color: #729fcf;">import</span> StanfordDependencyParser
-
-<span style="color: #eeeeec;">eng_parser</span> = StanfordDependencyParser(model_path=u<span style="color: #ad7fa8;">'edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz'</span>)
-<span style="color: #eeeeec;">res</span> = <span style="color: #729fcf;">list</span>(eng_parser.parse(<span style="color: #ad7fa8;">"the quick brown fox jumps over the lazy dog"</span>.split()))
-<span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> res[0].triples():
-    <span style="color: #729fcf;">print</span> row
+<span style="color: #ffcc66;">eng_parser</span> = StanfordDependencyParser(model_path=u<span style="color: #66cccc;">'edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz'</span>)
+<span style="color: #ffcc66;">res</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(eng_parser.parse(<span style="color: #66cccc;">"the quick brown fox jumps over the lazy dog"</span>.split()))
+<span style="color: #99cc99; font-weight: bold;">for</span> row <span style="color: #99cc99; font-weight: bold;">in</span> res[0].triples():
+    <span style="color: #99cc99; font-weight: bold;">print</span> row
 </pre>
 </div>
-
-<pre class="example">
-((u'fox', u'NN'), u'det', (u'the', u'DT'))
-((u'fox', u'NN'), u'amod', (u'quick', u'JJ'))
-((u'fox', u'NN'), u'amod', (u'brown', u'JJ'))
-((u'fox', u'NN'), u'dep', (u'jumps', u'NNS'))
-((u'jumps', u'NNS'), u'nmod', (u'dog', u'NN'))
-((u'dog', u'NN'), u'case', (u'over', u'IN'))
-((u'dog', u'NN'), u'det', (u'the', u'DT'))
-((u'dog', u'NN'), u'amod', (u'lazy', u'JJ'))
-</pre>
 
 <p>
 绘制出来的依存句法结构如下图所示。
