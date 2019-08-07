@@ -1,0 +1,258 @@
+---
+layout     : post
+title      : "论文笔记：Reading Wikipedia to Answer Open-Domain Questions"
+desc       : "Facebook 的 DrQA 项目的原理解析"
+categories : 论文笔记
+tags       :
+- NLP
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgf5bed87">作者</a></li>
+<li><a href="#orgbb16979">相关工作</a></li>
+<li><a href="#org3021a2d">术语</a></li>
+<li><a href="#org3a394f4">观点</a></li>
+<li><a href="#org410bb4c">数据集</a></li>
+<li><a href="#org585ed46">模型和方法</a></li>
+<li><a href="#orgead4cd1">实验和结论</a></li>
+<li><a href="#orgfc9de11">个人总结</a></li>
+</ul>
+</div>
+</div>
+
+
+
+<div class="figure">
+<p><img src="../../../assets/img/drqa.png" alt="drqa.png" />
+</p>
+</div>
+
+<p>
+这篇论文实现了一个基于维基百科的开放域问答系统，其实可以归类到机器阅读理解里面。相应的，这篇论文有配套的开源代码（见 <a href="https://github.com/facebookresearch/DrQA">facebookresearch/DrQA</a>），这个系统的工程部分还是蛮实在的。
+</p>
+
+<p>
+论文地址：<a href="https://arxiv.org/abs/1704.00051">https://arxiv.org/abs/1704.00051</a>
+</p>
+
+<div id="outline-container-orgf5bed87" class="outline-2">
+<h2 id="orgf5bed87">作者</h2>
+<div class="outline-text-2" id="text-orgf5bed87">
+<p>
+一作是毕业于 Stanford 的<a href="https://www.cs.princeton.edu/~danqic/">陈丹琦，目前在 Facebook 人工智能研究院(Facebook AI Research, FAIR) </a>。陈丹琦在机器阅读理解方面做了不少工作，博士论文《Neural Reading Comprehension and Beyond》我计划之后也读一下。
+</p>
+
+<p>
+其他参与者是 FAIR 的几个人：Adam Fisch, Jason Weston, Antoine Bordes。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb16979" class="outline-2">
+<h2 id="orgbb16979">相关工作</h2>
+<div class="outline-text-2" id="text-orgbb16979">
+<ul class="org-ul">
+<li>Ryu et al. 2014: They combine article content with multiple other answe matching modules based on different types of semi-structured knowledge such as infoboxes, arfticle structures, category structure and definitions</li>
+<li>Ahn et al. 2004: combine Wikipedia as a text resource with other resources, in this case with information retrieval over other documents</li>
+<li>Sun et al. 2015, QuASE: full pipeline QA approche</li>
+<li>Microsoft's AskMSR, 2002</li>
+<li>IBM's DeepQA, 2010: DeepQA is a very sophisticated system that relies on both unstructured information including text documents as well as structured data such as KBs, databases and ontologies to generate candidate answers or vote over evidence.</li>
+<li>YodaQA, 2015</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3021a2d" class="outline-2">
+<h2 id="org3021a2d">术语</h2>
+<div class="outline-text-2" id="text-org3021a2d">
+<ul class="org-ul">
+<li><p>
+Open-Domain Question Answering
+</p>
+
+<blockquote>
+<p>
+Open-domain QA was originally defined as finding answers in collections of unstructured documents, following the setting of the annual TREC competitions
+</p>
+</blockquote></li>
+
+<li><p>
+Machine Reading at Scale, MRS
+</p>
+
+<blockquote>
+<p>
+In order to answer any question, one must first retrieve the few relevant articles among more than 5 million items, and then scan them carefully to identify the answer. We term this setting, <b>machine reading at scale</b>.
+</p>
+</blockquote></li>
+
+<li><p>
+MurMurHash 算法
+</p>
+
+<p>
+我去了解了下，MurMurHash 算法是一种被广泛应用的速度快且碰撞少的哈希算法，sklearn 里的 HashingVectorizer、Redis 中都用到了这个算法。
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3a394f4" class="outline-2">
+<h2 id="org3a394f4">观点</h2>
+<div class="outline-text-2" id="text-org3a394f4">
+<ul class="org-ul">
+<li><p>
+Freebase/DBPedia 等知识库对计算机友好，但是过于稀疏，直接用于 open-domain question answering 并不好
+</p>
+
+<p>
+标了一个来源: Miller et al., 2016
+</p></li>
+
+<li>如 IBM DeepQA(Ferrucci et al., 2010) 的大规模 QA 系统，依赖多个不同的数据源之间的信息冗余来提高回答效果，比如说 Wikipedia、知识库、词典、大量的新闻文章、书籍……</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org410bb4c" class="outline-2">
+<h2 id="org410bb4c">数据集</h2>
+<div class="outline-text-2" id="text-org410bb4c">
+<p>
+论文中提到的数据集
+</p>
+<ul class="org-ul">
+<li><a href="https://nlp.stanford.edu/software/sempre/">WebQuestions</a></li>
+<li><a href="https://research.fb.com/downloads/babi/">SimpleQuestions</a></li>
+<li><a href="https://people.cs.umass.edu/~miyyer/qblearn/">QuizBowl</a></li>
+<li><a href="https://github.com/deepmind/rc-data/">CNN/Mail Daily</a></li>
+<li><a href="https://github.com/google-research-datasets/wiki-reading">WikiReading</a></li>
+<li>WikiAnswers</li>
+<li><a href="https://research.fb.com/downloads/babi/">WikiMovies</a></li>
+<li><a href="https://github.com/brmson/dataset-factoid-curated/tree/master/trec">CuratedTREC</a></li>
+</ul>
+
+<p>
+论文中使用的数据集
+</p>
+<ul class="org-ul">
+<li>2016 年 12 月 21 日导出的<a href="https://dumps.wikimedia.org/enwiki/">英文维基百科数据</a>，包含 5075182 篇文章</li>
+<li>SQuAD 数据集，这个是机器阅读理解领域最有名的数据集了</li>
+<li>CuratedTREC 数据集，包含 2180 个问题</li>
+<li>WebQuestions 数据集</li>
+<li>WikiMovies 数据集，包含了 96000 对电影领域的问答数据</li>
+</ul>
+
+<p>
+SQuAD 数据集是标准的阅读理解数据集，每一个样本都包含一个 (Q, A) 对，以及关联的维基百科文章中的段落，但 CuratedTREC、WebQuestions 和 WikiMovies 三个数据集只有单纯的 (Q, A) 对，所以论文中需要为后面这三个数据集补充上关联的文章段落数据才能用于训练。
+</p>
+
+<p>
+具体来说，是通过远程监督的手段来为 CuratedTREC/WebQuestions/WikiMovies 三个数据集补充相关的文章段落数据的，过程如下：
+</p>
+<ul class="org-ul">
+<li>从数据集中选择一个 (Q, A) 对</li>
+<li>用问题文本也就是 Q 作为 query，检索 5 篇维基百科的文章</li>
+<li>将这 5 篇百科文章切分成段落，并按下面的步骤去除无关的内容
+
+<ul class="org-ul">
+<li>若段落中不能找到 A，则去除</li>
+<li>去除字数在 25 以下或 1000 以上的段落</li>
+<li>如果 Q 中有命名实体（如人名、地名等），而某个段落中没有这个命名实体，则去除这个段落</li>
+</ul></li>
+
+<li>如果没有剩余可用段落，那么丢弃这个样本，如果有则进行排序：取段落中匹配到 A 的位置，以其为中心取一个 20 个词的窗口，计算其与 Q 的重叠程度（我理解是 LCS 之类的），选择最匹配的 5 个段落</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org585ed46" class="outline-2">
+<h2 id="org585ed46">模型和方法</h2>
+<div class="outline-text-2" id="text-org585ed46">
+<p>
+模型分为两大块，首先有一个 Document Retriever，对给定的问题 question，从所有维基百科文章中检索；检索到文章后切分成段落，然后用一个称之为 Document Reader 的模块在段落中预测答案位置并给出分数。后者其实就是标准的阅读理解模型了，完全可以替换成其他的机器阅读理解模型。
+</p>
+
+<p>
+总体上来说这个模型不复杂，或者说非常的简单直观……所以我就不在这里写那些模型的计算式了，需要的话可以自行查阅论文。
+</p>
+
+<p>
+Document Retriever 部分，我去阅读了对应开源项目的代码，有两种方法
+</p>
+<ul class="org-ul">
+<li><p>
+<a href="https://github.com/facebookresearch/DrQA/blob/master/drqa/retriever/tfidf_doc_ranker.py#L23">TfidfDocRanker</a>: 将 question 用 TFIDF+BOW 编码成向量，然后和文档的向量表示做內积进行排序
+</p>
+
+<p>
+看代码的话是直接和所有文档的向量组成的矩阵相乘的，维基百科的所有文章数量是很多的，我只能说像我这种穷惯了的人没法想象吧……
+</p></li>
+
+<li><a href="https://github.com/facebookresearch/DrQA/blob/master/drqa/retriever/elastic_doc_ranker.py#L23">ElasticDocRanker</a>: 这个直接就是把所有维基百科的文章存到 ES 上，然后用 ES 的 search 接口进行检索，用检索结果里 _score 来排序</li>
+</ul>
+
+<p>
+可以看到，所谓的 DocumentRetriever 的部分真的是超简单的……
+</p>
+
+<p>
+DocumentReader 是一个标准的机器阅读理解模型了，输入一个段落和一个 Q，从段落中预测一个 start 位置和一个 end 位置，取两个位置中间的文本作为答案输出。其中 start 和 end 的计算都是一样的，用 question 的向量表示和段落的向量表示做 attention 得到每个位置的 score。对任意一个 (start, end) 区间，取两者 score 的乘积作为这个区间的 score 并用之来排序，要求区间长度不超过 15。
+</p>
+
+<p>
+由于使用的数据有一部分是靠远程监督产生出来的，必然会存在噪音，所以这篇论文在训练阶段做了一些特殊处理，具体来说做了两个尝试：
+</p>
+<ul class="org-ul">
+<li>用 SQuAD 数据先训练出一个模型，然后在远程监督的数据上进行 finetuning</li>
+<li>或者，SQuAD 数据和远程监督数据一起作为训练数据，进行多任务学习，也就是分开训练，但是共享部分参数</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgead4cd1" class="outline-2">
+<h2 id="orgead4cd1">实验和结论</h2>
+<div class="outline-text-2" id="text-orgead4cd1">
+<ul class="org-ul">
+<li><p>
+单独在 SQuAD 上做训练，本文的 Document Reader 模型，在 dev 集上效果要好于 R-net 等一干模型，在 test 集上基本与 R-net 持平而好于剩下的模型，如下表所示：
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/drqa_eval.png" alt="drqa_eval.png" />
+</p>
+</div>
+
+<p>
+注: 这个表的结果是指不做文档检索、已经给定文章段落时预测答案的模型效果，而下文那个表则是包含文档检索、答案预测的整体效果。
+</p></li>
+
+<li><p>
+加远程监督数据，无论是 finetunning 还是多任务学习，效果都有显著提升，如下表所示
+</p>
+
+
+<div class="figure">
+<p><img src="../../../assets/img/drqa_eval2.png" alt="drqa_eval2.png" />
+</p>
+</div>
+
+<p>
+虽然说在 WikiMovies 数据集上有多达 12 个百分点的提升，不过 top1 的精度最好也就 30% 多……
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfc9de11" class="outline-2">
+<h2 id="orgfc9de11">个人总结</h2>
+<div class="outline-text-2" id="text-orgfc9de11">
+<ul class="org-ul">
+<li>这是一篇工程向的论文，在模型结构上并没有什么亮点</li>
+<li>远程监督制造大量带噪声的数据，然后以多任务学习或者 finetuning 的形式参与模型训练，这个其实是蛮有用的一个经验，我个人也在多个领域看到不少这种做法，对于深度学习这种对数据太过贪婪的方法，这也是被逼出来的方法吧</li>
+<li>DocumentRetriever 部分做得太简单了，我认为这是最终系统整体效果才 30% 多的一个较大原因，顺便吐槽一下，加个 ES 检索就说自己是「Machine Reading at Scale」了……</li>
+</ul>
+</div>
+</div>
