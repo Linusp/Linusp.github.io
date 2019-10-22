@@ -28,14 +28,14 @@ tags       :
 <li><a href="#org4428836">使用 FastText 进行文本分类</a></li>
 <li><a href="#org243d4a6">使用 Kashgari 进行文本分类</a>
 <ul>
-<li><a href="#org338da7f">进行常规的文本分类</a></li>
-<li><a href="#org206d4e8">基于 BERT 进行文本分类</a></li>
+<li><a href="#orgc94711d">进行常规的文本分类</a></li>
+<li><a href="#org6d4406e">基于 BERT 进行文本分类</a></li>
 </ul>
 </li>
 <li><a href="#orgd485d3f">使用 AllenNLP 进行文本分类</a>
 <ul>
-<li><a href="#orgc94711d">进行常规的文本分类</a></li>
-<li><a href="#org6d4406e">基于 BERT 进行文本分类</a></li>
+<li><a href="#org3cb8159">进行常规的文本分类</a></li>
+<li><a href="#orgcdca18c">基于 BERT 进行文本分类</a></li>
 </ul>
 </li>
 </ul>
@@ -51,7 +51,7 @@ tags       :
 <li><a href="http://www.zmonster.me/2018/03/26/nlp-thinking-1.html">NLP哪里跑: 开篇及一些碎碎念 · ZMonster's Blog</a></li>
 <li><a href="http://www.zmonster.me/2018/06/25/nlp-thinking-2.html">NLP哪里跑: 什么是自然语言处理 · ZMonster's Blog</a></li>
 <li><a href="http://www.zmonster.me/2018/10/20/nlp-road-3-unicode.html">NLP哪里跑: Unicode相关的一些小知识和工具 · ZMonster's Blog</a></li>
-<li><a href="http://www.zmonster.me/2018/10/20/nlp-thinking-4.html">NLP哪里跑: 文本分类工具一览 · ZMonster's Blog</a></li>
+<li><a href="http://www.zmonster.me/2019/10/20/nlp-thinking-4.html">NLP哪里跑: 文本分类工具一览 · ZMonster's Blog</a></li>
 </ol>
 
 <div id="outline-container-orgb88d858" class="outline-2">
@@ -1014,9 +1014,9 @@ Kashgari 是一个基于神经网络模型的 NLP 工具，内部实现大多数
 </p>
 </div>
 
-<div id="outline-container-org338da7f" class="outline-4">
-<h4 id="org338da7f">进行常规的文本分类</h4>
-<div class="outline-text-4" id="text-org338da7f">
+<div id="outline-container-orgc94711d" class="outline-4">
+<h4 id="orgc94711d">进行常规的文本分类</h4>
+<div class="outline-text-4" id="text-orgc94711d">
 <ul class="org-ul">
 <li><p>
 训练
@@ -1155,9 +1155,9 @@ test
 </div>
 </div>
 
-<div id="outline-container-org206d4e8" class="outline-4">
-<h4 id="org206d4e8">基于 BERT 进行文本分类</h4>
-<div class="outline-text-4" id="text-org206d4e8">
+<div id="outline-container-org6d4406e" class="outline-4">
+<h4 id="org6d4406e">基于 BERT 进行文本分类</h4>
+<div class="outline-text-4" id="text-org6d4406e">
 <p>
 先下载 BERT 模型。
 </p>
@@ -1210,9 +1210,9 @@ test
 </p>
 </div>
 
-<div id="outline-container-orgc94711d" class="outline-4">
-<h4 id="orgc94711d">进行常规的文本分类</h4>
-<div class="outline-text-4" id="text-orgc94711d">
+<div id="outline-container-org3cb8159" class="outline-4">
+<h4 id="org3cb8159">进行常规的文本分类</h4>
+<div class="outline-text-4" id="text-org3cb8159">
 <p>
 AllenNLP 完全通过配置文件来对数据处理、模型结果和训练过程进行设置，最简单的情况下可以一行代码不写就把一个文本分类模型训练出来。下面是一个配置文件示例：
 </p>
@@ -1543,9 +1543,9 @@ allennlp evaluate model_save_dir/model.tar.gz test.jsonl --include-package allen
 </div>
 </div>
 
-<div id="outline-container-org6d4406e" class="outline-4">
-<h4 id="org6d4406e">基于 BERT 进行文本分类</h4>
-<div class="outline-text-4" id="text-org6d4406e">
+<div id="outline-container-orgcdca18c" class="outline-4">
+<h4 id="orgcdca18c">基于 BERT 进行文本分类</h4>
+<div class="outline-text-4" id="text-orgcdca18c">
 <p>
 AllenNLP 是基于 pytorch 实现的，所以 Google 提供的 BERT 模型在它这里没法用，需要下载它自己提供的模型，以中文模型为例：
 </p>
