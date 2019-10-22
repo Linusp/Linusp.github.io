@@ -14,13 +14,13 @@ description:
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">词形还原(Lemmatization)</a></li>
-<li><a href="#orgheadline2">词形还原的工具</a>
+<li><a href="#org27348ec">词形还原(Lemmatization)</a></li>
+<li><a href="#orgb18d34f">词形还原的工具</a>
 <ul>
-<li><a href="#orgheadline3">Python: NLTK</a></li>
-<li><a href="#orgheadline4">Python: Pattern</a></li>
-<li><a href="#orgheadline5">Python: TextBlob</a></li>
-<li><a href="#orgheadline6">Tree Tagger</a></li>
+<li><a href="#orgde20842">Python: NLTK</a></li>
+<li><a href="#org8fabfe7">Python: Pattern</a></li>
+<li><a href="#org5e9b797">Python: TextBlob</a></li>
+<li><a href="#org91b7093">Tree Tagger</a></li>
 </ul>
 </li>
 </ul>
@@ -30,9 +30,9 @@ description:
 <b>注: 本文仅讨论英文</b>
 </p>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">词形还原(Lemmatization)</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org27348ec" class="outline-2">
+<h2 id="org27348ec">词形还原(Lemmatization)</h2>
+<div class="outline-text-2" id="text-org27348ec">
 <p>
 在英文当中，一些词会在不同的情况中有不同的形态：名词有单复数，动词有时态和语态，形容词有比较级。而在自然语言处理的一些场景中，这种形态的差异是没有意义的甚至有干扰作用，需要将不同形态的词转换为其 <b>原型</b> ，这种处理就称为 "词形还原(Lemmatization/Lemmatisation)" ，得到的原型被称为 "词元(Lemma)" 。
 </p>
@@ -197,25 +197,25 @@ D3: I was sleeping at home
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">词形还原的工具</h2>
-<div class="outline-text-2" id="text-orgheadline2">
-</div><div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">Python: <a href="http://www.nltk.org/">NLTK</a></h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgb18d34f" class="outline-2">
+<h2 id="orgb18d34f">词形还原的工具</h2>
+<div class="outline-text-2" id="text-orgb18d34f">
+</div>
+<div id="outline-container-orgde20842" class="outline-3">
+<h3 id="orgde20842">Python: <a href="http://www.nltk.org/">NLTK</a></h3>
+<div class="outline-text-3" id="text-orgde20842">
 <p>
 NLTK 是著名的 Python 自然语言处理包，其中包含了非常多的自然语言处理相关方法和工具，其中也包含了词形还原的功能。
 </p>
 
 <p>
-NLTK 中的词形还原功能依赖 WordNet 语料和一个名为 average_perceptron_tagger 的词性标注集，所以在使用其词形还原方法前需要先下载相关的数据:
+NLTK 中的词形还原功能依赖 WordNet 语料和一个名为 averaged_perceptron_tagger 的词性标注集，所以在使用其词形还原方法前需要先下载相关的数据:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> nltk
 
-<pre class="src src-python"><span style="color: #729fcf;">import</span> nltk
-
-nltk.download(<span style="color: #ad7fa8;">"wordnet"</span>)
-nltk.download(<span style="color: #ad7fa8;">"averaged_perceptron_tagger"</span>)
+nltk.download(<span style="color: #66cccc;">"wordnet"</span>)
+nltk.download(<span style="color: #66cccc;">"averaged_perceptron_tagger"</span>)
 </pre>
 </div>
 
@@ -223,19 +223,13 @@ nltk.download(<span style="color: #ad7fa8;">"averaged_perceptron_tagger"</span>)
 使用方法:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.stem <span style="color: #99cc99; font-weight: bold;">import</span> WordNetLemmatizer
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> nltk.stem <span style="color: #729fcf;">import</span> WordNetLemmatizer
-
-<span style="color: #eeeeec;">lemmatizer</span> = WordNetLemmatizer()
-<span style="color: #729fcf;">print</span> lemmatizer.lemmatize(<span style="color: #ad7fa8;">'dogs'</span>)
-<span style="color: #729fcf;">print</span> lemmatizer.lemmatize(<span style="color: #ad7fa8;">'working'</span>, pos=<span style="color: #ad7fa8;">'v'</span>)
+<span style="color: #ffcc66;">lemmatizer</span> = WordNetLemmatizer()
+<span style="color: #99cc99; font-weight: bold;">print</span> lemmatizer.lemmatize(<span style="color: #66cccc;">'dogs'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> lemmatizer.lemmatize(<span style="color: #66cccc;">'working'</span>, pos=<span style="color: #66cccc;">'v'</span>)
 </pre>
 </div>
-
-<pre class="example">
-dog
-work
-</pre>
 
 <p>
 NLTK 里这个词形还原工具的一个问题是需要手动指定词性，比如上面例子中的 "working" 这个词，如果不加后面那个 pos 参数，输出的结果将会是 "working" 本身。
@@ -255,9 +249,8 @@ NLTK 里这个词形还原工具的一个问题是需要手动指定词性，比
 其中分词和词性标注又有数据依赖:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-python">nltk.download(<span style="color: #ad7fa8;">"punkt"</span>)
-nltk.download(<span style="color: #ad7fa8;">"maxnet_treebank_pos_tagger"</span>)
+<pre class="src src-python">nltk.download(<span style="color: #66cccc;">"punkt"</span>)
+nltk.download(<span style="color: #66cccc;">"maxent_treebank_pos_tagger"</span>)
 </pre>
 </div>
 
@@ -265,41 +258,40 @@ nltk.download(<span style="color: #ad7fa8;">"maxnet_treebank_pos_tagger"</span>)
 给一个小 demo
 </p>
 <div class="org-src-container">
-
-<pre class="src src-python"><span style="color: #729fcf;">from</span> nltk.corpus <span style="color: #729fcf;">import</span> wordnet
-<span style="color: #729fcf;">from</span> nltk <span style="color: #729fcf;">import</span> word_tokenize, pos_tag
-<span style="color: #729fcf;">from</span> nltk.stem <span style="color: #729fcf;">import</span> WordNetLemmatizer
-
-
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">get_wordnet_pos</span>(treebank_tag):
-    <span style="color: #729fcf;">if</span> treebank_tag.startswith(<span style="color: #ad7fa8;">'J'</span>):
-        <span style="color: #729fcf;">return</span> wordnet.ADJ
-    <span style="color: #729fcf;">elif</span> treebank_tag.startswith(<span style="color: #ad7fa8;">'V'</span>):
-        <span style="color: #729fcf;">return</span> wordnet.VERB
-    <span style="color: #729fcf;">elif</span> treebank_tag.startswith(<span style="color: #ad7fa8;">'N'</span>):
-        <span style="color: #729fcf;">return</span> wordnet.NOUN
-    <span style="color: #729fcf;">elif</span> treebank_tag.startswith(<span style="color: #ad7fa8;">'R'</span>):
-        <span style="color: #729fcf;">return</span> wordnet.ADV
-    <span style="color: #729fcf;">else</span>:
-        <span style="color: #729fcf;">return</span> <span style="color: #e6a00f;">None</span>
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.corpus <span style="color: #99cc99; font-weight: bold;">import</span> wordnet
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk <span style="color: #99cc99; font-weight: bold;">import</span> word_tokenize, pos_tag
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.stem <span style="color: #99cc99; font-weight: bold;">import</span> WordNetLemmatizer
 
 
-<span style="color: #729fcf;">def</span> <span style="color: #edd400;">lemmatize_sentence</span>(sentence):
-    <span style="color: #eeeeec;">res</span> = []
-    <span style="color: #eeeeec;">lemmatizer</span> = WordNetLemmatizer()
-    <span style="color: #729fcf;">for</span> word, pos <span style="color: #729fcf;">in</span> pos_tag(word_tokenize(sentence)):
-        <span style="color: #eeeeec;">wordnet_pos</span> = get_wordnet_pos(pos) <span style="color: #729fcf;">or</span> wordnet.NOUN
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get_wordnet_pos</span>(treebank_tag):
+    <span style="color: #99cc99; font-weight: bold;">if</span> treebank_tag.startswith(<span style="color: #66cccc;">'J'</span>):
+        <span style="color: #99cc99; font-weight: bold;">return</span> wordnet.ADJ
+    <span style="color: #99cc99; font-weight: bold;">elif</span> treebank_tag.startswith(<span style="color: #66cccc;">'V'</span>):
+        <span style="color: #99cc99; font-weight: bold;">return</span> wordnet.VERB
+    <span style="color: #99cc99; font-weight: bold;">elif</span> treebank_tag.startswith(<span style="color: #66cccc;">'N'</span>):
+        <span style="color: #99cc99; font-weight: bold;">return</span> wordnet.NOUN
+    <span style="color: #99cc99; font-weight: bold;">elif</span> treebank_tag.startswith(<span style="color: #66cccc;">'R'</span>):
+        <span style="color: #99cc99; font-weight: bold;">return</span> wordnet.ADV
+    <span style="color: #99cc99; font-weight: bold;">else</span>:
+        <span style="color: #99cc99; font-weight: bold;">return</span> <span style="color: #6699cc;">None</span>
+
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">lemmatize_sentence</span>(sentence):
+    <span style="color: #ffcc66;">res</span> = []
+    <span style="color: #ffcc66;">lemmatizer</span> = WordNetLemmatizer()
+    <span style="color: #99cc99; font-weight: bold;">for</span> word, pos <span style="color: #99cc99; font-weight: bold;">in</span> pos_tag(word_tokenize(sentence)):
+        <span style="color: #ffcc66;">wordnet_pos</span> = get_wordnet_pos(pos) <span style="color: #99cc99; font-weight: bold;">or</span> wordnet.NOUN
         res.append(lemmatizer.lemmatize(word, pos=wordnet_pos))
 
-    <span style="color: #729fcf;">return</span> res
+    <span style="color: #99cc99; font-weight: bold;">return</span> res
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">Python: <a href="https://github.com/clips/pattern">Pattern</a></h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org8fabfe7" class="outline-3">
+<h3 id="org8fabfe7">Python: <a href="https://github.com/clips/pattern">Pattern</a></h3>
+<div class="outline-text-3" id="text-org8fabfe7">
 <p>
 Pattern 是一个 Python 的数据挖掘库，还实现了自然语言处理、机器学习以及数据可视化等一整套的功能，是一个非常强大的库， Github 上 4000 多个 star 呢。
 </p>
@@ -308,52 +300,34 @@ Pattern 是一个 Python 的数据挖掘库，还实现了自然语言处理、�
 Pattern 中的 en 模块是专门用于英文的自然语言处理的，实现了很多非常棒的方法，比如:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> pattern.en <span style="color: #99cc99; font-weight: bold;">import</span> quantify
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> pattern.en <span style="color: #729fcf;">import</span> quantify
-
-<span style="color: #729fcf;">print</span> quantify([<span style="color: #ad7fa8;">'goose'</span>, <span style="color: #ad7fa8;">'goose'</span>, <span style="color: #ad7fa8;">'duck'</span>, <span style="color: #ad7fa8;">'chicken'</span>, <span style="color: #ad7fa8;">'chicken'</span>, <span style="color: #ad7fa8;">'chicken'</span>])
-<span style="color: #729fcf;">print</span> quantify({<span style="color: #ad7fa8;">'carrot'</span>: 100, <span style="color: #ad7fa8;">'parrot'</span>: 20})
-<span style="color: #729fcf;">print</span> quantify(<span style="color: #ad7fa8;">'carrot'</span>, amount=1000)
+<span style="color: #99cc99; font-weight: bold;">print</span> quantify([<span style="color: #66cccc;">'goose'</span>, <span style="color: #66cccc;">'goose'</span>, <span style="color: #66cccc;">'duck'</span>, <span style="color: #66cccc;">'chicken'</span>, <span style="color: #66cccc;">'chicken'</span>, <span style="color: #66cccc;">'chicken'</span>])
+<span style="color: #99cc99; font-weight: bold;">print</span> quantify({<span style="color: #66cccc;">'carrot'</span>: 100, <span style="color: #66cccc;">'parrot'</span>: 20})
+<span style="color: #99cc99; font-weight: bold;">print</span> quantify(<span style="color: #66cccc;">'carrot'</span>, amount=1000)
 </pre>
 </div>
-
-<pre class="example">
-several chickens, a pair of geese and a duck
-dozens of carrots and a score of parrots
-hundreds of carrots
-</pre>
 
 <p>
 再比如:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> pattern.en <span style="color: #99cc99; font-weight: bold;">import</span> comparative, superlative
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> pattern.en <span style="color: #729fcf;">import</span> comparative, superlative
-
-<span style="color: #729fcf;">print</span> comparative(<span style="color: #ad7fa8;">'bad'</span>)
-<span style="color: #729fcf;">print</span> superlative(<span style="color: #ad7fa8;">'bad'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> comparative(<span style="color: #66cccc;">'bad'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> superlative(<span style="color: #66cccc;">'bad'</span>)
 </pre>
 </div>
-
-<pre class="example">
-worse
-worst
-</pre>
 
 <p>
 嗯，跑题了……使用 Pattern 进行词形还原在形式上非常简单，如下所示:
 </p>
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> pattern.en <span style="color: #99cc99; font-weight: bold;">import</span> lemma
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> pattern.en <span style="color: #729fcf;">import</span> lemma
-
-<span style="color: #729fcf;">print</span> lemma(<span style="color: #ad7fa8;">'working'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> lemma(<span style="color: #66cccc;">'working'</span>)
 </pre>
 </div>
-
-<pre class="example">
-work
-</pre>
 
 <p>
 So easy!完全不用管什么词性标注之类的。
@@ -361,32 +335,22 @@ So easy!完全不用管什么词性标注之类的。
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">Python: <a href="https://github.com/sloria/textblob">TextBlob</a></h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org5e9b797" class="outline-3">
+<h3 id="org5e9b797">Python: <a href="https://github.com/sloria/textblob">TextBlob</a></h3>
+<div class="outline-text-3" id="text-org5e9b797">
 <p>
 TextBlob 是一个专注自然语言处理的 Python 库，集成了 NLTK 和 Pattern 的一些功能。其中的词形还原功能使用如下:
 </p>
 
 <div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> textblob <span style="color: #99cc99; font-weight: bold;">import</span> TextBlob
 
-<pre class="src src-python"><span style="color: #729fcf;">from</span> textblob <span style="color: #729fcf;">import</span> TextBlob
-
-<span style="color: #eeeeec;">blob</span> = TextBlob(<span style="color: #ad7fa8;">'I was working at home'</span>)
-<span style="color: #729fcf;">print</span> blob.words
-<span style="color: #729fcf;">for</span> word <span style="color: #729fcf;">in</span> blob.words:
-    <span style="color: #729fcf;">print</span> word.lemmatize()
+<span style="color: #ffcc66;">blob</span> = TextBlob(<span style="color: #66cccc;">'I was working at home'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> blob.words
+<span style="color: #99cc99; font-weight: bold;">for</span> word <span style="color: #99cc99; font-weight: bold;">in</span> blob.words:
+    <span style="color: #99cc99; font-weight: bold;">print</span> word.lemmatize()
 </pre>
 </div>
-
-<pre class="example">
-['I', 'was', 'working', 'at', 'home']
-I
-wa
-working
-at
-home
-</pre>
 
 <p>
 结果并不是很理想，同 NLTK 一样，可以传入词性来使词形提高还原结果。
@@ -394,9 +358,9 @@ home
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6"><a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">Tree Tagger</a></h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-org91b7093" class="outline-3">
+<h3 id="org91b7093"><a href="http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/">Tree Tagger</a></h3>
+<div class="outline-text-3" id="text-org91b7093">
 <p>
 Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的功能。
 </p>
@@ -414,7 +378,6 @@ Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的�
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-sh">chmod +x install-tagger.sh &amp;&amp; ./install-tagger.sh
 </pre>
 </div></li>
@@ -426,18 +389,9 @@ Tree Tagger 是一个命令行词性标注工具，词形还原是它附带的�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-sh"><span style="color: #729fcf;">echo</span> <span style="color: #ad7fa8;">'I was working at home'</span> | tree-tagger-english
+<pre class="src src-sh"><span style="color: #cc99cc; background-color: #2d2d2d;">echo</span> <span style="color: #66cccc;">'I was working at home'</span> | tree-tagger-english
 </pre>
 </div>
-
-<pre class="example">
-I   PP  I
-was VBD be
-working VBG work
-at  IN  at
-home    NN  home
-</pre>
 </div>
 </div>
 </div>
