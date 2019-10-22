@@ -1,0 +1,1655 @@
+---
+layout     : post
+title      : "NLP哪里跑: 文本分类工具一览"
+desc       : "常见文本分类工具的使用方法罗列"
+categories : NLP
+tags       :
+- NLP
+- 文本分类
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgb88d858">关于文本分类</a></li>
+<li><a href="#org9f9025e">踩坑列表</a>
+<ul>
+<li><a href="#orgffa60ab">腾讯的 NeuralClassifier</a></li>
+<li><a href="#orga6e1f68">无人维护的 keras-text</a></li>
+<li><a href="#org0a650e3">差强人意的 text-classification-keras</a></li>
+</ul>
+</li>
+<li><a href="#org96810e9">可用的文本分类工具及其使用方法</a>
+<ul>
+<li><a href="#org103b445">使用 NLTK 进行文本分类</a></li>
+<li><a href="#org6d13b9e">使用 TextBlob 进行文本分类</a></li>
+<li><a href="#org2225d3a">使用 TextGrocery 进行文本分类</a></li>
+<li><a href="#org98269f3">使用 sklearn 进行文本分类</a></li>
+<li><a href="#org4428836">使用 FastText 进行文本分类</a></li>
+<li><a href="#org243d4a6">使用 Kashgari 进行文本分类</a>
+<ul>
+<li><a href="#org338da7f">进行常规的文本分类</a></li>
+<li><a href="#org206d4e8">基于 BERT 进行文本分类</a></li>
+</ul>
+</li>
+<li><a href="#orgd485d3f">使用 AllenNLP 进行文本分类</a>
+<ul>
+<li><a href="#orgc94711d">进行常规的文本分类</a></li>
+<li><a href="#org6d4406e">基于 BERT 进行文本分类</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<p>
+本文是《NLP 哪里跑》系列的第四篇文章，系列文章如下：
+</p>
+<ol class="org-ol">
+<li><a href="http://www.zmonster.me/2018/03/26/nlp-thinking-1.html">NLP哪里跑: 开篇及一些碎碎念 · ZMonster's Blog</a></li>
+<li><a href="http://www.zmonster.me/2018/06/25/nlp-thinking-2.html">NLP哪里跑: 什么是自然语言处理 · ZMonster's Blog</a></li>
+<li><a href="http://www.zmonster.me/2018/10/20/nlp-road-3-unicode.html">NLP哪里跑: Unicode相关的一些小知识和工具 · ZMonster's Blog</a></li>
+<li><a href="http://www.zmonster.me/2018/10/20/nlp-thinking-4.html">NLP哪里跑: 文本分类工具一览 · ZMonster's Blog</a></li>
+</ol>
+
+<div id="outline-container-orgb88d858" class="outline-2">
+<h2 id="orgb88d858">关于文本分类</h2>
+<div class="outline-text-2" id="text-orgb88d858">
+<p>
+所谓的文本分类，其实就是机器学习中分类问题在 NLP 领域中的应用，它的理论相对简单、工具成熟、上手简单，大家基本上是把它当作一个「理论上已经解决」的问题来看待，但其实在实际场景中处理文本分类任务时还是会遇到不少问题的，加上文本分类又是 NLP 领域中最常见的任务之一，我想把自己在这方面的一些经验和学习成果慢慢地整理出来。
+</p>
+
+<p>
+2017 年的时候，为了提高做文本分类任务的效率，将 <a href="https://scikit-learn.org/stable/index.html">sklearn</a> 中的文本分类功能做了一些封装，后来断断续续地优化，产出了一个我自己用起来很顺手的文本分类工具。在我开始写《NLP 哪里跑》这个系列的博客后，我计划是把自己在 NLP 方面的经验进行系统地梳理，第一块就是文本分类 —— 这一块当然有很多很多想讲的东西和想做的事情，一篇文章是写不完的，所以最初的想法是先看一下工具方面的情况。我对我在公司维护的文本分类工具还是挺满意的，但也会想自己会不会对一些先进的工具认识不够，所以就去了解了很多其他的同类工具，本篇文章就是对这些工具的一个简单的罗列，不涉及分类模型的理论，也不涉及某个分类模型的具体实现的优劣评价，仅仅是一个非常工具向、实用向的整理记录。
+</p>
+
+<p>
+我在挑选文本分类工具时是有一些标准的，不是非常严格，但大概能分成以下几点：
+</p>
+<ul class="org-ul">
+<li>工程化程度良好的，能提供易用的编程接口或命令行接口</li>
+<li>以 Python 生态内的工具为主 —— 很多其他语言实现的同类工具，限于精力就没有了解了</li>
+</ul>
+
+<p>
+后面的内容会分成两块：第一部分讲我的踩坑经历，主要是一些本来以为会好用的工具结果发现不符合我标准的情况；第二部分是我实验之后确认可用的工具和它们的使用方法。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9f9025e" class="outline-2">
+<h2 id="org9f9025e">踩坑列表</h2>
+<div class="outline-text-2" id="text-org9f9025e">
+<p>
+本节中列举的工具，建议读者不要浪费时间在上面。
+</p>
+</div>
+
+<div id="outline-container-orgffa60ab" class="outline-3">
+<h3 id="orgffa60ab">腾讯的 NeuralClassifier</h3>
+<div class="outline-text-3" id="text-orgffa60ab">
+<p>
+<b>注：下文仅代表个人观点和感受，不服不管。</b>
+</p>
+
+<p>
+三个月前腾讯开源的，见：<a href="https://cloud.tencent.com/developer/article/1459733">【开源公告】NeuralNLP-NeuralClassifier - 深度学习文本分类工具 - 云+社区 - 腾讯云</a>。
+</p>
+
+<p>
+项目地址：<a href="https://github.com/Tencent/NeuralNLP-NeuralClassifier">https://github.com/Tencent/NeuralNLP-NeuralClassifier</a>
+</p>
+
+<p>
+在我的列表里最坑的一个：
+</p>
+<ul class="org-ul">
+<li>作为一个 Python 项目，没有发布到 pypi 就算了，连 setup.py 也没有，无法安装，项目组织也没眼看，只能像个原始人一样拷贝代码到自己的目录跑跑脚本，很难想象是一个大厂的项目</li>
+<li>训练需要使用一个格式复杂的 json 格式的配置文件，然后这个配置的文档太过简略，不少细节藏在项目提供的脚本里……</li>
+</ul>
+
+<p>
+最终我魔改了一通后跑起来了，但是已经恶心到我了，弃。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga6e1f68" class="outline-3">
+<h3 id="orga6e1f68">无人维护的 keras-text</h3>
+<div class="outline-text-3" id="text-orga6e1f68">
+<p>
+项目地址：<a href="https://github.com/raghakot/keras-text">https://github.com/raghakot/keras-text</a>
+</p>
+
+<p>
+这个项目我觉得蛮可惜的，从文档和实际使用来看，作者在代码结构和使用流程上是做了一些用心的设计的，但是有些关键模块没有完成，在很多细节上存在令人难以忍受的小问题。
+</p>
+
+<p>
+项目已经两年没有更新了，可以参考它的代码，但不建议作为一个正经的工具在实际任务中使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0a650e3" class="outline-3">
+<h3 id="org0a650e3">差强人意的 text-classification-keras</h3>
+<div class="outline-text-3" id="text-org0a650e3">
+<p>
+项目地址：<a href="https://github.com/jfilter/text-classification-keras">https://github.com/jfilter/text-classification-keras</a>
+</p>
+
+<p>
+该项目是对 keras-text 项目的改进，总体上来说是一个可用的项目，但存在以下问题：
+</p>
+<ul class="org-ul">
+<li>使用文档不齐全</li>
+<li>代码上仍然有一些致命伤，比如
+
+<ul class="org-ul">
+<li>将文本转成特征向量后，先存了一个文件，然后从文件中加载后再喂给模型……意义不明……</li>
+<li>每次调用的时候都要把 <a href="https://spacy.io">spaCy</a> 的模型重新加载一遍，慢得要死</li>
+</ul></li>
+</ul>
+
+<p>
+作者应该是从 keras-text 项目 fork 过来然后改成能用的状态的，也挺不容易的，但不管怎么说在我这里是一个不合格的工具。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org96810e9" class="outline-2">
+<h2 id="org96810e9">可用的文本分类工具及其使用方法</h2>
+<div class="outline-text-2" id="text-org96810e9">
+</div>
+<div id="outline-container-org103b445" class="outline-3">
+<h3 id="org103b445">使用 NLTK 进行文本分类</h3>
+<div class="outline-text-3" id="text-org103b445">
+<p>
+安装: <code>pip install nltk</code>
+</p>
+
+<p>
+文档: <a href="https://www.nltk.org/api/nltk.classify.html">https://www.nltk.org/api/nltk.classify.html</a>
+</p>
+
+<p>
+NLTK 提供了大量的文本处理方法，同时提供了通用的分类器接口，组合起来就能进行文本分类了。
+</p>
+
+<p>
+以其中的朴素贝叶斯 NaiveBayesClassifier 为例，可以这样来进行文本分类
+</p>
+<ul class="org-ul">
+<li><p>
+实现一个方法，将文本转成 dict 形式的特征
+</p>
+
+<p>
+以英文为例，可以直接用 NLTK 中的分词方法，需要的话还可以加上 <a href="https://en.wikipedia.org/wiki/Stemming">stemming</a> 或者 <a href="https://en.wikipedia.org/wiki/Lemmatisation">lemmatization</a>。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.corpus <span style="color: #99cc99; font-weight: bold;">import</span> stopwords
+<span style="color: #99cc99; font-weight: bold;">from</span> nltk.tokenize <span style="color: #99cc99; font-weight: bold;">import</span> word_tokenize
+
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">extract_feature</span>(text):
+    <span style="color: #ffcc66;">feature</span> = {}
+    <span style="color: #99cc99; font-weight: bold;">for</span> word <span style="color: #99cc99; font-weight: bold;">in</span> word_tokenize(text):
+        <span style="color: #99cc99; font-weight: bold;">if</span> word <span style="color: #99cc99; font-weight: bold;">not</span> <span style="color: #99cc99; font-weight: bold;">in</span> stopwords:
+            <span style="color: #ffcc66;">feature</span>[word] = 1
+
+    <span style="color: #99cc99; font-weight: bold;">return</span> feature
+</pre>
+</div>
+
+<p>
+中文的话可以换成 jieba 或者其他中文分词工具。
+</p></li>
+
+<li><p>
+训练
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.classify <span style="color: #99cc99; font-weight: bold;">import</span> NaiveBayesClassifier
+
+
+<span style="color: #ffcc66;">train_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">train_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+
+<span style="color: #ffcc66;">train_features</span> = [extract_feature(text) <span style="color: #99cc99; font-weight: bold;">for</span> text <span style="color: #99cc99; font-weight: bold;">in</span> train_texts]
+<span style="color: #ffcc66;">train_samples</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(<span style="color: #cc99cc; background-color: #2d2d2d;">zip</span>(train_features, train_labels))
+<span style="color: #ffcc66;">classifier</span> = NaiveBayesClassifier.train(train_samples)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> nltk.classify <span style="color: #99cc99; font-weight: bold;">import</span> accuracy
+
+<span style="color: #ffcc66;">test_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">test_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+
+<span style="color: #ffcc66;">test_features</span> = [extract_feature(text) <span style="color: #99cc99; font-weight: bold;">for</span> text <span style="color: #99cc99; font-weight: bold;">in</span> test_texts]
+<span style="color: #ffcc66;">test_samples</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(<span style="color: #cc99cc; background-color: #2d2d2d;">zip</span>(test_features, test_labels))
+<span style="color: #ffcc66;">acc</span> = accuracy(classifier, test_samples)
+</pre>
+</div></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+用 classify 方法直接预测最可能的类别
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">text</span> = <span style="color: #66cccc;">"blablabla"</span>              <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#24453;&#39044;&#27979;&#30340;&#25991;&#26412;</span>
+<span style="color: #ffcc66;">feature</span> = extract_feature(text)
+<span style="color: #ffcc66;">pred_label</span> = classifier.classify(feature)
+</pre>
+</div>
+
+<p>
+用 prob_classify 方法获得所有可能类别的预测分数
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">text</span> = <span style="color: #66cccc;">"blablabla"</span>              <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#24453;&#39044;&#27979;&#30340;&#25991;&#26412;</span>
+<span style="color: #ffcc66;">feature</span> = extract_feature(text)
+<span style="color: #ffcc66;">prob</span> = classifier.prob_classify(feature)
+</pre>
+</div></li>
+
+<li><p>
+模型保存和读取
+</p>
+
+<p>
+可以直接用 pickle 保存、读取训练好的模型
+</p>
+
+<p>
+保存：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> pickle
+
+<span style="color: #99cc99; font-weight: bold;">with</span> <span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(<span style="color: #66cccc;">'model.pkl'</span>, <span style="color: #66cccc;">'wb'</span>) <span style="color: #99cc99; font-weight: bold;">as</span> f:
+    pickle.dump(classifier, f)
+</pre>
+</div>
+
+<p>
+读取：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> pickle
+
+<span style="color: #ffcc66;">classifier</span> = <span style="color: #6699cc;">None</span>
+<span style="color: #99cc99; font-weight: bold;">with</span> <span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(<span style="color: #66cccc;">'model.pkl'</span>, <span style="color: #66cccc;">'rb'</span>) <span style="color: #99cc99; font-weight: bold;">as</span> f:
+    <span style="color: #ffcc66;">classifier</span> = pickle.load(f)
+</pre>
+</div></li>
+</ul>
+
+<p>
+NLTK 中还有其他分类器，使用方法和 NaiveBayesClassifier 大同小异。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6d13b9e" class="outline-3">
+<h3 id="org6d13b9e">使用 TextBlob 进行文本分类</h3>
+<div class="outline-text-3" id="text-org6d13b9e">
+<p>
+<b>注意：TextBlob 仅支持英文</b>
+</p>
+
+<p>
+安装: <code>pip install textblob</code>
+</p>
+
+<p>
+文档: <a href="https://textblob.readthedocs.io/en/dev/classifiers.html">https://textblob.readthedocs.io/en/dev/classifiers.html</a>
+</p>
+
+<p>
+TextBlob 是一个基于 NLTK 的文本处理工具，其中的文本分类功能也是建立在 NLTK 中分类器的基础上的。
+</p>
+
+<ul class="org-ul">
+<li><p>
+训练
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> textblob.classifiers <span style="color: #99cc99; font-weight: bold;">import</span> NaiveBayesClassifier
+
+<span style="color: #ffcc66;">train_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">train_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">train_samples</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(<span style="color: #cc99cc; background-color: #2d2d2d;">zip</span>(train_texts, train_labels))
+<span style="color: #ffcc66;">classifier</span> = NaiveBayesClassifier(train_samples)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">test_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">test_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">test_samples</span> = <span style="color: #cc99cc; background-color: #2d2d2d;">list</span>(<span style="color: #cc99cc; background-color: #2d2d2d;">zip</span>(test_texts, test_labels))
+<span style="color: #ffcc66;">acc</span> = classifier.accuracy(test_samples)
+</pre>
+</div></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+只有一个 classify 接口预测得到最有可能的类别
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">label</span> = classifier.classify(<span style="color: #66cccc;">"this is a sentence to be classified"</span>)
+</pre>
+</div></li>
+
+<li><p>
+模型保存和读取
+</p>
+
+<p>
+同 NLTK。
+</p></li>
+</ul>
+
+<p>
+相比 NLTK 中原来的文本分类，TextBlob 的封装隐藏了一些细节，简化了接口，用起来还是挺方便的。不好的一点是，TextBlob 里强制依赖了 NLTK 里的 word_tokenize，虽然说 word_tokenize 可以通过 language 参数设置语言，但在 TextBlob 里没有提供传递这个参数的机会，这就导致 TextBlob 只能对英文进行分类。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2225d3a" class="outline-3">
+<h3 id="org2225d3a">使用 TextGrocery 进行文本分类</h3>
+<div class="outline-text-3" id="text-org2225d3a">
+<p>
+<b>注意：TextGrocery 仅支持 Python2</b>
+</p>
+
+<p>
+安装: <code>pip install tgrocery</code>
+</p>
+
+<p>
+文档: <a href="https://github.com/2shou/TextGrocery/blob/master/README_CN.md">https://github.com/2shou/TextGrocery/blob/master/README_CN.md</a>
+</p>
+
+<ul class="org-ul">
+<li><p>
+初始化
+</p>
+
+<p>
+需要给分类器指定一个名字
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> tgrocery <span style="color: #99cc99; font-weight: bold;">import</span> Grocery
+
+<span style="color: #ffcc66;">classifier</span> = Grocery(<span style="color: #66cccc;">'test'</span>)
+</pre>
+</div>
+
+<p>
+默认使用 jieba 作为分词器，但也支持在初始化分类器的时候通过 custom_tokenize 参数来自定义分词器
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">classifier</span> = Grocery(<span style="color: #66cccc;">'test'</span>, custom_tokenize=<span style="color: #cc99cc; background-color: #2d2d2d;">list</span>)
+</pre>
+</div>
+
+<p>
+要求 custom_tokenize 的参数值是一个 python 的函数。
+</p></li>
+
+<li><p>
+训练
+</p>
+
+<p>
+支持传入 python 数据进行训练：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">train_src</span> = [
+    (<span style="color: #66cccc;">'education'</span>, <span style="color: #66cccc;">'&#21517;&#24072;&#25351;&#23548;&#25176;&#31119;&#35821;&#27861;&#25216;&#24039;&#65306;&#21517;&#35789;&#30340;&#22797;&#25968;&#24418;&#24335;'</span>),
+    (<span style="color: #66cccc;">'education'</span>, <span style="color: #66cccc;">'&#20013;&#22269;&#39640;&#32771;&#25104;&#32489;&#28023;&#22806;&#35748;&#21487; &#26159;&#8220;&#29436;&#26469;&#20102;&#8221;&#21527;&#65311;'</span>),
+    (<span style="color: #66cccc;">'sports'</span>, <span style="color: #66cccc;">'&#22270;&#25991;&#65306;&#27861;&#32593;&#23391;&#33778;&#23572;&#26031;&#33510;&#25112;&#36827;16&#24378; &#23391;&#33778;&#23572;&#26031;&#24594;&#21564;'</span>),
+    (<span style="color: #66cccc;">'sports'</span>, <span style="color: #66cccc;">'&#22235;&#24029;&#20025;&#26865;&#20030;&#34892;&#20840;&#22269;&#38271;&#36317;&#30331;&#23665;&#25361;&#25112;&#36187; &#36817;&#19975;&#20154;&#21442;&#19982;'</span>)
+]
+classifier.train(train_src)
+</pre>
+</div>
+
+<p>
+也支持从文件中读取训练数据然后训练，要求文件中一行是一个数据，且行中有一个分隔符把文本和文本的类别标签分隔开，如用竖线分隔：
+</p>
+<pre class="example">
+education|名师指导托福语法技巧：名词的复数形式
+education|中国高考成绩海外认可 是“狼来了”吗？
+sports|图文：法网孟菲尔斯苦战进16强 孟菲尔斯怒吼
+sports|四川丹棱举行全国长距登山挑战赛 近万人参与
+</pre>
+
+<p>
+假设上面的内容存储在 train.txt 中，则将 train.txt 作为 train 的参数，同时要用 delimiter 参数指明分隔符
+</p>
+<div class="org-src-container">
+<pre class="src src-python">classifier.train(<span style="color: #66cccc;">'train.txt'</span>, delimiter=<span style="color: #66cccc;">'|'</span>)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">test_src</span> = [
+    (<span style="color: #66cccc;">'education'</span>, <span style="color: #66cccc;">'&#31119;&#24314;&#26149;&#23395;&#20844;&#21153;&#21592;&#32771;&#35797;&#25253;&#21517;18&#26085;&#25130;&#27490; 2&#26376;6&#26085;&#32771;&#35797;'</span>),
+    (<span style="color: #66cccc;">'sports'</span>, <span style="color: #66cccc;">'&#24847;&#30002;&#39318;&#36718;&#34917;&#36187;&#20132;&#25112;&#35760;&#24405;:&#31859;&#20848;&#23458;&#22330;8&#25112;&#19981;&#36133;&#22269;&#31859;10&#24180;&#36830;&#32988;'</span>),
+]
+<span style="color: #ffcc66;">report</span> = classifier.test(test_src)
+report.show_result()
+</pre>
+</div>
+
+<p>
+上述代码会输出如下内容：
+</p>
+<pre class="example">
+               accuracy       recall
+education      50.00%         100.00%
+sports         0.00%          0.00%
+</pre>
+
+<p>
+也可以从文件中读取数据进行评估，文件的要求同训练
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">report</span> = classifier.test(<span style="color: #66cccc;">'test.txt'</span>, delimiter=<span style="color: #66cccc;">'|'</span>)
+report.show_result()
+</pre>
+</div></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+使用 predict 接口来进行预测
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">preds</span> = classifier.predict(<span style="color: #66cccc;">'&#24847;&#30002;&#39318;&#36718;&#34917;&#36187;&#20132;&#25112;&#35760;&#24405;:&#31859;&#20848;&#23458;&#22330;8&#25112;&#19981;&#36133;&#22269;&#31859;10&#24180;&#36830;&#32988;'</span>)
+<span style="color: #99cc99; font-weight: bold;">print</span> preds.dec_values         <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">=&gt; {'education': 0.00604235155848336, 'sports': -0.006042351558483356}</span>
+<span style="color: #99cc99; font-weight: bold;">print</span> preds.predicted_y        <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">=&gt; education</span>
+<span style="color: #99cc99; font-weight: bold;">print</span> <span style="color: #cc99cc; background-color: #2d2d2d;">str</span>(preds)               <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">=&gt; education</span>
+</pre>
+</div></li>
+
+<li><p>
+模型保存和读取
+</p>
+
+<p>
+用 save 方法来保存模型
+</p>
+<div class="org-src-container">
+<pre class="src src-python">classifier.save()
+</pre>
+</div>
+
+<p>
+保存模型时会用分类器初始化时给的名字来创建一个目录，比如最开始给的名字是 test，所保存的模型会在 test 目录下，如下所示：
+</p>
+<pre class="example">
+test
+├── converter
+│   ├── class_map.config.pickle
+│   ├── feat_gen.config.pickle
+│   └── text_prep.config.pickle
+├── id
+└── learner
+    ├── idf.pickle
+    ├── liblinear_model
+    └── options.pickle
+</pre>
+
+<p>
+用相同的名字创建一个分类器，然后执行 load 方法来读取模型
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">classifier</span> = Grocery(<span style="color: #66cccc;">'test'</span>, custom_tokenize=<span style="color: #cc99cc; background-color: #2d2d2d;">list</span>)
+classifier.load()
+</pre>
+</div>
+
+<p>
+这里需要注意的是，保存模型的时候，自定义的分词器是没有被保存下来的，所以在读取的时候，还需要重新设置一下分词器。
+</p></li>
+</ul>
+
+<p>
+TextGrocery 是一个基于 liblinear 的小巧的文本分类实现，可惜作者已经放弃维护了，目前只能在 Python2 环境里面使用。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org98269f3" class="outline-3">
+<h3 id="org98269f3">使用 sklearn 进行文本分类</h3>
+<div class="outline-text-3" id="text-org98269f3">
+<p>
+安装: <code>pip install scikit-learn</code>
+</p>
+
+<p>
+文档: <a href="https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html#training-a-classifier">https://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html#training-a-classifier</a>
+</p>
+
+<p>
+sklearn 中实现了很多的分类器，并且提供了统一的接口，我个人是比较喜欢的。
+</p>
+<ul class="org-ul">
+<li><p>
+训练
+</p>
+
+<p>
+首先创建一个 vectorizer 用来将文本编码成向量，最常用的可能是 TfidfVectorizer 了
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.feature_extraction.text <span style="color: #99cc99; font-weight: bold;">import</span> TfidfVectorizer
+
+<span style="color: #ffcc66;">vectorizer</span> = TfidfVectorizer()
+</pre>
+</div>
+
+<p>
+默认会按空格来分词，如果需要自定义分词器，可以通过 tokenizer 参数来传入一个函数，比如
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> jieba
+
+<span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">jieba_tokenize</span>(text):
+    <span style="color: #99cc99; font-weight: bold;">return</span> jieba.lcut(text)
+
+<span style="color: #ffcc66;">vectorizer</span> = TfidfVectorizer(tokenizer=jieba_tokenize)
+</pre>
+</div>
+
+<p>
+<b>注意：由于 jieba 中加了线程锁，将 jieba.lcut 直接传入，会导致模型无法保存</b>
+</p>
+
+<p>
+这个 vectorizer 是需要训练的
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">texts</span> = [
+    <span style="color: #66cccc;">'&#21517;&#24072;&#25351;&#23548;&#25176;&#31119;&#35821;&#27861;&#25216;&#24039;'</span>,
+    <span style="color: #66cccc;">'&#20013;&#22269;&#39640;&#32771;&#25104;&#32489;&#28023;&#22806;&#35748;&#21487;'</span>,
+    <span style="color: #66cccc;">'&#27861;&#32593;&#23391;&#33778;&#23572;&#26031;&#33510;&#25112;&#36827;16&#24378;'</span>,
+    <span style="color: #66cccc;">'&#22235;&#24029;&#20025;&#26865;&#20030;&#34892;&#30331;&#23665;&#25361;&#25112;&#36187;'</span>,
+]
+vectorizer.fit(texts)
+</pre>
+</div>
+
+<p>
+一旦训练后，对任意一个文本，会产生一个固定长度的向量，比如：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">print</span>(vectorizer.transform([<span style="color: #66cccc;">'&#21517;&#24072;&#25351;&#23548;&#25176;&#31119;&#35821;&#27861;&#25216;&#24039;'</span>]).toarray())
+</pre>
+</div>
+
+<p>
+上面的代码会输出
+</p>
+<div class="org-src-container">
+<pre class="src src-python">[[0.        0.        0.        0.        0.4472136 0.        0.
+  0.        0.        0.4472136 0.4472136 0.4472136 0.        0.
+  0.        0.        0.        0.        0.        0.4472136 0.
+  0.       ]]
+</pre>
+</div>
+
+<p>
+向量化还有其他方法，如下：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.feature_extraction.text <span style="color: #99cc99; font-weight: bold;">import</span> (
+    TfidfVectorizer,
+    CountVectorizer,
+    HashingVectorizer,
+)
+<span style="color: #99cc99; font-weight: bold;">from</span> sklearn.feature_extraction <span style="color: #99cc99; font-weight: bold;">import</span> DictVectorizer
+</pre>
+</div>
+
+<p>
+创建一个分类器，比如 SVM
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.svm <span style="color: #99cc99; font-weight: bold;">import</span> LinearSVC
+
+<span style="color: #ffcc66;">classifier</span> = LinearSVC()
+</pre>
+</div>
+
+<p>
+如果想使用 GBDT 分类器的话，可以执行 <code>pip install xgboost</code> 安装 <a href="https://xgboost.readthedocs.io/en/latest/">XGBoost</a> 这个包，它提供了符合 sklearn 规范的接口，可以直接使用并像 sklearn 的分类器一样用在后面的训练、预测过程中：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> xgboost <span style="color: #99cc99; font-weight: bold;">import</span> XGBClassifier
+
+<span style="color: #ffcc66;">classifier</span> = XGBClassifier()
+</pre>
+</div>
+
+<p>
+首先用 vectorizer 将训练数据中的文本转成矩阵，然后喂给分类器进行训练
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">train_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">blablabla</span>
+]
+<span style="color: #ffcc66;">train_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">blablabla</span>
+]
+<span style="color: #ffcc66;">train_feats</span> = vectorizer.transform(train_texts)
+classifier.fit(train_feats, train_labels)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<p>
+用分类器的 score 方法可以计算测试集的 accuracy
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">test_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">test_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">...</span>
+]
+<span style="color: #ffcc66;">test_feats</span> = vectorizer.transform(test_texts)
+<span style="color: #ffcc66;">acc</span> = classifier.score(test_feats, test_labels)
+</pre>
+</div>
+
+<p>
+这个方法其实是调用了 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html#sklearn.metrics.accuracy_score">accuracy_score</a> 这个函数，所以也可以自己来计算
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.metrics <span style="color: #99cc99; font-weight: bold;">import</span> accuracy_score
+
+<span style="color: #ffcc66;">pred_labels</span> = classifier.predict(test_feats)
+<span style="color: #ffcc66;">acc</span> = accuracy_score(test_labels, pred_labels)
+</pre>
+</div>
+
+<p>
+还可以用 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html">classification_report</a> 这个函数来得到更详细的评估报告
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.metrics <span style="color: #99cc99; font-weight: bold;">import</span> classification_report
+
+<span style="color: #ffcc66;">pred_labels</span> = classifier.predict(test_feats)
+<span style="color: #99cc99; font-weight: bold;">print</span>(classification_report(test_labels, pred_labels))
+</pre>
+</div>
+
+<p>
+输出结果是下面这个样子的：
+</p>
+<pre class="example">
+              precision    recall  f1-score   support
+
+     class 0       0.50      1.00      0.67         1
+     class 1       0.00      0.00      0.00         1
+     class 2       1.00      0.67      0.80         3
+
+    accuracy                           0.60         5
+   macro avg       0.50      0.56      0.49         5
+weighted avg       0.70      0.60      0.61         5
+</pre>
+
+<p>
+有时候我们还需要输出分类的混淆矩阵，虽然 sklearn 提供了 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix">sklearn.metrics.confusion_matrix</a> 这个方法来计算混淆矩阵，但它的输出不够直观，我个人比较喜欢用 <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.crosstab.html">pandas.crosstab</a>
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> pandas
+
+<span style="color: #ffcc66;">pred_labels</span> = classifier.predict(test_feats)
+<span style="color: #ffcc66;">cnf_matrix</span> = pandas.crosstab(
+    pandas.Series(test_labels), pandas.Series(pred_labels),
+    rownames=[<span style="color: #66cccc;">'targets'</span>], colnames=[<span style="color: #66cccc;">'preds'</span>]
+)
+</pre>
+</div>
+
+<p>
+输入结果是下面这个样子：
+</p>
+<pre class="example">
+preds     negative  positive
+
+targets
+negative       590       126
+positive       383       901
+</pre></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+用 predict 方法来预测最可能的类别，或用 predict_proba 方法来获得所预测类别的分数
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">texts</span> = [<span style="color: #66cccc;">'text1'</span>, <span style="color: #66cccc;">'text2'</span>, <span style="color: #66cccc;">'text3'</span>]
+<span style="color: #ffcc66;">feats</span> = vectorizer.transform(texts)
+<span style="color: #ffcc66;">labels</span> = classifier.predict(feats) <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">labels: ['label1', 'label2', 'label3']</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">or</span>
+<span style="color: #ffcc66;">prob_list</span> = classifier.predict_proba(feats)
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">prob_list:</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[</span>
+<span style="color: #999999; font-style: italic;">#     </span><span style="color: #999999; font-style: italic;">{'label1': 0.1, 'label2': 0.3, 'label3': 0.6},</span>
+<span style="color: #999999; font-style: italic;">#     </span><span style="color: #999999; font-style: italic;">{'label1': 0.1, 'label2': 0.3, 'label3': 0.6},</span>
+<span style="color: #999999; font-style: italic;">#     </span><span style="color: #999999; font-style: italic;">{'label1': 0.1, 'label2': 0.3, 'label3': 0.6},</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">]</span>
+</pre>
+</div>
+
+<p>
+注意 sklearn 中的 predict/predict_proba 都被设计为批量预测，没有单个数据预测的接口。
+</p></li>
+
+<li><p>
+模型保存和读取
+</p>
+
+<p>
+保存模型用 pickle 或者 joblib 都可以，注意要把 vectorizer 和 classifier 一起保存。
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> pickle
+<span style="color: #99cc99; font-weight: bold;">from</span> sklearn.externals <span style="color: #99cc99; font-weight: bold;">import</span> joblib
+
+<span style="color: #99cc99; font-weight: bold;">with</span> <span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(<span style="color: #66cccc;">'model.pkl'</span>, <span style="color: #66cccc;">'wb'</span>) <span style="color: #99cc99; font-weight: bold;">as</span> f:
+    <span style="color: #ffcc66;">data</span> = [vectorizer, classifier]
+    pickle.dump(data, f)
+
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">or</span>
+<span style="color: #ffcc66;">data</span> = [vectorizer, classifier]
+joblib.dump(data, <span style="color: #66cccc;">'model.pkl'</span>)
+</pre>
+</div>
+
+<p>
+如果使用 <code>pickle.dump</code> 保存的模型，则用 <code>pickle.load</code> 来读取；如果是用 <code>joblib.dump</code> 保存的则用 <code>joblib.load</code> 读取
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">vectorizer</span>, <span style="color: #ffcc66;">classifier</span> = <span style="color: #6699cc;">None</span>, <span style="color: #6699cc;">None</span>
+<span style="color: #99cc99; font-weight: bold;">with</span> <span style="color: #cc99cc; background-color: #2d2d2d;">open</span>(<span style="color: #66cccc;">'model.pkl'</span>, <span style="color: #66cccc;">'rb'</span>) <span style="color: #99cc99; font-weight: bold;">as</span> f:
+    <span style="color: #ffcc66;">vectorizer</span>, <span style="color: #ffcc66;">classifier</span> = pickle.load(f)
+
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">or</span>
+<span style="color: #ffcc66;">vectorizer</span>, <span style="color: #ffcc66;">classifier</span> = joblib.load(<span style="color: #66cccc;">'model.pkl'</span>)
+</pre>
+</div></li>
+</ul>
+
+
+<p>
+除了上面这样先创建 vectorizer 再创建 classifier 的方法，sklearn 还提供了 <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html">Pipeline</a> 这个类来简化这个过程，非常推荐使用。
+</p>
+
+<p>
+创建 vectorizer 和 classifier 后，用 Pipeline 把它们组合起来：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> sklearn.pipeline <span style="color: #99cc99; font-weight: bold;">import</span> Pipeline
+
+<span style="color: #ffcc66;">vectorizer</span> = TfidfVectorizer()
+<span style="color: #ffcc66;">classifier</span> = LinearSVC()
+<span style="color: #ffcc66;">pipeline</span> = Pipeline([(<span style="color: #66cccc;">'vec'</span>, vectorizer), (<span style="color: #66cccc;">'model'</span>, classifier)])
+</pre>
+</div>
+
+<p>
+然后可以直接将文本喂给 pipeline，不用自己再去调用 vectorizer.fit 和 vectorizer.transform 来将文本编码成向量了！
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">train_texts</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">blablabla</span>
+]
+<span style="color: #ffcc66;">train_labels</span> = [
+    <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">blablabla</span>
+]
+pipeline.fit(train_texts, train_labels)
+</pre>
+</div>
+
+<p>
+评估、预测和非 pipeline 方式的差不多，都是可以省略掉将文本转成向量的这个步骤；模型保存时只需要将 pipeline 保存成文件即可。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4428836" class="outline-3">
+<h3 id="org4428836">使用 FastText 进行文本分类</h3>
+<div class="outline-text-3" id="text-org4428836">
+<p>
+安装: <code>pip install fasttext</code>
+</p>
+
+<p>
+文档: <a href="https://fasttext.cc/docs/en/python-module.html#text-classification-model">https://fasttext.cc/docs/en/python-module.html#text-classification-model</a>
+</p>
+<ul class="org-ul">
+<li><p>
+数据格式
+</p>
+
+<p>
+fasttext 的训练和评估都只能从文件中读取数据，而不能直接传入 Python 的值，而且对文件的格式是有要求的
+</p>
+<ol class="org-ol">
+<li>文件中一行一个样本</li>
+<li>每行用制表符分隔，第一列是标签，第二列是文本</li>
+<li>第一列的标签要有 <code>__label__</code> 前缀</li>
+<li>第二列的文本必须是用空格分隔的词序列，对中文来说，意味着需要先分好词</li>
+</ol>
+
+<p>
+文件内容示例如下：
+</p>
+<pre class="example">
+__label__education	名师 指导 托福 语法 技巧 ： 名词 的 复数 形式
+__label__education	中国 高考 成绩 海外 认可 是 “ 狼 来了 ” 吗 ？
+__label__sports	图文 ： 法网 孟菲尔斯 苦战 进 16强 孟菲尔斯 怒吼
+__label__sports	四川 丹棱 举行 全国 长距 登山 挑战赛 近 万人 参与
+</pre></li>
+
+<li><p>
+训练
+</p>
+
+<p>
+假设训练数据按照前面的要求写在了 train_data.txt 里，则用下面的代码来训练：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> fasttext
+
+<span style="color: #ffcc66;">model</span> = fasttext.train_supervised(<span style="color: #66cccc;">'train_data.txt'</span>)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<p>
+假设测试数据在 test_data.txt 中，使用 test 方法来评估模型效果，它会返回数据集中的样本数量，以及 precesion 和 recall 值：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">num</span>, <span style="color: #ffcc66;">precesion</span>, <span style="color: #ffcc66;">recall</span> = model.test(<span style="color: #66cccc;">'test_data.txt'</span>)
+</pre>
+</div>
+
+<p>
+也可以用 test_label 方法获得每个类别的 precesion、recall 和 f1 值：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">print</span>(model.test_label(<span style="color: #66cccc;">'test_data.txt'</span>))
+</pre>
+</div>
+
+<p>
+输出结果是下面这个样子的：
+</p>
+<div class="org-src-container">
+<pre class="src src-python">{
+    <span style="color: #66cccc;">'__label__education'</span>: {
+        <span style="color: #66cccc;">'precision'</span>: 0.8830022075055187,
+        <span style="color: #66cccc;">'recall'</span>: 0.8784773060029283,
+        <span style="color: #66cccc;">'f1score'</span>: 0.8807339449541285
+    },
+    <span style="color: #66cccc;">'__label__sports'</span>: {
+        <span style="color: #66cccc;">'precision'</span>: 0.883881230116649,
+        <span style="color: #66cccc;">'recall'</span>: 0.853121801432958,
+        <span style="color: #66cccc;">'f1score'</span>: 0.8682291666666667
+    }
+}
+</pre>
+</div></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+用 predict 接口来对单条文本进行预测，同样要求文本是用空格分隔的、分好词的
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">top3_labels</span>, <span style="color: #ffcc66;">top3_scores</span> = model.predict(<span style="color: #66cccc;">'&#22303;&#35910;&#32593; &#25311; &#26126;&#24180; &#30331;&#38470; &#32435;&#24066; &#21215;&#36164; 1.5 &#20159;&#32654;&#20803;'</span>, k=3)
+</pre>
+</div></li>
+
+<li><p>
+模型保存和读取
+</p>
+
+<p>
+保存
+</p>
+<div class="org-src-container">
+<pre class="src src-python">model.save_model(<span style="color: #66cccc;">'model.bin'</span>)
+</pre>
+</div>
+
+<p>
+读取
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">import</span> fasttext
+<span style="color: #ffcc66;">model</span> = fasttext.load_model(<span style="color: #66cccc;">'model.bin'</span>)
+</pre>
+</div></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org243d4a6" class="outline-3">
+<h3 id="org243d4a6">使用 Kashgari 进行文本分类</h3>
+<div class="outline-text-3" id="text-org243d4a6">
+<p>
+安装: <code>pip install kashgari-tf tensorflow==1.14.0</code>
+</p>
+
+<p>
+文档: <a href="https://kashgari.bmio.net/">https://kashgari.bmio.net/</a>
+</p>
+
+<p>
+Kashgari 是一个基于神经网络模型的 NLP 工具，内部实现大多数常用的神经网络模型，也支持了最新的 BERT，使用体验挺不错的。
+</p>
+</div>
+
+<div id="outline-container-org338da7f" class="outline-4">
+<h4 id="org338da7f">进行常规的文本分类</h4>
+<div class="outline-text-4" id="text-org338da7f">
+<ul class="org-ul">
+<li><p>
+训练
+</p>
+
+<p>
+Kashgari 要求输入的文本是分好词的，把分词的事情留给用户自己处理。不过分好词就能直接输入到模型中了，不需要像 sklearn 一样通过 vectorizer 转成向量：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> kashgari.tasks.classification.models <span style="color: #99cc99; font-weight: bold;">import</span> CNN_Model
+
+<span style="color: #ffcc66;">train_x</span> = [[<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'world'</span>], [<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'Kashgari'</span>]]
+<span style="color: #ffcc66;">train_y</span> = [<span style="color: #66cccc;">'a'</span>, <span style="color: #66cccc;">'b'</span>]
+
+<span style="color: #ffcc66;">model</span> = CNN_Model()
+model.fit(train_x, train_y)
+</pre>
+</div>
+
+<p>
+训练时还可以设置校验集
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">val_x</span> = [[<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'world'</span>], [<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'Kashgari'</span>]]
+<span style="color: #ffcc66;">val_y</span> = [<span style="color: #66cccc;">'a'</span>, <span style="color: #66cccc;">'b'</span>]
+
+model.fit(val_x, val_y)
+</pre>
+</div></li>
+
+<li><p>
+评估
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">test_x</span> = [[<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'world'</span>], [<span style="color: #66cccc;">'Hello'</span>, <span style="color: #66cccc;">'Kashgari'</span>]]
+<span style="color: #ffcc66;">test_y</span> = [<span style="color: #66cccc;">'a'</span>, <span style="color: #66cccc;">'b'</span>]
+model.evaluate(test_x, test_y)
+</pre>
+</div>
+
+<p>
+会打印测试结果到标准输出，其内容是下面这个格式的：
+</p>
+<pre class="example">
+              precision    recall  f1-score   support
+
+      sports     1.0000    1.0000    1.0000      1000
+   education     1.0000    0.9980    0.9990      1000
+  technology     0.9930    1.0000    0.9965      1000
+
+    accuracy                         0.9985     10000
+   macro avg     0.9985    0.9985    0.9985     10000
+weighted avg     0.9985    0.9985    0.9985     10000
+</pre></li>
+
+<li><p>
+预测
+</p>
+
+<p>
+使用 predict 方法来预测最可能的类别
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">tokens</span> = [<span style="color: #66cccc;">'&#23002;&#26126;'</span>, <span style="color: #66cccc;">'&#65306;'</span>, <span style="color: #66cccc;">'&#23545;'</span>, <span style="color: #66cccc;">'&#22885;&#23612;&#23572;'</span>, <span style="color: #66cccc;">'&#19981;&#24471;'</span>, <span style="color: #66cccc;">'&#19981;&#26381;'</span>]
+model.predict([tokens])          <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">=&gt; ['sports']</span>
+</pre>
+</div>
+
+<p>
+或者用 predict_top_k_class 来获取 topk 的预测结果及分数
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">print</span>(model.predict_top_k_class([tokens], top_k=3))
+</pre>
+</div>
+
+<p>
+结果
+</p>
+<div class="org-src-container">
+<pre class="src src-python">[
+    {
+        <span style="color: #66cccc;">'label'</span>: <span style="color: #66cccc;">'sports'</span>,
+        <span style="color: #66cccc;">'confidence'</span>: 0.50483656,
+        <span style="color: #66cccc;">'candidates'</span>: [
+            {<span style="color: #66cccc;">'label'</span>: <span style="color: #66cccc;">'education'</span>, <span style="color: #66cccc;">'confidence'</span>: 0.057417843},
+            {<span style="color: #66cccc;">'label'</span>: <span style="color: #66cccc;">'technology'</span>, <span style="color: #66cccc;">'confidence'</span>: 0.048766118},
+        ]
+    }
+]
+</pre>
+</div></li>
+
+<li>模型保存和读取
+
+<ul class="org-ul">
+<li><p>
+保存
+</p>
+
+<p>
+使用 save 方法将模型保存到 test 目录中，目录不存在会创建
+</p>
+<div class="org-src-container">
+<pre class="src src-python">model.save(<span style="color: #66cccc;">'test'</span>)
+</pre>
+</div>
+
+<p>
+目录中会有一个描述模型结构的 model_info.json 和记录模型参数的 model_weights.h5
+</p>
+<pre class="example">
+test
+├── model_info.json
+└── model_weights.h5
+
+0 directories, 2 files
+</pre></li>
+
+<li><p>
+读取
+</p>
+
+<p>
+使用 <code>kashgari.utils.d_model</code> 来读取模型
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> kashgari.utils <span style="color: #99cc99; font-weight: bold;">import</span> load_model
+
+<span style="color: #ffcc66;">model</span> = load_model(<span style="color: #66cccc;">'test'</span>)
+</pre>
+</div></li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org206d4e8" class="outline-4">
+<h4 id="org206d4e8">基于 BERT 进行文本分类</h4>
+<div class="outline-text-4" id="text-org206d4e8">
+<p>
+先下载 BERT 模型。
+</p>
+
+<p>
+中文的话可以用 Google 开放的: <a href="https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip">https://storage.googleapis.com/bert_models/2018_11_03/chinese_L-12_H-768_A-12.zip</a>
+</p>
+
+<p>
+中文模型下载后解压得到 chinese_L-12_H-768_A-12 这个目录
+</p>
+
+<p>
+然后创建基于 BERT 的分类器
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> kashgari.embeddings <span style="color: #99cc99; font-weight: bold;">import</span> BERTEmbedding
+<span style="color: #99cc99; font-weight: bold;">from</span> kashgari.tasks.classification.models <span style="color: #99cc99; font-weight: bold;">import</span> CNN_Model
+
+<span style="color: #ffcc66;">embedding</span> = BERTEmbedding(<span style="color: #66cccc;">'chinese_L-12_H-768_A-12/'</span>, task=kashgari.CLASSIFICATION)
+<span style="color: #ffcc66;">model</span> = CNN_Model(embedding)
+</pre>
+</div>
+
+<p>
+之后的训练、评估、预测，都和非 BERT 的模型一样。
+</p>
+
+<p>
+默认情况下 BERTEmbedding 被设置为不可训练，如果需要对 BERT 进行 finetuning 的话，那么按如下设置：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">embedding</span> = BERTEmbedding(<span style="color: #66cccc;">'chinese_L-12_H-768_A-12/'</span>, task=kashgari.CLASSIFICATION, trainable=<span style="color: #6699cc;">True</span>)
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd485d3f" class="outline-3">
+<h3 id="orgd485d3f">使用 AllenNLP 进行文本分类</h3>
+<div class="outline-text-3" id="text-orgd485d3f">
+<p>
+安装: <code>pip install allennlp</code>
+</p>
+
+<p>
+文档: <a href="https://allennlp.org/tutorials">https://allennlp.org/tutorials</a>
+</p>
+</div>
+
+<div id="outline-container-orgc94711d" class="outline-4">
+<h4 id="orgc94711d">进行常规的文本分类</h4>
+<div class="outline-text-4" id="text-orgc94711d">
+<p>
+AllenNLP 完全通过配置文件来对数据处理、模型结果和训练过程进行设置，最简单的情况下可以一行代码不写就把一个文本分类模型训练出来。下面是一个配置文件示例：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #66cccc;">"dataset_reader"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"text_classification_json"</span>,
+        <span style="color: #66cccc;">"tokenizer"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"word"</span>,
+            <span style="color: #66cccc;">"word_splitter"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"jieba"</span>,
+            }
+        }
+    },
+    <span style="color: #66cccc;">"train_data_path"</span>: <span style="color: #66cccc;">"allen.data.train"</span>,
+    <span style="color: #66cccc;">"test_data_path"</span>: <span style="color: #66cccc;">"allen.data.test"</span>,
+    <span style="color: #66cccc;">"evaluate_on_test"</span>: <span style="color: #6699cc;">true</span>,
+    <span style="color: #66cccc;">"model"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"basic_classifier"</span>,
+        <span style="color: #66cccc;">"text_field_embedder"</span>: {
+            <span style="color: #66cccc;">"tokens"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"embedding"</span>,
+                <span style="color: #66cccc;">"embedding_dim"</span>: 100,
+                <span style="color: #66cccc;">"trainable"</span>: <span style="color: #6699cc;">true</span>
+            }
+        },
+        <span style="color: #66cccc;">"seq2vec_encoder"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"cnn"</span>,
+            <span style="color: #66cccc;">"embedding_dim"</span>: 100,
+            <span style="color: #66cccc;">"num_filters"</span>: 1,
+            <span style="color: #66cccc;">"ngram_filter_sizes"</span>: [2, 3, 4]
+        }
+    },
+    <span style="color: #66cccc;">"iterator"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bucket"</span>,
+        <span style="color: #66cccc;">"sorting_keys"</span>: [[<span style="color: #66cccc;">"tokens"</span>, <span style="color: #66cccc;">"num_tokens"</span>]],
+        <span style="color: #66cccc;">"batch_size"</span>: 64
+    },
+    <span style="color: #66cccc;">"trainer"</span>: {
+        <span style="color: #66cccc;">"num_epochs"</span>: 40,
+        <span style="color: #66cccc;">"patience"</span>: 3,
+        <span style="color: #66cccc;">"cuda_device"</span>: -1,
+        <span style="color: #66cccc;">"grad_clipping"</span>: 5.0,
+        <span style="color: #66cccc;">"validation_metric"</span>: <span style="color: #66cccc;">"+accuracy"</span>,
+        <span style="color: #66cccc;">"optimizer"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"adam"</span>
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+配置文件中的内容可以分成
+</p>
+<ul class="org-ul">
+<li>数据部分: 包括 dataset_reader/train_data_path/test_data_path 这几个 key 及其 value</li>
+<li>模型部分: 就是 model 这个 key 的内容</li>
+<li>训练部分: 包括 evaluate_on_test/iterator/trainer 这几个 key 及其 value</li>
+</ul>
+
+<p>
+由于本文不是专门介绍 AllenNLP 的文章，所以只对这些配置做简要说明，详细内容可查看文档。
+</p>
+<ul class="org-ul">
+<li><p>
+数据部分
+</p>
+
+<p>
+train_data_path 和 test_data_path 比较好理解，它们指定了训练数据和测试数据的文件路径；而 data_reader 则限定了数据文件的格式。
+</p>
+
+<p>
+data_reader 中的配置，会被用来构建一个 <a href="https://allenai.github.io/allennlp-docs/api/allennlp.data.dataset_readers.dataset_reader.html">DatasetReader</a> 的子类的对象，用来读取数据并转换成一个个 <a href="https://allenai.github.io/allennlp-docs/api/allennlp.data.instance.html">Instance</a> 对象。
+</p>
+<ul class="org-ul">
+<li><p>
+内置的可用来读取分类数据的 DataReader 是 <a href="https://allenai.github.io/allennlp-docs/api/allennlp.data.dataset_readers.text_classification_json.html">TextClassificationJsonReader</a> ，所以配置中有
+</p>
+
+<pre class="example">
+"type": "text_classification_json"
+</pre>
+
+<p>
+这个 type 的值是 TextClassificationJsonReader 这个类实现的时候注册上的，去看代码会看到有这样的片段
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #6699cc;">@DatasetReader.register</span>(<span style="color: #66cccc;">"text_classification_json"</span>)
+<span style="color: #99cc99; font-weight: bold;">class</span> <span style="color: #6699cc;">TextClassificationJsonReader</span>(DatasetReader):
+</pre>
+</div>
+
+<p>
+这个 TextClassificationJsonReader 要求的数据文件是一行一个 json 数据，如下：
+</p>
+<pre class="example">
+{"label": "education", "text": "名师指导托福语法技巧：名词的复数形式"}
+{"label": "education", "text": "中国高考成绩海外认可是“狼来了”吗？"}
+{"label": "sports, "text": "图文：法网孟菲尔斯苦战进16强孟菲尔斯怒吼"}
+{"label": "sports, "text": "四川丹棱举行全国长距登山挑战赛近万人参与"}
+</pre></li>
+
+<li><p>
+DataReader 通过配置中 tokenizer 部分会创建一个分词器，用来将文本转换为词序列
+</p>
+
+<pre class="example">
+"tokenizer": {
+    "type": "word",
+    "word_splitter": {
+        "type": "jieba",
+    }
+}
+</pre>
+
+<p>
+type 的值设置为 word，这没什么好说的。
+</p>
+
+<p>
+tokenizer 中的 word_splitter 指定的才是真正的分词器（比较绕）。
+</p>
+
+<p>
+如果是英文的数据，那么 word_splitter 的配置可以不写，默认就是支持英文分词的。
+</p>
+
+<p>
+但如果是用于中文处理的话，有一个 SpacyWordSplitter 可以用于中文分类，但是现有的<a href="https://github.com/howl-anderson/Chinese_models_for_SpaCy">中文 spaCy 模型</a>仅支持 spaCy 2.0.x，和 AllenNLP 中 spaCy 要求的版本不兼容，这个是比较坑的。
+</p>
+
+<p>
+好在 AllenNLP 提供了加载自定义模块的方法，按照如下方法来处理这个问题
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">mkdir allen_ext/
+touch allen_ext/__init__.py
+touch allen_ext/word_splitter.py
+</pre>
+</div>
+
+<p>
+然后在 allen_ext/word_splitter.py 中写入如下内容
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> typing <span style="color: #99cc99; font-weight: bold;">import</span> List
+
+<span style="color: #99cc99; font-weight: bold;">import</span> jieba
+<span style="color: #99cc99; font-weight: bold;">from</span> overrides <span style="color: #99cc99; font-weight: bold;">import</span> overrides
+<span style="color: #99cc99; font-weight: bold;">from</span> allennlp.data.tokenizers.token <span style="color: #99cc99; font-weight: bold;">import</span> Token
+<span style="color: #99cc99; font-weight: bold;">from</span> allennlp.data.tokenizers.word_splitter <span style="color: #99cc99; font-weight: bold;">import</span> WordSplitter
+
+
+<span style="color: #6699cc;">@WordSplitter.register</span>(<span style="color: #66cccc;">'jieba'</span>)
+<span style="color: #99cc99; font-weight: bold;">class</span> <span style="color: #6699cc;">JiebaWordSplitter</span>(WordSplitter):
+
+    <span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">__init__</span>(<span style="color: #99cc99; font-weight: bold;">self</span>):
+        <span style="color: #99cc99; font-weight: bold;">pass</span>
+
+    <span style="color: #6699cc;">@overrides</span>
+    <span style="color: #99cc99; font-weight: bold;">def</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">split_words</span>(<span style="color: #99cc99; font-weight: bold;">self</span>, sentence: <span style="color: #cc99cc; background-color: #2d2d2d;">str</span>) -&gt; List[Token]:
+        <span style="color: #ffcc66;">offset</span> = 0
+        <span style="color: #ffcc66;">tokens</span> = []
+        <span style="color: #99cc99; font-weight: bold;">for</span> word <span style="color: #99cc99; font-weight: bold;">in</span> jieba.lcut(sentence):
+            <span style="color: #ffcc66;">word</span> = word.strip()
+            <span style="color: #99cc99; font-weight: bold;">if</span> <span style="color: #99cc99; font-weight: bold;">not</span> word:
+                <span style="color: #99cc99; font-weight: bold;">continue</span>
+
+            <span style="color: #ffcc66;">start</span> = sentence.find(word, offset)
+            tokens.append(Token(word, start))
+
+            <span style="color: #ffcc66;">offset</span> = start + <span style="color: #cc99cc; background-color: #2d2d2d;">len</span>(word)
+
+        <span style="color: #99cc99; font-weight: bold;">return</span> tokens
+</pre>
+</div>
+
+<p>
+使用 <code>WordSplitter.register('jieba')</code> 后就可以在配置中 word_splitter 部分写上 <code>"type": "jieba"</code> 来启用。
+</p>
+
+<p>
+在 allen_ext/__init__.py 中写入如下内容
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> .word_splitter <span style="color: #99cc99; font-weight: bold;">import</span> JiebaWordSplitter
+
+<span style="color: #cc99cc; background-color: #2d2d2d;">__all__</span> = [<span style="color: #66cccc;">'JiebaWordSplitter'</span>]
+</pre>
+</div>
+
+<p>
+自定义了 JiebaWordSplitter 后在训练的时候还要加载 allen_ext 这个目录才能生效，这个之后再说。
+</p></li>
+</ul></li>
+
+<li><p>
+模型部分
+</p>
+
+<p>
+因为是做文本分类，所以 type 设置为 <a href="https://allenai.github.io/allennlp-docs/api/allennlp.models.basic_classifier.html">basic_classifier</a>。
+</p>
+
+<p>
+这个分类器需要 text_field_embedder 和 seq2vec_encoder 两个参数：
+</p>
+<ul class="org-ul">
+<li><p>
+text_field_embedder 用来定义 word embedding，这个配置应该还好理解
+</p>
+
+<pre class="example">
+"text_field_embedder": {
+    "tokens": {
+        "type": "embedding",
+        "embedding_dim": 100,
+        "trainable": true
+    }
+}
+</pre></li>
+
+<li><p>
+seq2vec_encoder 则用来产生句子的编码向量用于分类，这里选择了 CNN
+</p>
+
+<pre class="example">
+"seq2vec_encoder": {
+    "type": "cnn",
+    "embedding_dim": 100,
+    "num_filters": 1,
+    "ngram_filter_sizes": [2, 3, 4]
+}
+</pre></li>
+</ul></li>
+
+<li>训练部分：略</li>
+</ul>
+
+
+<p>
+配置文件写好后，假设配置文件为 config.json，直接执行下面的命令来训练即可
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">allennlp train config.json -s model_save_dir --include-package allen_ext
+</pre>
+</div>
+
+<p>
+选项 <code>--include-package allen_ext</code> 用来来加载自定义的模块。
+</p>
+
+<p>
+最终会在 save_dir 目录下产生一个 model.tar.gz 文件，就是模型参数，然后目录下还会产生 tensorboard 能读取的 log，这个挺方便的。
+</p>
+
+<p>
+评估的话，用 evaluate 命令
+</p>
+<pre class="example">
+allennlp evaluate model_save_dir/model.tar.gz test.jsonl --include-package allen_ext
+</pre>
+
+<p>
+比较麻烦的是，预测需要一个 Predictor，而 AllenNLP 中内置的 <a href="https://allenai.github.io/allennlp-docs/api/allennlp.predictors.html#text-classifier">TextClassifierPredictor</a> 要求的输入是 <code>{"sentence": "xxx"}</code> ，这个和 TextClassificationJsonReader 的要求不一样……
+</p>
+
+<p>
+如果是在代码里进行预测，那么是没有问题的，可以这样
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99; font-weight: bold;">from</span> allen_ext <span style="color: #99cc99; font-weight: bold;">import</span> *         <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">noqa</span>
+<span style="color: #99cc99; font-weight: bold;">from</span> allennlp.models.archival <span style="color: #99cc99; font-weight: bold;">import</span> load_archive
+<span style="color: #99cc99; font-weight: bold;">from</span> allennlp.predictors.predictor <span style="color: #99cc99; font-weight: bold;">import</span> Predictor
+
+<span style="color: #ffcc66;">archive</span> = load_archive(<span style="color: #66cccc;">'model_save_dir/model.tar.gz'</span>)
+<span style="color: #ffcc66;">predictor</span> = Predictor.from_archive(archive)
+
+<span style="color: #ffcc66;">inputs</span> = {<span style="color: #66cccc;">"sentence"</span>: <span style="color: #66cccc;">"&#21517;&#24072;&#25351;&#23548;&#25176;&#31119;&#35821;&#27861;&#25216;&#24039;&#65306;&#21517;&#35789;&#30340;&#22797;&#25968;&#24418;&#24335;"</span>}
+<span style="color: #ffcc66;">result</span> = predictor.predict_json(inputs)
+</pre>
+</div>
+
+<p>
+得到的 result 是这样的结构
+</p>
+<div class="org-src-container">
+<pre class="src src-python">{
+    <span style="color: #66cccc;">'label'</span>: <span style="color: #66cccc;">'education'</span>,
+    <span style="color: #66cccc;">'logits'</span>: [
+        15.88630199432373,
+        0.7209644317626953,
+        7.292031764984131,
+        5.195938587188721,
+        5.073373317718506,
+        -35.6490478515625,
+        -7.7982988357543945,
+        -35.44648742675781,
+        -18.14293098449707,
+        -14.513381004333496
+    ],
+    <span style="color: #66cccc;">'probs'</span>: [
+        0.999771773815155,
+        2.592259420453047e-07,
+        0.0001851213601185009,
+        2.2758060367777944e-05,
+        2.013285666180309e-05,
+        4.153195524896307e-23,
+        5.1737975015342386e-11,
+        5.085729773519049e-23,
+        1.6641527142180782e-15,
+        6.273159211056881e-14
+    ],
+}
+</pre>
+</div>
+
+<p>
+这个输出结构完全是由 TextClassifierPredictor 决定的。
+</p>
+
+<p>
+如果要自定义 Predictor，可以参考<a href="https://github.com/allenai/allennlp/blob/master/tutorials/getting_started/predicting_paper_venues/predicting_paper_venues_pt2.md#creating-a-predictor">文档</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6d4406e" class="outline-4">
+<h4 id="org6d4406e">基于 BERT 进行文本分类</h4>
+<div class="outline-text-4" id="text-org6d4406e">
+<p>
+AllenNLP 是基于 pytorch 实现的，所以 Google 提供的 BERT 模型在它这里没法用，需要下载它自己提供的模型，以中文模型为例：
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">mkdir chinese_bert_torch &amp;&amp; <span style="color: #cc99cc; background-color: #2d2d2d;">cd</span> chinese_bert_torch
+wget https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese-pytorch_model.bin -O pytorch_model.bin
+wget https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese-config.json -O config.json
+wget https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-chinese-vocab.txt -O vocab.txt
+</pre>
+</div>
+
+<p>
+然后 config.json 中 data_reader 部分这样写
+</p>
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #66cccc;">"dataset_reader"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"text_classification_json"</span>,
+        <span style="color: #66cccc;">"tokenizer"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"word"</span>,
+            <span style="color: #66cccc;">"word_splitter"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert-basic"</span>,
+            }
+        },
+        <span style="color: #66cccc;">"token_indexers"</span>: {
+            <span style="color: #66cccc;">"bert"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert-pretrained"</span>,
+                <span style="color: #66cccc;">"pretrained_model"</span>: <span style="color: #66cccc;">"./chinese_bert_torch/vocab.txt"</span>
+            }
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+model 部分这么写
+</p>
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #66cccc;">"model"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert_for_classification"</span>,
+        <span style="color: #66cccc;">"bert_model"</span>: <span style="color: #66cccc;">"./chinese_bert_torch"</span>,
+        <span style="color: #66cccc;">"trainable"</span>: <span style="color: #6699cc;">false</span>
+    }
+}
+</pre>
+</div>
+
+<p>
+这里 trainable 设置成 false 的话 BERT 就只是充当一个 encoder，不参与训练；如果要进行 finetuning 的话将其改为 true。
+</p>
+
+<p>
+完整的配置是这个样子的
+</p>
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #66cccc;">"dataset_reader"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"text_classification_json"</span>,
+        <span style="color: #66cccc;">"tokenizer"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"word"</span>,
+            <span style="color: #66cccc;">"word_splitter"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert-basic"</span>,
+            }
+        },
+        <span style="color: #66cccc;">"token_indexers"</span>: {
+            <span style="color: #66cccc;">"bert"</span>: {
+                <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert-pretrained"</span>,
+                <span style="color: #66cccc;">"pretrained_model"</span>: <span style="color: #66cccc;">"./chinese_bert_torch/vocab.txt"</span>
+            }
+        }
+    },
+    <span style="color: #66cccc;">"train_data_path"</span>: <span style="color: #66cccc;">"allen.data.train"</span>,
+    <span style="color: #66cccc;">"test_data_path"</span>: <span style="color: #66cccc;">"allen.data.test"</span>,
+    <span style="color: #66cccc;">"evaluate_on_test"</span>: <span style="color: #6699cc;">true</span>,
+    <span style="color: #66cccc;">"model"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bert_for_classification"</span>,
+        <span style="color: #66cccc;">"bert_model"</span>: <span style="color: #66cccc;">"./chinese_bert_torch"</span>,
+        <span style="color: #66cccc;">"trainable"</span>: <span style="color: #6699cc;">false</span>
+    },
+    <span style="color: #66cccc;">"iterator"</span>: {
+        <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"bucket"</span>,
+        <span style="color: #66cccc;">"sorting_keys"</span>: [[<span style="color: #66cccc;">"tokens"</span>, <span style="color: #66cccc;">"num_tokens"</span>]],
+        <span style="color: #66cccc;">"batch_size"</span>: 64
+    },
+    <span style="color: #66cccc;">"trainer"</span>: {
+        <span style="color: #66cccc;">"num_epochs"</span>: 5,
+        <span style="color: #66cccc;">"patience"</span>: 3,
+        <span style="color: #66cccc;">"cuda_device"</span>: -1,
+        <span style="color: #66cccc;">"grad_clipping"</span>: 5.0,
+        <span style="color: #66cccc;">"validation_metric"</span>: <span style="color: #66cccc;">"+accuracy"</span>,
+        <span style="color: #66cccc;">"optimizer"</span>: {
+            <span style="color: #66cccc;">"type"</span>: <span style="color: #66cccc;">"adam"</span>
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+训练、评估、预测等操作同未使用 BERT 的时候一样。
+</p>
+</div>
+</div>
+</div>
+</div>
