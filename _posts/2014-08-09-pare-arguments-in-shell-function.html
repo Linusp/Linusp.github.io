@@ -11,11 +11,11 @@ tags       :
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">手工解析</a></li>
-<li><a href="#orgheadline2">getopts</a></li>
-<li><a href="#orgheadline3">getopt</a></li>
-<li><a href="#orgheadline4">getopts处理长选项</a></li>
-<li><a href="#orgheadline5">在函数中解析参数</a></li>
+<li><a href="#org242584d">手工解析</a></li>
+<li><a href="#org039a802">getopts</a></li>
+<li><a href="#org29fcbdf">getopt</a></li>
+<li><a href="#orgefa2c7a">getopts处理长选项</a></li>
+<li><a href="#org893ba73">在函数中解析参数</a></li>
 </ul>
 </div>
 </div>
@@ -43,42 +43,41 @@ tags       :
 <li>-h : 打印帮助信息</li>
 </ol>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">手工解析</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org242584d" class="outline-2">
+<h2 id="org242584d">手工解析</h2>
+<div class="outline-text-2" id="text-org242584d">
 <p>
 所谓的手工解析，就是取到参数后手工一个一个解析了，以下是手工解析上述情景参数的过程:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #729fcf;">while</span> [ $<span style="color: #eeeeec;">#</span> -gt 0 ];<span style="color: #729fcf;">do</span>
-    <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">1</span><span style="color: #729fcf;"> in</span>
+<pre class="src src-shell-script"><span style="color: #2c3e50; font-weight: bold; font-style: italic;">while</span> [ $<span style="color: #3498db;">#</span> -gt 0 ];<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">1</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
         -d)
-            <span style="color: #729fcf;">shift</span>
-            <span style="color: #eeeeec;">file_to_trash</span>=$<span style="color: #eeeeec;">1</span>
-            trash $<span style="color: #eeeeec;">file_to_trash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">trash is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
+            <span style="color: #3498db;">file_to_trash</span>=$<span style="color: #3498db;">1</span>
+            trash $<span style="color: #3498db;">file_to_trash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">trash is a function</span>
             ;;
         -l)
-            print_trashed_file  <span style="color: #888a85;"># </span><span style="color: #888a85;">print_trashed_file is a function</span>
+            print_trashed_file  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">print_trashed_file is a function</span>
             ;;
         -b)
-            <span style="color: #729fcf;">shift</span>
-            <span style="color: #eeeeec;">file_to_untrash</span>=$<span style="color: #eeeeec;">1</span>
-            untrash $<span style="color: #eeeeec;">file_to_untrash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">untrash is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
+            <span style="color: #3498db;">file_to_untrash</span>=$<span style="color: #3498db;">1</span>
+            untrash $<span style="color: #3498db;">file_to_untrash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">untrash is a function</span>
             ;;
         -c)
-            clean_all           <span style="color: #888a85;"># </span><span style="color: #888a85;">clean all is a function</span>
+            clean_all           <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">clean all is a function</span>
             ;;
         -h)
             usage
-            <span style="color: #729fcf;">exit</span> 0
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
             ;;
-        <span style="color: #ad7fa8;">\?</span>)
+        <span style="color: #16a085;">\?</span>)
             usage
-            <span style="color: #729fcf;">exit</span> 1
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 1
             ;;
-    <span style="color: #729fcf;">esac</span>
-<span style="color: #729fcf;">done</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 
@@ -99,37 +98,36 @@ hello.txt
 这样，在使用了shift后，我们每次都只要去看参数列表中的第一个就行了。当然，其实不用'shift'也是可以的，比如说这样:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #eeeeec;">i</span>=1
-<span style="color: #729fcf;">while</span> [ $<span style="color: #eeeeec;">i</span> -le $<span style="color: #eeeeec;">#</span> ];<span style="color: #729fcf;">do</span>
-    <span style="color: #729fcf;">case</span> ${<span style="color: #eeeeec;">!</span>i} <span style="color: #729fcf;">in</span>
+<pre class="src src-shell-script"><span style="color: #3498db;">i</span>=1
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">while</span> [ $<span style="color: #3498db;">i</span> -le $<span style="color: #3498db;">#</span> ];<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> ${<span style="color: #3498db;">!</span>i} <span style="color: #2c3e50; font-weight: bold; font-style: italic;">in</span>
         -d)
-            <span style="color: #eeeeec;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #eeeeec;">i</span> + 1)
-            <span style="color: #eeeeec;">file_to_trash</span>=${<span style="color: #eeeeec;">!</span>i}
-            trash $<span style="color: #eeeeec;">file_to_trash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">trash is a function</span>
+            <span style="color: #3498db;">i</span>=$(<span style="color: #ff00ff;">expr</span> $<span style="color: #3498db;">i</span> + 1)
+            <span style="color: #3498db;">file_to_trash</span>=${<span style="color: #3498db;">!</span>i}
+            trash $<span style="color: #3498db;">file_to_trash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">trash is a function</span>
             ;;
         -l)
-            print_trashed_file  <span style="color: #888a85;"># </span><span style="color: #888a85;">print_trashed_file is a function</span>
+            print_trashed_file  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">print_trashed_file is a function</span>
             ;;
         -b)
-            <span style="color: #eeeeec;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #eeeeec;">i</span> + 1)
-            <span style="color: #eeeeec;">file_to_untrash</span>=${<span style="color: #eeeeec;">!</span>i}
-            untrash $<span style="color: #eeeeec;">file_to_untrash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">untrash is a function</span>
+            <span style="color: #3498db;">i</span>=$(<span style="color: #ff00ff;">expr</span> $<span style="color: #3498db;">i</span> + 1)
+            <span style="color: #3498db;">file_to_untrash</span>=${<span style="color: #3498db;">!</span>i}
+            untrash $<span style="color: #3498db;">file_to_untrash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">untrash is a function</span>
             ;;
         -c)
-            clean_all           <span style="color: #888a85;"># </span><span style="color: #888a85;">clean all is a function</span>
+            clean_all           <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">clean all is a function</span>
             ;;
         -h)
             usage
-            <span style="color: #729fcf;">exit</span> 0
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
             ;;
-        <span style="color: #ad7fa8;">\?</span>)
+        <span style="color: #16a085;">\?</span>)
             usage
-            <span style="color: #729fcf;">exit</span> 1
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 1
             ;;
-    <span style="color: #729fcf;">esac</span>
-    <span style="color: #eeeeec;">i</span>=$(<span style="color: #fa8072;">expr</span> $<span style="color: #eeeeec;">i</span> + 1)
-<span style="color: #729fcf;">done</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+    <span style="color: #3498db;">i</span>=$(<span style="color: #ff00ff;">expr</span> $<span style="color: #3498db;">i</span> + 1)
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 
@@ -143,15 +141,14 @@ hello.txt
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">getopts</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-org039a802" class="outline-2">
+<h2 id="org039a802">getopts</h2>
+<div class="outline-text-2" id="text-org039a802">
 <p>
 'getopts'是POSIX Shell中内置的一个命令，其使用方法是:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #729fcf;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt; &lt;arguments&gt;
+<pre class="src src-shell-script"><span style="color: #2c3e50; background-color: #ecf0f1;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt; &lt;arguments&gt;
 </pre>
 </div>
 
@@ -169,19 +166,17 @@ hello.txt
 本质上来说，'getopts'的处理和我们手工处理是差不多的，它不过是提供了更便利的方式而已。它的使用方式非常简单明了，其形式为:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #729fcf;">while </span><span style="color: #729fcf;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt;
-    <span style="color: #729fcf;">case</span> $&lt;optvar&gt;<span style="color: #729fcf;"> in</span>
-        <span style="color: #888a85;"># </span><span style="color: #888a85;">...</span>
-    <span style="color: #729fcf;">esac</span>
-<span style="color: #729fcf;">done</span>
+<pre class="src src-shell-script"><span style="color: #2c3e50; font-weight: bold; font-style: italic;">while </span><span style="color: #2c3e50; background-color: #ecf0f1;">getopts</span> &lt;opt_string&gt; &lt;optvar&gt;
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $&lt;optvar&gt;<span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
+        <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">...</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 <p>
 其中&lt;opt_string&gt;是要处理的选项的一个集合，每个选项在其中用不包含连字符'-'的字母来表示，每个代表选项的字母前后可以有一个冒号，前面有冒号表示当处理该选项出错时不输出'getopts'自身产生的错误信息，这方便我们自己编写对应的错误处理方法;后面的冒号表示这个选项需要一个值。对于我们这个"安全删除"的例子，这个&lt;opt_string&gt;应该是:
 </p>
 <div class="org-src-container">
-
 <pre class="src src-shell-script">d:lb:ch
 </pre>
 </div>
@@ -193,33 +188,32 @@ hello.txt
 在使用'getopts'时，有两个特殊的变量，它们是 <b>OPTIND</b> 和 <b>OPTARG</b> ，前者表示当前参数在参数列表中的位置——相当于手工解析第二种方法中那个自定义的变量 <b>i</b> ，其值初始时为1， 会在每次取了选项以及其值(如果有的话)后更新; <b>OPTARG</b> 则是在选项需要值时，存储这个选项对应的值。这样，我们这个例子用'getopts'就可以写成:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #729fcf;">while </span><span style="color: #729fcf;">getopts</span> d:lb:ch OPT;<span style="color: #729fcf;">do</span>
-    <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">OPT</span><span style="color: #729fcf;"> in</span>
+<pre class="src src-shell-script"><span style="color: #2c3e50; font-weight: bold; font-style: italic;">while </span><span style="color: #2c3e50; background-color: #ecf0f1;">getopts</span> d:lb:ch OPT;<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">OPT</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
         d)
-            <span style="color: #eeeeec;">file_to_trash</span>=$<span style="color: #eeeeec;">OPTARG</span>
-            trash $<span style="color: #eeeeec;">file_to_trash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">trash is a function</span>
+            <span style="color: #3498db;">file_to_trash</span>=$<span style="color: #3498db;">OPTARG</span>
+            trash $<span style="color: #3498db;">file_to_trash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">trash is a function</span>
             ;;
         l)
-            print_trashed_file  <span style="color: #888a85;"># </span><span style="color: #888a85;">print_trashed_file is a function</span>
+            print_trashed_file  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">print_trashed_file is a function</span>
             ;;
         b)
-            <span style="color: #eeeeec;">file_to_untrash</span>=$<span style="color: #eeeeec;">OPTARG</span>
-            untrash $<span style="color: #eeeeec;">file_to_untrash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">untrash is a function</span>
+            <span style="color: #3498db;">file_to_untrash</span>=$<span style="color: #3498db;">OPTARG</span>
+            untrash $<span style="color: #3498db;">file_to_untrash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">untrash is a function</span>
             ;;
         c)
-            clean_all           <span style="color: #888a85;"># </span><span style="color: #888a85;">clean all is a function</span>
+            clean_all           <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">clean all is a function</span>
             ;;
         h)
             usage
-            <span style="color: #729fcf;">exit</span> 0
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
             ;;
-        <span style="color: #ad7fa8;">\?</span>)
+        <span style="color: #16a085;">\?</span>)
             usage
-            <span style="color: #729fcf;">exit</span> 1
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 1
             ;;
-    <span style="color: #729fcf;">esac</span>
-<span style="color: #729fcf;">done</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 
@@ -231,7 +225,6 @@ hello.txt
 比如说，对于上面的例子，假设这个脚本已经完全写好了，脚本名为 <b>trash.sh</b> ，其参数处理就是上面这样，那么如果我在终端里执行:
 </p>
 <div class="org-src-container">
-
 <pre class="src src-shell-script">./trash.sh a -b hello.txt
 </pre>
 </div>
@@ -241,9 +234,9 @@ hello.txt
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">getopt</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-org29fcbdf" class="outline-2">
+<h2 id="org29fcbdf">getopt</h2>
+<div class="outline-text-2" id="text-org29fcbdf">
 <p>
 'getopt'与'getopts'类似，不过'getopts'只能处理短选项，'getopt'则能处理短选项和长选项。所谓的短选项就是类似下面这样的选项:
 </p>
@@ -320,42 +313,41 @@ hello.txt
 以下是针对本文假设的情景，使用'getopt'解析参数的流程:
 </p>
 <div class="org-src-container">
+<pre class="src src-shell-script"><span style="color: #3498db;">arg</span>=$(<span style="color: #ff00ff;">getopt</span> -o d:lb:ch -l delete:,list,back:,clear,help -- $<span style="color: #3498db;">@</span>)
 
-<pre class="src src-shell-script"><span style="color: #eeeeec;">arg</span>=$(<span style="color: #fa8072;">getopt</span> -o d:lb:ch -l delete:,list,back:,clear,help -- $<span style="color: #eeeeec;">@</span>)
+<span style="color: #2c3e50; background-color: #ecf0f1;">set</span> -- <span style="color: #16a085;">"$arg"</span>
 
-<span style="color: #729fcf;">set</span> -- <span style="color: #ad7fa8;">"$arg"</span>
-
-<span style="color: #729fcf;">while</span> true
-<span style="color: #729fcf;">do</span>
-    <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">1</span><span style="color: #729fcf;"> in</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">while</span> true
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">1</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
         -d|--delete)
-            <span style="color: #eeeeec;">file_to_trash</span>=$<span style="color: #eeeeec;">2</span>
-            trash $<span style="color: #eeeeec;">file_to_trash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">trash is a function</span>
-            <span style="color: #729fcf;">shift</span> 2
+            <span style="color: #3498db;">file_to_trash</span>=$<span style="color: #3498db;">2</span>
+            trash $<span style="color: #3498db;">file_to_trash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">trash is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span> 2
             ;;
         -l|--list)
-            print_trashed_file  <span style="color: #888a85;"># </span><span style="color: #888a85;">print_trashed_file is a function</span>
-            <span style="color: #729fcf;">shift</span>
+            print_trashed_file  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">print_trashed_file is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
             ;;
         -b|--back)
-            <span style="color: #eeeeec;">file_to_untrash</span>=$<span style="color: #eeeeec;">2</span>
-            untrash $<span style="color: #eeeeec;">file_to_untrash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">untrash is a function</span>
-            <span style="color: #729fcf;">shift</span>
+            <span style="color: #3498db;">file_to_untrash</span>=$<span style="color: #3498db;">2</span>
+            untrash $<span style="color: #3498db;">file_to_untrash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">untrash is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
             ;;
         -c|--clear)
-            clean_all           <span style="color: #888a85;"># </span><span style="color: #888a85;">clean all is a function</span>
-            <span style="color: #729fcf;">shift</span>
+            clean_all           <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">clean all is a function</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
             ;;
         -h|--help)
             usage
-            <span style="color: #729fcf;">exit</span> 0
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
             ;;
         --)
-            <span style="color: #729fcf;">shift</span>
-            <span style="color: #729fcf;">break</span>
+            <span style="color: #2c3e50; background-color: #ecf0f1;">shift</span>
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">break</span>
             ;;
-    <span style="color: #729fcf;">esac</span>
-<span style="color: #729fcf;">done</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 
@@ -385,9 +377,9 @@ eval set -- "$arg"
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4">getopts处理长选项</h2>
-<div class="outline-text-2" id="text-orgheadline4">
+<div id="outline-container-orgefa2c7a" class="outline-2">
+<h2 id="orgefa2c7a">getopts处理长选项</h2>
+<div class="outline-text-2" id="text-orgefa2c7a">
 <p>
 既然不建议使用'getopt'，那么怎么处理长选项呢？自然是有办法的。
 </p>
@@ -405,33 +397,33 @@ eval set -- "$arg"
 用'getopts'处理这种情况，可以这么做:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-shell-script"><span style="color: #eeeeec;">filename</span>=<span style="color: #ad7fa8;">""</span>
-<span style="color: #729fcf;">while </span><span style="color: #729fcf;">getopts</span> f:h-: opt;<span style="color: #729fcf;">do</span>
-    <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">opt</span><span style="color: #729fcf;"> in</span>
+<pre class="src src-shell-script"><span style="color: #3498db;">filename</span>=<span style="color: #16a085;">""</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">while </span><span style="color: #2c3e50; background-color: #ecf0f1;">getopts</span> f:h-: opt;<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">opt</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
         -)
-            <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">OPTARG</span><span style="color: #729fcf;"> in</span>
-                <span style="color: #729fcf;">help</span>)
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">OPTARG</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
+                <span style="color: #2c3e50; background-color: #ecf0f1;">help</span>)
                     usage
-                    <span style="color: #729fcf;">exit</span> 0
+                    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
                     ;;
-                <span style="color: #eeeeec;">file</span>=*)
-                    <span style="color: #eeeeec;">filename</span>=${<span style="color: #eeeeec;">OPTARG</span>#*=}
+                <span style="color: #3498db;">file</span>=*)
+                    <span style="color: #3498db;">filename</span>=${<span style="color: #3498db;">OPTARG</span>#*=}
                     ;;
-            <span style="color: #729fcf;">esac</span>
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+            ;;
         f)
-            <span style="color: #eeeeec;">filename</span>=$<span style="color: #eeeeec;">OPTARG</span>
+            <span style="color: #3498db;">filename</span>=$<span style="color: #3498db;">OPTARG</span>
             ;;
         h)
             usage
-            <span style="color: #729fcf;">exit</span> 0
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
             ;;
-        <span style="color: #ad7fa8;">\?</span>)
+        <span style="color: #16a085;">\?</span>)
             usage
-            <span style="color: #729fcf;">exit</span> 1
+            <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 1
             ;;
-    <span style="color: #729fcf;">esac</span>
-<span style="color: #729fcf;">done</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+<span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 </pre>
 </div>
 
@@ -441,9 +433,9 @@ eval set -- "$arg"
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5">在函数中解析参数</h2>
-<div class="outline-text-2" id="text-orgheadline5">
+<div id="outline-container-org893ba73" class="outline-2">
+<h2 id="org893ba73">在函数中解析参数</h2>
+<div class="outline-text-2" id="text-org893ba73">
 <p>
 有时候，我们也许想把参数解析的工作放到函数中去做，比如说定义了一个'main'函数然后在'main'函数中封装整个流程处理逻辑。又或者像我一样，写了几个小小的工具函数，放到了Bash的配置文件 <b>.bashrc</b> 中，参数解析的工作必须得在函数中做。
 </p>
@@ -456,40 +448,39 @@ eval set -- "$arg"
 不过假如我们想用'getopts'来处理呢？动手尝试后，你会发现直接在函数中使用'getopts'是会出错的。要在函数中使用'getopts'，必须在这个函数中使用'getopts'前，将 <b>OPTIND</b> 这个被'getopts'使用的特殊变量设置为函数局部变量，像这样:
 </p>
 <div class="org-src-container">
+<pre class="src src-shell-script"><span style="color: #2c3e50; font-weight: bold; font-style: italic;">function</span> <span style="color: #9b59b6; background-color: #ecf0f1; font-weight: bold;">main</span>() {
 
-<pre class="src src-shell-script"><span style="color: #729fcf;">function</span> <span style="color: #edd400;">main</span>() {
+    <span style="color: #2c3e50; background-color: #ecf0f1;">local</span> OPTIND
 
-    <span style="color: #729fcf;">local</span> OPTIND
-
-    <span style="color: #729fcf;">while </span><span style="color: #729fcf;">getopts</span> d:lb:ch OPT;<span style="color: #729fcf;">do</span>
-       <span style="color: #729fcf;">case</span> $<span style="color: #eeeeec;">OPT</span><span style="color: #729fcf;"> in</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">while </span><span style="color: #2c3e50; background-color: #ecf0f1;">getopts</span> d:lb:ch OPT;<span style="color: #2c3e50; font-weight: bold; font-style: italic;">do</span>
+       <span style="color: #2c3e50; font-weight: bold; font-style: italic;">case</span> $<span style="color: #3498db;">OPT</span><span style="color: #2c3e50; font-weight: bold; font-style: italic;"> in</span>
            d)
-               <span style="color: #eeeeec;">file_to_trash</span>=$<span style="color: #eeeeec;">OPTARG</span>
-               trash $<span style="color: #eeeeec;">file_to_trash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">trash is a function</span>
+               <span style="color: #3498db;">file_to_trash</span>=$<span style="color: #3498db;">OPTARG</span>
+               trash $<span style="color: #3498db;">file_to_trash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">trash is a function</span>
                ;;
            l)
-               print_trashed_file  <span style="color: #888a85;"># </span><span style="color: #888a85;">print_trashed_file is a function</span>
+               print_trashed_file  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">print_trashed_file is a function</span>
                ;;
            b)
-               <span style="color: #eeeeec;">file_to_untrash</span>=$<span style="color: #eeeeec;">OPTARG</span>
-               untrash $<span style="color: #eeeeec;">file_to_untrash</span> <span style="color: #888a85;"># </span><span style="color: #888a85;">untrash is a function</span>
+               <span style="color: #3498db;">file_to_untrash</span>=$<span style="color: #3498db;">OPTARG</span>
+               untrash $<span style="color: #3498db;">file_to_untrash</span> <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">untrash is a function</span>
                ;;
            c)
-               clean_all           <span style="color: #888a85;"># </span><span style="color: #888a85;">clean all is a function</span>
+               clean_all           <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">clean all is a function</span>
                ;;
            h)
                usage
-               <span style="color: #729fcf;">exit</span> 0
+               <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 0
                ;;
-           <span style="color: #ad7fa8;">\?</span>)
+           <span style="color: #16a085;">\?</span>)
                usage
-               <span style="color: #729fcf;">exit</span> 1
+               <span style="color: #2c3e50; font-weight: bold; font-style: italic;">exit</span> 1
                ;;
-       <span style="color: #729fcf;">esac</span>
-    <span style="color: #729fcf;">done</span>
+       <span style="color: #2c3e50; font-weight: bold; font-style: italic;">esac</span>
+    <span style="color: #2c3e50; font-weight: bold; font-style: italic;">done</span>
 }
 
-main $<span style="color: #eeeeec;">@</span>
+main $<span style="color: #3498db;">@</span>
 </pre>
 </div>
 
