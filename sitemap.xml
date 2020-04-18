@@ -20,10 +20,6 @@ layout: null
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>http://www.zmonster.me/notes.html</loc>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>http://www.zmonster.me/about.html</loc>
     <priority>0.6</priority>
   </url>
