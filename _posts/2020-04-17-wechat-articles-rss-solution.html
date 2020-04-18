@@ -1,0 +1,403 @@
+---
+layout     : post
+title      : "我所使用过的微信公众号文章转 RSS 的方法"
+desc       : "微广场关闭之后，我开始自己去为微信公众号输出 RSS，在这三年里尝试了多种方法，在此分享一下。"
+categories : 数字生活
+tags       :
+- RSS
+- 微信公众号
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2291282">背景</a></li>
+<li><a href="#orgadb6262">Huginn 简介</a></li>
+<li><a href="#org5dc36cf">基于搜狗微信搜索的方案</a></li>
+<li><a href="#orgeb00ac2">基于即刻/快知和 RSSHub 的方案</a></li>
+<li><a href="#org0ab99c4">基于 EFB 和 Telegram 的方案</a></li>
+<li><a href="#org7aff131">其他参考方案</a></li>
+<li><a href="#org19ab5b2">后记</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org2291282" class="outline-2">
+<h2 id="org2291282">背景</h2>
+<div class="outline-text-2" id="text-org2291282">
+<p>
+作为一个 RSS 重度用户，在<a href="https://zhuanlan.zhihu.com/p/26638306">微广场关闭</a>前，我一直使用微广场来把自己想看的微信公众号、知乎专栏转成 RSS。在微广场关闭后，不仅是我，很多人也意识到了，类似的公开服务最终都可能走向同样的结局。在那之后，我就开始探索自己的方案，尝试不依赖第三方服务来把微信公众号转成 RSS。比较幸运的是，当时我已经接触到了 <a href="https://github.com/huginn/huginn">Huginn</a>，<a href="https://www.zmonster.me/2016/10/22/pkm-information-collection.html#orgheadline7">使用它</a>来获取一些学术论文资讯，而我加入的一个 Huginn 交流群里，早就有人在做相关的尝试了。基于交流群中朋友分享的方案，我也开始使用 Huginn 来为公众号输出 RSS，在这三年时间里，我前后使用过的方案有下面这些：
+</p>
+
+<ol class="org-ol">
+<li>基于<a href="https://weixin.sogou.com/">搜狗微信搜索</a>的方案</li>
+<li>基于即刻/快知和 <a href="https://github.com/DIYgod/RSSHub/">RSSHub</a> 的方案</li>
+<li>基于 <a href="https://github.com/blueset/ehForwarderBot">EFB</a> 和 Telegram 的方案</li>
+</ol>
+
+<p>
+我将在后文中按顺序讲一下这三种方案。
+</p>
+
+<p>
+当然，除了这三种方案外，也有一些门槛相对低的方案，不想折腾的人可能会更感兴趣一些，所以我会在文末也介绍一下这些方法。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgadb6262" class="outline-2">
+<h2 id="orgadb6262">Huginn 简介</h2>
+<div class="outline-text-2" id="text-orgadb6262">
+<p>
+由于几个方案主要都是使用 Huginn 来实现的，这里简单介绍一下 Huginn。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/huginn.png" alt="huginn.png" width="50%" />
+</p>
+</div>
+
+<p>
+<a href="https://github.com/cantino/huginn">Huginn</a> 是一个 Ruby 编写的自动化工具，在理念上类似 IFTTT 和天国的 Yahoo! Pipes，即进行事件的监听然后根据预先设定的规则自动化地进行后续操作。
+</p>
+
+<p>
+Huginn 的 wiki 上列举了一些典型的使用场景，如:
+</p>
+<ol class="org-ol">
+<li>Never Forget Your Umbrella Again: 下雨提醒</li>
+<li>Adding RSS Feeds to Any Site: 为任意网站生成 RSS 输出</li>
+<li>Follow stock prices: 监听股票价格</li>
+</ol>
+
+<p>
+在 Huginn 中，主要有 event 和 agent 两个概念，agent 类似 IFTTT 里的 channel，event 则是 agent 的输出。在 Huginn 中可以将一个 agent 的输出作为另外一个 agent 的输入，由此产生复杂的自动化操作。
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/huginn_diagram.png" alt="huginn_diagram.png" />
+</p>
+</div>
+
+<p>
+上图来自 <a href="https://web.archive.org/web/20170315013204/http://www.jianshu.com/p/4a47e452abc9">Huginn:烧录RSS的神器</a> 一文，该文对 Huginn 的使用做了很详细的介绍。
+</p>
+
+<p>
+和 IFTTT 不同的是，Huginn 需要自己部署，很多细节需要自己定制，因此在使用门槛上会高很多。想尝试一下的话，可以参考<a href="https://github.com/huginn/huginn#heroku">文档</a>一键免费部署 Huginn 到 PaaS 平台 <a href="http://heroku.com/">Heroku</a> 上，对于轻度是用来说足够了。
+</p>
+
+<p>
+由于本文的目的并不是专门介绍 Huginn，如果读者想了解更多关于 Huginn 的内容，可以自行搜索、阅读文档和相关资料。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5dc36cf" class="outline-2">
+<h2 id="org5dc36cf">基于搜狗微信搜索的方案</h2>
+<div class="outline-text-2" id="text-org5dc36cf">
+<p>
+<a href="https://weixin.sogou.com/">搜狗微信搜索</a>是一个开放的网站，同时又能获取指定公众号的最新文章，所以就成了早期的公众号文章转 RSS 的重要工具。
+</p>
+
+<p>
+在搜狗微信搜索中，如果知道一个微信公众号的 ID，可以直接拼接出该公众号在搜狗微信搜索上的页面，以“经济学人”的公众号举例，其公众号 ID 是 <i>TheEconomistGroup</i> ，那么其对应的搜狗微信搜索页面就是 <a href="https://weixin.sogou.com/weixin?query=TheEconomistGroup">https://weixin.sogou.com/weixin?query=TheEconomistGroup</a> ，访问这个页面，可以看到如下内容：
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/sogou_wexin_search.png" alt="sogou_wexin_search.png" />
+</p>
+</div>
+
+<p>
+从最下方的“最近文章”处就可以解析出该公众号最新文章的标题和链接，因此基于搜狗微信搜索的方案，通过下面几个步骤来得到公众号的 RSS 输出：
+</p>
+<ol class="org-ol">
+<li>解析公众号的搜狗微信搜索页面，获取最新文章的标题和链接</li>
+<li>访问文章的链接，解析出文章的全文</li>
+<li>输入包含文章标题、文章链接、文章内容的 RSS</li>
+</ol>
+
+<p>
+看起来是比较简单的，然而这个方案在实际中却遇到了一个比较大的问题，那就是搜狗的反爬机制。大概是出于保护内容、流量的缘故，搜狗微信搜索虽然能够比较方便地访问到微信公众号文章，但我们通过它获得的文章链接，都不是文章的原始链接：2017 年的时候这个链接是一个有时效性的临时链接，这个链接在不到一天的时间内就会失效而不可访问，所以早期的方案都会在链接没有失效的时候先解析出全文，这样在 RSS 阅读器里直接就能阅读；而现在，这个链接是一个重定向链接，在重定向后才会得到一个临时的文章链接。
+</p>
+
+<p>
+我个人没有办法解决链接重定向的问题，所以认为这个方案现在已经无效了，如果有读者认为该问题可以被解决，那么可以参考 <a href="https://web.archive.org/web/20170719092304/http://www.jianshu.com/p/22167468300f">Huginn教程：微信公众号 转换成 RSS</a> 一文去尝试一下。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgeb00ac2" class="outline-2">
+<h2 id="orgeb00ac2">基于即刻/快知和 RSSHub 的方案</h2>
+<div class="outline-text-2" id="text-orgeb00ac2">
+<p>
+<a href="https://baike.baidu.com/item/%E5%8D%B3%E5%88%BB/18672117">即刻</a>上线机器人功能后，用户就可以自定义微信公众号机器人来抓取任意公众号并生成一个主题了，而即刻的每个主题，又是存在公开 WEB 链接的，所以就可以用 Huginn 解析一个即刻的公众号主题页面，来获取一个公众号的文章列表更新了。而后来 RSSHub 又能直接输出一个即刻主题的 RSS，所以这个流程又能进一步简化一下，省略掉解析极客主题页面这一步，直接从 RSSHub 输出的 RSS 中，进一步解析出公众号文章的原始链接并抓取全文了。
+</p>
+
+<p>
+在即刻服务可用的时候，我就彻底抛弃了基于搜狗微信搜索的方案，因为基于即刻和 RSSHub 的方案一来可以获取文章的原始链接，二来在整体流程上比前者都更简单。
+</p>
+
+<p>
+可惜的是，即刻也因为某些暂不了解的原因而停止服务了，不过依赖第三方服务服务会有这个下场我也是有心理准备的，后来就有了第三个方案。
+</p>
+
+<p>
+在说第三个方案之前得说一下，现在有一个非常类似即刻的 APP 叫做<a href="http://kzfeed.com/">快知</a>，可以充当这个方案里即刻的替代品，唯一的差别是没有办法获得文章的原始链接，所以在 Huginn 中就少了一个文章直链获取的 Agent，见下图对比：
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/huginn_scenarios_comparison.png" alt="huginn_scenarios_comparison.png" />
+</p>
+</div>
+
+<p>
+目前基于快知的这个方案是可用的，如果想使用这个方案，可以有两种办法：
+</p>
+<ol class="org-ol">
+<li><p>
+安装我的个人项目 <a href="https://github.com/Linusp/zs/">zs</a> 然后执行下面的命令来生成一个 Huginn Scenario 文件，然后在 Huginn 中导入
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">zs-rss gen-scenario -t kz -n &#26202;&#28857;LatePost -i postlate --kz-topic-id k69QJvO82RKoA -o postlate.json
+</pre>
+</div>
+
+<p>
+命令参数解释如下：
+</p>
+<ul class="org-ul">
+<li>"-t kz" 表示生成一个基于快知的 Huginn Scenario</li>
+<li>"-n 晚点LatePost" 将这个 Scenario 命名为“晚点LatePost”，同时也设置了最后输出的 RSS 的标题</li>
+<li>"-i postlate" 指定这个公众号的微信 ID，会用在最终的 RSS URL 中，比如这里指定的是 postlate，假设 Huginn 服务的域名是 <a href="https://myhuginn.com">https://myhuginn.com</a> 那么最终的 RSS URL 可能是 <a href="https://myhuginn.com/users/1/web_requests/395/wx-postlate.xml">https://myhuginn.com/users/1/web_requests/395/wx-postlate.xml</a> —— 这里如果不在乎可维护性的话，不用公众号的微信 ID 也可以，给一个自己喜欢的英文 id 即可</li>
+<li>"&#x2013;kz-topic-id k69QJvO82RKoA" 这里指定“晚点LatePost”这个公众号在快知中的主题 ID，可以通过快知搜索到公众号后，分享链接到浏览器获得，比如“晚点LatePost”在快知中对应的主题链接是 <a href="https://kz.sync163.com/web/topic/k69QJvO82RKoA">https://kz.sync163.com/web/topic/k69QJvO82RKoA</a> ，那么主题 ID 就是尾部那串符号 "k69QJvO82RKoA"</li>
+<li>"-o postlate.json" 指定输出文件名，随意</li>
+</ul></li>
+
+<li>直接下载我准备好的 Huginn Scenario 文件 <a href="https://raw.githubusercontent.com/Linusp/zs/master/zs/rss/kz_scenario_template.json">kz_scenario_template.json</a> ，在 Huginn 中导入后再修改其中的设置</li>
+</ol>
+
+
+<p>
+基于快知的方案目前可用，但我并不看好这个方案，按照经验，这种做信息抓取的服务，总是存在风险的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0ab99c4" class="outline-2">
+<h2 id="org0ab99c4">基于 EFB 和 Telegram 的方案</h2>
+<div class="outline-text-2" id="text-org0ab99c4">
+<p>
+由于我一直使用 Linux 系统，工作中需要使用微信进行沟通的时候非常不方便，后来了解到 <a href="https://github.com/blueset/ehForwarderBot">EFB</a> 后就用它来把收到的微信消息转发到 Telegram，而 Telegram 是有 Linux 客户端的，这样我就能在 Linux 系统上查看微信消息了。
+</p>
+
+<p>
+EFB 本质上是在服务器上登录网页微信，然后监听网页微信上的消息来做转发，只要不去搞什么自动回复机器人之类的，那么在使用 EFB 的过程中，所有通过 EFB 收到的消息就是微信上好友、关注的公众号主动发过来的消息，通过 EFB 发送的消息也都是以个人身份发出去的，总之是一个正常用户的正常行为，并不会有封号之类的风险。我使用 EFB 已经有两年了，除了偶尔需要重新登录一下，并没有遇到什么大问题。
+</p>
+
+<p>
+使用 EFB 后可以在 Telegram 上收到我关注的公众号的更新消息，而 Telegram 的 API 是丰富易用，完全可以写点代码把 Telegram 上收到的公众号文章更新收集起来再转成 RSS。于是在即刻停止服务后，我就开始摸索出了一套新的方案，大致流程是这样的：
+</p>
+<ol class="org-ol">
+<li>写一个脚本，利用 Telegram 的 API，定时获取更新的公众号文章，并保存下来</li>
+<li>在 Huginn 上新建一个 WebhookAgent，它会提供一个对应的 webhooks</li>
+<li>将保存下来的公众号文章发往到 WebhookAgent，然后通过后续的其他 Agent 进行全文解析和 RSS 输出</li>
+</ol>
+
+<p>
+一个完整的 Scenario 是下面这个样子的：
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/huginn_efb_scenario.png" alt="huginn_efb_scenario.png" />
+</p>
+</div>
+
+<p>
+这个方案的好处有：
+</p>
+<ol class="org-ol">
+<li>不依赖除 Telegram 外的任何第三方服务，因此也不用担心反爬、服务停止等各种问题</li>
+<li>能获得极低延时的 RSS 更新</li>
+</ol>
+
+<p>
+不过相对的，这个方案的门槛也是最高的：
+</p>
+<ol class="org-ol">
+<li>需要自己部署 EFB 和 Huginn，其中 Huginn 虽然可以免费部署，但 EFB 却不行，所以至少需要一个 VPS</li>
+<li>需要熟悉 Telegram 的 API 并编写代码 —— 不过这块我已经做了，其他人有兴趣可以直接使用我的代码</li>
+<li>需要一个能登录网页微信的个人微信号，而 2017 年 9 月份之后注册的微信号已经无法登录网页微信</li>
+</ol>
+
+<p>
+这个方案的总体过程是这样的：
+</p>
+<ol class="org-ol">
+<li>部署 EFB，可参考小众软件的文章：<a href="https://www.appinn.com/efb-tutorial-with-docker/">EFB 简明安装教程：用 Telegram 收发微信</a></li>
+<li>在 Telegram 上新建一个频道，比如“微信.公众号”</li>
+<li><p>
+与 EFB 机器人对话，将需要输出 RSS 的公众号链接到刚才建立的频道，如 "/link 晚点LatePost"，这样该公众号的消息就会被 EFB 发送到这个频道了
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/telegram_linked_channel.png" alt="telegram_linked_channel.png" />
+</p>
+</div></li>
+
+<li><p>
+创建一个包含 WebhookAgent 的 Huginn Scenario，同样有两种方法
+</p>
+
+<ul class="org-ul">
+<li><p>
+第一种方法是安装我的项目 <a href="https://github.com/Linusp/zs/">zs</a>，然后执行下面的命令来生成 Scenario 文件
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">zs-rss gen-scenario -n &#26202;&#28857;LatePost -i postlate -o postlate.json
+</pre>
+</div>
+
+<p>
+参数含义同之前生成基于快知的 Scenario 时一样
+</p></li>
+
+<li>也可以直接下载我项目中提供的 Huginn Scenario 文件 <a href="https://raw.githubusercontent.com/Linusp/zs/master/zs/rss/efb_scenario_template.json">efb_scenario_template.json</a> 然后在 Huginn 中导入</li>
+</ul>
+
+<p>
+创建好 Huginn Scenario 后，点击进入“微信公众号 Webhooks”这个 Agent，获取 webhooks 链接，比如：<a href="https://myhuginn.com/users/1/web_requests/318/4SXo3X2T2X7HCDjv">https://myhuginn.com/users/1/web_requests/318/4SXo3X2T2X7HCDjv</a>
+</p></li>
+
+<li>在 VPS 或某台能 24 小时开机的机器上上新建定时任务
+
+<ul class="org-ul">
+<li>首先安装前面反复提到的我的个人项目 zs</li>
+<li><p>
+然后创建本地数据库，用来存储收集到的微信公众号文章更新
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">zs-rss create-db
+</pre>
+</div>
+
+<p>
+这条命令会在 $HOME/.zs/data 目录下新建一个数据文件 rss.db
+</p></li>
+
+<li><p>
+在 $HOME/.zs/config 目录下新建配置文件 rss.json，写入刚才获得的 webhooks 链接，如
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #16a085;">"huginn_webhooks"</span>: {
+        <span style="color: #16a085;">"default"</span>: <span style="color: #16a085;">"https://myhuginn.com/users/1/web_requests/372/d742b76e"</span>,
+        <span style="color: #16a085;">"&#26202;&#28857;LatePost"</span>: <span style="color: #16a085;">"https://myhuginn.com/users/1/web_requests/372/4SXo3X2T2X7HCDjv"</span>
+    }
+}
+</pre>
+</div>
+
+<p>
+这个配置的意思是，公众号“晚点LatePost”的更新发送到一个 webhooks，其他的发送到另外的 webhooks。如果每个公众号都要输出一个 RSS，那么就需要为每个公众号都设置一个 webhooks 链接；如果有多个公众号想要合并输出一个 RSS，那么可以不设置 webhooks 而使用 default 对应的 webhooks。
+</p></li>
+
+<li><p>
+使用 <a href="http://man7.org/linux/man-pages/man1/crontab.1.html">crontab</a> 新增两条定时任务
+</p>
+
+<pre class="example">
+7,17,27,37,47,57 * * * * zs-rss fetch-wx-articles -n 微信.公众号 &gt;&gt; log.txt
+*/10 * * * * zs-rss send-wx-articles &gt;&gt; log.txt
+</pre>
+
+<p>
+具体的时间频率可以自己调整。
+</p>
+
+<p>
+其中第一条定时任务需要 Telegram 的授权认证，具体来说是需要在 $HOME/.zs/config/telegram.json 中有如下内容
+</p>
+<div class="org-src-container">
+<pre class="src src-js">{
+    <span style="color: #16a085;">"api_id"</span>: <span style="color: #16a085;">"561071"</span>,
+    <span style="color: #16a085;">"api_hash"</span>: <span style="color: #16a085;">"22691769c5decd501fd49d96ecff58e3"</span>,
+    <span style="color: #16a085;">"session"</span>: <span style="color: #16a085;">"AUTHENTICATION SESSION CODE"</span>
+}
+</pre>
+</div>
+
+<p>
+其中 "api_id" 和 "api_hash" 可以在 <a href="https://my.telegram.org/">https://my.telegram.org/</a> 上获取，而 session 的值会在第一次运行时生成并自动写入到上面的配置文件里。
+</p></li>
+</ul></li>
+</ol>
+
+<p>
+目前 zs 这个项目仅考虑了我自己的需求，所以设计未必很合理，如果有开发能力的话可以参考我的代码自行更改、增加功能。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7aff131" class="outline-2">
+<h2 id="org7aff131">其他参考方案</h2>
+<div class="outline-text-2" id="text-org7aff131">
+<p>
+如果不想折腾，也有一定的经济来源，可以考虑一些付费服务，比如：
+</p>
+<ol class="org-ol">
+<li><a href="http://www.jintiankansha.me/">今天看啥</a>：以前可以免费订阅若干个公众号的，现在必须付费了，价格见<a href="http://www.jintiankansha.me/about/rss">今天看啥-RSS订阅方法</a></li>
+<li><a href="https://werss.app">WeRss</a>：免费试用三天，试用期间可订阅 8 个公众号，具体价格见<a href="https://werss.app/price/">WeRss 付费价格</a></li>
+</ol>
+
+<p>
+另外，<a href="http://kindle4rss.com/">Kindle4rss</a> 上面有不少热门的微信公众号全文 RSS，我大致数了下差不多有 100 个，如下图所示：
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/kindle4rss_feeds.png" alt="kindle4rss_feeds.png" />
+</p>
+</div>
+
+<p>
+Kindle4rss 的免费用户可以有 12 个订阅，付费价格也不贵，一年 36 人民币就可以订阅 300 个源，比前面两个便宜多了，而且这个服务存在很多年了，可以说一直很稳定，非常推荐。
+</p>
+
+<p>
+此外 RSSHub 也有微信公众号支持，见<a href="https://docs.rsshub.app/new-media.html#wei-xin">文档</a>。在 RSSHub 里支持了六种方案，分别是：
+</p>
+<ol class="org-ol">
+<li>基于 <a href="https://wemp.app/">WeMP</a> 的方案</li>
+<li>基于<a href="https://chuansongme.com/">传送门</a>的方案</li>
+<li>基于北美生活引擎 <a href="https://careerengine.us/about">CareerEngine</a> 的方案</li>
+<li>基于微信公众号数据分析平台<a href="https://www.ershicimi.com/">二十次幂</a>的方案</li>
+<li>基于知识管理工具<a href="https://uread.ai/">优读</a>的方案</li>
+<li>基于 EFB 和 Telegram 的方案</li>
+</ol>
+
+<p>
+RSSHub 的前五个方案都是基于一些第三方信息抓取服务的，相对来说非常易用，但仍然存在第三方服务被关停的风险，最后那个方案和我的第三个方案类似，只不过把 Huginn 替换成了 RSSHub。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org19ab5b2" class="outline-2">
+<h2 id="org19ab5b2">后记</h2>
+<div class="outline-text-2" id="text-org19ab5b2">
+<p>
+也许有人会说微信就是个大毒瘤我就不看微信公众号，但确实有一些很好的作者只在微信公众号上写作，还有很多博客时代的知名写作者也迁移到了微信公众号上，原来的博客不再更新甚至不可访问了，加上微信生态的封闭，所以一个微信公众号文章的抓取和开放访问需求始终是存在的，也因此各种第三方抓取服务层出不穷。厌恶微信到完全不想碰微信产品包括微信公众号的人自然是有的，但既然大众的需求存在，我想也没什么好争辩的，每个人都有自己选择的自由。虽说如此，在看到一个好的公众号的时候，也不妨先去了解一下作者是否有同步更新的独立博客或知乎专栏，如果有的话还是更推荐去订阅其博客或知乎专栏等更开放的文章来源。
+</p>
+</div>
+</div>
