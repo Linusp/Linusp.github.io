@@ -86,11 +86,11 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </p>
 
 <p>
-和 IFTTT 不同的是，Huginn 需要自己部署，很多细节需要自己定制，因此在使用门槛上会高很多。想尝试一下的话，可以参考<a href="https://github.com/huginn/huginn#heroku">文档</a>一键免费部署 Huginn 到 PaaS 平台 <a href="http://heroku.com/">Heroku</a> 上，对于轻度是用来说足够了。
+和 IFTTT 不同的是，Huginn 需要自己部署，很多细节需要自己定制，因此在使用门槛上会高很多。想尝试一下的话，可以参考<a href="https://github.com/huginn/huginn#heroku">文档</a>一键免费部署 Huginn 到 PaaS 平台 <a href="http://heroku.com/">Heroku</a> 上，轻度使用的话足够了。
 </p>
 
 <p>
-由于本文的目的并不是专门介绍 Huginn，如果读者想了解更多关于 Huginn 的内容，可以自行搜索、阅读文档和相关资料。
+本文的目的并不是专门介绍 Huginn，如果读者想了解更多关于 Huginn 的内容，可以自行搜索、阅读文档和相关资料。
 </p>
 </div>
 </div>
@@ -135,7 +135,7 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 <h2 id="orgeb00ac2">基于即刻/快知和 RSSHub 的方案</h2>
 <div class="outline-text-2" id="text-orgeb00ac2">
 <p>
-<a href="https://baike.baidu.com/item/%E5%8D%B3%E5%88%BB/18672117">即刻</a>上线机器人功能后，用户就可以自定义微信公众号机器人来抓取任意公众号并生成一个主题了，而即刻的每个主题，又是存在公开 WEB 链接的，所以就可以用 Huginn 解析一个即刻的公众号主题页面，来获取一个公众号的文章列表更新了。而后来 RSSHub 又能直接输出一个即刻主题的 RSS，所以这个流程又能进一步简化一下，省略掉解析极客主题页面这一步，直接从 RSSHub 输出的 RSS 中，进一步解析出公众号文章的原始链接并抓取全文了。
+<a href="https://baike.baidu.com/item/%E5%8D%B3%E5%88%BB/18672117">即刻</a>上线机器人功能后，用户就可以自定义微信公众号机器人来抓取任意公众号并生成一个主题了，而即刻的每个主题，又是存在公开 WEB 链接的，所以就可以用 Huginn 解析一个即刻的公众号主题页面，来获取一个公众号的文章列表更新了。而后来 RSSHub 又能直接输出一个即刻主题的 RSS，所以这个流程又能进一步简化一下，省略掉解析即刻主题页面这一步，直接从 RSSHub 输出的 RSS 中，进一步解析出公众号文章的原始链接并抓取全文了。
 </p>
 
 <p>
@@ -202,7 +202,7 @@ EFB 本质上是在服务器上登录网页微信，然后监听网页微信上�
 </p>
 
 <p>
-使用 EFB 后可以在 Telegram 上收到我关注的公众号的更新消息，而 Telegram 的 API 是丰富易用，完全可以写点代码把 Telegram 上收到的公众号文章更新收集起来再转成 RSS。于是在即刻停止服务后，我就开始摸索出了一套新的方案，大致流程是这样的：
+使用 EFB 后可以在 Telegram 上收到我关注的公众号的更新消息，而 Telegram 的 API 丰富易用，完全可以写点代码把 Telegram 上收到的公众号文章更新收集起来再转成 RSS。于是在即刻停止服务后，我就开始摸索出了一套新的方案，大致流程是这样的：
 </p>
 <ol class="org-ol">
 <li>写一个脚本，利用 Telegram 的 API，定时获取更新的公众号文章，并保存下来</li>
