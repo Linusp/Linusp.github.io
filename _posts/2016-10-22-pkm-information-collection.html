@@ -1,54 +1,38 @@
 ---
-layout: post
-title: '个人知识管理系统(二): 信息的取舍与收集'
-categories: 生活
-tags:
-  - pkm
-  - rss
-comments:
-  - author:
-      type: full
-      displayName: Linusp
-      url: 'https://github.com/Linusp'
-      picture: 'https://avatars0.githubusercontent.com/u/1883870?v=3&s=73'
-    content: test
-    date: 2017-04-18T15:18:41.153Z
-  - author:
-      type: full
-      displayName: Linusp
-      url: 'https://github.com/Linusp'
-      picture: 'https://avatars0.githubusercontent.com/u/1883870?v=3&s=73'
-    content: test2
-    date: 2017-04-18T15:47:16.328Z
-
+layout     : post
+title      : "个人知识管理系统(二): 信息的取舍与收集"
+categories : 生活
+tags       :
+- pkm
+- RSS
 ---
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">信息的取舍</a></li>
-<li><a href="#orgheadline2">信息的收集</a>
+<li><a href="#org519d91e">信息的取舍</a></li>
+<li><a href="#org263dff2">信息的收集</a>
 <ul>
-<li><a href="#orgheadline3">RSS 和「即刻」</a></li>
-<li><a href="#orgheadline4">Feed43: 从静态网站生成 RSS 输出</a></li>
-<li><a href="#orgheadline5">微广场: 从微信公众号、知乎、简书、百度百家生成 RSS 输出</a></li>
-<li><a href="#orgheadline6">微博看看: 从微博用户的 feed 流生成 RSS 输出</a></li>
-<li><a href="#orgheadline7">Huginn: 从任意网站生成 RSS 输出</a></li>
+<li><a href="#org7f79f5c">RSS 和「即刻」</a></li>
+<li><a href="#org604dd48">Feed43: 从静态网站生成 RSS 输出</a></li>
+<li><a href="#org845e4c0">微广场: 从微信公众号、知乎、简书、百度百家生成 RSS 输出</a></li>
+<li><a href="#org56e1826">微博看看: 从微博用户的 feed 流生成 RSS 输出</a></li>
+<li><a href="#orge5f5ea8">Huginn: 从任意网站生成 RSS 输出</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<hr  />
+<hr />
 
 <p>
 接上一篇 <a href="http://www.zmonster.me/2016/10/11/pkm-design-overview.html">《个人知识管理系统(一): 概述》</a> ，本篇主要谈一下我是如何对信息进行取舍和收集的。
 </p>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">信息的取舍</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org519d91e" class="outline-2">
+<h2 id="org519d91e">信息的取舍</h2>
+<div class="outline-text-2" id="text-org519d91e">
 <p>
 前文已经提过，信息的取舍是建立整个系统的第一步。而信息取舍也是分阶段的: 最初的阶段，剔除对个人来说无用的信息；第二个阶段，区分有用信息的重要程度，只保留重要的信息。
 </p>
@@ -151,12 +135,13 @@ comments:
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">信息的收集</h2>
-<div class="outline-text-2" id="text-orgheadline2">
-</div><div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">RSS 和「即刻」</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-org263dff2" class="outline-2">
+<h2 id="org263dff2">信息的收集</h2>
+<div class="outline-text-2" id="text-org263dff2">
+</div>
+<div id="outline-container-org7f79f5c" class="outline-3">
+<h3 id="org7f79f5c">RSS 和「即刻」</h3>
+<div class="outline-text-3" id="text-org7f79f5c">
 <p>
 我主要使用 RSS 阅读器来收集、汇总不同的信息源。
 </p>
@@ -193,15 +178,15 @@ RSS 阅读器我用 Inoreader，再加上即刻，这就是我使用且仅使用
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">Feed43: 从静态网站生成 RSS 输出</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org604dd48" class="outline-3">
+<h3 id="org604dd48">Feed43: 从静态网站生成 RSS 输出</h3>
+<div class="outline-text-3" id="text-org604dd48">
 <p>
 前文也说了，RSS 只是一种信息标准，信息源如果有提供 RSS 输出，那当然是最好的，如果没有，那么只要用一些方法将内容从信息源中「抽取」出来，然后按照 RSS 的格式组织好，不就生成了一个 RSS 输出结果吗？没错，任何一个可以公开访问的信息源，理论上都能转换为 RSS 输出，基本步骤就是「内容抽取-格式转换」两个步骤，由于 RSS 的格式是标准的，格式转换这一步没有太多难度，因此将一个网站的内容转换成 RSS 输出，主要的难度在内容抽取上。
 </p>
 
 <p>
-最简单的一种情况是静态网站，所谓静态网站，是指访问的网页内容就是一个对不同的人来说内容不变的网页文件，这种网站上的内容访问不受限制，比如说不需要登录啊之类的，因此可以很简单地完成内容抽取这一步。而 <a href="http://feed43.com/">Feed43</a> 就是这样一个用来从静态网站中生成 RSS 输出的工具。
+最简单的一种情况是静态网站，所谓静态网站，是指访问的网页内容就是一个对不同的人来说内容不变的网页文件，这种网站上的内容访问不受限制，比如说不需要登录啊之类的，因此可以很简单地完成内容抽取这一步。而 <a href="http://feed43.com">Feed43</a> 就是这样一个用来从静态网站中生成 RSS 输出的工具。
 </p>
 
 <p>
@@ -261,9 +246,9 @@ Feed43 的使用需要一点 HTML/CSS 的知识，稍微有点门槛，如果没
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">微广场: 从微信公众号、知乎、简书、百度百家生成 RSS 输出</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org845e4c0" class="outline-3">
+<h3 id="org845e4c0">微广场: 从微信公众号、知乎、简书、百度百家生成 RSS 输出</h3>
+<div class="outline-text-3" id="text-org845e4c0">
 <p>
 微信公众号是一个封闭的内容平台，对于想使用 RSS 阅读器来聚合信息的人来说可能是一个难以割舍的信息来源。而微广场对此提供服务，从微信公众号、知乎、简书等站点生成 RSS 输出，这样就可以把订阅的一堆微信公众号以及知乎上关注的很多专栏都整合进 RSS 阅读器里了。
 </p>
@@ -284,9 +269,9 @@ Feed43 的使用需要一点 HTML/CSS 的知识，稍微有点门槛，如果没
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">微博看看: 从微博用户的 feed 流生成 RSS 输出</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-org56e1826" class="outline-3">
+<h3 id="org56e1826">微博看看: 从微博用户的 feed 流生成 RSS 输出</h3>
+<div class="outline-text-3" id="text-org56e1826">
 <p>
 「微博看看」原名「微博档案」，是一个微博备份工具，同时提供 RSS 输出。我原先在微博上关注了不少做机器学习、深度学习方面的微博用户，但他们的 feed 流经常被我关注的其他微博用户的 feed 流打乱，有了微博看看后我就取关了这些微博用户，在 RSS 阅读器里看他们输出的内容了，目前只对「爱可可-爱生活」老师的 feed 流做了转换。
 </p>
@@ -299,9 +284,9 @@ Feed43 的使用需要一点 HTML/CSS 的知识，稍微有点门槛，如果没
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">Huginn: 从任意网站生成 RSS 输出</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-orge5f5ea8" class="outline-3">
+<h3 id="orge5f5ea8">Huginn: 从任意网站生成 RSS 输出</h3>
+<div class="outline-text-3" id="text-orge5f5ea8">
 
 <div class="figure">
 <p><img src="/assets/img/huginn.png" alt="huginn.png" width="30%" />
@@ -332,7 +317,7 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </div>
 
 <p>
-上图来自 <a href="http://www.jianshu.com/p/4a47e452abc9">Huginn:烧录RSS的神器</a> 一文，该文对 Huginn 的使用做了很详细的介绍。
+上图来自 <a href="https://web.archive.org/web/20170315013204/http://www.jianshu.com/p/4a47e452abc9">Huginn:烧录RSS的神器</a> 一文，该文对 Huginn 的使用做了很详细的介绍。
 </p>
 
 <p>
