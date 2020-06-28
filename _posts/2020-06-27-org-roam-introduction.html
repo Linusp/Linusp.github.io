@@ -12,6 +12,7 @@ tags       :
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#orga7b35dc">前言</a></li>
+<li><a href="#org575209e">环境说明</a></li>
 <li><a href="#orge3ac302">安装及初步配置</a></li>
 <li><a href="#org8ca3405">org-roam 的基本使用</a></li>
 <li><a href="#orgbf7c137">org-roam 进阶</a>
@@ -49,6 +50,21 @@ Roam Research 这类工具中的理念，叫做卡片盒笔记法，本文无意
 <li>org-roam 复用了 org-capture 的强大功能，使得我们可以自定义各种笔记模板来更好地表示、呈现知识</li>
 <li>org-roam-server 提供的笔记网络可视化界面和 org-roam 深度集成，点击界面上的笔记节点就能在 Emacs 中打开对应的笔记</li>
 </ol>
+</div>
+</div>
+
+<div id="outline-container-org575209e" class="outline-2">
+<h2 id="org575209e">环境说明</h2>
+<div class="outline-text-2" id="text-org575209e">
+<ul class="org-ul">
+<li>操作系统： Ubuntu 16.04</li>
+<li>Emacs 版本： GNU Emacs 26.1</li>
+<li>org-mode 版本： 9.3.7</li>
+<li>org-roam 版本： 开发版 20200615</li>
+<li>org-roam-server 版本： 开发版 20200621</li>
+<li>浏览器： Firefox/Chrome</li>
+<li>GIF 录制工具： <a href="https://linux.die.net/man/1/byzanz-record">byzanz-record</a></li>
+</ul>
 </div>
 </div>
 
@@ -269,6 +285,16 @@ Roam Research 这类工具中的理念，叫做卡片盒笔记法，本文无意
 <p>
 上图和步骤 3 一样执行的是 org-roam-insert，但从图上右侧可以看到，只是已有的两个节点之间产生了一条关联，并没有新的节点产生。
 </p></li>
+
+<li><p>
+使用 org-roam 展示笔记的 backlinks
+</p>
+
+
+<div class="figure">
+<p><img src="/assets/img/org-roam-show-backlinks.gif" alt="org-roam-show-backlinks.gif" />
+</p>
+</div></li>
 
 <li><p>
 用 org-roam-capture 在已有笔记中新增内容
