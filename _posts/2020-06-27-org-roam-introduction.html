@@ -97,16 +97,16 @@ Roam Research 这类工具中的理念，叫做卡片盒笔记法，本文无意
 </div>
 
 <p>
-然后设置并启动 org-roam-server 来监听笔记的变化并进行可视化
+然后设置并启动 org-roam-server 来监听笔记的变化并进行可视化（见<a href="https://github.com/org-roam/org-roam-server#installation">org-roam-server 安装说明</a>）
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> org-roam-server-host <span style="color: #66cccc;">"127.0.0.1"</span>
       org-roam-server-port 9090
       org-roam-server-export-inline-images t
       org-roam-server-authenticate nil
-      org-roam-server-label-truncate t
-      org-roam-server-label-truncate-length 60
-      org-roam-server-label-wrap-length 20)
+      org-roam-server-network-label-truncate t
+      org-roam-server-network-label-truncate-length 60
+      org-roam-server-network-label-wrap-length 20)
 (org-roam-server-mode)
 </pre>
 </div>
@@ -134,7 +134,7 @@ Roam Research 这类工具中的理念，叫做卡片盒笔记法，本文无意
 </div>
 
 <p>
-这个 org-roam-protocol 是使用 org-protocol 实现的，依赖操作系统的相关功能，相关设置参考<a href="https://orgmode.org/worg/org-contrib/org-protocol.html">文档</a>。
+这个 org-roam-protocol 是使用 org-protocol 实现的，依赖操作系统的相关功能，相关设置参考<a href="https://www.orgroam.com/manual/Installation-_00281_0029.html">文档</a>。
 </p>
 
 <p>
@@ -581,7 +581,7 @@ org-roam 中新建笔记一般都是以一个新文件的形式来创建的，�
 </p>
 
 <p>
-这个设置用来在新建笔记文件时设置初始内容，只会执行一次，也就是说之后如果使用 org-roam-capture 新增内容带已有笔记中时，这个设置的内容是不会再写入到文件中的。
+这个设置用来在新建笔记文件时设置初始内容，只会执行一次，也就是说之后如果使用 org-roam-capture 新增内容到已有笔记中时，这个设置的内容是不会再写入到文件中的。
 </p>
 
 <p>
@@ -694,7 +694,7 @@ org-roam 的笔记模板是利用 <a href="https://orgmode.org/manual/Capture.ht
 <h3 id="org6fd36c4">实现网页内容摘录</h3>
 <div class="outline-text-3" id="text-org6fd36c4">
 <p>
-这部分内容需要 org-protocol，后续内容是在 org-protocol 已经设置好的基础上展开的，如果 org-protocol 设置存在问题，请查阅<a href="https://orgmode.org/worg/org-contrib/org-protocol.html">文档</a>，或这评论区留言来讨论。
+这部分内容需要 org-protocol，后续内容是在 org-protocol 已经设置好的基础上展开的，如果 org-protocol 设置存在问题，请查阅<a href="https://www.orgroam.com/manual/Installation-_00281_0029.html">文档</a>，或这评论区留言来讨论。
 </p>
 
 <p>
@@ -762,7 +762,7 @@ org-roam 的笔记模板是利用 <a href="https://orgmode.org/manual/Capture.ht
 </div></li>
 
 <li><p>
-第三部分获取一些网页的信息，并设置到变量中，共模板填充使用
+第三部分获取一些网页的信息，并设置到变量中，供模板填充使用
 </p>
 
 <div class="org-src-container">
