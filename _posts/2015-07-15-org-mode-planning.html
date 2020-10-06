@@ -1,38 +1,48 @@
 ---
 layout     : post
-title      : "强大的Org mode(2):任务管理"
+title      : "强大的 Org mode(2): 任务管理"
 categories : Emacs
 tags       : org-mode
 description:
 ---
-
 <div id="table-of-contents">
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">基本的任务管理</a></li>
-<li><a href="#orgheadline2">自定义状态序列</a>
+<li><a href="#org3b3f517">基本的任务管理</a></li>
+<li><a href="#orgb56e62e">自定义状态序列</a>
 <ul>
-<li><a href="#orgheadline3">添加新的状态</a></li>
-<li><a href="#orgheadline4">为状态设置不同外观</a></li>
-<li><a href="#orgheadline5">多个终结状态及快速选择</a></li>
-<li><a href="#orgheadline6">进入与离开时的额外操作</a></li>
+<li><a href="#org3793ce6">添加新的状态</a></li>
+<li><a href="#orgb51e4aa">为状态设置不同外观</a></li>
+<li><a href="#org8cc7568">多个终结状态及快速选择</a></li>
+<li><a href="#orgd74fcca">进入与离开时的额外操作</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline7">基于列表的任务</a></li>
-<li><a href="#orgheadline8">子任务、任务进度与任务依赖</a></li>
+<li><a href="#org9676ddb">基于列表的任务</a></li>
+<li><a href="#org99414a4">子任务、任务进度与任务依赖</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">基本的任务管理</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+
+<p>
+本文是《强大的 Org mode》系列的第二篇文章，系列文章如下：
+</p>
+<ol class="org-ol">
+<li><a href="https://www.zmonster.me/2015/07/12/org-mode-introduction.html">强大的 Org mode(1): 简单介绍与基本使用 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2015/07/15/org-mode-planning.html">强大的 Org mode(2): 任务管理 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2016/06/03/org-mode-table.html">强大的 Org mode(3): 表格的基本操作及公式、绘图 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2018/02/28/org-mode-capture.html">强大的 Org mode(4): 使用 capture 功能快速记录 · ZMonster's Blog</a></li>
+</ol>
+
+<div id="outline-container-org3b3f517" class="outline-2">
+<h2 id="org3b3f517">基本的任务管理</h2>
+<div class="outline-text-2" id="text-org3b3f517">
 <p>
 在 Org mode 中，可以在 headline 的星号与内容之间插入特定的表示进度的关键词，来将一个 headline 标记为一个任务(Plan)，默认情况下，支持两个关键词，分别是 "TODO" 和 "DONE"。当一个 headline 作为一个任务时，一方面标示其状态的关键词会被高亮(如下图所示)，另一方面 Org mode 提供了一组完善的功能来对这些任务进行处理。
 </p>
 
 
-<div class="figure">
+<div id="org0f0d255" class="figure">
 <p><img src="/assets/img/org-task-status.png" alt="org-task-status.png" />
 </p>
 </div>
@@ -84,7 +94,7 @@ description:
 </p>
 
 
-<div class="figure">
+<div id="orgf0f532e" class="figure">
 <p><img src="/assets/img/org-task-status-change.gif" alt="org-task-status-change.gif" />
 </p>
 </div>
@@ -131,18 +141,19 @@ description:
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">自定义状态序列</h2>
-<div class="outline-text-2" id="text-orgheadline2">
-</div><div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">添加新的状态</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgb56e62e" class="outline-2">
+<h2 id="orgb56e62e">自定义状态序列</h2>
+<div class="outline-text-2" id="text-orgb56e62e">
+</div>
+<div id="outline-container-org3793ce6" class="outline-3">
+<h3 id="org3793ce6">添加新的状态</h3>
+<div class="outline-text-3" id="text-org3793ce6">
 <p>
 上一节提到，默认情况下，Org mode 接受的任务状态关键词只有 "TODO" 和 "DONE" 两个，分别表示 "待办" 与 "完成"。这样的分类对于一些不可再分的小任务，当然是足够用的，但有时候需要设置更为丰富的任务状态，如添加一个表示 "正在进行" 状态的关键词 "DOING"，在不进行设置的情况下，这个关键词是无法高亮的:
 </p>
 
 
-<div class="figure">
+<div id="orge25606d" class="figure">
 <p><img src="/assets/img/org-task-add-doing.png" alt="org-task-add-doing.png" />
 </p>
 </div>
@@ -152,7 +163,7 @@ description:
 </p>
 
 
-<div class="figure">
+<div id="org62561a5" class="figure">
 <p><img src="/assets/img/org-task-status-doing-ignored.gif" alt="org-task-status-doing-ignored.gif" />
 </p>
 </div>
@@ -165,8 +176,7 @@ description:
 Org mode 中有一个变量 <b>org-todo-keywords</b> 存储着作用于全局的状态序列，它的默认值是:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">'((sequence <span style="color: #ad7fa8;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #ad7fa8;">"</span> <span style="color: #ad7fa8;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #ad7fa8;">"</span>))
+<pre class="src src-emacs-lisp">'((sequence <span style="color: #66cccc;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;">"</span> <span style="color: #66cccc;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #66cccc;">"</span>))
 </pre>
 </div>
 <p>
@@ -177,14 +187,13 @@ Org mode 中有一个变量 <b>org-todo-keywords</b> 存储着作用于全局的
 需要注意的是，状态序列在定义时的顺序是从左至右有序的，最后一个关键词会被认为是 <b>表示任务终结</b> 的关键词。所以如果要添加 "DOING" 这个状态，应该像下面这样进行设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #ad7fa8;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #ad7fa8;">"</span> <span style="color: #ad7fa8;">"DOING"</span> <span style="color: #ad7fa8;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #ad7fa8;">"</span>)))
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-todo-keywords '((sequence <span style="color: #66cccc;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;">"</span> <span style="color: #66cccc;">"DOING"</span> <span style="color: #66cccc;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #66cccc;">"</span>)))
 </pre>
 </div>
 <p>
 默认情况下表示非终结状态的关键词与表示终结的关键词的高亮颜色是不一样的，而且在更改为终结状态时，会在任务下添加一条下面这样的标记。
 </p>
-<pre class="example">
+<pre class="example" id="org1f12d6e">
 CLOSED: [2015-07-15 三 23:20]
 </pre>
 <p>
@@ -192,7 +201,7 @@ CLOSED: [2015-07-15 三 23:20]
 </p>
 
 
-<div class="figure">
+<div id="org8362bf8" class="figure">
 <p><img src="/assets/img/org-task-wrong-status.png" alt="org-task-wrong-status.png" />
 </p>
 </div>
@@ -201,24 +210,22 @@ CLOSED: [2015-07-15 三 23:20]
 如果只想在某个文件中为其设置独有的关键词序列，那么可以在org文件的头部用"#+SEQ_TODO"来进行设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+SEQ_TODO: TODO DOING DONE</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+SEQ_TODO: TODO DOING DONE</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">为状态设置不同外观</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-orgb51e4aa" class="outline-3">
+<h3 id="orgb51e4aa">为状态设置不同外观</h3>
+<div class="outline-text-3" id="text-orgb51e4aa">
 <p>
 之前提到，Org mode 在高亮时只区分非终结状态与终结状态，但如果各个状态都能以不同的颜色显示，那肯定能让任务的状态更加一目了然。通过修改 <b>org-todo-keyword-faces</b> 这个变量可以达到这个目的。例如我们希望 "TODO" 以红色显示，"DOING" 以黄色显示，"DONE" 用绿色显示，就可以这样设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-todo-keyword-faces '((<span style="color: #ad7fa8;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #ad7fa8;">"</span> . <span style="color: #ad7fa8;">"red"</span>)
-                               (<span style="color: #ad7fa8;">"DOING"</span> . <span style="color: #ad7fa8;">"yellow"</span>)
-                               (<span style="color: #ad7fa8;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #ad7fa8;">"</span> . <span style="color: #ad7fa8;">"green"</span>)))
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-todo-keyword-faces '((<span style="color: #66cccc;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;">"</span> . <span style="color: #66cccc;">"red"</span>)
+                               (<span style="color: #66cccc;">"DOING"</span> . <span style="color: #66cccc;">"yellow"</span>)
+                               (<span style="color: #66cccc;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #66cccc;">"</span> . <span style="color: #66cccc;">"green"</span>)))
 </pre>
 </div>
 
@@ -227,23 +234,22 @@ CLOSED: [2015-07-15 三 23:20]
 </p>
 
 
-<div class="figure">
+<div id="org82f33ab" class="figure">
 <p><img src="/assets/img/org-todo-keywords-face.png" alt="org-todo-keywords-face.png" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">多个终结状态及快速选择</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org8cc7568" class="outline-3">
+<h3 id="org8cc7568">多个终结状态及快速选择</h3>
+<div class="outline-text-3" id="text-org8cc7568">
 <p>
 前面所以说 "终结状态" 而不说 "完成状态"，是因为 "终结状态" 可能有不止一种，比如在表示正常完成的状态外，还可以有表示异常中止的状态。当有多个表示终结的状态时，相应的关键词要处于关键词序列的尾部，并且用"|"和非终结状态分隔开来，也就是这样:
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #ad7fa8;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #ad7fa8;">"</span> <span style="color: #ad7fa8;">"DOING"</span> <span style="color: #ad7fa8;">"|"</span> <span style="color: #ad7fa8;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #ad7fa8;">"</span> <span style="color: #ad7fa8;">"ABORT"</span>)))
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-todo-keywords '((sequence <span style="color: #66cccc;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;">"</span> <span style="color: #66cccc;">"DOING"</span> <span style="color: #66cccc;">"|"</span> <span style="color: #66cccc;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #66cccc;">"</span> <span style="color: #66cccc;">"ABORT"</span>)))
 </pre>
 </div>
 
@@ -251,8 +257,7 @@ CLOSED: [2015-07-15 三 23:20]
 若在文件中进行设置，则是:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+SEQ_TODO: TODO DOING | DONE ABORT</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+SEQ_TODO: TODO DOING | DONE ABORT</span>
 </pre>
 </div>
 
@@ -269,8 +274,7 @@ CLOSED: [2015-07-15 三 23:20]
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-use-fast-todo-selection t)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-use-fast-todo-selection t)
 </pre>
 </div>
 
@@ -278,16 +282,14 @@ CLOSED: [2015-07-15 三 23:20]
 然后在定义关键词序列时，在每个关键词后跟随括号并在其中指定快速选择键，如:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-todo-keywords '((sequence <span style="color: #ad7fa8;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #ad7fa8;">(t)"</span> <span style="color: #ad7fa8;">"DOING(i)"</span> <span style="color: #ad7fa8;">"|"</span> <span style="color: #ad7fa8;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #ad7fa8;">(d)"</span> <span style="color: #ad7fa8;">"ABORT(a)"</span>)))
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-todo-keywords '((sequence <span style="color: #66cccc;">"</span><span style="color: #cc9393;">TODO</span><span style="color: #66cccc;">(t)"</span> <span style="color: #66cccc;">"DOING(i)"</span> <span style="color: #66cccc;">"|"</span> <span style="color: #66cccc;">"</span><span style="color: #afd8af;">DONE</span><span style="color: #66cccc;">(d)"</span> <span style="color: #66cccc;">"ABORT(a)"</span>)))
 </pre>
 </div>
 <p>
 或在文件头部设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+SEQ_TODO: TODO(t) DOING(i) | DONE(d) ABORT(a)</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+SEQ_TODO: TODO(t) DOING(i) | DONE(d) ABORT(a)</span>
 </pre>
 </div>
 
@@ -296,16 +298,16 @@ CLOSED: [2015-07-15 三 23:20]
 </p>
 
 
-<div class="figure">
+<div id="orgc929863" class="figure">
 <p><img src="/assets/img/org-task-fast-select.gif" alt="org-task-fast-select.gif" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">进入与离开时的额外操作</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-orgd74fcca" class="outline-3">
+<h3 id="orgd74fcca">进入与离开时的额外操作</h3>
+<div class="outline-text-3" id="text-orgd74fcca">
 <p>
 除了上述内容以外，Org mode 还允许定义进入状态和离开状态时的额外动作，可用的动作包含两个:
 </p>
@@ -317,7 +319,7 @@ CLOSED: [2015-07-15 三 23:20]
 <p>
 这个通过定义带快速选择键的关键词时，在快速选择键后用"X/Y"来表示，X表示进入该状态时的动作，Y表示离开该状态时的动作。对于一个状态(以"DONE"为例)，以下形式都是合法的:
 </p>
-<pre class="example">
+<pre class="example" id="org968a9cb">
 DONE(d@)       ; 进入时添加笔记
 DONE(d/!)      ; 离开时添加变更信息
 DONE(d@/!)     ; 进入时添加笔记，离开时添加变更信息
@@ -326,7 +328,7 @@ DONE(d@/!)     ; 进入时添加笔记，离开时添加变更信息
 <p>
 而这个是不合法的:
 </p>
-<pre class="example">
+<pre class="example" id="org7c864a0">
 DONE(d@/)
 </pre>
 
@@ -335,7 +337,7 @@ DONE(d@/)
 </p>
 
 
-<div class="figure">
+<div id="orgec1f163" class="figure">
 <p><img src="/assets/img/org-task-changing-action.gif" alt="org-task-changing-action.gif" />
 </p>
 </div>
@@ -343,15 +345,15 @@ DONE(d@/)
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7">基于列表的任务</h2>
-<div class="outline-text-2" id="text-orgheadline7">
+<div id="outline-container-org9676ddb" class="outline-2">
+<h2 id="org9676ddb">基于列表的任务</h2>
+<div class="outline-text-2" id="text-org9676ddb">
 <p>
 除了基于 headline 的任务管理外，Org mode 还提供基于列表的任务管理，即将每个列表项作为任务，方法是在列表标记与列表项内容之间添加一个 "[ ]" 标记(注意中间包含一个字符的预留位置)，这个标记在 Org mode 中被称为 <b>checkbox</b> 。这种任务只有三种状态(待办、进行中和完成)，分别用 "[ ]", "[-]" 和 "[X]" 表示，如下图所示:
 </p>
 
 
-<div class="figure">
+<div id="org4966140" class="figure">
 <p><img src="/assets/img/org-checkbox-task.png" alt="org-checkbox-task.png" />
 </p>
 </div>
@@ -401,9 +403,9 @@ checkbox 任务相对来说更轻量、简洁一些，自然也会有人群更�
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8">子任务、任务进度与任务依赖</h2>
-<div class="outline-text-2" id="text-orgheadline8">
+<div id="outline-container-org99414a4" class="outline-2">
+<h2 id="org99414a4">子任务、任务进度与任务依赖</h2>
+<div class="outline-text-2" id="text-org99414a4">
 <p>
 在之前本文提到过 "子任务" 这个概念，这个在 Org mode 里的表现形式是很简单的:
 </p>
@@ -421,7 +423,7 @@ checkbox 任务相对来说更轻量、简洁一些，自然也会有人群更�
 </p>
 
 
-<div class="figure">
+<div id="orgbe921eb" class="figure">
 <p><img src="/assets/img/org-task-update-cookie.gif" alt="org-task-update-cookie.gif" />
 </p>
 </div>
@@ -438,8 +440,7 @@ checkbox 任务相对来说更轻量、简洁一些，自然也会有人群更�
 不过以上两种行为默认是被关闭的，如果要开启这些功能，要对变量 <b>org-enforce-todo-dependencies</b> 进行设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-enforce-todo-dependencies t)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-enforce-todo-dependencies t)
 </pre>
 </div>
 
@@ -448,7 +449,7 @@ checkbox 任务相对来说更轻量、简洁一些，自然也会有人群更�
 </p>
 
 
-<div class="figure">
+<div id="orgd965c90" class="figure">
 <p><img src="/assets/img/org-task-dependencies.gif" alt="org-task-dependencies.gif" />
 </p>
 </div>

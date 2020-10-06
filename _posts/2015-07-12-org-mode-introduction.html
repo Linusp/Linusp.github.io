@@ -1,6 +1,6 @@
 ---
 layout     : post
-title      : "强大的Org mode(1):简单介绍与基本使用"
+title      : "强大的 Org mode(1): 简单介绍与基本使用"
 categories : Emacs
 tags       :
 - org-mode
@@ -10,21 +10,31 @@ description:
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">简介</a></li>
-<li><a href="#orgheadline2">安装与基础设置</a></li>
-<li><a href="#orgheadline3">基本使用</a>
+<li><a href="#orgf01a498">简介</a></li>
+<li><a href="#orge7864c5">安装与基础设置</a></li>
+<li><a href="#org11a4506">基本使用</a>
 <ul>
-<li><a href="#orgheadline4">所谓大纲(outline)</a></li>
-<li><a href="#orgheadline5">基本语法</a></li>
+<li><a href="#org7d39a64">所谓大纲(outline)</a></li>
+<li><a href="#org4d5dfd2">基本语法</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">简介</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<p>
+本文是《强大的 Org mode》系列的第一篇文章，系列文章如下：
+</p>
+<ol class="org-ol">
+<li><a href="https://www.zmonster.me/2015/07/12/org-mode-introduction.html">强大的 Org mode(1): 简单介绍与基本使用 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2015/07/15/org-mode-planning.html">强大的 Org mode(2): 任务管理 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2016/06/03/org-mode-table.html">强大的 Org mode(3): 表格的基本操作及公式、绘图 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2018/02/28/org-mode-capture.html">强大的 Org mode(4): 使用 capture 功能快速记录 · ZMonster's Blog</a></li>
+</ol>
+
+<div id="outline-container-orgf01a498" class="outline-2">
+<h2 id="orgf01a498">简介</h2>
+<div class="outline-text-2" id="text-orgf01a498">
 <p>
 <b>Org mode</b> 是 Emacs 的一个插件，能为 Emacs 用户提供一个强大的纯文本编辑环境，下面是 Org mode 官网上对自己的介绍:
 </p>
@@ -62,23 +72,22 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 </p>
 
 
-<div class="figure">
+<div id="org919a4c7" class="figure">
 <p><img src="/assets/img/org-main.jpg" alt="org-main.jpg" />
 </p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">安装与基础设置</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-orge7864c5" class="outline-2">
+<h2 id="orge7864c5">安装与基础设置</h2>
+<div class="outline-text-2" id="text-orge7864c5">
 <p>
 自 Emacs 22 后，Emacs 都自带了可用的 Org mode，在 Emacs 中，Org mode 作为一个 major mode，在用 Emacs 打开(或新建)后缀为 "org" 的文件时即会启用，如果您的 Emacs 在打开 org 文件时没有启用 org-mode 这个 major mode，可以在配置文件中加入:
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(add-to-list 'auto-mode-alist  '(<span style="color: #ad7fa8;">"\\.org\\'"</span> . org-mode))
+<pre class="src src-emacs-lisp">(add-to-list 'auto-mode-alist  '(<span style="color: #66cccc;">"\\.org\\'"</span> . org-mode))
 </pre>
 </div>
 
@@ -86,8 +95,7 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 另外 Org mode 在默认情况下不开启自动折行，这将导致一行文字的长度超出屏幕范围时，行会继续往右延伸而导致部分内容不可见(因在屏幕范围外而无法看见)，要开启自动折行，应在配置中进行设置:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq truncate-lines nil)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> truncate-lines nil)
 </pre>
 </div>
 <p>
@@ -104,9 +112,8 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 从 <a href="http://orgmode.org/">Org mode的官网</a> 上下载最新的包，解压后在 Emacs 的配置文件中添加配置进行加载，比如将其解压在 ~/.emacs.d/site-lisp/org/ 目录下，那么配置语句可以是这样的:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #ad7fa8;">"~/.emacs.d/site-lis/org/lisp"</span>)
-(add-to-list 'load-path <span style="color: #ad7fa8;">"~/.emacs.d/site-lis/org/contrib/lisp"</span>)
+<pre class="src src-emacs-lisp">(add-to-list 'load-path <span style="color: #66cccc;">"~/.emacs.d/site-lis/org/lisp"</span>)
+(add-to-list 'load-path <span style="color: #66cccc;">"~/.emacs.d/site-lis/org/contrib/lisp"</span>)
 </pre>
 </div>
 
@@ -117,12 +124,13 @@ Org mode 实际上是一种轻量级标记语言，与 <a href="https://zh.wikip
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">基本使用</h2>
-<div class="outline-text-2" id="text-orgheadline3">
-</div><div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">所谓大纲(outline)</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org11a4506" class="outline-2">
+<h2 id="org11a4506">基本使用</h2>
+<div class="outline-text-2" id="text-org11a4506">
+</div>
+<div id="outline-container-org7d39a64" class="outline-3">
+<h3 id="org7d39a64">所谓大纲(outline)</h3>
+<div class="outline-text-3" id="text-org7d39a64">
 <p>
 在 Org mode 中，文档内容是通过 headline 来组织成一个树状结构的 —— 由于在 Org mode 中还存在 "title" 这种文章级的标题，为避免混淆，就不对 "headline" 进行翻译了，我们只要知道这几点就行:
 </p>
@@ -204,7 +212,7 @@ headline 在 Org mode 中会被高亮显示，且不同级别的 headline 会以
 </p>
 
 
-<div class="figure">
+<div id="org066cda2" class="figure">
 <p><img src="/assets/img/org-outline.png" alt="org-outline.png" />
 </p>
 </div>
@@ -227,7 +235,7 @@ subtree cycling的状态
 </p>
 
 
-<div class="figure">
+<div id="org3b0ec94" class="figure">
 <p><img src="/assets/img/subtree-cycling.gif" alt="subtree-cycling.gif" />
 </p>
 </div>
@@ -237,7 +245,7 @@ global cycling 的状态变化与 subtree cycling 类似，不过针对的是整
 </p>
 
 
-<div class="figure">
+<div id="org567c98b" class="figure">
 <p><img src="/assets/img/global-cycling.gif" alt="global-cycling.gif" />
 </p>
 </div>
@@ -248,9 +256,9 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-3">
-<h3 id="orgheadline5">基本语法</h3>
-<div class="outline-text-3" id="text-orgheadline5">
+<div id="outline-container-org4d5dfd2" class="outline-3">
+<h3 id="org4d5dfd2">基本语法</h3>
+<div class="outline-text-3" id="text-org4d5dfd2">
 <p>
 除了 headline 外，Org mode 还支持列表、文字修饰(粗体、斜体、下划线等)、代码块、引用等常见的功能。
 </p>
@@ -260,7 +268,6 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-org">+ &#26080;&#24207;&#21015;&#34920;
   * &#29992;"+","-", "*"&#24320;&#22836;&#65292;&#21518;&#36319;&#38543;&#29992;&#31354;&#26684;&#20998;&#38548;&#24320;&#30340;&#21015;&#34920;&#39033;&#21517;&#31216;&#12289;&#20869;&#23481;
   * "*"&#22312;&#34892;&#39318;&#39030;&#26684;&#30340;&#35805;&#21017;&#26159;headline&#65292;&#36825;&#20010;&#35201;&#27880;&#24847;
@@ -336,9 +343,8 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="font-weight: bold;">*&#31895;&#20307;*</span> &#29992;&#20004;&#20010;&#26143;&#21495;&#21253;&#35065;&#65292;&#26143;&#21495;&#19982;&#31895;&#20307;&#21069;&#21518;&#30340;&#20854;&#20182;&#23383;&#24212;&#35813;&#21508;&#26377;&#33267;&#23569;&#19968;&#20010;&#31354;&#26684;&#25110;&#33521;&#25991;&#26631;&#28857;&#20998;&#38548;&#24320;&#26469;
-<span style="font-weight: bold;">*bold*</span>,word,&#29992;&#33521;&#25991;&#36887;&#21495;&#20998;&#38548;&#24320;&#65292;bold&#26174;&#31034;&#20986;&#31895;&#20307;&#25928;&#26524;
+<pre class="src src-org"><span style="font-weight: bold;">&#31895;&#20307;</span> &#29992;&#20004;&#20010;&#26143;&#21495;&#21253;&#35065;&#65292;&#26143;&#21495;&#19982;&#31895;&#20307;&#21069;&#21518;&#30340;&#20854;&#20182;&#23383;&#24212;&#35813;&#21508;&#26377;&#33267;&#23569;&#19968;&#20010;&#31354;&#26684;&#25110;&#33521;&#25991;&#26631;&#28857;&#20998;&#38548;&#24320;&#26469;
+<span style="font-weight: bold;">bold</span>,word,&#29992;&#33521;&#25991;&#36887;&#21495;&#20998;&#38548;&#24320;&#65292;bold&#26174;&#31034;&#20986;&#31895;&#20307;&#25928;&#26524;
 *bold*word&#21017;&#19981;&#26174;&#31034;&#31895;&#20307;&#25928;&#26524;
 </pre>
 </div></li>
@@ -348,9 +354,8 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="font-style: italic;">/hello/</span> &#29992;"/"&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
-<span style="font-style: italic;">/&#26012;&#20307;/</span> &#22909;&#20687;&#23545;&#20013;&#25991;&#19981;&#31649;&#29992;?&#23548;&#20986;&#25104;HTML&#26102;&#30475;&#21040;&#36824;&#26159;&#29983;&#25928;&#20102;&#65292;&#21487;&#33021;&#26159;&#23383;&#20307;&#20851;&#31995;&#21543;
+<pre class="src src-org"><span style="font-style: italic;">hello</span> &#29992;"<span style="font-style: italic;">"&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;</span>
+<span style="font-style: italic;">&#26012;&#20307;</span> &#22909;&#20687;&#23545;&#20013;&#25991;&#19981;&#31649;&#29992;?&#23548;&#20986;&#25104;HTML&#26102;&#30475;&#21040;&#36824;&#26159;&#29983;&#25928;&#20102;&#65292;&#21487;&#33021;&#26159;&#23383;&#20307;&#20851;&#31995;&#21543;
 </pre>
 </div></li>
 
@@ -359,8 +364,7 @@ Org mode 的几大特性中，任务管理、任务计时、项目管理都是�
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="text-decoration: underline;">_&#19979;&#21010;&#32447;_</span> &#29992;"_"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
+<pre class="src src-org"><span style="text-decoration: underline;">&#19979;&#21010;&#32447;</span> &#29992;"_"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
 _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#21017;&#19981;&#29983;&#25928;
 </pre>
 </div></li>
@@ -370,8 +374,7 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="text-decoration: line-through;">+&#21024;&#38500;&#32447;+</span> &#29992;"+"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
+<pre class="src src-org"><span style="text-decoration: line-through;">&#21024;&#38500;&#32447;</span> &#29992;"+"&#22312;&#21069;&#21518;&#21253;&#35065;&#65292;&#35268;&#21017;&#21516;&#31895;&#20307;
 </pre>
 </div></li>
 
@@ -380,10 +383,9 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_QUOTE</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+BEGIN_QUOTE</span>
 &#24341;&#29992;&#20869;&#23481;
-<span style="color: #888a85;">#+END_QUOTE</span>
+<span style="color: #999999; font-style: italic;">#+END_QUOTE</span>
 </pre>
 </div>
 
@@ -396,10 +398,9 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+Begin_EXAMPLE</span>
-<span style="color: #b3b3b3;">&#31034;&#20363;</span>
-<span style="color: #888a85;">#+END_EXAMPLE</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+Begin_EXAMPLE</span>
+&#31034;&#20363;
+<span style="color: #999999; font-style: italic;">#+END_EXAMPLE</span>
 </pre>
 </div>
 
@@ -412,19 +413,18 @@ _&#19979;&#21010;&#32447;_&#32039;&#36319;&#20854;&#20182;&#23383;&#65292;&#2101
 </p>
 
 <div class="org-src-container">
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+BEGIN_SRC C++</span>
+<span style="color: #cc99cc; background-color: #f2f2f2;">#include</span><span style="color: #f99157;"> </span><span style="color: #66cccc;">&lt;iostream&gt;</span>
 
-<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_SRC C++</span>
-<span style="color: #729fcf;">#include</span> <span style="color: #ad7fa8;">&lt;iostream&gt;</span>
+<span style="color: #99cc99; font-weight: bold; font-style: italic;">using</span><span style="color: #f99157;"> </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">namespace</span><span style="color: #f99157;"> </span><span style="color: #6699cc; font-style: italic;">std</span><span style="color: #f99157;">;</span>
 
-<span style="color: #729fcf;">using</span> <span style="color: #729fcf;">namespace</span> <span style="color: #e6a00f;">std</span>;
+<span style="color: #6699cc;">int</span><span style="color: #f99157;"> </span><span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">main</span><span style="color: #f99157;">(</span><span style="color: #6699cc;">int</span><span style="color: #f99157;"> </span><span style="color: #ffcc66;">argc</span><span style="color: #f99157;">, </span><span style="color: #6699cc;">char</span><span style="color: #f99157;"> *</span><span style="color: #ffcc66;">argv</span><span style="color: #f99157;">)</span>
+<span style="color: #f99157;">{</span>
+<span style="color: #f99157;">    cout &lt;&lt; </span><span style="color: #66cccc;">"&#20195;&#30721;&#22359;"</span><span style="color: #f99157;"> &lt;&lt; endl;</span>
 
-<span style="color: #8ae234;">int</span> <span style="color: #edd400;">main</span>(<span style="color: #8ae234;">int</span> <span style="color: #eeeeec;">argc</span>, <span style="color: #8ae234;">char</span> *<span style="color: #eeeeec;">argv</span>)
-{
-    cout &lt;&lt; <span style="color: #ad7fa8;">"&#20195;&#30721;&#22359;"</span> &lt;&lt; endl;
-
-    <span style="color: #729fcf;">return</span> 0;
-}
-<span style="color: #888a85;">#+END_SRC</span>
+<span style="color: #f99157;">    </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">return</span><span style="color: #f99157;"> 0;</span>
+<span style="color: #f99157;">}</span>
+<span style="color: #999999; font-style: italic;">#+END_SRC</span>
 </pre>
 </div>
 
@@ -437,8 +437,7 @@ Org mode可以根据代码所属的语言来对其进行高亮，不过自Emacs 
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq org-src-fontify-natively t)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-src-fontify-natively t)
 </pre>
 </div>
 
@@ -447,7 +446,7 @@ Org mode可以根据代码所属的语言来对其进行高亮，不过自Emacs 
 </p>
 
 
-<div class="figure">
+<div id="org5230d7a" class="figure">
 <p><img src="/assets/img/source-edit.gif" alt="source-edit.gif" />
 </p>
 </div>
@@ -467,7 +466,7 @@ Org mode可以根据代码所属的语言来对其进行高亮，不过自Emacs 
 <p>
 为进行区分，通常会在图片地址前加上"file"前缀，如
 </p>
-<pre class="example">
+<pre class="example" id="org60a5c6b">
 file:/assets/img/source-edit.gif
 </pre></li>
 
@@ -478,14 +477,14 @@ file:/assets/img/source-edit.gif
 <p>
 链接的语法规则是这样的:
 </p>
-<pre class="example">
+<pre class="example" id="org0de2d8a">
 [[&lt;link url&gt;][&lt;text&gt;]]
 </pre>
 
 <p>
 比如
 </p>
-<pre class="example">
+<pre class="example" id="orge7b09cd">
 [[http://linusp.github.io/][Linusp's Blog]]
 </pre>
 

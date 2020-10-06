@@ -36,6 +36,15 @@ tags       : org-mode
 </div>
 </div>
 
+<p>
+本文是《强大的 Org mode》系列的第四篇文章，系列文章如下：
+</p>
+<ol class="org-ol">
+<li><a href="https://www.zmonster.me/2015/07/12/org-mode-introduction.html">强大的 Org mode(1): 简单介绍与基本使用 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2015/07/15/org-mode-planning.html">强大的 Org mode(2): 任务管理 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2016/06/03/org-mode-table.html">强大的 Org mode(3): 表格的基本操作及公式、绘图 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2018/02/28/org-mode-capture.html">强大的 Org mode(4): 使用 capture 功能快速记录 · ZMonster's Blog</a></li>
+</ol>
 
 <div id="outline-container-orgbfd201a" class="outline-2">
 <h2 id="orgbfd201a">简介</h2>
@@ -50,7 +59,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="org0672efa" class="figure">
 <p><img src="/assets/img/org-capture-note.gif" alt="org-capture-note.gif" />
 </p>
 </div></li>
@@ -60,7 +69,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="orgcdf8bac" class="figure">
 <p><img src="/assets/img/org-capture-journal.gif" alt="org-capture-journal.gif" />
 </p>
 </div></li>
@@ -70,7 +79,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="orgac9edff" class="figure">
 <p><img src="/assets/img/org-capture-2.gif" alt="org-capture-2.gif" />
 </p>
 </div></li>
@@ -80,7 +89,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="orgb0e513d" class="figure">
 <p><img src="/assets/img/org-capture-task.gif" alt="org-capture-task.gif" />
 </p>
 </div></li>
@@ -90,7 +99,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="org28d450a" class="figure">
 <p><img src="/assets/img/org-capture-snip.gif" alt="org-capture-snip.gif" />
 </p>
 </div></li>
@@ -103,7 +112,7 @@ tags       : org-mode
 </p>
 
 
-<div class="figure">
+<div id="org05d91d3" class="figure">
 <p><img src="/assets/img/org-capture-buffer.png" alt="org-capture-buffer.png" />
 </p>
 </div>
@@ -165,7 +174,7 @@ capture 功能包含在 org 包里，所以只要安装了 org，那么直接就
 </p>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(global-set-key (kbd <span style="color: #66cccc;">"C-c c"</span>) 'org-capture)
-(<span style="color: #99cc99; font-weight: bold;">setq</span> org-default-notes-file <span style="color: #66cccc;">"~/org/inbox.org"</span>)
+(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-default-notes-file <span style="color: #66cccc;">"~/org/inbox.org"</span>)
 </pre>
 </div>
 
@@ -174,7 +183,7 @@ capture 功能包含在 org 包里，所以只要安装了 org，那么直接就
 </p>
 
 
-<div class="figure">
+<div id="orgfdff538" class="figure">
 <p><img src="/assets/img/org-capture-minimum.gif" alt="org-capture-minimum.gif" />
 </p>
 </div>
@@ -277,7 +286,7 @@ key 和 description 这两部分会在执行 org-capture 进入模板选择 buff
 </p>
 
 
-<div class="figure">
+<div id="org9422bbb" class="figure">
 <p><img src="/assets/img/org-capture-buffer.png" alt="org-capture-buffer.png" />
 </p>
 </div>
@@ -978,14 +987,14 @@ org-protocol 可用的特殊标记有如下六个
 此外，在内容模板中还支持自定义函数来插入内容，以 <i>%(sexp)</i> 的形式，比如说我们可以自己写一个 <b>get-current-time</b> 函数来插入当前的时间，那么内容模板可以是这个样子的
 </p>
 
-<pre class="example">
+<pre class="example" id="org185f444">
 "%(get-current-time)"
 </pre>
 
 <p>
 而在内容模板中使用自定义函数时，可以将上面 eww 和 org-protocol 的这些特殊标记作为函数的参数，比如一个场景是，用 org-protocol 捕获的网页 title 中包含中括号，会导致下面这样的内容模板出错
 </p>
-<pre class="example">
+<pre class="example" id="org6f0f801">
 "[[%:link][%:description]]"
 </pre>
 
@@ -993,7 +1002,7 @@ org-protocol 可用的特殊标记有如下六个
 这个时候可以定一个一个函数来将 %:description 中的中括号替换成下划线
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">replace-bracket-in-title</span> (title)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">replace-bracket-in-title</span> (title)
   <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">blablabla</span>
   )
 </pre>
@@ -1002,7 +1011,7 @@ org-protocol 可用的特殊标记有如下六个
 <p>
 那么上面那个内容模板可以改成这样
 </p>
-<pre class="example">
+<pre class="example" id="org423e554">
 "[[%:link][%(replace-bracket-in-title \"%:description\")]]"
 </pre></li>
 
@@ -1026,7 +1035,7 @@ org-protocol 可用的特殊标记有如下六个
 "%^{prompt}" 则会用 prompt 作为提示符要求我们输入，并且用我们输入的文本替换模板中相应的内容。比如说 "%{姓名}" 会用 "姓名" 作为提示符要求输入。当有多个标记时，可以用 "%\N" 来插入第 N 个提示输入标记产生的内容，举个例子，下面的内容模板
 </p>
 
-<pre class="example">
+<pre class="example" id="orgb89291f">
 "- name: %^{姓名}\n- age: %^{年龄}\n\n%\\1的年龄是%\\2"
 </pre>
 
@@ -1037,7 +1046,7 @@ org-protocol 可用的特殊标记有如下六个
 <p>
 会要求我们输入姓名和年龄，假如我们输入姓名是 "张三"，年龄是 "25"，那么最后得到的内容是
 </p>
-<pre class="example">
+<pre class="example" id="org977571f">
 - name: 张三
 - age: 25
 
@@ -1064,7 +1073,7 @@ org-protocol 可用的特殊标记有如下六个
 在开始之前，我们先将 org-capture-templates 设置为空
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> org-capture-templates nil)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-capture-templates nil)
 </pre>
 </div>
 </div>
@@ -1170,7 +1179,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 
-<div class="figure">
+<div id="orgafb2a9b" class="figure">
 <p><img src="/assets/img/org-capture-buffer-no-group.png" alt="org-capture-buffer-no-group.png" />
 </p>
 </div>
@@ -1180,7 +1189,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 
-<div class="figure">
+<div id="org10b6174" class="figure">
 <p><img src="/assets/img/org-capture-buffer-group-1.png" alt="org-capture-buffer-group-1.png" />
 </p>
 </div>
@@ -1190,7 +1199,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 
-<div class="figure">
+<div id="orgcfb6133" class="figure">
 <p><img src="/assets/img/org-capture-buffer-group-2.png" alt="org-capture-buffer-group-2.png" />
 </p>
 </div>
@@ -1230,7 +1239,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 
-<div class="figure">
+<div id="org1f913ba" class="figure">
 <p><img src="/assets/img/org-capture-datetree-and-weektree.png" alt="org-capture-datetree-and-weektree.png" />
 </p>
 </div>
@@ -1310,30 +1319,30 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-year-and-month</span> ()
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-year-and-month</span> ()
   (list (format-time-string <span style="color: #66cccc;">"%Y&#24180;"</span>) (format-time-string <span style="color: #66cccc;">"%m&#26376;"</span>)))
 
 
-(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">find-month-tree</span> ()
-  (<span style="color: #99cc99; font-weight: bold;">let*</span> ((path (get-year-and-month))
+(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">find-month-tree</span> ()
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let*</span> ((path (get-year-and-month))
          (level 1)
          end)
-    (<span style="color: #99cc99; font-weight: bold;">unless</span> (derived-mode-p 'org-mode)
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">unless</span> (derived-mode-p 'org-mode)
       (<span style="color: #f2777a; background-color: #ffe4b5; font-weight: bold;">error</span> <span style="color: #66cccc;">"Target buffer \"%s\" should be in Org mode"</span> (current-buffer)))
     (goto-char (point-min))             <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#31227;&#21160;&#21040; buffer &#30340;&#24320;&#22987;&#20301;&#32622;</span>
     <span style="color: #999999; font-style: italic;">;; </span><span style="color: #999999; font-style: italic;">&#20808;&#23450;&#20301;&#34920;&#31034;&#24180;&#20221;&#30340; headline&#65292;&#20877;&#23450;&#20301;&#34920;&#31034;&#26376;&#20221;&#30340; headline</span>
-    (<span style="color: #99cc99; font-weight: bold;">dolist</span> (heading path)
-      (<span style="color: #99cc99; font-weight: bold;">let</span> ((re (format org-complex-heading-regexp-format
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">dolist</span> (heading path)
+      (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let</span> ((re (format org-complex-heading-regexp-format
                         (regexp-quote heading)))
             (cnt 0))
-        (<span style="color: #99cc99; font-weight: bold;">if</span> (re-search-forward re end t)
+        (<span style="color: #99cc99; font-weight: bold; font-style: italic;">if</span> (re-search-forward re end t)
             (goto-char (point-at-bol))  <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#22914;&#26524;&#25214;&#21040;&#20102; headline &#23601;&#31227;&#21160;&#21040;&#23545;&#24212;&#30340;&#20301;&#32622;</span>
-          (<span style="color: #99cc99; font-weight: bold;">progn</span>                        <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#21542;&#21017;&#23601;&#26032;&#24314;&#19968;&#20010; headline</span>
-            (<span style="color: #99cc99; font-weight: bold;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
-            (<span style="color: #99cc99; font-weight: bold;">if</span> (/= (point) (point-min)) (org-end-of-subtree t t))
+          (<span style="color: #99cc99; font-weight: bold; font-style: italic;">progn</span>                        <span style="color: #999999; font-style: italic;">;</span><span style="color: #999999; font-style: italic;">&#21542;&#21017;&#23601;&#26032;&#24314;&#19968;&#20010; headline</span>
+            (<span style="color: #99cc99; font-weight: bold; font-style: italic;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
+            (<span style="color: #99cc99; font-weight: bold; font-style: italic;">if</span> (/= (point) (point-min)) (org-end-of-subtree t t))
             (insert (make-string level ?*) <span style="color: #66cccc;">" "</span> heading <span style="color: #66cccc;">"\n"</span>))))
-      (<span style="color: #99cc99; font-weight: bold;">setq</span> level (1+ level))
-      (<span style="color: #99cc99; font-weight: bold;">setq</span> end (<span style="color: #99cc99; font-weight: bold;">save-excursion</span> (org-end-of-subtree t t))))
+      (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> level (1+ level))
+      (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> end (<span style="color: #99cc99; font-weight: bold; font-style: italic;">save-excursion</span> (org-end-of-subtree t t))))
     (org-end-of-subtree)))
 </pre>
 </div>
@@ -1343,7 +1352,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 
-<div class="figure">
+<div id="org8303ae3" class="figure">
 <p><img src="/assets/img/org-capture-billing.gif" alt="org-capture-billing.gif" />
 </p>
 </div>
@@ -1404,20 +1413,20 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">random-alphanum</span> ()
-  (<span style="color: #99cc99; font-weight: bold;">let*</span> ((charset <span style="color: #66cccc;">"abcdefghijklmnopqrstuvwxyz0123456789"</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">random-alphanum</span> ()
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let*</span> ((charset <span style="color: #66cccc;">"abcdefghijklmnopqrstuvwxyz0123456789"</span>)
          (x (random 36)))
     (char-to-string (elt charset x))))
 
-(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">create-password</span> ()
-  (<span style="color: #99cc99; font-weight: bold;">let</span> ((value <span style="color: #66cccc;">""</span>))
-    (<span style="color: #99cc99; font-weight: bold;">dotimes</span> (number 16 value)
-      (<span style="color: #99cc99; font-weight: bold;">setq</span> value (concat value (random-alphanum))))))
+(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">create-password</span> ()
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let</span> ((value <span style="color: #66cccc;">""</span>))
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">dotimes</span> (number 16 value)
+      (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> value (concat value (random-alphanum))))))
 
 
-(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-or-create-password</span> ()
-  (<span style="color: #99cc99; font-weight: bold;">setq</span> password (read-string <span style="color: #66cccc;">"Password: "</span>))
-  (<span style="color: #99cc99; font-weight: bold;">if</span> (string= password <span style="color: #66cccc;">""</span>)
+(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">get-or-create-password</span> ()
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> password (read-string <span style="color: #66cccc;">"Password: "</span>))
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">if</span> (string= password <span style="color: #66cccc;">""</span>)
       (create-password)
     password))
 </pre>
@@ -1444,7 +1453,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">setq</span> org-publish-project-alist
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> org-publish-project-alist
       '((<span style="color: #66cccc;">"blog-org"</span>
          <span style="color: #cc99cc; background-color: #2d2d2d;">:base-directory</span> <span style="color: #66cccc;">"~/Dropbox/org/blog/"</span>
          <span style="color: #cc99cc; background-color: #2d2d2d;">:base-extension</span> <span style="color: #66cccc;">"org"</span>
@@ -1539,7 +1548,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 在 Emacs 中我们需要加载一下 org-protocol
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">require</span> '<span style="color: #6699cc;">org-protocol</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">require</span> '<span style="color: #6699cc; font-style: italic;">org-protocol</span>)
 </pre>
 </div>
 
@@ -1660,19 +1669,19 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 这里用了 file+function，函数 org-capture-template-goto-link 的定义参考了 reddit 上的<a href="https://www.reddit.com/r/emacs/comments/7m6nwo/file_orgcapture_item_under_existing_heading_if_it/">这篇帖子</a>。
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">org-capture-template-goto-link</span> ()
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">org-capture-template-goto-link</span> ()
   (org-capture-put <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span> (list 'file+headline
                                  (nth 1 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span>))
                                  (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:annotation</span>)))
   (org-capture-put-target-region-and-position)
   (widen)
-  (<span style="color: #99cc99; font-weight: bold;">let</span> ((hd (nth 2 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span>))))
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let</span> ((hd (nth 2 (org-capture-get <span style="color: #cc99cc; background-color: #2d2d2d;">:target</span>))))
     (goto-char (point-min))
-    (<span style="color: #99cc99; font-weight: bold;">if</span> (re-search-forward
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">if</span> (re-search-forward
          (format org-complex-heading-regexp-format (regexp-quote hd)) nil t)
         (org-end-of-subtree)
       (goto-char (point-max))
-      (<span style="color: #99cc99; font-weight: bold;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
+      (<span style="color: #99cc99; font-weight: bold; font-style: italic;">or</span> (bolp) (insert <span style="color: #66cccc;">"\n"</span>))
       (insert <span style="color: #66cccc;">"* "</span> hd <span style="color: #66cccc;">"\n"</span>))))
 </pre>
 </div>
@@ -1687,7 +1696,7 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 </ul>
 
 <p>
-而结合 <a href="https://github.com/alphapapa/org-protocol-capture-html">org-protocol-capture-html</a> 这个工具，我们可以在用 org-protocol 触发 org-capture 时，将网页内容全文转换成 org 文件存储到特定目录中，打造一个类似<a href="https://baike.baidu.com/item/%E7%A8%8D%E5%90%8E%E9%98%85%E8%AF%BB">稍后阅读</a>的工具。
+而结合 <a href="https://github.com/alphapapa/org-protocol-capture-html">org-protocol-capture-html</a> 这个工具，我们可以在用 org-protocol 触发 org-capture 时，将网页内容全文转换成 org 文件存储到特定目录中，打造一个类似<a href="https://baike.baidu.com/item/%25E7%25A8%258D%25E5%2590%258E%25E9%2598%2585%25E8%25AF%25BB">稍后阅读</a>的工具。
 </p>
 </div>
 </div>
@@ -1715,21 +1724,21 @@ GTD 一般会有一整套系统的设计，这里只讲一下最一般的新建�
 其中的 generate-anki-note-body 函数如下
 </p>
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">generate-anki-note-body</span> ()
-  (<span style="color: #99cc99; font-weight: bold;">interactive</span>)
+<pre class="src src-emacs-lisp">(<span style="color: #99cc99; font-weight: bold; font-style: italic;">defun</span> <span style="color: #f99157; background-color: #2d2d2d; font-weight: bold;">generate-anki-note-body</span> ()
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">interactive</span>)
   (message <span style="color: #66cccc;">"Fetching note types..."</span>)
-  (<span style="color: #99cc99; font-weight: bold;">let</span> ((note-types (sort (anki-editor-note-types) #'string-lessp))
+  (<span style="color: #99cc99; font-weight: bold; font-style: italic;">let</span> ((note-types (sort (anki-editor-note-types) #'string-lessp))
         (decks (sort (anki-editor-deck-names) #'string-lessp))
         deck note-type fields)
-    (<span style="color: #99cc99; font-weight: bold;">setq</span> deck (completing-read <span style="color: #66cccc;">"Choose a deck: "</span> decks))
-    (<span style="color: #99cc99; font-weight: bold;">setq</span> note-type (completing-read <span style="color: #66cccc;">"Choose a note type: "</span> note-types))
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> deck (completing-read <span style="color: #66cccc;">"Choose a deck: "</span> decks))
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> note-type (completing-read <span style="color: #66cccc;">"Choose a note type: "</span> note-types))
     (message <span style="color: #66cccc;">"Fetching note fields..."</span>)
-    (<span style="color: #99cc99; font-weight: bold;">setq</span> fields (<span style="color: #99cc99; font-weight: bold;">anki-editor--anki-connect-invoke-result</span> <span style="color: #66cccc;">"modelFieldNames"</span> `((modelName . ,note-type))))
+    (<span style="color: #99cc99; font-weight: bold; font-style: italic;">setq</span> fields (<span style="color: #99cc99; font-weight: bold; font-style: italic;">anki-editor--anki-connect-invoke-result</span> <span style="color: #66cccc;">"modelFieldNames"</span> `((modelName . ,note-type))))
     (concat <span style="color: #66cccc;">"  :PROPERTIES:\n"</span>
             <span style="color: #66cccc;">"  :ANKI_DECK: "</span> deck <span style="color: #66cccc;">"\n"</span>
-            <span style="color: #66cccc;">"  :ANKI_NOTE_TYPE: "</span> note-type <span style="color: #66cccc;">"\n"</span>
+            <span style="color: #66cccc;">"  :ANKI_</span><span style="color: #d0bf8f;">NOTE</span><span style="color: #66cccc;">_TYPE: "</span> note-type <span style="color: #66cccc;">"\n"</span>
             <span style="color: #66cccc;">"  :END:\n\n"</span>
-            (mapconcat (<span style="color: #99cc99; font-weight: bold;">lambda</span> (str) (concat <span style="color: #66cccc;">"** "</span> str))
+            (mapconcat (<span style="color: #99cc99; font-weight: bold; font-style: italic;">lambda</span> (str) (concat <span style="color: #66cccc;">"** "</span> str))
                        fields
                        <span style="color: #66cccc;">"\n\n"</span>))))
 </pre>

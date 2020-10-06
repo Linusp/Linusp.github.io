@@ -8,37 +8,45 @@ tags       : org-mode
 <h2>&#30446;&#24405;</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">Org mode 中的表格</a></li>
-<li><a href="#orgheadline2">表格的创建</a></li>
-<li><a href="#orgheadline3">表格的基本操作</a></li>
-<li><a href="#orgheadline4">表格公式</a></li>
-<li><a href="#orgheadline5">表格绘图</a>
+<li><a href="#orgd207dde">Org mode 中的表格</a></li>
+<li><a href="#orgfec45f4">表格的创建</a></li>
+<li><a href="#org22e5907">表格的基本操作</a></li>
+<li><a href="#org700966f">表格公式</a></li>
+<li><a href="#org95037c7">表格绘图</a>
 <ul>
-<li><a href="#orgheadline6">org-plot/gnuplot</a></li>
-<li><a href="#orgheadline7">With source block</a></li>
+<li><a href="#orgb471e17">org-plot/gnuplot</a></li>
+<li><a href="#org5ac4422">With source block</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline8">总结</a></li>
+<li><a href="#org0ada646">总结</a></li>
 </ul>
 </div>
 </div>
 
+<hr />
 
-<hr  />
+<p>
+本文是《强大的 Org mode》系列的第三篇文章，系列文章如下：
+</p>
+<ol class="org-ol">
+<li><a href="https://www.zmonster.me/2015/07/12/org-mode-introduction.html">强大的 Org mode(1): 简单介绍与基本使用 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2015/07/15/org-mode-planning.html">强大的 Org mode(2): 任务管理 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2016/06/03/org-mode-table.html">强大的 Org mode(3): 表格的基本操作及公式、绘图 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2018/02/28/org-mode-capture.html">强大的 Org mode(4): 使用 capture 功能快速记录 · ZMonster's Blog</a></li>
+</ol>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">Org mode 中的表格</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-orgd207dde" class="outline-2">
+<h2 id="orgd207dde">Org mode 中的表格</h2>
+<div class="outline-text-2" id="text-orgd207dde">
 <p>
 Org mode 原生支持表格，这是 rst 或者 markdown 所不具备的特点。一个表格的例子如下所示:
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #87cefa;">| Name  | Phone | Age |</span>
-<span style="color: #87cefa;">|-------+-------+-----|</span>
-<span style="color: #87cefa;">| Peter |  1234 |  17 |</span>
-<span style="color: #87cefa;">| Anna  |  4321 |  25 |</span>
+<pre class="src src-org"><span style="color: #cc99cc;">| Name  | Phone | Age |</span>
+<span style="color: #cc99cc;">|-------+-------+-----|</span>
+<span style="color: #cc99cc;">| Peter |  1234 |  17 |</span>
+<span style="color: #cc99cc;">| Anna  |  4321 |  25 |</span>
 </pre>
 </div>
 
@@ -56,15 +64,15 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">表格的创建</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-orgfec45f4" class="outline-2">
+<h2 id="orgfec45f4">表格的创建</h2>
+<div class="outline-text-2" id="text-orgfec45f4">
 <p>
 利用 "第一个非空白符号是 | 的行被视作表格行" 这个特性，手动创建表格也是非常方便的。首先手动完成第一行，确定表格有多少列，然后按下 TAB 键就能自动在下一行插入新一行表格行了，如下图所示。
 </p>
 
 
-<div class="figure">
+<div id="orge44e0b6" class="figure">
 <p><img src="/assets/img/org-table-create-1.gif" alt="org-table-create-1.gif" />
 </p>
 </div>
@@ -77,9 +85,8 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 一种办法是新起一行，对齐后输入 "|-" ，即一个列分隔附跟一个连字符，如下所示:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #87cefa;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
-<span style="color: #87cefa;">|-</span>
+<pre class="src src-org"><span style="color: #cc99cc;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
+<span style="color: #cc99cc;">|-</span>
 </pre>
 </div>
 
@@ -87,9 +94,8 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 然后按 TAB 键，就会补全成为这样的样式了
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #87cefa;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
-<span style="color: #87cefa;">|-------+-------+-------|</span>
+<pre class="src src-org"><span style="color: #cc99cc;">| &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; | &#21333;&#20803;&#26684; |</span>
+<span style="color: #cc99cc;">|-------+-------+-------|</span>
 </pre>
 </div>
 
@@ -98,7 +104,7 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </p>
 
 
-<div class="figure">
+<div id="org8d58290" class="figure">
 <p><img src="/assets/img/org-table-create-2.gif" alt="org-table-create-2.gif" />
 </p>
 </div>
@@ -108,7 +114,7 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </p>
 
 
-<div class="figure">
+<div id="org8414362" class="figure">
 <p><img src="/assets/img/org-table-create-3.gif" alt="org-table-create-3.gif" />
 </p>
 </div>
@@ -118,7 +124,7 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </p>
 
 
-<div class="figure">
+<div id="org3625525" class="figure">
 <p><img src="/assets/img/org-table-create-4.gif" alt="org-table-create-4.gif" />
 </p>
 </div>
@@ -137,9 +143,9 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </div>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3">表格的基本操作</h2>
-<div class="outline-text-2" id="text-orgheadline3">
+<div id="outline-container-org22e5907" class="outline-2">
+<h2 id="org22e5907">表格的基本操作</h2>
+<div class="outline-text-2" id="text-org22e5907">
 <p>
 下表是表格常用操作的快捷键:
 </p>
@@ -248,15 +254,15 @@ Org mode 中的表格除了用来展示数据，还支持表格公式，能在�
 </div>
 </div>
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4">表格公式</h2>
-<div class="outline-text-2" id="text-orgheadline4">
+<div id="outline-container-org700966f" class="outline-2">
+<h2 id="org700966f">表格公式</h2>
+<div class="outline-text-2" id="text-org700966f">
 <p>
 Org mode 中的表格的另外一个强大之处，在于它支持公式。在表格区域使用快捷键 "C-c '"，就可以对表格公式进行编辑，完成后公式会显示在表格下方，以 "#+TBLFM:" 开头，如下图所示。
 </p>
 
 
-<div class="figure">
+<div id="orgf8e0035" class="figure">
 <p><img src="/assets/img/org-table-edit-formula.gif" alt="org-table-edit-formula.gif" />
 </p>
 </div>
@@ -270,7 +276,7 @@ Org mode 中的表格的另外一个强大之处，在于它支持公式。在�
 </p>
 
 
-<div class="figure">
+<div id="orgdb0a7c2" class="figure">
 <p><img src="/assets/img/org-table-formula-eval.gif" alt="org-table-formula-eval.gif" />
 </p>
 </div>
@@ -290,14 +296,14 @@ Org mode 中的表格的另外一个强大之处，在于它支持公式。在�
 <p>
 下面这个表示左上角为第二行第一列单元格、右下角为第四行第三列单元格的区域，共包含 9 个单元格。
 </p>
-<pre class="example">
+<pre class="example" id="org1df168c">
 @2$1..@4$3
 </pre>
 
 <p>
 下面这个则表示"当前行"的第一列到第三列的区域:
 </p>
-<pre class="example">
+<pre class="example" id="org26b9e56">
 $1..$3
 </pre>
 
@@ -309,15 +315,14 @@ $1..$3
 此外，还可以定义常量、变量，或者给某个单元格命名，然后引用它们。假设其名字为 "name"，那么 "$name" 就可以引用它了。常量的定义可以通过 "org-table-formula-constants"  来进行，这样定义的常量是全局的；如果要定义局部的常量，可以在org文件中添加诸如这样的行:
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+CONSTANTS: pi=3.14 eps=2.4e-6</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+CONSTANTS: pi=3.14 eps=2.4e-6</span>
 </pre>
 </div>
 
 <p>
 还可以在当前表格引用其他表格的域，这需要其他表格被命名为某个名字，如"FOO"，我们要在另一个表格中使用其第三行第四列的域，将其值赋给当前表格的第五行第二列，则可以这样写:
 </p>
-<pre class="example">
+<pre class="example" id="orgc221a7f">
 @5$2=remote(FOO, @3$4)
 </pre>
 
@@ -329,14 +334,14 @@ $1..$3
 <p>
 Org mode 的表格公式中，四则运算符都能正常使用，不过略有不同——乘号 "*" 的优先级要比除号 "/" 要高，因此
 </p>
-<pre class="example">
+<pre class="example" id="orga9a55bb">
 $3 / $2 * $1
 </pre>
 
 <p>
 会被解释为
 </p>
-<pre class="example">
+<pre class="example" id="orgda6c6e6">
 $3 / ($2 * $1)
 </pre>
 
@@ -360,7 +365,7 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 </p>
 
 
-<div class="figure">
+<div id="org80f657b" class="figure">
 <p><img src="/assets/img/org-table-formula-with-lisp.gif" alt="org-table-formula-with-lisp.gif" />
 </p>
 </div>
@@ -391,17 +396,17 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5">表格绘图</h2>
-<div class="outline-text-2" id="text-orgheadline5">
+<div id="outline-container-org95037c7" class="outline-2">
+<h2 id="org95037c7">表格绘图</h2>
+<div class="outline-text-2" id="text-org95037c7">
 <p>
 使用 Org mode 文档中的表格数据进行绘图有两种方式，一种是使用 Org mode 提供的 "org-plot/gnuplot" 命令直接绘制图像，另外一种是通过在 source block 中读取表格数据来绘图。前者胜在方便快捷，但需要对 gnuplot 有一定的了解；后者胜在灵活，可以选用自己擅长的可视化方法，而且可以绘制复杂的图形。
 </p>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6">org-plot/gnuplot</h3>
-<div class="outline-text-3" id="text-orgheadline6">
+<div id="outline-container-orgb471e17" class="outline-3">
+<h3 id="orgb471e17">org-plot/gnuplot</h3>
+<div class="outline-text-3" id="text-orgb471e17">
 <p>
 第一种方法依赖 gnuplot 这个外部绘图工具，以及 gnuplot-mode 这个 Emacs 插件。
 </p>
@@ -411,15 +416,14 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]" file:"./plot.png"</span>
-<span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
-<span style="color: #87cefa;">|-----------+-----------+---------|</span>
-<span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
-<span style="color: #87cefa;">| Leeds     |    165.77 |   19.68 |</span>
-<span style="color: #87cefa;">| Sao Paolo |     71.00 |   11.50 |</span>
-<span style="color: #87cefa;">| Stockholm |    134.19 |   14.33 |</span>
-<span style="color: #87cefa;">| Morelia   |    257.56 |   17.67 |</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]" <a href="file:&quot;./plot.png">file:"./plot.png</a>"</span>
+<span style="color: #cc99cc;">| Sede      | Max cites | H-index |</span>
+<span style="color: #cc99cc;">|-----------+-----------+---------|</span>
+<span style="color: #cc99cc;">| Chile     |    257.72 |   21.39 |</span>
+<span style="color: #cc99cc;">| Leeds     |    165.77 |   19.68 |</span>
+<span style="color: #cc99cc;">| Sao Paolo |     71.00 |   11.50 |</span>
+<span style="color: #cc99cc;">| Stockholm |    134.19 |   14.33 |</span>
+<span style="color: #cc99cc;">| Morelia   |    257.56 |   17.67 |</span>
 </pre>
 </div>
 
@@ -428,7 +432,7 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 </p>
 
 
-<div class="figure">
+<div id="orgac87e31" class="figure">
 <p><img src="/assets/img/org-plot-example.png" alt="org-plot-example.png" width="80%" />
 </p>
 </div>
@@ -457,9 +461,9 @@ Calc 的内容比较多，这里不做深入展开，有需要的话可以参考
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-3">
-<h3 id="orgheadline7">With source block</h3>
-<div class="outline-text-3" id="text-orgheadline7">
+<div id="outline-container-org5ac4422" class="outline-3">
+<h3 id="org5ac4422">With source block</h3>
+<div class="outline-text-3" id="text-org5ac4422">
 <p>
 Org mode 有一个非常强大的功能就是可以插入各种语言的 source block，并且能去执行 source block 里的代码，接着将结果插入到当前的 Org mode 文档中来。
 </p>
@@ -469,7 +473,7 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 </p>
 
 
-<div class="figure">
+<div id="org90de954" class="figure">
 <p><img src="/assets/img/org-src-block-evaluate.gif" alt="org-src-block-evaluate.gif" />
 </p>
 </div>
@@ -479,7 +483,7 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 </p>
 
 
-<div class="figure">
+<div id="org114194c" class="figure">
 <p><img src="/assets/img/org-src-block-read-tbl.gif" alt="org-src-block-read-tbl.gif" />
 </p>
 </div>
@@ -497,15 +501,14 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 对于下面这个表格，我可以可以用这个方法将数据传递给 source block ，然后用 matplotlib 来绘制图像。
 </p>
 <div class="org-src-container">
-
-<pre class="src src-org"><span style="color: #888a85;">#+NAME: citas-data</span>
-<span style="color: #87cefa;">| Sede      | Max cites | H-index |</span>
-<span style="color: #87cefa;">|-----------+-----------+---------|</span>
-<span style="color: #87cefa;">| Chile     |    257.72 |   21.39 |</span>
-<span style="color: #87cefa;">| Leeds     |    165.77 |   19.68 |</span>
-<span style="color: #87cefa;">| Sao Paolo |     71.00 |   11.50 |</span>
-<span style="color: #87cefa;">| Stockholm |    134.19 |   14.33 |</span>
-<span style="color: #87cefa;">| Morelia   |    257.56 |   17.67 |</span>
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+NAME: citas-data</span>
+<span style="color: #cc99cc;">| Sede      | Max cites | H-index |</span>
+<span style="color: #cc99cc;">|-----------+-----------+---------|</span>
+<span style="color: #cc99cc;">| Chile     |    257.72 |   21.39 |</span>
+<span style="color: #cc99cc;">| Leeds     |    165.77 |   19.68 |</span>
+<span style="color: #cc99cc;">| Sao Paolo |     71.00 |   11.50 |</span>
+<span style="color: #cc99cc;">| Stockholm |    134.19 |   14.33 |</span>
+<span style="color: #cc99cc;">| Morelia   |    257.56 |   17.67 |</span>
 </pre>
 </div>
 
@@ -513,29 +516,28 @@ Org mode 有一个非常强大的功能就是可以插入各种语言的 source 
 相应的 source block 为
 </p>
 <div class="org-src-container">
+<pre class="src src-org"><span style="color: #999999; font-style: italic;">#+BEGIN_SRC python :results file :var tbl_data=citas-data filename="./org-plot-example2.png"</span>
+<span style="color: #99cc99; font-weight: bold; font-style: italic;">import</span><span style="color: #f99157;"> numpy </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">as</span><span style="color: #f99157;"> np</span>
+<span style="color: #99cc99; font-weight: bold; font-style: italic;">import</span><span style="color: #f99157;"> matplotlib</span>
+<span style="color: #99cc99; font-weight: bold; font-style: italic;">import</span><span style="color: #f99157;"> matplotlib.pyplot </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">as</span><span style="color: #f99157;"> plt</span>
 
-<pre class="src src-org"><span style="color: #888a85;">#+BEGIN_SRC python :results file :var tbl_data=citas-data filename="./org-plot-example2.png"</span>
-<span style="color: #729fcf;">import</span> numpy <span style="color: #729fcf;">as</span> np
-<span style="color: #729fcf;">import</span> matplotlib
-<span style="color: #729fcf;">import</span> matplotlib.pyplot <span style="color: #729fcf;">as</span> plt
-
-plt.style.use(<span style="color: #ad7fa8;">'ggplot'</span>)
+<span style="color: #f99157;">plt.style.use(</span><span style="color: #66cccc;">'ggplot'</span><span style="color: #f99157;">)</span>
 
 
-<span style="color: #eeeeec;">bar_names</span> = [row[0] <span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> tbl_data]
-<span style="color: #eeeeec;">h_index</span> = [row[2] <span style="color: #729fcf;">for</span> row <span style="color: #729fcf;">in</span> tbl_data]
-<span style="color: #eeeeec;">ind</span> = np.arange(<span style="color: #729fcf;">len</span>(tbl_data))
-<span style="color: #eeeeec;">width</span> = 0.5
+<span style="color: #ffcc66;">bar_names</span><span style="color: #f99157;"> = [row[0] </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">for</span><span style="color: #f99157;"> row </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">in</span><span style="color: #f99157;"> tbl_data]</span>
+<span style="color: #ffcc66;">h_index</span><span style="color: #f99157;"> = [row[2] </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">for</span><span style="color: #f99157;"> row </span><span style="color: #99cc99; font-weight: bold; font-style: italic;">in</span><span style="color: #f99157;"> tbl_data]</span>
+<span style="color: #ffcc66;">ind</span><span style="color: #f99157;"> = np.arange(</span><span style="color: #cc99cc; background-color: #2d2d2d;">len</span><span style="color: #f99157;">(tbl_data))</span>
+<span style="color: #ffcc66;">width</span><span style="color: #f99157;"> = 0.5</span>
 
-plt.bar(ind, h_index, width)
-plt.title(<span style="color: #ad7fa8;">'Citas'</span>)
-plt.xlabel(<span style="color: #ad7fa8;">'Sede'</span>)
-plt.ylabel(<span style="color: #ad7fa8;">'H-index'</span>)
-plt.xticks(ind + width/2., bar_names)
+<span style="color: #f99157;">plt.bar(ind, h_index, width)</span>
+<span style="color: #f99157;">plt.title(</span><span style="color: #66cccc;">'Citas'</span><span style="color: #f99157;">)</span>
+<span style="color: #f99157;">plt.xlabel(</span><span style="color: #66cccc;">'Sede'</span><span style="color: #f99157;">)</span>
+<span style="color: #f99157;">plt.ylabel(</span><span style="color: #66cccc;">'H-index'</span><span style="color: #f99157;">)</span>
+<span style="color: #f99157;">plt.xticks(ind + width/2., bar_names)</span>
 
-plt.savefig(filename)
-<span style="color: #729fcf;">return</span>(filename)
-<span style="color: #888a85;">#+END_SRC</span>
+<span style="color: #f99157;">plt.savefig(filename)</span>
+<span style="color: #99cc99; font-weight: bold; font-style: italic;">return</span><span style="color: #f99157;">(filename)</span>
+<span style="color: #999999; font-style: italic;">#+END_SRC</span>
 </pre>
 </div>
 
@@ -544,16 +546,16 @@ plt.savefig(filename)
 </p>
 
 
-<div class="figure">
+<div id="org3e8ecab" class="figure">
 <p><img src="/assets/img/org-plot-example2.png" alt="org-plot-example2.png" width="80%" />
 </p>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8">总结</h2>
-<div class="outline-text-2" id="text-orgheadline8">
+<div id="outline-container-org0ada646" class="outline-2">
+<h2 id="org0ada646">总结</h2>
+<div class="outline-text-2" id="text-org0ada646">
 <p>
 同 Org mode 中的其他功能一样，表格能很好地和 Org mode 的其他功能一起工作，利用 Org mode ，能够很容易地进行可重现研究(Reproducible Research)，数据、处理过程、结果展示，都可以在 Org mode 中一起呵成，而且比起 IPython Notebook，Org mode 拥有丰富得多的功能，表格就是其中一例。
 </p>
