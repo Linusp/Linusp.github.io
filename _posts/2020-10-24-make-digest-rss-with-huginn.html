@@ -1,0 +1,154 @@
+---
+layout     : post
+title      : "用 Huginn 为高频 RSS 生成每日摘要并输出新的 RSS"
+desc       : "一些资讯类的 RSS 通常都会有较高的更新频率，但我只是想保持关注，了解一下大致有什么事情发生，并不想在一天内接收到几十上百个更新，于是用 Huginn 把一段时间内更新的条目合并起来再输出一个更新频率更低的 RSS。"
+categories : 数字生活
+tags       :
+- RSS
+- Huginn
+---
+<p>
+我订阅了一些资讯类的 RSS，但是这种 RSS 通常更新频率都较高，好一点的一天十来篇文章，烦一点几十篇都有可能。但其实我订阅这些 RSS，只是想要对相关的领域（如时事、游戏）保持一定的关注度，更希望是定期（比如每天）整体扫一眼看有没有关心的内容，而不是在一天的各个时间段内连续不断地收到更新。
+</p>
+
+<p>
+基于这个想法，我就想找个现成的工具为这种 RSS 生成一个每日摘要，但是只能找到从 RSS 生成摘要邮件的一些方法，而在邮件里看资讯并不是我习惯的方式，还是得自己动手啊。
+</p>
+
+<p>
+思考尝试了下，这个问题有两种解决方法:
+</p>
+
+<ol class="org-ol">
+<li>先用 Email Digest 工具(如<a href="https://ifttt.com/email_digest">IFTTT</a>)将 RSS 转成摘要邮件，然后再将邮件转成 RSS，最后这一步可以用 <a href="https://zapier.com/">Zapier</a>；</li>
+<li>直接上 <a href="https://github.com/huginn/huginn/issues/2599">Huginn</a>，RSS Agent + Digest Agent + Delay Agent + Data Output Agent 一套搞定</li>
+</ol>
+
+<p>
+第一个方案我虽然也能操作，但是始终要在邮箱里过一遍，我还是嫌麻烦，而 <a href="https://github.com/huginn/huginn/issues/2599">Huginn</a> 是我非常熟悉的工具，于是就选用了第二套方案。花了几天验证效果，调整之后的 Scenario 如下图所示：
+</p>
+
+
+<div id="org60f0409" class="figure">
+<p><img src="/assets/img/digest-scenario.png" alt="digest-scenario.png" />
+</p>
+</div>
+
+<p>
+以<a href="https://www.gcores.com/">机核</a>的 RSS 为例，从上到下五个 Agent 分别是：
+</p>
+<ul class="org-ul">
+<li><p>
+RSS Agent：负责监听原始的 RSS 源，接收更新生成 event
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">{
+  <span style="color: #66cccc;">"expected_update_period_in_days"</span>: <span style="color: #66cccc;">"5"</span>,
+  <span style="color: #66cccc;">"clean"</span>: <span style="color: #66cccc;">"false"</span>,
+  <span style="color: #66cccc;">"url"</span>: <span style="color: #66cccc;">"https://www.gcores.com/rss"</span>
+}
+</pre>
+</div></li>
+
+<li><p>
+Digest Aget：负责聚合一定时间 RSS Agent 输出的 event 产生一个新的 event，我设定为每天凌晨 1 点执行，这样能把前一天所有的 RSS 更新聚合起来
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">{
+  <span style="color: #66cccc;">"message"</span>: <span style="color: #66cccc;">"{% raw %}&lt;ul&gt;{% for event in events %}&lt;li&gt;&lt;a href={{ event.url }}&gt;{{ event.title }}&lt;\/a&gt;&lt;\/li&gt;{% endfor %}&lt;\/ul&gt;{% endraw %}"</span>,
+  <span style="color: #66cccc;">"expected_receive_period_in_days"</span>: <span style="color: #66cccc;">"2"</span>,
+  <span style="color: #66cccc;">"retained_events"</span>: <span style="color: #66cccc;">"0"</span>
+}
+</pre>
+</div></li>
+
+<li><p>
+Event Formatting Agent：给 Digest Agent 产生的 event 添加一个标题
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">{
+  <span style="color: #66cccc;">"instructions"</span>: {
+    <span style="color: #66cccc;">"content"</span>: <span style="color: #66cccc;">"{% raw %}{{ message }}{% endraw %}"</span>,
+    <span style="color: #66cccc;">"title"</span>: <span style="color: #66cccc;">"{% raw %}&#26426;&#26680;{% assign current_date = 'now' | date: '%s' | minus: 86400 %} {{current_date | date: \"%Y-%m-%d\" }} &#25688;&#35201;{% endraw %}"</span>
+  },
+  <span style="color: #66cccc;">"matchers"</span>: [
+
+  ],
+  <span style="color: #66cccc;">"mode"</span>: <span style="color: #66cccc;">"clean"</span>
+}
+</pre>
+</div></li>
+
+<li><p>
+Delay Agent：延迟一定时间后将 Event Formatting Agent 的输出再传递给最后的 Data Output Agent，我设置为延迟到早上六点
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">{
+  <span style="color: #66cccc;">"expected_receive_period_in_days"</span>: <span style="color: #66cccc;">"3"</span>,
+  <span style="color: #66cccc;">"max_events"</span>: <span style="color: #66cccc;">"100"</span>,
+  <span style="color: #66cccc;">"keep"</span>: <span style="color: #66cccc;">"newest"</span>,
+  <span style="color: #66cccc;">"max_emitted_events"</span>: <span style="color: #66cccc;">"1"</span>
+}
+</pre>
+</div></li>
+
+<li><p>
+Data Output Agent：将最终结果输出为新的 RSS
+</p>
+
+<div class="org-src-container">
+<pre class="src src-javascript">{
+  <span style="color: #66cccc;">"secrets"</span>: [
+    <span style="color: #66cccc;">"gcore-daily"</span>
+  ],
+  <span style="color: #66cccc;">"expected_receive_period_in_days"</span>: 2,
+  <span style="color: #66cccc;">"template"</span>: {
+    <span style="color: #66cccc;">"title"</span>: <span style="color: #66cccc;">"&#26426;&#26680;-&#27599;&#26085;&#25688;&#35201;"</span>,
+    <span style="color: #66cccc;">"description"</span>: <span style="color: #66cccc;">"&#26426;&#26680;&#27599;&#26085;&#28040;&#24687;&#27719;&#24635;"</span>,
+    <span style="color: #66cccc;">"item"</span>: {
+      <span style="color: #66cccc;">"title"</span>: <span style="color: #66cccc;">"{% raw %}{{ title }}{% endraw %}"</span>,
+      <span style="color: #66cccc;">"description"</span>: <span style="color: #66cccc;">"{% raw %}{{ content }}{% endraw %}"</span>,
+      <span style="color: #66cccc;">"link"</span>: <span style="color: #66cccc;">"https://www.gcores.com/"</span>
+    }
+  },
+  <span style="color: #66cccc;">"ns_media"</span>: <span style="color: #66cccc;">"true"</span>
+}
+</pre>
+</div></li>
+</ul>
+
+<p>
+这样我每天早上六点就能收到一个前一天的汇总列表了，效果如下：
+</p>
+
+
+<div id="org84593a7" class="figure">
+<p><img src="/assets/img/digest-rss-item.png" alt="digest-rss-item.png" />
+</p>
+</div>
+
+<p>
+除了机核，当然还会有其他资讯类 RSS 想做这个转换，每次都在 Huginn 上手动创建一个个 agent 也不是个事，就顺手在我的<a href="https://github.com/Linusp/zs">个人脚本仓库</a>里加了一个脚本，还是以机核为例，只要执行下面的命令就会生成一个  Huginn 的 Scenario 文件，然后到 Huginn 上直接导入就好了：
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">zs-rss gen-daily-scenario --feed-url <span style="color: #66cccc;">"https://www.gcores.com/rss"</span> -n &#26426;&#26680; -o gcore.json
+</pre>
+</div>
+
+<p>
+目前制作了两个这样的每日摘要 RSS，分别是：
+</p>
+
+<ul class="org-ul">
+<li>机核: <a href="https://feedpress.me/gcore-daily">https://feedpress.me/gcore-daily</a></li>
+<li>Engadget 中国版: <a href="https://feedpress.me/engadget-cn-daily">https://feedpress.me/engadget-cn-daily</a></li>
+</ul>
+
+<p>
+输出的 RSS 里只有原始 RSS 里文章的标题和链接，文章内容被我丢掉了，之后考虑改一下把内容加上（如果有的话）。
+</p>
