@@ -14,7 +14,7 @@ tags       :
 <li><a href="#org2291282">背景</a></li>
 <li><a href="#orgadb6262">Huginn 简介</a></li>
 <li><a href="#org5dc36cf">基于搜狗微信搜索的方案</a></li>
-<li><a href="#orgeb00ac2">基于即刻/快知和 RSSHub 的方案</a></li>
+<li><a href="#org3f4ef78">(已失效)基于即刻/快知和 RSSHub 的方案</a></li>
 <li><a href="#org0ab99c4">基于 EFB 和 Telegram 的方案</a></li>
 <li><a href="#org7aff131">其他参考方案</a></li>
 <li><a href="#org19ab5b2">后记</a></li>
@@ -53,7 +53,7 @@ tags       :
 </p>
 
 
-<div class="figure">
+<div id="org9d9cdeb" class="figure">
 <p><img src="/assets/img/huginn.png" alt="huginn.png" width="50%" />
 </p>
 </div>
@@ -76,7 +76,7 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </p>
 
 
-<div class="figure">
+<div id="org4083c2d" class="figure">
 <p><img src="/assets/img/huginn_diagram.png" alt="huginn_diagram.png" />
 </p>
 </div>
@@ -107,7 +107,7 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </p>
 
 
-<div class="figure">
+<div id="org9d91280" class="figure">
 <p><img src="/assets/img/sogou_wexin_search.png" alt="sogou_wexin_search.png" />
 </p>
 </div>
@@ -131,11 +131,11 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </div>
 </div>
 
-<div id="outline-container-orgeb00ac2" class="outline-2">
-<h2 id="orgeb00ac2">基于即刻/快知和 RSSHub 的方案</h2>
-<div class="outline-text-2" id="text-orgeb00ac2">
+<div id="outline-container-org3f4ef78" class="outline-2">
+<h2 id="org3f4ef78">(已失效)基于即刻/快知和 RSSHub 的方案</h2>
+<div class="outline-text-2" id="text-org3f4ef78">
 <p>
-<a href="https://baike.baidu.com/item/%E5%8D%B3%E5%88%BB/18672117">即刻</a>上线机器人功能后，用户就可以自定义微信公众号机器人来抓取任意公众号并生成一个主题了，而即刻的每个主题，又是存在公开 WEB 链接的，所以就可以用 Huginn 解析一个即刻的公众号主题页面，来获取一个公众号的文章列表更新了。而后来 RSSHub 又能直接输出一个即刻主题的 RSS，所以这个流程又能进一步简化一下，省略掉解析即刻主题页面这一步，直接从 RSSHub 输出的 RSS 中，进一步解析出公众号文章的原始链接并抓取全文了。
+<a href="https://baike.baidu.com/item/%25E5%258D%25B3%25E5%2588%25BB/18672117">即刻</a>上线机器人功能后，用户就可以自定义微信公众号机器人来抓取任意公众号并生成一个主题了，而即刻的每个主题，又是存在公开 WEB 链接的，所以就可以用 Huginn 解析一个即刻的公众号主题页面，来获取一个公众号的文章列表更新了。而后来 RSSHub 又能直接输出一个即刻主题的 RSS，所以这个流程又能进一步简化一下，省略掉解析即刻主题页面这一步，直接从 RSSHub 输出的 RSS 中，进一步解析出公众号文章的原始链接并抓取全文了。
 </p>
 
 <p>
@@ -151,7 +151,7 @@ Huginn 的 wiki 上列举了一些典型的使用场景，如:
 </p>
 
 
-<div class="figure">
+<div id="org93e4c6d" class="figure">
 <p><img src="/assets/img/huginn_scenarios_comparison.png" alt="huginn_scenarios_comparison.png" />
 </p>
 </div>
@@ -215,7 +215,7 @@ EFB 本质上是在服务器上登录网页微信，然后监听网页微信上�
 </p>
 
 
-<div class="figure">
+<div id="orgd0e37ae" class="figure">
 <p><img src="/assets/img/huginn_efb_scenario.png" alt="huginn_efb_scenario.png" />
 </p>
 </div>
@@ -248,7 +248,7 @@ EFB 本质上是在服务器上登录网页微信，然后监听网页微信上�
 </p>
 
 
-<div class="figure">
+<div id="org85bc46f" class="figure">
 <p><img src="/assets/img/telegram_linked_channel.png" alt="telegram_linked_channel.png" />
 </p>
 </div></li>
@@ -317,7 +317,7 @@ EFB 本质上是在服务器上登录网页微信，然后监听网页微信上�
 使用 <a href="http://man7.org/linux/man-pages/man1/crontab.1.html">crontab</a> 新增两条定时任务
 </p>
 
-<pre class="example">
+<pre class="example" id="org8270be7">
 7,17,27,37,47,57 * * * * zs-rss fetch-wx-articles -n 微信.公众号 &gt;&gt; log.txt
 */10 * * * * zs-rss send-wx-articles &gt;&gt; log.txt
 </pre>
@@ -366,7 +366,7 @@ EFB 本质上是在服务器上登录网页微信，然后监听网页微信上�
 </p>
 
 
-<div class="figure">
+<div id="org330f787" class="figure">
 <p><img src="/assets/img/kindle4rss_feeds.png" alt="kindle4rss_feeds.png" />
 </p>
 </div>
