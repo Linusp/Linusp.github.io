@@ -1,0 +1,47 @@
+---
+layout     : post
+title      : "（已修复）对微信公众号 RSS 停止更新的说明"
+desc       : "今天发现我用 Huginn 制作的微信公众号全部没有更新了，持续了大概三到四周，对各位订阅者表示歉意。"
+categories : 数字生活
+tags       :
+---
+<p>
+年初换了新工作后，变得更忙了一点，看 RSS 的习惯也逐渐荒废了，今天上去看看，才发现我之前制作的微信公众号 RSS （见<a href="https://www.zmonster.me/2020/03/10/wx-article-rss.html">文章1</a>和<a href="https://www.zmonster.me/2020/04/11/wx-article-rss-2.html">文章2</a>）全部停止更新了，故障发生的时间点大概是三到四周前，赶紧去看下到底是怎么回事。
+</p>
+
+<p>
+由于 RSS 最终是由 <a href="https://feedpress.com">FeedPress</a> 输出的，所以我先登录到 FeedPress 上看了下，确认 FeedPress 自己没有出问题，只是输出的数据都是三到四周前的了；接着去看 Huginn，也是一样，工作正常，但接受到的原始数据就缺失了，而这些原始数据是我在一台国外 VPS 上的定时任务产出的，通过 Telegram API 获取 EFB 同步过来的微信公众号文章消息（详见我的<a href="https://www.zmonster.me/2020/04/17/wechat-articles-rss-solution.html">另一篇文章</a>），看了下日志，确认是这个定时任务出问题了。
+</p>
+
+<p>
+手工执行了下定时任务，得到了这么一条错误输出：
+</p>
+
+<pre class="example" id="orgabaf844">
+The authorization key (session file) was used under two different IP addresses simultaneously, and can no longer be used. Use the same session exclusively, or use different sessions'
+</pre>
+
+<p>
+出错的代码见 <a href="https://github.com/Linusp/zs/blob/master/zs/telegram.py#L366">Github</a>。
+</p>
+
+<p>
+至此明白原因了：大概三周前，我在本地使用相同的 token 跑了自己写的脚本，用来导出聊天记录，当时我本地也报了这个错，但没太在意，就是从那个时候起 VPS 上的 token 就失效了，然后加上没有做什么监控也没有用户反馈，导致到今天我才发现这个问题。
+</p>
+
+<p>
+明确问题后，按照如下过程修复问题：
+</p>
+<ol class="org-ol">
+<li>删除 VPS 上的 token，并重新认证</li>
+<li>获取 2021.04.30 后的微信公众号更新消息</li>
+<li>对每个有输出 RSS 的公众号，取最近 10 篇文章发送到 Huginn，生成相应的 RSS</li>
+</ol>
+
+<p>
+这样处理后问题暂时就解决了，FeedPress 应该会在之后陆续更新相应的 RSS 源了。
+</p>
+
+<p>
+在此对订阅这些 RSS 源的朋友表示歉意！
+</p>
