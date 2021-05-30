@@ -10,14 +10,14 @@ tags       :
 </p>
 
 <p>
-由于 RSS 最终是由 <a href="https://feedpress.com">FeedPress</a> 输出的，所以我先登录到 FeedPress 上看了下，确认 FeedPress 自己没有出问题，只是输出的数据都是三到四周前的了；接着去看 Huginn，也是一样，工作正常，但接受到的原始数据就缺失了，而这些原始数据是我在一台国外 VPS 上的定时任务产出的，通过 Telegram API 获取 EFB 同步过来的微信公众号文章消息（详见我的<a href="https://www.zmonster.me/2020/04/17/wechat-articles-rss-solution.html">另一篇文章</a>），看了下日志，确认是这个定时任务出问题了。
+由于 RSS 最终是由 <a href="https://feedpress.com">FeedPress</a> 输出的，所以我先登录到 FeedPress 上看了下，确认 FeedPress 自己没有出问题，只是输出的数据都是三到四周前的了；接着去看 Huginn，也是一样，工作正常，但接收到的原始数据就缺失了，而这些原始数据是我在一台国外 VPS 上的定时任务产出的，通过 Telegram API 获取 EFB 同步过来的微信公众号文章消息（详见我的<a href="https://www.zmonster.me/2020/04/17/wechat-articles-rss-solution.html">另一篇文章</a>），看了下日志，确认是这个定时任务出问题了。
 </p>
 
 <p>
 手工执行了下定时任务，得到了这么一条错误输出：
 </p>
 
-<pre class="example" id="orgabaf844">
+<pre class="example" id="orgd865196">
 The authorization key (session file) was used under two different IP addresses simultaneously, and can no longer be used. Use the same session exclusively, or use different sessions'
 </pre>
 
