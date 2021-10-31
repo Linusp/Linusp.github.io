@@ -1,0 +1,87 @@
+---
+layout     : post
+title      : 北青深一度和谷雨实验室全文RSS
+desc       : 应网友要求制作了北青深一度和谷雨实验室的全文RSS
+categories : 数字生活
+tags       :
+- RSS
+---
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org2a1f31a">北青深一度</a></li>
+<li><a href="#orgfb1bc37">谷雨实验室</a></li>
+</ul>
+</div>
+</div>
+
+<p>
+之前《<a href="https://www.zmonster.me/2020/03/10/wx-article-rss.html">我制作的微信公众号RSS</a>》这篇文章的评论里，有网友反馈了一些希望输出 RSS 的信息源，捡了两个看着顺眼的做了下。
+</p>
+
+<div id="outline-container-org2a1f31a" class="outline-2">
+<h2 id="org2a1f31a">北青深一度</h2>
+<div class="outline-text-2" id="text-org2a1f31a">
+<p>
+地址：<a href="https://feedpress.me/bqs">https://feedpress.me/bqs</a>
+</p>
+
+<p>
+制作步骤：
+</p>
+<ul class="org-ul">
+<li>找到北青深一度的网易号页面：<a href="https://c.m.163.com/news/sub/T1477387792079.html">https://c.m.163.com/news/sub/T1477387792079.html</a></li>
+<li><p>
+在 Inoreader 中添加订阅源，输入这个地址，会显示这不是一个有效的 Feed，然后点击「创建 Rss 订阅源」，按照提示创建
+</p>
+
+
+<div id="org0aed31b" class="figure">
+<p><img src="/assets/img/20211031_132837.png" alt="20211031_132837.png" />
+</p>
+</div>
+
+<p>
+不知道为什么，我今天想重现这个过程，老是显示「我们无法抓取远程网站」，所以无法给出后续步骤示例了。
+</p></li>
+
+<li><p>
+由于这种方式创建的订阅没有公开的 RSS 地址，要给别人用的话不太方便，好在 Inoreader 提供了对目录输出 RSS 的功能（限 Pro 用户），因此在 Inoreader 里新建了一个同名目录，把这个订移动到这个目录里，右键选择获取 RSS 订阅源就可以得到可以公开使用的 RSS 地址了
+</p>
+
+
+<div id="org9754990" class="figure">
+<p><img src="/assets/img/20211031_133912.png" alt="20211031_133912.png" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfb1bc37" class="outline-2">
+<h2 id="orgfb1bc37">谷雨实验室</h2>
+<div class="outline-text-2" id="text-orgfb1bc37">
+<p>
+地址：<a href="https://feedpress.me/wx-guyulab">https://feedpress.me/wx-guyulab</a>
+</p>
+
+<p>
+制作步骤
+</p>
+<ul class="org-ul">
+<li>用我的个人微信订阅「谷雨实验室-腾讯新闻」这个公众号，并记住公众号 guyulab</li>
+<li>在 Telegram 上将这个公众号关联到我专门的群组里</li>
+<li><p>
+用 <a href="https://github.com/Linusp/zs">zs</a> 生成 Huginn Scenario
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">zs-rss gen-wx-scenario -n &#35895;&#38632;&#23454;&#39564;&#23460; -i guyulab -o wx-guyulab.json
+</pre>
+</div></li>
+
+<li>登录 Huginn 导入创建好的 Scenario</li>
+</ul>
+</div>
+</div>
