@@ -1,0 +1,20 @@
+---
+layout: default
+title: 闲言碎语
+---
+
+<div class="posts">
+  {% for post in site.microblog reversed %}
+  <div class="post">
+    <h2 class="post-title">
+      <a href="{{ post.url }}">
+        {{ post.title }}
+      </a>
+    </h2>
+    <div style="font-size: 20px;">
+      {{ post.excerpt }}
+    </div>
+    <hr/>
+  </div>
+  {% endfor %}
+</div>

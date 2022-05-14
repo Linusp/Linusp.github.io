@@ -26,8 +26,16 @@ author:
 # Social Media
 github:              https://github.com/Linusp
 
+
+collections:
+  microblog:
+    output: true
+    permalink: /microblog/:title.html
+
 # sidebar nav
 nav:
+  - text: 闲言碎语
+    url: /microblog.html
   - text: 分类
     url : /categories.html
   - text: 标签
