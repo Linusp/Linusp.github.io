@@ -1,0 +1,24 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ "ZMonster's Lifelog" | xml_escape }}</title>
+    <link href="{{ site.out_url }}"/>
+    <atom:link type= "application/rss+xml" href="{{ site.out_url }}/microblog-rss.xml" rel="self"/>
+    <pubDate>{{ site.time | date_to_xmlschema }}</pubDate>
+    <lastBuildDate>{{ site.time | date_to_xmlschema }}</lastBuildDate>
+    <generator>Jekyll v{{ jekyll.version }}</generator>
+    {% for post in site.microblog reversed %}
+    <item>
+      <title>{{ post.title | xml_escape }}</title>
+      <link type="text/html" rel="alternate" href="{{ site.out_url }}{{ post.url }}"/>
+      <guid>{{ site.out_url }}{{ post.id }}</guid>
+      <pubDate>{{ post.date | date_to_xmlschema }}</pubDate>
+      <description>{{ post.content | xml_escape }}</description>
+      <content type="html">{{ post.content | xml_escape }}</content>
+    </item>
+    {% endfor %}
+  </channel>
+</rss>
