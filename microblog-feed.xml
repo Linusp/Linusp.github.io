@@ -22,6 +22,9 @@ layout: null
     <id>{{ site.out_url }}{{ post.id }}</id>
     <published>{{ post.date | date_to_xmlschema }}</published>
     <updated>{{ post.date | date_to_xmlschema }}</updated>
+    <description type="html">
+      {{ post.content | xml_escape }}
+    </description>
     <content type="html">
       {{ post.content | xml_escape }}
     </content>
