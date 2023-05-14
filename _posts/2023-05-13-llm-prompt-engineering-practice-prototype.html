@@ -27,7 +27,7 @@ tags       :
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">import</span> openai
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">import</span> openai
 openai.<span style="color: #ffcc66;">proxy</span> = <span style="color: #66cccc;">'http://localhost:8080'</span>
 </pre>
 </div>
@@ -36,12 +36,12 @@ openai.<span style="color: #ffcc66;">proxy</span> = <span style="color: #66cccc;
 设置好代理后，用 langchain 就可以简单地调用 OpenAI 的接口来获得回答，比如说这样：
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.chat_models <span style="color: #99cc99;">import</span> ChatOpenAI
-<span style="color: #99cc99;">from</span> langchain.schema <span style="color: #99cc99;">import</span> HumanMessage
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.chat_models <span style="color: #99cc99; font-style: italic;">import</span> ChatOpenAI
+<span style="color: #99cc99; font-style: italic;">from</span> langchain.schema <span style="color: #99cc99; font-style: italic;">import</span> HumanMessage
 
 <span style="color: #ffcc66;">user_message</span> = HumanMessage(content=<span style="color: #66cccc;">'&#23558;&#36825;&#21477;&#35805;&#32763;&#35793;&#25104;&#20013;&#25991;: &#8220;to be or not to be&#8221;'</span>)
 
-<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#23433;&#20840;&#32771;&#34385;&#36825;&#37324;&#21543;&#30495;&#23454; API KEY &#38544;&#34255;&#20102;&#65292;&#21518;&#25991;&#19981;&#20877;&#24378;&#35843;</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#23433;&#20840;&#32771;&#34385;&#36825;&#37324;&#25226;&#30495;&#23454; API KEY &#38544;&#34255;&#20102;&#65292;&#21518;&#25991;&#19981;&#20877;&#24378;&#35843;</span>
 llm = ChatOpenAI(temperature=0, openai_api_key=<span style="color: #66cccc;">'sk-xxxxxxxxxxxxxxxx'</span>)
 answer = llm([user_message])
 <span style="color: #cc99cc;">print</span>(answer.content)
@@ -51,7 +51,7 @@ answer = llm([user_message])
 <p>
 上面的代码没有指定要使用的模型，默认会使用 gpt-3.5-turbo，运行后得到了这样的结果
 </p>
-<pre class="example" id="org6d6c3ad">
+<pre class="example" id="org5549ca5">
 生存还是毁灭
 </pre>
 
@@ -59,7 +59,7 @@ answer = llm([user_message])
 当然，这段代码不是对话的模式，没有考虑聊天历史，如果要做聊天的话，需要维护一个聊天历史
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.memory <span style="color: #99cc99;">import</span> ChatMessageHistory
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.memory <span style="color: #99cc99; font-style: italic;">import</span> ChatMessageHistory
 
 <span style="color: #ffcc66;">memory</span> = ChatMessageHistory()
 </pre>
@@ -85,7 +85,7 @@ memory.add_ai_message(answer.content)
 <p>
 结果
 </p>
-<pre class="example" id="org491bf64">
+<pre class="example" id="org85f54e8">
 [HumanMessage(content='将这句话翻译成中文: “to be or not to be”', additional_kwargs={}, example=False),
  AIMessage(content='"生存还是毁灭"', additional_kwargs={}, example=False)]
 </pre>
@@ -108,7 +108,7 @@ memory.add_ai_message(answer.content)
 <p>
 结果
 </p>
-<pre class="example" id="org4c2f0d6">
+<pre class="example" id="org3563c58">
 Answer: "生きるか死ぬか"
 History:
 [HumanMessage(content='将这句话翻译成中文: “to be or not to be”', additional_kwargs={}, example=False),
@@ -121,18 +121,18 @@ History:
 综合上面的代码，只要写一个循环，就能做持续的对话了
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.chat_models <span style="color: #99cc99;">import</span> ChatOpenAI
-<span style="color: #99cc99;">from</span> langchain.memory <span style="color: #99cc99;">import</span> ChatMessageHistory
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.chat_models <span style="color: #99cc99; font-style: italic;">import</span> ChatOpenAI
+<span style="color: #99cc99; font-style: italic;">from</span> langchain.memory <span style="color: #99cc99; font-style: italic;">import</span> ChatMessageHistory
 
 <span style="color: #ffcc66;">memory</span> = ChatMessageHistory()
 <span style="color: #ffcc66;">llm</span> = ChatOpenAI(temperature=0, openai_api_key=<span style="color: #66cccc;">'sk-xxxxxxxxxxxxxxxx'</span>)
-<span style="color: #99cc99;">while</span> <span style="color: #6699cc;">True</span>:
+<span style="color: #99cc99; font-style: italic;">while</span> <span style="color: #6699cc; font-style: italic;">True</span>:
     user_message = <span style="color: #cc99cc;">input</span>(<span style="color: #66cccc;">'You: '</span>).strip()
-    <span style="color: #99cc99;">if</span> <span style="color: #99cc99;">not</span> user_message:
-        <span style="color: #99cc99;">continue</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #99cc99; font-style: italic;">not</span> user_message:
+        <span style="color: #99cc99; font-style: italic;">continue</span>
 
-    <span style="color: #99cc99;">if</span> user_message.lower() <span style="color: #99cc99;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
-        <span style="color: #99cc99;">break</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> user_message.lower() <span style="color: #99cc99; font-style: italic;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
+        <span style="color: #99cc99; font-style: italic;">break</span>
 
     memory.add_user_message(user_message)
     answer = llm(memory.messages)
@@ -146,7 +146,7 @@ History:
 </p>
 
 <p>
-综上，为了保证不超出接口长度限制，需要只取 memory.messages 中的一部分，假设取的 memory.messages 中的这部分的总 token 数 为 L1，我们还要保证输出结果的总 token 数能达到 L2，那么必须保证 L1 + L2 &lt; 4096，L2 可以在初始化 ChatOpenAI 的时候通过参数 max_tokens 来设置，默认没设置就是无限，那为了更好地计算 L1，需要显示设置一下它，比如说设置为 1024：
+综上，为了保证不超出接口长度限制，需要只取 memory.messages 中的一部分，假设取的 memory.messages 中的这部分的总 token 数 为 L1，我们还要保证输出结果的总 token 数能达到 L2，那么必须保证 L1 + L2 &lt; 4096，L2 可以在初始化 ChatOpenAI 的时候通过参数 max_tokens 来设置，默认没设置就是无限，那为了更好地计算 L1，需要显式设置一下它，比如说设置为 1024：
 </p>
 
 <div class="org-src-container">
@@ -168,7 +168,7 @@ History:
 </p>
 
 
-<div id="org2932086" class="figure">
+<div id="org6a83d09" class="figure">
 <p><img src="/assets/img/gpt3_tokens_example_english.png" alt="gpt3_tokens_example_english.png" />
 </p>
 </div></li>
@@ -178,7 +178,7 @@ History:
 </p>
 
 
-<div id="orgfe205b4" class="figure">
+<div id="org019e696" class="figure">
 <p><img src="/assets/img/gpt3_tokens_example_chinese.png" alt="gpt3_tokens_example_chinese.png" />
 </p>
 </div>
@@ -192,7 +192,7 @@ History:
 OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这个 python 库来做文本到 token 的编码转换
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> tiktoken.model <span style="color: #99cc99;">import</span> encoding_for_model
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> tiktoken.model <span style="color: #99cc99; font-style: italic;">import</span> encoding_for_model
 
 <span style="color: #ffcc66;">encoder</span> = encoding_for_model(<span style="color: #66cccc;">'gpt-3.5-turbo'</span>)
 </pre>
@@ -202,27 +202,27 @@ OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这�
 由于 gpt-3.5-turbo 模型使用的 Chat Completion 接口的输入不是普通的文本格式，计算输入的 token 数不能简单把用户输入和接口响应结果文本的 token 数加起来，OpenAI 自己给出了<a href="https://platform.openai.com/docs/guides/chat/managing-tokens">计算方法</a>:
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">import</span> tiktoken
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">import</span> tiktoken
 
-<span style="color: #99cc99;">def</span> <span style="color: #f99157;">num_tokens_from_messages</span>(messages, model=<span style="color: #66cccc;">"gpt-3.5-turbo-0301"</span>):
+<span style="color: #99cc99; font-style: italic;">def</span> <span style="color: #f99157;">num_tokens_from_messages</span>(messages, model=<span style="color: #66cccc;">"gpt-3.5-turbo-0301"</span>):
     <span style="color: #cc99cc;">"""Returns the number of tokens used by a list of messages."""</span>
-    <span style="color: #99cc99;">try</span>:
+    <span style="color: #99cc99; font-style: italic;">try</span>:
         encoding = tiktoken.encoding_for_model(model)
-    <span style="color: #99cc99;">except</span> <span style="color: #6699cc;">KeyError</span>:
+    <span style="color: #99cc99; font-style: italic;">except</span> <span style="color: #6699cc;">KeyError</span>:
         encoding = tiktoken.get_encoding(<span style="color: #66cccc;">"cl100k_base"</span>)
 
-    <span style="color: #99cc99;">if</span> model == <span style="color: #66cccc;">"gpt-3.5-turbo-0301"</span>:  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">note: future models may deviate from this</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> model == <span style="color: #66cccc;">"gpt-3.5-turbo-0301"</span>:  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">note: future models may deviate from this</span>
         num_tokens = 0
-        <span style="color: #99cc99;">for</span> message <span style="color: #99cc99;">in</span> messages:
+        <span style="color: #99cc99; font-style: italic;">for</span> message <span style="color: #99cc99; font-style: italic;">in</span> messages:
             num_tokens += 4  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">every message follows &lt;im_start&gt;{role/name}\n{content}&lt;im_end&gt;\n</span>
-            <span style="color: #99cc99;">for</span> key, value <span style="color: #99cc99;">in</span> message.items():
+            <span style="color: #99cc99; font-style: italic;">for</span> key, value <span style="color: #99cc99; font-style: italic;">in</span> message.items():
                 num_tokens += <span style="color: #cc99cc;">len</span>(encoding.encode(value))
-                <span style="color: #99cc99;">if</span> key == <span style="color: #66cccc;">"name"</span>:  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">if there's a name, the role is omitted</span>
+                <span style="color: #99cc99; font-style: italic;">if</span> key == <span style="color: #66cccc;">"name"</span>:  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">if there's a name, the role is omitted</span>
                     num_tokens += -1  <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">role is always required and always 1 token</span>
 
-        <span style="color: #99cc99;">return</span> num_tokens
-    <span style="color: #99cc99;">else</span>:
-        <span style="color: #99cc99;">raise</span> <span style="color: #6699cc;">NotImplementedError</span>(
+        <span style="color: #99cc99; font-style: italic;">return</span> num_tokens
+    <span style="color: #99cc99; font-style: italic;">else</span>:
+        <span style="color: #99cc99; font-style: italic;">raise</span> <span style="color: #6699cc;">NotImplementedError</span>(
             f<span style="color: #66cccc;">"num_tokens_from_messages() is not presently implemented for model </span>{model}<span style="color: #66cccc;">.\n"</span>
             <span style="color: #66cccc;">"See https://github.com/openai/openai-python/blob/main/chatml.md "</span>
             <span style="color: #66cccc;">"for information on how messages are converted to tokens."</span>
@@ -242,33 +242,33 @@ OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这�
 基于这个函数可以来实现聊天历史的选择了，这里只简单实现一个取最近聊天历史的
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.schema <span style="color: #99cc99;">import</span> AIMessage, HumanMessage
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.schema <span style="color: #99cc99; font-style: italic;">import</span> AIMessage, HumanMessage
 
-<span style="color: #99cc99;">def</span> <span style="color: #f99157;">select_messages</span>(messages, max_total_tokens=4096, max_output_tokens=1024):
+<span style="color: #99cc99; font-style: italic;">def</span> <span style="color: #f99157;">select_messages</span>(messages, max_total_tokens=4096, max_output_tokens=1024):
     tokens_num = 0
     selected = []
-    <span style="color: #99cc99;">for</span> message <span style="color: #99cc99;">in</span> messages[::-1]:
+    <span style="color: #99cc99; font-style: italic;">for</span> message <span style="color: #99cc99; font-style: italic;">in</span> messages[::-1]:
         role = <span style="color: #66cccc;">'system'</span>
-        <span style="color: #99cc99;">if</span> <span style="color: #cc99cc;">isinstance</span>(message, AIMessage):
+        <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #cc99cc;">isinstance</span>(message, AIMessage):
             role = <span style="color: #66cccc;">'assistant'</span>
-        <span style="color: #99cc99;">elif</span> <span style="color: #cc99cc;">isinstance</span>(message, HumanMessage):
+        <span style="color: #99cc99; font-style: italic;">elif</span> <span style="color: #cc99cc;">isinstance</span>(message, HumanMessage):
             role = <span style="color: #66cccc;">'user'</span>
 
         cur_token_num = num_tokens_from_messages([{<span style="color: #66cccc;">'role'</span>: role, <span style="color: #66cccc;">'content'</span>: message.content}])
-        <span style="color: #99cc99;">if</span> tokens_num + cur_token_num + 2 + max_output_tokens &gt; max_total_tokens:
-            <span style="color: #99cc99;">break</span>
+        <span style="color: #99cc99; font-style: italic;">if</span> tokens_num + cur_token_num + 2 + max_output_tokens &gt; max_total_tokens:
+            <span style="color: #99cc99; font-style: italic;">break</span>
 
         selected.append(message)
         tokens_num += cur_token_num
 
     selected = selected[::-1]
-    <span style="color: #99cc99;">if</span> <span style="color: #cc99cc;">isinstance</span>(selected[0], AIMessage): <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#30830;&#20445;&#31532;&#19968;&#26465;&#26159;&#29992;&#25143;&#28040;&#24687;</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #cc99cc;">isinstance</span>(selected[0], AIMessage): <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#30830;&#20445;&#31532;&#19968;&#26465;&#26159;&#29992;&#25143;&#28040;&#24687;</span>
         selected = selected[1:]
 
-    <span style="color: #99cc99;">if</span> <span style="color: #99cc99;">not</span> selected:            <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#20551;&#35774; messages &#37324;&#26368;&#21518;&#19968;&#26465;&#26159;&#24403;&#21069;&#29992;&#25143;&#36755;&#20837;</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #99cc99; font-style: italic;">not</span> selected:            <span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#20551;&#35774; messages &#37324;&#26368;&#21518;&#19968;&#26465;&#26159;&#24403;&#21069;&#29992;&#25143;&#36755;&#20837;</span>
         selected = message[-1]
 
-    <span style="color: #99cc99;">return</span> selected
+    <span style="color: #99cc99; font-style: italic;">return</span> selected
 </pre>
 </div>
 
@@ -276,8 +276,8 @@ OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这�
 那么前面的持续对话代码可以改造成这个样子了
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.chat_models <span style="color: #99cc99;">import</span> ChatOpenAI
-<span style="color: #99cc99;">from</span> langchain.memory <span style="color: #99cc99;">import</span> ChatMessageHistory
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.chat_models <span style="color: #99cc99; font-style: italic;">import</span> ChatOpenAI
+<span style="color: #99cc99; font-style: italic;">from</span> langchain.memory <span style="color: #99cc99; font-style: italic;">import</span> ChatMessageHistory
 
 <span style="color: #ffcc66;">memory</span> = ChatMessageHistory()
 
@@ -287,13 +287,13 @@ OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这�
     openai_api_key=<span style="color: #66cccc;">'sk-xxxxxxxxxxxxxxxx'</span>,
     max_tokens=max_output_tokens,
 )
-<span style="color: #99cc99;">while</span> <span style="color: #6699cc;">True</span>:
+<span style="color: #99cc99; font-style: italic;">while</span> <span style="color: #6699cc; font-style: italic;">True</span>:
     user_message = <span style="color: #cc99cc;">input</span>(<span style="color: #66cccc;">'You: '</span>).strip()
-    <span style="color: #99cc99;">if</span> <span style="color: #99cc99;">not</span> user_message:
-        <span style="color: #99cc99;">continue</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #99cc99; font-style: italic;">not</span> user_message:
+        <span style="color: #99cc99; font-style: italic;">continue</span>
 
-    <span style="color: #99cc99;">if</span> user_message.lower() <span style="color: #99cc99;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
-        <span style="color: #99cc99;">break</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> user_message.lower() <span style="color: #99cc99; font-style: italic;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
+        <span style="color: #99cc99; font-style: italic;">break</span>
 
     memory.add_user_message(user_message)
     messages = select_messages(
@@ -316,7 +316,7 @@ OpenAI 提供了 <a href="https://github.com/openai/tiktoken">tiktoken</a> 这�
 max_output_tokens=200, max_total_tokens=4096 时，输入的最大 token 数可以到 3896，所以可以选到尽可能多的历史消息
 </p>
 
-<pre class="example" id="org4736cc9">
+<pre class="example" id="org61448f4">
 You: 将这句话翻译成中文: “to be or not to be”
 selected messages: [HumanMessage(content='将这句话翻译成中文: “to be or not to be”', additional_kwargs={}, example=False)]
 BOT: "生存还是毁灭"
@@ -329,7 +329,7 @@ BOT: "生きるか死ぬか"
 max_output_tokens=4050, max_total_tokens=4096，输入的最大 token 数只有 46，第二轮的时候没法使用前一轮的历史消息
 </p>
 
-<pre class="example" id="orgafae93d">
+<pre class="example" id="org7ad4342">
 You: 将这句话翻译成中文: “to be or not to be”
 selected messages: [HumanMessage(content='将这句话翻译成中文: “to be or not to be”', additional_kwargs={}, example=False)]
 BOT: "生存还是毁灭"
@@ -344,9 +344,9 @@ BOT: もう一度日本語に翻訳してください。
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #99cc99;">from</span> langchain.chat_models <span style="color: #99cc99;">import</span> ChatOpenAI
-<span style="color: #99cc99;">from</span> langchain.memory <span style="color: #99cc99;">import</span> ChatMessageHistory
-<span style="color: #99cc99;">from</span> langchain.schema <span style="color: #99cc99;">import</span> SystemMessage
+<pre class="src src-python"><span style="color: #99cc99; font-style: italic;">from</span> langchain.chat_models <span style="color: #99cc99; font-style: italic;">import</span> ChatOpenAI
+<span style="color: #99cc99; font-style: italic;">from</span> langchain.memory <span style="color: #99cc99; font-style: italic;">import</span> ChatMessageHistory
+<span style="color: #99cc99; font-style: italic;">from</span> langchain.schema <span style="color: #99cc99; font-style: italic;">import</span> SystemMessage
 
 <span style="color: #ffcc66;">memory</span> = ChatMessageHistory()
 <span style="color: #ffcc66;">system_message</span> = SystemMessage(
@@ -363,13 +363,13 @@ llm = ChatOpenAI(
     openai_api_key=<span style="color: #66cccc;">'sk-xxxxxxxxxxxxxxxx'</span>,
     max_tokens=max_output_tokens,
 )
-<span style="color: #99cc99;">while</span> <span style="color: #6699cc;">True</span>:
+<span style="color: #99cc99; font-style: italic;">while</span> <span style="color: #6699cc; font-style: italic;">True</span>:
     user_message = <span style="color: #cc99cc;">input</span>(<span style="color: #66cccc;">'You: '</span>).strip()
-    <span style="color: #99cc99;">if</span> <span style="color: #99cc99;">not</span> user_message:
-        <span style="color: #99cc99;">continue</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> <span style="color: #99cc99; font-style: italic;">not</span> user_message:
+        <span style="color: #99cc99; font-style: italic;">continue</span>
 
-    <span style="color: #99cc99;">if</span> user_message.lower() <span style="color: #99cc99;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
-        <span style="color: #99cc99;">break</span>
+    <span style="color: #99cc99; font-style: italic;">if</span> user_message.lower() <span style="color: #99cc99; font-style: italic;">in</span> (<span style="color: #66cccc;">'quit'</span>, <span style="color: #66cccc;">'exit'</span>):
+        <span style="color: #99cc99; font-style: italic;">break</span>
 
     memory.add_user_message(user_message)
     messages = select_messages(
@@ -387,7 +387,7 @@ llm = ChatOpenAI(
 <p>
 这样让它介绍自己就会按照设定来回答了
 </p>
-<pre class="example" id="orgd7731ba">
+<pre class="example" id="org54cb3ca">
 You: 介绍一下你自己
 selected messages: [HumanMessage(content='介绍一下你自己', additional_kwargs={}, example=False)]
 BOT: 你好，我是Xorius，一名人工智能助手。我可以与您讨论各种话题，帮助您解决问题。我可以提供有关各种主题的信息，例如科技、文化、历史、健康、旅游等等。我还可以执行各种任务，例如设置提醒、发送电子邮件、搜索信息等等。请告诉我您需要什么帮助，我会尽力为您提供支持。
@@ -396,7 +396,7 @@ BOT: 你好，我是Xorius，一名人工智能助手。我可以与您讨论各
 <p>
 如果不加这个 system_message，同样的输入得到的回答里它会强调自己由 OpenAI 开发，如下所示：
 </p>
-<pre class="example" id="orgd27aa42">
+<pre class="example" id="orgc6a60b3">
 You: 介绍一下你自己
 selected messages: [HumanMessage(content='介绍一下你自己', additional_kwargs={}, example=False)]
 BOT: 我是一名AI语言模型，由OpenAI开发。我可以进行自然语言处理和生成，帮助用户回答问题、翻译、写作等。我没有实体，只存在于计算机中，但我可以通过文字和语音与人类进行交互。我不会感到疲倦或犯错，但我也没有情感和意识。我只是一个程序，但我希望能够为人类提供帮助和便利。
@@ -406,21 +406,21 @@ BOT: 我是一名AI语言模型，由OpenAI开发。我可以进行自然语言�
 最后，我将上述代码做一些调整后实现成了项目里的一个命令行工具，代码见 <a href="https://github.com/monsternlp/xorius">https://github.com/monsternlp/xorius</a> ，也发布到了 pypi，执行 pip install xorius 即可安装，安装后即可在命令行执行 xorius-cli 来进入对话。
 </p>
 
+
+<div id="orgd75dfab" class="figure">
+<p><img src="/assets/img/xorius_cli.png" alt="xorius_cli.png" />
+</p>
+</div>
+
 <p>
 命令行参数说明如下：
 </p>
 <ul class="org-ul">
-<li>&#x2013;api-key: 设置 OpenAI 的 API 密钥</li>
-<li>&#x2013;temperature: 设置温度参数，用于控制生成结果时的随性，0 的话不随机每次都生成概率最大的结果，默认 0.7</li>
-<li>&#x2013;max-tokens: 设置生成结果允许的最大 token 数，默认 512</li>
-<li>&#x2013;proxy: 设置 http 代理，主要针对国内网络环境</li>
+<li><code>--api-key</code>: 设置 OpenAI 的 API 密钥</li>
+<li><code>--temperature</code>: 设置温度参数，用于控制生成结果时的随性，0 的话不随机每次都生成概率最大的结果，默认 0.7</li>
+<li><code>--max-tokens</code>: 设置生成结果允许的最大 token 数，默认 512</li>
+<li><code>--proxy</code>: 设置 http 代理，主要针对国内网络环境</li>
 </ul>
-
-
-<div id="org1817384" class="figure">
-<p><img src="/assets/img/xorius_cli.png" alt="xorius_cli.png" />
-</p>
-</div>
 
 <p>
 原型是实现了，但是在这个原型上，能看到一些直接的问题
@@ -435,7 +435,7 @@ BOT: 我是一名AI语言模型，由OpenAI开发。我可以进行自然语言�
 </p>
 
 
-<div id="orgd8b962f" class="figure">
+<div id="org1702b81" class="figure">
 <p><img src="/assets/img/xorius_cli_2.png" alt="xorius_cli_2.png" />
 </p>
 </div></li>
