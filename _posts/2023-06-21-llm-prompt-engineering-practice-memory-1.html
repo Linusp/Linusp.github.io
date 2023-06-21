@@ -15,6 +15,7 @@ tags       :
 <ol class="org-ol">
 <li><a href="https://www.zmonster.me/2023/05/07/llm-prompt-engineering-practice-prologue.html">LLM Prompt Engineering 实践：序 · ZMonster's Blog</a></li>
 <li><a href="https://www.zmonster.me/2023/05/13/llm-prompt-engineering-practice-prototype.html">LLM Prompt Engineering 实践：原型 · ZMonster's Blog</a></li>
+<li><a href="https://www.zmonster.me/2023/06/21/llm-prompt-engineering-practice-memory-1.html">LLM Prompt Engineering 实践：记忆（1） · ZMonster's Blog</a></li>
 </ol>
 
 <p>
@@ -29,7 +30,7 @@ tags       :
 </ol>
 
 <p>
-其中 1/2/3 设计到记忆机制的问题，对这几个问题都可以独立地去思考和尝试解决，但在此之前，还是有必要再对这几个问题做更多的探讨。
+其中 1/2/3 涉及到记忆机制的问题，对这几个问题都可以独立地去思考和尝试解决，但在此之前，还是有必要再对这几个问题做更多的探讨。
 </p>
 
 <p>
@@ -178,7 +179,7 @@ Xorius:
 </ol>
 
 <p>
-在多轮对话的研究里，对历史基于和当前输入的相关关系应该还会有更全面、更细致的分类，暂时不想去翻相关的研究资料了，等需要做更精细的处理的时候可能会去看看，现在主要是做一个大致的梳理，知道模型在利用聊天历史时存在不同情况即可。
+在多轮对话的研究里，对历史记忆和当前输入的相关关系应该还会有更全面、更细致的分类，暂时不想去翻相关的研究资料了，等需要做更精细的处理的时候可能会去看看，现在主要是做一个大致的梳理，知道模型在利用聊天历史时存在不同情况即可。
 </p>
 
 <p>
@@ -195,7 +196,7 @@ Xorius:
 </p>
 
 <p>
-第 5 个问题则是在第 4 个问题上更进一步思考，如果最近 K 轮历史记忆中有无关内容，那么它们一定是会带来负面影响的，它们可能会摊薄回答中 token 和模型输入（当前用户输入及用到的历史记忆）中有用内容的 attention 权重，进而导致回可能偏离预期。这种负面影响的大小一定程度上取决于模型本身的能力，很强的模型（比如 GPT-4）可能不会表现得很明显。
+第 5 个问题则是在第 4 个问题上更进一步思考，如果最近 K 轮历史记忆中有无关内容，那么它们一定是会带来负面影响的，它们可能会摊薄当前输入中 token 和历史记忆中有用内容的 attention 权重，进而导致回可能偏离预期。这种负面影响的大小一定程度上取决于模型本身的能力，很强的模型（比如 GPT-4）可能不会表现得很明显。
 </p>
 
 <p>
