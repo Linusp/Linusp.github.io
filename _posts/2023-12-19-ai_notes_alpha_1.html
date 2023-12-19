@@ -46,7 +46,7 @@ tags       :
 </p>
 
 
-<div id="orgc9bc90f" class="figure">
+<div id="org98ca753" class="figure">
 <p><img src="/assets/img/model_editing_1.png" alt="model_editing_1.png" />
 </p>
 </div>
@@ -56,7 +56,7 @@ tags       :
 </p>
 
 
-<div id="orgbd07f0f" class="figure">
+<div id="orgb849e5f" class="figure">
 <p><img src="/assets/img/model_editing_2.png" alt="model_editing_2.png" />
 </p>
 </div>
@@ -112,7 +112,7 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org8814fd6" class="figure">
+<div id="orgc6fb423" class="figure">
 <p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
 </p>
 </div>
@@ -122,16 +122,16 @@ EMNLP2023 的最佳论文之一。
 </p>
 <ol class="org-ol">
 <li>在浅层中，标签词从示例样本中聚合信息，形成后续计算的语义表示</li>
-<li><p>
-在深层中，模型通过提取标签词的信息（就是假设 1 中的语义表示）进行预测
-</p>
+<li>在深层中，模型通过提取标签词的信息（就是假设 1 中的语义表示）进行预测</li>
+</ol>
+
 
 <p>
 这两个假设的可视化地描述的话是下图这个样子：
 </p>
 
 
-<div id="org037e1fe" class="figure">
+<div id="orgac42fd1" class="figure">
 <p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
 </p>
 </div>
@@ -141,29 +141,26 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org5258f64" class="figure">
+<div id="orgfe5c0ca" class="figure">
 <p><img src="/assets/img/shallow_layers_hypothesis.png" alt="shallow_layers_hypothesis.png" />
 </p>
-</div></li>
-</ol>
+</div>
 
 <p>
 可以看到
 </p>
 <ul class="org-ul">
-<li><p>
-同样在前 5 层进行阻断时，阻断流向标签词的信息流带来的模型效果损失远远比阻断流向非标签词的大；
-</p>
-<ul class="org-ul">
+<li>同样在前 5 层进行阻断时，阻断流向标签词的信息流带来的模型效果损失远远比阻断流向非标签词的大；</li>
 <li>同样阻断流向标签词的信息流时，在前 5 层进行阻断带来的模型效果损失远远比后五层大，事实上，在后五层对流向标签词的信息流进行阻断时，模型的效果损失非常小</li>
 </ul>
+
 
 <p>
 对第二个假设是通过直接考察输出位置对标签词处的 attention 权重、将权重最大的标签词作为预测结果，然后与正确的结果进行对比，计算 AUC-ROC 分数考察两者之间的相关性，如下图所示，可以看到这个相关性在浅层时很不明显但在深层时就很明显了。
 </p>
 
 
-<div id="org20db5e8" class="figure">
+<div id="org3442e26" class="figure">
 <p><img src="/assets/img/deep_layers_hypothesis.png" alt="deep_layers_hypothesis.png" />
 </p>
 </div>
@@ -175,8 +172,7 @@ EMNLP2023 的最佳论文之一。
 <li>Anchor Re-weighting: 我理解就是把之前直接用目标位置对标签词的 attention 值来预测类别的方法，形式化后发现和逻辑回归很像，然后逻辑回归会有一个偏置项嘛，所以作者也在这个形式上加了一个偏执项来和逻辑回归对齐（是一种假设模型本身存在 bias 的意思？），然后根据这个形式化假设去学习到这个偏执项里的参数，最后用来调整目标位置在每个标签词上的 attention 值。</li>
 <li>Anchor-Only Context Compression: 大概意思是，预先把示例的 hidden state 算好，然后有真实的任务输入进来的时候，把每一层标签词位置的 hidden state 拿出来拼接起来放到（处理真实任务输入的这个）模型的每一层最前面，这样实际预测的时候就示例中的所有文本就不再需要参与计算了，推理过程就能加速了。</li>
 <li>Anchor Distances for Error Diagnosis: 通过对比示例中标签词的 attention 相关的表示（论文里有一套稍微复杂点的计算过程，暂时没去细看）然后计算不同标签词表示之间的相似度，理想情况下不同标签词的相似度应该较低，当预测结果有错误时可能就有不同的标签词因为 In-Context Learning 而产生了相似的表示，这样通过分析不同标签词之间的混淆情况就能把错误的原因找出来，或许也能去针对性地做调整 —— 比如说把有混淆的那个标签词的文本换成别的？</li>
-</ol></li>
-</ul>
+</ol>
 </div>
 </div>
 
@@ -205,7 +201,7 @@ EMNLP2023 的最佳论文之一。
 <p>
 文中所谓 demenstration bias 是说因为示例数量太少，导致他们可以被划分到不唯一的多个任务空间里去，进而影响结果，比如说下面这样两个用于情感分类的示例，不看标签的话两个示例的对比差异不够明显，可以用在情感分类里，也可以用到电影类型分类任务里：
 </p>
-<pre class="example" id="org3931807">
+<pre class="example" id="orgeca9ae8">
 Obviously, Titanic is a well-made romantic film. -&gt; positive
 Damn, it's a waste of time watching this cartoon! -&gt; negative
 </pre>
@@ -219,7 +215,7 @@ Damn, it's a waste of time watching this cartoon! -&gt; negative
 </p>
 
 
-<div id="org13b684f" class="figure">
+<div id="orgcb6baf9" class="figure">
 <p><img src="/assets/img/comparable_demenstrations.png" alt="comparable_demenstrations.png" />
 </p>
 </div>
@@ -407,14 +403,14 @@ safety_settings 用来设置安全策略，只有 4 个能设置，我建议按�
 <p>
 如果前面没有设置 safety_settings，上面的代码会报错
 </p>
-<pre class="example" id="org9b0d4c7">
+<pre class="example" id="org7715f92">
 ValueError: The `response.parts` quick accessor only works for a single candidate, but none were returned. Check the `response.prompt_feedback` to see if the prompt was blocked.
 </pre>
 
 <p>
 根据错误提示查看 response.prompt_feedback 会得到这样的结果，可以看到 HARM_CATEGORY_HARASSMENT 这个类别被判断达到 MEDIUM 级别所以就被过滤了。
 </p>
-<pre class="example" id="org90909d9">
+<pre class="example" id="org13fc62d">
 safety_ratings {
   category: HARM_CATEGORY_SEXUALLY_EXPLICIT
   probability: NEGLIGIBLE
@@ -459,7 +455,7 @@ safety_ratings {
 </div>
 
 
-<div id="orgfa81fee" class="figure">
+<div id="org06e247c" class="figure">
 <p><img src="/assets/img/meme.jpg" alt="meme.jpg" />
 </p>
 </div>
@@ -477,7 +473,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="orgced7fa6">
+<pre class="example" id="org949ee68">
 图片中的水桶代表着一个人的收入，水代表着支出。水桶里的水从不同的洞中流出，代表着不同的支出，如水电费、交通费、房租、保险、电话费等。水桶里的水位越来越低，代表着收入被各种支出一点点蚕食。最后，水桶里的水流光了，代表着入不敷出。图片反映了当代年轻人生活压力大的现状。
 </pre>
 
@@ -509,7 +505,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="orga6e4861">
+<pre class="example" id="orgb11a410">
 您好，很高兴为您服务。我是人工智能助手，可以帮助您解决各种问题。您有什么需要我帮忙的吗？
 </pre>
 
@@ -524,7 +520,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="org73ba95f">
+<pre class="example" id="org9e7a3c1">
 [parts {
    text: "你好"
  }
@@ -556,7 +552,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="org7b8e2f6">
+<pre class="example" id="org88254dd">
 Shape: (2, 768)
 Embeddings: [[ 0.0427908  -0.06421863 -0.02308055 ...  0.01537165 -0.00269788
    0.03161672]
@@ -580,7 +576,7 @@ Inner Product: 0.9999966707944825
 </p>
 
 
-<div id="orga8f02f9" class="figure">
+<div id="org8df3b2e" class="figure">
 <p><img src="/assets/img/perplexity_chat.png" alt="perplexity_chat.png" />
 </p>
 </div></li>
@@ -593,7 +589,7 @@ Perplexity 的 API 同样需要设置好支付方式才能使用，不过不像 
 </p>
 
 
-<div id="org3f19e25" class="figure">
+<div id="orga47481a" class="figure">
 <p><img src="/assets/img/perplexity_api.png" alt="perplexity_api.png" />
 </p>
 </div>
@@ -628,7 +624,7 @@ completion = client.chat.completions.create(
 <p>
 输出
 </p>
-<pre class="example" id="org197fd1f">
+<pre class="example" id="org5eb31ca">
 "桃花汛" 是指一种具有桃花的气味和花汛的特点的气味。在中文中，桃花汛通常被称为"桃花味"或"桃花气味"。
 
 桃花汛是一种植物性的气味，具有桃花的甜美和花汛的芳香。它通常用于描述一种气味很柔和、温暖、甜美的感觉，类似于桃花的气味。在中文中，桃花汛通常用于描述食物、饮料、皮肤护理产品等具有桃花味的产品
@@ -648,7 +644,7 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="orgc3b7a73" class="figure">
+<div id="orge0f7cf9" class="figure">
 <p><img src="/assets/img/dify_1.png" alt="dify_1.png" />
 </p>
 </div>
@@ -658,7 +654,7 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="org5b93b47" class="figure">
+<div id="org98a008c" class="figure">
 <p><img src="/assets/img/dify_2.png" alt="dify_2.png" />
 </p>
 </div>
@@ -668,7 +664,7 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="org6b8c5b6" class="figure">
+<div id="org24cf2e8" class="figure">
 <p><img src="/assets/img/dify_3.png" alt="dify_3.png" />
 </p>
 </div>
@@ -678,7 +674,7 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="orgf82f21e" class="figure">
+<div id="org3d048ed" class="figure">
 <p><img src="/assets/img/dify_4.png" alt="dify_4.png" />
 </p>
 </div>
