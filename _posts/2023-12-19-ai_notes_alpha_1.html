@@ -46,7 +46,7 @@ tags       :
 </p>
 
 
-<div id="org98ca753" class="figure">
+<div id="org665be99" class="figure">
 <p><img src="/assets/img/model_editing_1.png" alt="model_editing_1.png" />
 </p>
 </div>
@@ -56,13 +56,13 @@ tags       :
 </p>
 
 
-<div id="orgb849e5f" class="figure">
+<div id="orgb3823ab" class="figure">
 <p><img src="/assets/img/model_editing_2.png" alt="model_editing_2.png" />
 </p>
 </div>
 
 <p>
-模型编辑可以最粗暴地通过对预训练模型进行直接微调来做到，但可能因为数据量太少而效果不佳，除此以外还有一些方法会尝试定位到具体的一些神经元做局部参数修改。广义上来说，通过外部知识进行增强（比如将正确的或者新知识后填充到 Prompt 里）、在住模型外附加针对性的额外参数（这些额外参数可以比较少然后用对应的少量数据训练）也算是模型编辑。
+模型编辑可以最粗暴地通过对预训练模型进行直接微调来做到，但可能因为数据量太少而效果不佳，除此以外还有一些方法会尝试定位到具体的一些神经元做局部参数修改。广义上来说，通过外部知识进行增强（比如将正确的或者新知识后填充到 Prompt 里）、在主模型外附加针对性的额外参数（这些额外参数可以比较少然后用对应的少量数据训练）也算是模型编辑。
 </p>
 
 <p>
@@ -112,7 +112,7 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="orgc6fb423" class="figure">
+<div id="org9076544" class="figure">
 <p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
 </p>
 </div>
@@ -131,8 +131,8 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="orgac42fd1" class="figure">
-<p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
+<div id="orgd2682fe" class="figure">
+<p><img src="/assets/img/information_flow.png" alt="information_flow.png" />
 </p>
 </div>
 
@@ -141,7 +141,7 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="orgfe5c0ca" class="figure">
+<div id="org27f077c" class="figure">
 <p><img src="/assets/img/shallow_layers_hypothesis.png" alt="shallow_layers_hypothesis.png" />
 </p>
 </div>
@@ -160,7 +160,7 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org3442e26" class="figure">
+<div id="orgb2f99f1" class="figure">
 <p><img src="/assets/img/deep_layers_hypothesis.png" alt="deep_layers_hypothesis.png" />
 </p>
 </div>
@@ -201,7 +201,7 @@ EMNLP2023 的最佳论文之一。
 <p>
 文中所谓 demenstration bias 是说因为示例数量太少，导致他们可以被划分到不唯一的多个任务空间里去，进而影响结果，比如说下面这样两个用于情感分类的示例，不看标签的话两个示例的对比差异不够明显，可以用在情感分类里，也可以用到电影类型分类任务里：
 </p>
-<pre class="example" id="orgeca9ae8">
+<pre class="example" id="org77d38f2">
 Obviously, Titanic is a well-made romantic film. -&gt; positive
 Damn, it's a waste of time watching this cartoon! -&gt; negative
 </pre>
@@ -215,7 +215,7 @@ Damn, it's a waste of time watching this cartoon! -&gt; negative
 </p>
 
 
-<div id="orgcb6baf9" class="figure">
+<div id="org5048430" class="figure">
 <p><img src="/assets/img/comparable_demenstrations.png" alt="comparable_demenstrations.png" />
 </p>
 </div>
@@ -403,14 +403,14 @@ safety_settings 用来设置安全策略，只有 4 个能设置，我建议按�
 <p>
 如果前面没有设置 safety_settings，上面的代码会报错
 </p>
-<pre class="example" id="org7715f92">
+<pre class="example" id="orga12b69b">
 ValueError: The `response.parts` quick accessor only works for a single candidate, but none were returned. Check the `response.prompt_feedback` to see if the prompt was blocked.
 </pre>
 
 <p>
 根据错误提示查看 response.prompt_feedback 会得到这样的结果，可以看到 HARM_CATEGORY_HARASSMENT 这个类别被判断达到 MEDIUM 级别所以就被过滤了。
 </p>
-<pre class="example" id="org13fc62d">
+<pre class="example" id="org49ee3ae">
 safety_ratings {
   category: HARM_CATEGORY_SEXUALLY_EXPLICIT
   probability: NEGLIGIBLE
@@ -455,7 +455,7 @@ safety_ratings {
 </div>
 
 
-<div id="org06e247c" class="figure">
+<div id="org9b28b39" class="figure">
 <p><img src="/assets/img/meme.jpg" alt="meme.jpg" />
 </p>
 </div>
@@ -473,7 +473,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="org949ee68">
+<pre class="example" id="org51e71dd">
 图片中的水桶代表着一个人的收入，水代表着支出。水桶里的水从不同的洞中流出，代表着不同的支出，如水电费、交通费、房租、保险、电话费等。水桶里的水位越来越低，代表着收入被各种支出一点点蚕食。最后，水桶里的水流光了，代表着入不敷出。图片反映了当代年轻人生活压力大的现状。
 </pre>
 
@@ -505,7 +505,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="orgb11a410">
+<pre class="example" id="org6fb7f81">
 您好，很高兴为您服务。我是人工智能助手，可以帮助您解决各种问题。您有什么需要我帮忙的吗？
 </pre>
 
@@ -520,7 +520,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="org9e7a3c1">
+<pre class="example" id="org950d16f">
 [parts {
    text: "你好"
  }
@@ -552,7 +552,7 @@ safety_ratings {
 <p>
 输出
 </p>
-<pre class="example" id="org88254dd">
+<pre class="example" id="orgf2998b0">
 Shape: (2, 768)
 Embeddings: [[ 0.0427908  -0.06421863 -0.02308055 ...  0.01537165 -0.00269788
    0.03161672]
@@ -576,7 +576,7 @@ Inner Product: 0.9999966707944825
 </p>
 
 
-<div id="org8df3b2e" class="figure">
+<div id="org6f2ac80" class="figure">
 <p><img src="/assets/img/perplexity_chat.png" alt="perplexity_chat.png" />
 </p>
 </div></li>
@@ -589,7 +589,7 @@ Perplexity 的 API 同样需要设置好支付方式才能使用，不过不像 
 </p>
 
 
-<div id="orga47481a" class="figure">
+<div id="org0a7a38a" class="figure">
 <p><img src="/assets/img/perplexity_api.png" alt="perplexity_api.png" />
 </p>
 </div>
@@ -608,7 +608,7 @@ Perplexity 的 API 只提供了 RESTful API，没有提供 SDK，不过我看了
     http_client=httpx.Client(proxies={<span style="color: #25ef29;">'http://'</span>: <span style="color: #25ef29;">'http://localhost:7428'</span>, <span style="color: #25ef29;">'https://'</span>: <span style="color: #25ef29;">'http://localhost:7428'</span>}),
 )
 completion = client.chat.completions.create(
-    model=<span style="color: #25ef29;">'llama-2-70b-chat'</span>,  <span style="color: #e81122;"># </span><span style="color: #e81122;">e.g. gpt-35-instant</span>
+    model=<span style="color: #25ef29;">'llama-2-70b-chat'</span>,
     messages=[
         {
             <span style="color: #25ef29;">'role'</span>: <span style="color: #25ef29;">'user'</span>,
@@ -624,7 +624,7 @@ completion = client.chat.completions.create(
 <p>
 输出
 </p>
-<pre class="example" id="org5eb31ca">
+<pre class="example" id="org42bded7">
 "桃花汛" 是指一种具有桃花的气味和花汛的特点的气味。在中文中，桃花汛通常被称为"桃花味"或"桃花气味"。
 
 桃花汛是一种植物性的气味，具有桃花的甜美和花汛的芳香。它通常用于描述一种气味很柔和、温暖、甜美的感觉，类似于桃花的气味。在中文中，桃花汛通常用于描述食物、饮料、皮肤护理产品等具有桃花味的产品
@@ -644,7 +644,7 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="orge0f7cf9" class="figure">
+<div id="org3dae69c" class="figure">
 <p><img src="/assets/img/dify_1.png" alt="dify_1.png" />
 </p>
 </div>
@@ -654,7 +654,7 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="org98a008c" class="figure">
+<div id="orgbd0a83c" class="figure">
 <p><img src="/assets/img/dify_2.png" alt="dify_2.png" />
 </p>
 </div>
@@ -664,7 +664,7 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="org24cf2e8" class="figure">
+<div id="org3eba6f6" class="figure">
 <p><img src="/assets/img/dify_3.png" alt="dify_3.png" />
 </p>
 </div>
@@ -674,7 +674,7 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="org3d048ed" class="figure">
+<div id="org608a6e6" class="figure">
 <p><img src="/assets/img/dify_4.png" alt="dify_4.png" />
 </p>
 </div>
