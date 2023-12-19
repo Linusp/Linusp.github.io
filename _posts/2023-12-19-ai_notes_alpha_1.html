@@ -2,7 +2,7 @@
 layout     : post
 title      : "Zmonster's AI Notes(Alpah) #1"
 desc       : "一周AI笔记，读了点 In-Context Learning 的论文，了解了下 Gemini API、Perplexity API 和 Dify"
-categories :
+categories : AI
 tags       :
 ---
 <div id="table-of-contents" role="doc-toc">
@@ -46,8 +46,8 @@ tags       :
 </p>
 
 
-<div id="org2e9b25b" class="figure">
-<p><img src="/assets/img/_20231219_105017029542192023-12-19_10-42.png" alt="_20231219_105017029542192023-12-19_10-42.png" />
+<div id="orgc9bc90f" class="figure">
+<p><img src="/assets/img/model_editing_1.png" alt="model_editing_1.png" />
 </p>
 </div>
 
@@ -56,8 +56,8 @@ tags       :
 </p>
 
 
-<div id="orgd8aac1a" class="figure">
-<p><img src="/assets/img/_20231219_105017029542272023-12-19_10-37.png" alt="_20231219_105017029542272023-12-19_10-37.png" />
+<div id="orgbd07f0f" class="figure">
+<p><img src="/assets/img/model_editing_2.png" alt="model_editing_2.png" />
 </p>
 </div>
 
@@ -112,8 +112,8 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org95bc7cc" class="figure">
-<p><img src="/assets/img/_20231218_132617028771612023-12-18_13-25.png" alt="_20231218_132617028771612023-12-18_13-25.png" />
+<div id="org8814fd6" class="figure">
+<p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
 </p>
 </div>
 
@@ -131,8 +131,8 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="orgd85fdf2" class="figure">
-<p><img src="/assets/img/_20231218_120317028722102023-12-18_12-03.png" alt="_20231218_120317028722102023-12-18_12-03.png" />
+<div id="org037e1fe" class="figure">
+<p><img src="/assets/img/information_flow_categories.png" alt="information_flow_categories.png" />
 </p>
 </div>
 
@@ -141,8 +141,8 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org6e13929" class="figure">
-<p><img src="/assets/img/_20231218_135317028788152023-12-18_13-53.png" alt="_20231218_135317028788152023-12-18_13-53.png" />
+<div id="org5258f64" class="figure">
+<p><img src="/assets/img/shallow_layers_hypothesis.png" alt="shallow_layers_hypothesis.png" />
 </p>
 </div></li>
 </ol>
@@ -163,8 +163,8 @@ EMNLP2023 的最佳论文之一。
 </p>
 
 
-<div id="org5bd1e5f" class="figure">
-<p><img src="/assets/img/_20231218_151917028839422023-12-18_15-18.png" alt="_20231218_151917028839422023-12-18_15-18.png" />
+<div id="org20db5e8" class="figure">
+<p><img src="/assets/img/deep_layers_hypothesis.png" alt="deep_layers_hypothesis.png" />
 </p>
 </div>
 
@@ -205,7 +205,7 @@ EMNLP2023 的最佳论文之一。
 <p>
 文中所谓 demenstration bias 是说因为示例数量太少，导致他们可以被划分到不唯一的多个任务空间里去，进而影响结果，比如说下面这样两个用于情感分类的示例，不看标签的话两个示例的对比差异不够明显，可以用在情感分类里，也可以用到电影类型分类任务里：
 </p>
-<pre class="example" id="orge511a81">
+<pre class="example" id="org3931807">
 Obviously, Titanic is a well-made romantic film. -&gt; positive
 Damn, it's a waste of time watching this cartoon! -&gt; negative
 </pre>
@@ -219,8 +219,8 @@ Damn, it's a waste of time watching this cartoon! -&gt; negative
 </p>
 
 
-<div id="orge618d2f" class="figure">
-<p><img src="/assets/img/_20231219_161117029734622023-12-19_16-10.png" alt="_20231219_161117029734622023-12-19_16-10.png" />
+<div id="org13b684f" class="figure">
+<p><img src="/assets/img/comparable_demenstrations.png" alt="comparable_demenstrations.png" />
 </p>
 </div>
 </div>
@@ -346,26 +346,26 @@ Python SDK 通过 pip install google-generativeai 安装即可，需要 Python3.
 开始使用前需要设置好 API Key 并实例化一个 GenerativeModel 对象：
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #2c3e50; font-style: italic;">import</span> google.generativeai <span style="color: #2c3e50; font-style: italic;">as</span> genai
+<pre class="src src-python"><span style="color: #cf4a44;">import</span> google.generativeai <span style="color: #cf4a44;">as</span> genai
 
-<span style="color: #3498db;">api_key</span> = <span style="color: #16a085;">'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-U'</span>
+<span style="color: #fefc58;">api_key</span> = <span style="color: #25ef29;">'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-U'</span>
 genai.configure(api_key=api_key)
 safety_settings = [
-    {<span style="color: #16a085;">'category'</span>: <span style="color: #16a085;">'HARM_CATEGORY_SEXUALLY_EXPLICIT'</span>, <span style="color: #16a085;">'threshold'</span>: <span style="color: #16a085;">'BLOCK_NONE'</span>},
-    {<span style="color: #16a085;">'category'</span>: <span style="color: #16a085;">'HARM_CATEGORY_HATE_SPEECH'</span>, <span style="color: #16a085;">'threshold'</span>: <span style="color: #16a085;">'BLOCK_NONE'</span>},
-    {<span style="color: #16a085;">'category'</span>: <span style="color: #16a085;">'HARM_CATEGORY_HARASSMENT'</span>, <span style="color: #16a085;">'threshold'</span>: <span style="color: #16a085;">'BLOCK_NONE'</span>},
-    {<span style="color: #16a085;">'category'</span>: <span style="color: #16a085;">'HARM_CATEGORY_DANGEROUS_CONTENT'</span>, <span style="color: #16a085;">'threshold'</span>: <span style="color: #16a085;">'BLOCK_NONE'</span>}
+    {<span style="color: #25ef29;">'category'</span>: <span style="color: #25ef29;">'HARM_CATEGORY_SEXUALLY_EXPLICIT'</span>, <span style="color: #25ef29;">'threshold'</span>: <span style="color: #25ef29;">'BLOCK_NONE'</span>},
+    {<span style="color: #25ef29;">'category'</span>: <span style="color: #25ef29;">'HARM_CATEGORY_HATE_SPEECH'</span>, <span style="color: #25ef29;">'threshold'</span>: <span style="color: #25ef29;">'BLOCK_NONE'</span>},
+    {<span style="color: #25ef29;">'category'</span>: <span style="color: #25ef29;">'HARM_CATEGORY_HARASSMENT'</span>, <span style="color: #25ef29;">'threshold'</span>: <span style="color: #25ef29;">'BLOCK_NONE'</span>},
+    {<span style="color: #25ef29;">'category'</span>: <span style="color: #25ef29;">'HARM_CATEGORY_DANGEROUS_CONTENT'</span>, <span style="color: #25ef29;">'threshold'</span>: <span style="color: #25ef29;">'BLOCK_NONE'</span>}
 ]
 generation_config = {
-    <span style="color: #16a085;">'candidate_count'</span>: 1,
-    <span style="color: #16a085;">'stop_sequences'</span>: <span style="color: #7f8c8d; font-style: italic;">None</span>,
-    <span style="color: #16a085;">'max_output_tokens'</span>: <span style="color: #7f8c8d; font-style: italic;">None</span>,
-    <span style="color: #16a085;">'temperature'</span>: 0.7,
-    <span style="color: #16a085;">'top_p'</span>: <span style="color: #7f8c8d; font-style: italic;">None</span>,
-    <span style="color: #16a085;">'top_k'</span>: <span style="color: #7f8c8d; font-style: italic;">None</span>,
+    <span style="color: #25ef29;">'candidate_count'</span>: 1,
+    <span style="color: #25ef29;">'stop_sequences'</span>: <span style="color: #bebebe;">None</span>,
+    <span style="color: #25ef29;">'max_output_tokens'</span>: <span style="color: #bebebe;">None</span>,
+    <span style="color: #25ef29;">'temperature'</span>: 0.7,
+    <span style="color: #25ef29;">'top_p'</span>: <span style="color: #bebebe;">None</span>,
+    <span style="color: #25ef29;">'top_k'</span>: <span style="color: #bebebe;">None</span>,
 }
 model = genai.GenerativeModel(
-    model_name=<span style="color: #16a085;">'gemini-pro'</span>,
+    model_name=<span style="color: #25ef29;">'gemini-pro'</span>,
     safety_settings=safety_settings,
     generation_config=generation_config,
 )
@@ -382,8 +382,8 @@ safety_settings 用来设置安全策略，只有 4 个能设置，我建议按�
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #3498db;">response</span> = model.generate_content(content=<span style="color: #16a085;">'&#39554;&#19968;&#20010;&#20154;'</span>)
-<span style="color: #2c3e50;">print</span>(response.text)
+<pre class="src src-python"><span style="color: #fefc58;">response</span> = model.generate_content(content=<span style="color: #25ef29;">'&#39554;&#19968;&#20010;&#20154;'</span>)
+<span style="color: #31d3c4;">print</span>(response.text)
 </pre>
 </div>
 
@@ -407,14 +407,14 @@ safety_settings 用来设置安全策略，只有 4 个能设置，我建议按�
 <p>
 如果前面没有设置 safety_settings，上面的代码会报错
 </p>
-<pre class="example" id="orgf8d641e">
+<pre class="example" id="org9b0d4c7">
 ValueError: The `response.parts` quick accessor only works for a single candidate, but none were returned. Check the `response.prompt_feedback` to see if the prompt was blocked.
 </pre>
 
 <p>
 根据错误提示查看 response.prompt_feedback 会得到这样的结果，可以看到 HARM_CATEGORY_HARASSMENT 这个类别被判断达到 MEDIUM 级别所以就被过滤了。
 </p>
-<pre class="example" id="org6d49e13">
+<pre class="example" id="org90909d9">
 safety_ratings {
   category: HARM_CATEGORY_SEXUALLY_EXPLICIT
   probability: NEGLIGIBLE
@@ -437,8 +437,8 @@ safety_ratings {
 也可以在实例化 GenerativeModel 时不设置 safety_settings 而是在调用 generate_content 时设置
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #3498db;">response</span> = model.generate_content(content=<span style="color: #16a085;">'&#39554;&#19968;&#20010;&#20154;'</span>, safety_settings=safety_settings)
-<span style="color: #2c3e50;">print</span>(response.text)
+<pre class="src src-python"><span style="color: #fefc58;">response</span> = model.generate_content(content=<span style="color: #25ef29;">'&#39554;&#19968;&#20010;&#20154;'</span>, safety_settings=safety_settings)
+<span style="color: #31d3c4;">print</span>(response.text)
 </pre>
 </div></li>
 
@@ -450,8 +450,8 @@ safety_ratings {
 首先需要在初始化 GenerativeModel 的时候讲模型设置为 gemini-pro-vision
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #3498db;">model</span> = genai.GenerativeModel(
-    model_name=<span style="color: #16a085;">'gemini-pro-vision'</span>,
+<pre class="src src-python"><span style="color: #fefc58;">model</span> = genai.GenerativeModel(
+    model_name=<span style="color: #25ef29;">'gemini-pro-vision'</span>,
     safety_settings=safety_settings,
     generation_config=generation_config,
 )
@@ -459,7 +459,7 @@ safety_ratings {
 </div>
 
 
-<div id="org7a59594" class="figure">
+<div id="orgfa81fee" class="figure">
 <p><img src="/assets/img/meme.jpg" alt="meme.jpg" />
 </p>
 </div>
@@ -468,16 +468,16 @@ safety_ratings {
 然后读取图片后加上指令（或其他文本输入）
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #2c3e50; font-style: italic;">from</span> PIL <span style="color: #2c3e50; font-style: italic;">import</span> Image
+<pre class="src src-python"><span style="color: #cf4a44;">from</span> PIL <span style="color: #cf4a44;">import</span> Image
 
-<span style="color: #3498db;">response</span> = model.generate_content([<span style="color: #16a085;">'&#36825;&#24352;&#22270;&#29255;&#26159;&#20160;&#20040;&#24847;&#24605;'</span>, Image.<span style="color: #2c3e50;">open</span>(<span style="color: #16a085;">'meme.jpg'</span>)])
+<span style="color: #fefc58;">response</span> = model.generate_content([<span style="color: #25ef29;">'&#36825;&#24352;&#22270;&#29255;&#26159;&#20160;&#20040;&#24847;&#24605;'</span>, Image.<span style="color: #31d3c4;">open</span>(<span style="color: #25ef29;">'meme.jpg'</span>)])
 </pre>
 </div>
 
 <p>
 输出
 </p>
-<pre class="example" id="orged1ca4e">
+<pre class="example" id="orgced7fa6">
 图片中的水桶代表着一个人的收入，水代表着支出。水桶里的水从不同的洞中流出，代表着不同的支出，如水电费、交通费、房租、保险、电话费等。水桶里的水位越来越低，代表着收入被各种支出一点点蚕食。最后，水桶里的水流光了，代表着入不敷出。图片反映了当代年轻人生活压力大的现状。
 </pre>
 
@@ -493,7 +493,7 @@ safety_ratings {
 首先调用 start_chat 创建一个多轮对话（注意多轮对话只能用 gemini-pro 模型不能用 gemini-pro-vision 模型）
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #3498db;">chat</span> = model.start_chat()
+<pre class="src src-python"><span style="color: #fefc58;">chat</span> = model.start_chat()
 </pre>
 </div>
 
@@ -501,15 +501,15 @@ safety_ratings {
 然后只需要用 chat.send_message 发送新的输入即可，不需要自己管理会话历史还是蛮友好的。
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #3498db;">response</span> = chat.send_message(<span style="color: #16a085;">'&#20320;&#22909;'</span>)
-<span style="color: #2c3e50;">print</span>(response.text)
+<pre class="src src-python"><span style="color: #fefc58;">response</span> = chat.send_message(<span style="color: #25ef29;">'&#20320;&#22909;'</span>)
+<span style="color: #31d3c4;">print</span>(response.text)
 </pre>
 </div>
 
 <p>
 输出
 </p>
-<pre class="example" id="org4f2ed9b">
+<pre class="example" id="orga6e4861">
 您好，很高兴为您服务。我是人工智能助手，可以帮助您解决各种问题。您有什么需要我帮忙的吗？
 </pre>
 
@@ -517,14 +517,14 @@ safety_ratings {
 也可以通过 chat.history 来查看历史消息
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #2c3e50;">print</span>(chat.history)
+<pre class="src src-python"><span style="color: #31d3c4;">print</span>(chat.history)
 </pre>
 </div>
 
 <p>
 输出
 </p>
-<pre class="example" id="org1230bb9">
+<pre class="example" id="org73ba95f">
 [parts {
    text: "你好"
  }
@@ -543,20 +543,20 @@ safety_ratings {
 没太多好说的，只能用 models/embedding-001 这个模型，得到的是一个 768 维的向量。
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #2c3e50; font-style: italic;">import</span> numpy <span style="color: #2c3e50; font-style: italic;">as</span> np
+<pre class="src src-python"><span style="color: #cf4a44;">import</span> numpy <span style="color: #cf4a44;">as</span> np
 
-<span style="color: #3498db;">response</span> = genai.embed_content(<span style="color: #16a085;">'models/embedding-001'</span>, [<span style="color: #16a085;">'&#20320;&#22909;'</span>, <span style="color: #16a085;">'&#20320;&#19981;&#22909;'</span>])
-<span style="color: #3498db;">embeddings</span> = np.array(response[<span style="color: #16a085;">'embedding'</span>])
-<span style="color: #2c3e50;">print</span>(<span style="color: #16a085;">'Shape:'</span>, embeddings.shape)
-<span style="color: #2c3e50;">print</span>(<span style="color: #16a085;">'Embeddings:'</span>, embeddings)
-<span style="color: #2c3e50;">print</span>(<span style="color: #16a085;">'Inner Product:'</span>, np.dot(embeddings[0], embeddings[1]))
+<span style="color: #fefc58;">response</span> = genai.embed_content(<span style="color: #25ef29;">'models/embedding-001'</span>, [<span style="color: #25ef29;">'&#20320;&#22909;'</span>, <span style="color: #25ef29;">'&#20320;&#19981;&#22909;'</span>])
+<span style="color: #fefc58;">embeddings</span> = np.array(response[<span style="color: #25ef29;">'embedding'</span>])
+<span style="color: #31d3c4;">print</span>(<span style="color: #25ef29;">'Shape:'</span>, embeddings.shape)
+<span style="color: #31d3c4;">print</span>(<span style="color: #25ef29;">'Embeddings:'</span>, embeddings)
+<span style="color: #31d3c4;">print</span>(<span style="color: #25ef29;">'Inner Product:'</span>, np.dot(embeddings[0], embeddings[1]))
 </pre>
 </div>
 
 <p>
 输出
 </p>
-<pre class="example" id="org55418ff">
+<pre class="example" id="org7b8e2f6">
 Shape: (2, 768)
 Embeddings: [[ 0.0427908  -0.06421863 -0.02308055 ...  0.01537165 -0.00269788
    0.03161672]
@@ -580,8 +580,8 @@ Inner Product: 0.9999966707944825
 </p>
 
 
-<div id="orgf2f438c" class="figure">
-<p><img src="/assets/img/_20231219_164417029754922023-12-19_16-44.png" alt="_20231219_164417029754922023-12-19_16-44.png" />
+<div id="orga8f02f9" class="figure">
+<p><img src="/assets/img/perplexity_chat.png" alt="perplexity_chat.png" />
 </p>
 </div></li>
 
@@ -593,8 +593,8 @@ Perplexity 的 API 同样需要设置好支付方式才能使用，不过不像 
 </p>
 
 
-<div id="org1c099b9" class="figure">
-<p><img src="/assets/img/_20231219_165517029761502023-12-19_16-55.png" alt="_20231219_165517029761502023-12-19_16-55.png" />
+<div id="org3f19e25" class="figure">
+<p><img src="/assets/img/perplexity_api.png" alt="perplexity_api.png" />
 </p>
 </div>
 
@@ -602,33 +602,33 @@ Perplexity 的 API 同样需要设置好支付方式才能使用，不过不像 
 Perplexity 的 API 只提供了 RESTful API，没有提供 SDK，不过我看了下，它的 API 只有 Chat Completions 这样一个接口，然后这个接口的参数完全是 OpenAI 对应接口的子集，所以直接用 OpenAI 的 Python SDK 就可以了：
 </p>
 <div class="org-src-container">
-<pre class="src src-python"><span style="color: #2c3e50; font-style: italic;">import</span> httpx
-<span style="color: #2c3e50; font-style: italic;">from</span> openai <span style="color: #2c3e50; font-style: italic;">import</span> OpenAI
+<pre class="src src-python"><span style="color: #cf4a44;">import</span> httpx
+<span style="color: #cf4a44;">from</span> openai <span style="color: #cf4a44;">import</span> OpenAI
 
-<span style="color: #3498db;">api_key</span> = <span style="color: #16a085;">'pplx-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU'</span>
-<span style="color: #3498db;">client</span> = OpenAI(
-    base_url=<span style="color: #16a085;">'https://api.perplexity.ai/'</span>,
+<span style="color: #fefc58;">api_key</span> = <span style="color: #25ef29;">'pplx-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU'</span>
+<span style="color: #fefc58;">client</span> = OpenAI(
+    base_url=<span style="color: #25ef29;">'https://api.perplexity.ai/'</span>,
     api_key=api_key,
-    http_client=httpx.Client(proxies={<span style="color: #16a085;">'http://'</span>: <span style="color: #16a085;">'http://localhost:7428'</span>, <span style="color: #16a085;">'https://'</span>: <span style="color: #16a085;">'http://localhost:7428'</span>}),
+    http_client=httpx.Client(proxies={<span style="color: #25ef29;">'http://'</span>: <span style="color: #25ef29;">'http://localhost:7428'</span>, <span style="color: #25ef29;">'https://'</span>: <span style="color: #25ef29;">'http://localhost:7428'</span>}),
 )
 completion = client.chat.completions.create(
-    model=<span style="color: #16a085;">'llama-2-70b-chat'</span>,  <span style="color: #95a5a6; font-style: italic;"># </span><span style="color: #95a5a6; font-style: italic;">e.g. gpt-35-instant</span>
+    model=<span style="color: #25ef29;">'llama-2-70b-chat'</span>,  <span style="color: #e81122;"># </span><span style="color: #e81122;">e.g. gpt-35-instant</span>
     messages=[
         {
-            <span style="color: #16a085;">'role'</span>: <span style="color: #16a085;">'user'</span>,
-            <span style="color: #16a085;">'content'</span>: <span style="color: #16a085;">'&#20160;&#20040;&#26159;&#26691;&#33457;&#27739;&#65292;&#29992;&#20013;&#25991;&#22238;&#31572;&#25105;'</span>,
+            <span style="color: #25ef29;">'role'</span>: <span style="color: #25ef29;">'user'</span>,
+            <span style="color: #25ef29;">'content'</span>: <span style="color: #25ef29;">'&#20160;&#20040;&#26159;&#26691;&#33457;&#27739;&#65292;&#29992;&#20013;&#25991;&#22238;&#31572;&#25105;'</span>,
         },
     ],
     temperature=0,
 )
-<span style="color: #2c3e50;">print</span>(completion.choices[0].message.content)
+<span style="color: #31d3c4;">print</span>(completion.choices[0].message.content)
 </pre>
 </div>
 
 <p>
 输出
 </p>
-<pre class="example" id="orge617dd7">
+<pre class="example" id="org197fd1f">
 "桃花汛" 是指一种具有桃花的气味和花汛的特点的气味。在中文中，桃花汛通常被称为"桃花味"或"桃花气味"。
 
 桃花汛是一种植物性的气味，具有桃花的甜美和花汛的芳香。它通常用于描述一种气味很柔和、温暖、甜美的感觉，类似于桃花的气味。在中文中，桃花汛通常用于描述食物、饮料、皮肤护理产品等具有桃花味的产品
@@ -640,7 +640,7 @@ completion = client.chat.completions.create(
 <h3 id="org161164c">Dify</h3>
 <div class="outline-text-3" id="text-org161164c">
 <p>
-Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是抄的 Dify，非常无耻。使用 Dify 可以轻松构建一个 LLM 聊天或者文本生成应用，还支持上传自己的知识库，并且一创建就支持了可访问的 WebUI 以及相应的 API，支持的 LLM 也非常多种。
+Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是抄的 Dify。使用 Dify 可以轻松构建一个 LLM 聊天或者文本生成应用，还支持上传自己的知识库，并且一创建就支持了可访问的 WebUI 以及相应的 API，支持的 LLM 也非常多种。
 </p>
 
 <p>
@@ -648,8 +648,8 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="org6774905" class="figure">
-<p><img src="/assets/img/_20231219_183317029820062023-12-19_17-50_1.png" alt="_20231219_183317029820062023-12-19_17-50_1.png" />
+<div id="orgc3b7a73" class="figure">
+<p><img src="/assets/img/dify_1.png" alt="dify_1.png" />
 </p>
 </div>
 
@@ -658,8 +658,8 @@ Dify 是一个开源的 LLM 应用构建工具，字节的 Coze 看起来就是�
 </p>
 
 
-<div id="org0f92a29" class="figure">
-<p><img src="/assets/img/_20231219_183417029820832023-12-19_17-51.png" alt="_20231219_183417029820832023-12-19_17-51.png" />
+<div id="org5b93b47" class="figure">
+<p><img src="/assets/img/dify_2.png" alt="dify_2.png" />
 </p>
 </div>
 
@@ -668,8 +668,8 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="orgd730470" class="figure">
-<p><img src="/assets/img/_20231219_183917029823542023-12-19_17-53.png" alt="_20231219_183917029823542023-12-19_17-53.png" />
+<div id="org6b8c5b6" class="figure">
+<p><img src="/assets/img/dify_3.png" alt="dify_3.png" />
 </p>
 </div>
 
@@ -678,8 +678,8 @@ Dify 提供的 API 额度只有 200 次，如果想长期使用，可以自己�
 </p>
 
 
-<div id="org7fed8d4" class="figure">
-<p><img src="/assets/img/_20231219_184417029826872023-12-19_17-54.png" alt="_20231219_184417029826872023-12-19_17-54.png" />
+<div id="orgf82f21e" class="figure">
+<p><img src="/assets/img/dify_4.png" alt="dify_4.png" />
 </p>
 </div>
 
