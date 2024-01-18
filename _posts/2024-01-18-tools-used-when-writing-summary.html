@@ -1,0 +1,592 @@
+---
+layout     : post
+title      : 我的年度总结所使用到的数据分析和可视化工具
+desc       : 两年前我写完《我的2021》后有些朋友问我用到了什么工具和方法，前阵子写完《我的2023》后又有一些朋友询问，所以就来简单写一下好了。
+categories :
+tags       :
+---
+<div id="table-of-contents" role="doc-toc">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga7ff5f6">数据的获取</a></li>
+<li><a href="#org5688d95">用 orgparse 解析 org-mode 文件</a></li>
+<li><a href="#orgb8f1e2f">用 LTP 进行分词/词性标注/实体识别等文本分析</a></li>
+<li><a href="#org70589c9">用 ImageMagick 进行简单的图像处理</a></li>
+<li><a href="#org8edf412">用 july 绘制日志/日历热力图</a></li>
+<li><a href="#org2937745">用 wordcloud 绘制词云</a></li>
+<li><a href="#org00a4661">用 matplotlib_venn_wordcloud 绘制韦恩图形式的词云</a></li>
+<li><a href="#org032a7c6">用 matplotlib.pyplot.subplot_mosaic 进行布局设置</a></li>
+</ul>
+</div>
+</div>
+
+<p>
+两年前我写完《<a href="https://www.zmonster.me/2022/01/15/annual-summary-of-2021.html">我的2021</a>》后有些朋友问我用到了什么工具和方法，前阵子写完《<a href="https://www.zmonster.me/2024/01/12/annual-summary-of-2023.html">我的2023</a>》后又有一些朋友询问，所以就来简单写一下好了。
+</p>
+
+<div id="outline-container-orga7ff5f6" class="outline-2">
+<h2 id="orga7ff5f6">数据的获取</h2>
+<div class="outline-text-2" id="text-orga7ff5f6">
+<p>
+在两篇年度总结中，我用到了这么一些数据
+</p>
+<ul class="org-ul">
+<li>日记文本</li>
+<li>工作日志文本</li>
+<li>org-mode clock 记录</li>
+<li>微信聊天记录</li>
+<li>B站观看记录</li>
+</ul>
+
+<p>
+其中日记文本和工作日志文本都没有什么好说的，都是我用 org-mode 手工记下来的，这里只简单展示一下这两者的内容结构
+</p>
+<ul class="org-ul">
+<li><p>
+工作日志是一个「年-月-日-具体记录」的四级结构
+</p>
+
+
+<div id="org4b294cb" class="figure">
+<p><img src="/assets/img/work_journal_example.png" alt="work_journal_example.png" />
+</p>
+</div></li>
+
+<li><p>
+日记是一个「日-具体记录」的两级结构
+</p>
+
+
+<div id="org71af651" class="figure">
+<p><img src="/assets/img/diary_example.png" alt="diary_example.png" />
+</p>
+</div></li>
+</ul>
+
+<p>
+org-mode clock 记录也是使用 org-mode 产生的，这个在《<a href="https://www.zmonster.me/2021/09/25/record-life-with-org.html">我的生活记录经验及个人工具与方法</a>》这篇文章中也有提过，每当我执行 org-clock-in 或者 org-clock-out 后就会自动在对应任务下的 LOGBOOK 下自动地新增记录，如下图所示：
+</p>
+
+
+<div id="org8bfddd5" class="figure">
+<p><img src="/assets/img/clock_records_example.png" alt="clock_records_example.png" />
+</p>
+</div>
+
+<p>
+然后是微信聊天记录，我目前使用 <a href="https://github.com/ehForwarderBot/efb-wechat-slave/">EFB</a> 来将微信消息转发到 Telegram，而 Telegram 是有接口能导出历史消息的，其 PC 桌面端也能直接将历史消息导出。其他的微信聊天记录导出方式我没有了解过。
+</p>
+
+<p>
+B站的观看记录，我自己写了一个简单的脚本去抓取，见 <a href="https://gist.github.com/Linusp/eeaa2aed4b90cb130fd002d0189ad7ff">Gist</a>。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5688d95" class="outline-2">
+<h2 id="org5688d95">用 orgparse 解析 org-mode 文件</h2>
+<div class="outline-text-2" id="text-org5688d95">
+<p>
+我的工作日志和日记都是 org-mode 文件，本质上里面的内容是一个树形的结构，最开始是自己写代码去解析的，后来换成了 <a href="https://github.com/karlicoss/orgparse">orgparse</a> 这个 Python 的 org-mode 解析器。
+</p>
+
+<p>
+orgparse 可以直接将 org-mode 文件内容解析成一棵树，这样我在处理工作日志和个人日记时只要去遍历这棵树就好了
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> orgparse
+
+<span style="color: #ffcc66;">content</span> = <span style="color: #66cccc;">'''</span>
+
+<span style="color: #66cccc;">* 2024-01-17 &#21608;&#19977;</span>
+<span style="color: #66cccc;">** 12:05 &#33021;&#20570;&#30340;&#20107;&#24773;</span>
+<span style="color: #66cccc;">blablablabla</span>
+<span style="color: #66cccc;">** 16:01 &#24608;&#24816;</span>
+<span style="color: #66cccc;">blablablabla</span>
+<span style="color: #66cccc;">** 17:44 &#32534;&#21046;</span>
+<span style="color: #66cccc;">blablablabla</span>
+<span style="color: #66cccc;">** 22:06 &#20170;&#26085;&#22238;&#39038;</span>
+<span style="color: #66cccc;">blablablabla</span>
+<span style="color: #66cccc;">* 2024-01-18 &#21608;&#22235;</span>
+<span style="color: #66cccc;">'''</span>
+
+<span style="color: #ffcc66;">tree</span> = orgparse.loads(content)
+<span style="color: #99cc99;">for</span> node <span style="color: #99cc99;">in</span> tree.children:
+    <span style="color: #cc99cc;">print</span>(node)
+
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#32467;&#26524;&#65306;</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">* 2024-01-17 &#21608;&#19977;</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">* 2024-01-18 &#21608;&#22235;</span>
+</pre>
+</div>
+
+<p>
+然后任务下面的 clock 记录它也会解析出来
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> orgparse
+
+<span style="color: #ffcc66;">content</span> = <span style="color: #66cccc;">'''</span>
+<span style="color: #66cccc;">* &#20241;&#38386;</span>
+<span style="color: #66cccc;">** SOMETIME &#30475;&#30005;&#24433;</span>
+<span style="color: #66cccc;">:LOGBOOK:</span>
+<span style="color: #66cccc;">CLOCK: [2023-12-21 &#22235; 18:10]--[2023-12-21 &#22235; 21:20] =&gt;  3:10</span>
+<span style="color: #66cccc;">- &#29399;&#31070;</span>
+<span style="color: #66cccc;">CLOCK: [2023-10-04 &#19977; 14:59]--[2023-10-04 &#19977; 17:28] =&gt;  2:29</span>
+<span style="color: #66cccc;">- &#20420;&#32599;&#26031;&#28779;&#36710;&#22823;&#21163;&#26696;</span>
+<span style="color: #66cccc;">:END:</span>
+<span style="color: #66cccc;">'''</span>
+
+tree = orgparse.loads(content)
+<span style="color: #99cc99;">for</span> level_1_node <span style="color: #99cc99;">in</span> tree.children:
+    <span style="color: #99cc99;">for</span> level_2_node <span style="color: #99cc99;">in</span> level_1_node.children:
+        <span style="color: #99cc99;">for</span> item <span style="color: #99cc99;">in</span> level_2_node.clock:
+            <span style="color: #cc99cc;">print</span>(item)
+
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">&#32467;&#26524;</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[2023-12-21 Thu 18:10]--[2023-12-21 Thu 21:20]</span>
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[2023-10-04 Wed 14:59]--[2023-10-04 Wed 17:28]</span>
+</pre>
+</div>
+
+<p>
+不过有点可惜的是解析出来的 clock 记录把 note 丢掉了，所以我只用来做大类的时间统计，有些依赖里面内容的分析我还是自己做的。
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb8f1e2f" class="outline-2">
+<h2 id="orgb8f1e2f">用 LTP 进行分词/词性标注/实体识别等文本分析</h2>
+<div class="outline-text-2" id="text-orgb8f1e2f">
+<p>
+要绘制词云就需要从文本里提取关键词，所以分词是必需的。再进一步的关键词提取，虽然也有很多工具，但这些工具基本上都是面向某个领域的，和我自己的日记、日志并不太匹配，所以我就采取了一些简单的策略来做关键词提取，反正也只是用来画一个词云，马马虎虎就行。
+</p>
+
+<p>
+具体来说，这个策略是这样的：
+</p>
+<ul class="org-ul">
+<li>先对文本进行分词、词性标注（标记每个词是名词、形容词、动词还是别的什么）、实体识别（人名、地名、机构名等）</li>
+<li>反向过滤：若词中包含标点符号则去除，若词在停用词表中则去除，若词的词性为我设定的类别（连词、助词、叹词、量词、数词、介词、非语素词、时间名词）则去除（LTP 使用的词性标注集是 2005 年颁布的《<a href="http://www.moe.gov.cn/jyb_sjzl/ziliao/A19/201001/t20100115_75692.html">信息处理用现代汉语词类标记规范</a>》）、若词中字数太少（1个字的往往无意义）或太多（字数太多可能分词出错了）则去除</li>
+<li>正向筛选：识别为实体的词一律选中作为关键词，我预先设置的一些重要词汇一律都选中作为关键词</li>
+</ul>
+
+<p>
+能进行分词、词性标注、实体识别的工具很多，21 年的时候我用的是 <a href="https://github.com/fxsjy/jieba">jieba</a> ，它的好处是依赖干净而且比较快，但效果要差一些而且没有实体识别功能。除了 jieba 还可以用北大的 <a href="https://github.com/lancopku/pkuseg-python">pkuseg</a>、哈工大的 <a href="https://github.com/HIT-SCIR/ltp">LTP</a>、百度的 <a href="https://github.com/baidu/lac">LAC</a>，当然国外的 <a href="https://spacy.io/">spaCy</a> 和斯坦福大学的 <a href="https://stanfordnlp.github.io/stanza/">Stanza</a> 也有中文支持都是不错的，我个人建议 pkuseg 或者 LTP。2023 年的年度分析我最后选了 LTP，是因为 LTP 在持续地更新，4.0 后已经升级成了 pytorch 模型想尝试下。
+</p>
+
+<p>
+LTP 的模型建议像我一样自己下载好放到本地，否则它会去从已经被大陆屏蔽的 Huggingface 上下载而失败出错。
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">from</span> ltp <span style="color: #99cc99;">import</span> LTP
+
+<span style="color: #ffcc66;">ltp</span> = LTP(<span style="color: #66cccc;">'/home/zmonster/Projects/ltp/small/'</span>)
+<span style="color: #ffcc66;">output</span> = ltp.pipeline([<span style="color: #66cccc;">'&#24605;&#32771;&#26202;&#19978;&#21507;&#20160;&#20040;&#26368;&#21518;&#20915;&#23450;&#29038;&#38754;&#21507;&#65292;&#28982;&#21518;&#22312;&#25972;&#29702;&#26085;&#35760;&#30340;&#26102;&#20505;&#30475;&#21040;&#33258;&#24049;&#26377;&#19968;&#22825;&#31354;&#27668;&#28856;&#38149;&#20102;&#22836;&#19968;&#22825; KFC &#30127;&#29378;&#26143;&#26399;&#22235;&#20080;&#30340;&#40481;&#31859;&#33457;&#65292;&#24819;&#36215;&#26469;&#20102;&#20043;&#21069;&#33258;&#24049;&#36824;&#20080;&#36807;&#23567;&#37221;&#32905;&#25918;&#20912;&#31665;&#20102;&#65292;&#32763;&#20986;&#26469;&#20934;&#22791;&#31354;&#27668;&#28856;&#38149;&#28909;&#20102;&#26202;&#19978;&#21507;&#19968;&#28857;&#12290;'</span>], tasks=[<span style="color: #66cccc;">'cws'</span>, <span style="color: #66cccc;">'pos'</span>, <span style="color: #66cccc;">'ner'</span>])
+
+<span style="color: #cc99cc;">print</span>(output.cws)
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[['&#24605;&#32771;', '&#26202;&#19978;', '&#21507;', '&#20160;&#20040;', '&#26368;&#21518;', '&#20915;&#23450;', '&#29038;', '&#38754;', '&#21507;', '&#65292;', '&#28982;&#21518;', '&#22312;', '&#25972;&#29702;', '&#26085;&#35760;', '&#30340;', '&#26102;&#20505;', '&#30475;&#21040;', '&#33258;&#24049;', '&#26377;', '&#19968;', '&#22825;', '&#31354;&#27668;', '&#28856;&#38149;', '&#20102;', '&#22836;', '&#19968;', '&#22825; ', 'KFC ', '&#30127;&#29378;', '&#26143;&#26399;&#22235;', '&#20080;', '&#30340;', '&#40481;&#31859;&#33457;', '&#65292;', '&#24819;', '&#36215;&#26469;', '&#20102;', '&#20043;&#21069;', '&#33258;&#24049;', '&#36824;', '&#20080;', '&#36807;', '&#23567;', '&#37221;&#32905;', '&#25918;', '&#20912;&#31665;', '&#20102;', '&#65292;', '&#32763;', '&#20986;&#26469;', '&#20934;&#22791;', '&#31354;&#27668;', '&#28856;&#38149;', '&#28909;', '&#20102;', '&#26202;&#19978;', '&#21507;', '&#19968;&#28857;', '&#12290;']]</span>
+
+<span style="color: #cc99cc;">print</span>(output.pos)
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[['v', 'nt', 'v', 'r', 'nd', 'v', 'v', 'n', 'v', 'wp', 'c', 'p', 'v', 'n', 'u', 'n', 'v', 'r', 'v', 'm', 'q', 'n', 'v', 'u', 'm', 'm', 'q', 'nz', 'a', 'nt', 'v', 'u', 'n', 'wp', 'v', 'v', 'u', 'nd', 'r', 'd', 'v', 'u', 'a', 'n', 'v', 'n', 'u', 'wp', 'v', 'v', 'v', 'n', 'v', 'v', 'u', 'nt', 'v', 'm', 'wp']]</span>
+
+<span style="color: #cc99cc;">print</span>(output.ner)
+<span style="color: #999999; font-style: italic;"># </span><span style="color: #999999; font-style: italic;">[[]]</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org70589c9" class="outline-2">
+<h2 id="org70589c9">用 ImageMagick 进行简单的图像处理</h2>
+<div class="outline-text-2" id="text-org70589c9">
+<p>
+我用 ImageMagick 来生成词云图需要的 mask 图使得画出来的词云能按照我预想的形状展示：
+</p>
+<ul class="org-ul">
+<li><p>
+用 ImageMagick 绘制一张黑底白字写着 2023 的图
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">convert -background black -fill white -pointsize 512 label:2023 2023.png
+</pre>
+</div>
+
+
+<div id="org4c326e0" class="figure">
+<p><img src="/assets/img/2023.png" alt="2023.png" />
+</p>
+</div></li>
+
+<li><p>
+用 ImageMagick 绘制一个直径 400 像素的圆
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">convert -size 400x400 xc:white -fill black -draw <span style="color: #66cccc;">'circle 200,200 200,3'</span> circle400.png
+</pre>
+</div>
+
+
+<div id="orgd3dd3a4" class="figure">
+<p><img src="/assets/img/circle400.png" alt="circle400.png" />
+</p>
+</div></li>
+</ul>
+
+
+<p>
+然后我还很常用 ImageMagick 来裁剪一下图像的白边使得图像显得更紧凑一些，随后讲到的绘制热力图的 july 产生的结果就会有特别大的一块白边，我希望它能少一些但它又没有提供什么选项来让我控制（matplotlib 的 tight_layout 完全没作用）所以只能用 ImageMagick 再处理一下了
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">convert -trim 2023_diary_heatmap.png  /tmp/a.png
+mv /tmp/a.png 2023_diary_heatmap.png
+</pre>
+</div>
+
+<p>
+裁剪前是这个样子的
+</p>
+
+
+<div id="org1978269" class="figure">
+<p><img src="/assets/img/2023_diary_heatmap-original.png" alt="2023_diary_heatmap-original.png" />
+</p>
+</div>
+
+<p>
+裁剪后是这个样子
+</p>
+
+
+<div id="orge833fe7" class="figure">
+<p><img src="/assets/img/2023_diary_heatmap.png" alt="2023_diary_heatmap.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8edf412" class="outline-2">
+<h2 id="org8edf412">用 july 绘制日志/日历热力图</h2>
+<div class="outline-text-2" id="text-org8edf412">
+<p>
+<a href="https://github.com/e-hulten/july">july</a> 是一个基于 matplotlib 的用来绘制每日事件热力图的工具， 如下所示
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> numpy <span style="color: #99cc99;">as</span> np
+<span style="color: #99cc99;">import</span> matplotlib.pyplot <span style="color: #99cc99;">as</span> plt
+<span style="color: #99cc99;">import</span> july
+<span style="color: #99cc99;">from</span> july.utils <span style="color: #99cc99;">import</span> date_range
+
+<span style="color: #ffcc66;">dates</span> = date_range(<span style="color: #66cccc;">"2020-01-01"</span>, <span style="color: #66cccc;">"2020-12-31"</span>)
+<span style="color: #ffcc66;">data</span> = np.random.randint(0, 14, <span style="color: #cc99cc;">len</span>(dates))
+july.heatmap(dates, data, title=<span style="color: #66cccc;">'Github Activity'</span>, cmap=<span style="color: #66cccc;">"github"</span>)
+</pre>
+</div>
+
+<p>
+会得到这样的图：
+</p>
+
+
+<div id="orgb4e9aa6" class="figure">
+<p><img src="/assets/img/july_heatmap_github.jpg" alt="july_heatmap_github.jpg" />
+</p>
+</div>
+
+<p>
+具体使用看项目 README 就好了，没有什么太特别的。不过如果想和我一样让显示的横坐标和纵坐标都是中文的话，需要在调用 july 前设置一下 locale
+</p>
+<div class="org-src-container">
+<pre class="src src-python">locale.setlocale(locale.LC_ALL, <span style="color: #66cccc;">"zh_CN.UTF8"</span>)
+</pre>
+</div>
+
+<p>
+另外就是在调用 july 的时候设置一下字体，这个在 README 的示例中有。
+</p>
+
+<p>
+最近才看到 yihong 的 <a href="https://github.com/yihong0618/GitHubPoster">GithubPoster</a> 感觉非常不错，之后也许就用 yihong 的这个工具了。
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2937745" class="outline-2">
+<h2 id="org2937745">用 wordcloud 绘制词云</h2>
+<div class="outline-text-2" id="text-org2937745">
+<p>
+<a href="https://github.com/amueller/word_cloud">wordcloud</a> 是基于 matplotlib 实现的词云绘制工具，它自己也提供了命令行工具直接从文本中读取数据然后绘制，但它里面自带的是按空白符进行分词的做法，也就是说不适用于中文文本。
+</p>
+
+<p>
+好在它的 WordCloud 类实现了一个叫作 generate_from_frequencies 的方法，所以我是先在之前用 LTP 分词自己统计好频次后使用这个方法来绘制，像这样：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">from</span> wordcloud <span style="color: #99cc99;">import</span> WordCloud
+
+<span style="color: #ffcc66;">freqs</span> = {
+    <span style="color: #66cccc;">'&#26379;&#21451;'</span>: 432,
+    <span style="color: #66cccc;">'&#21507;&#39277;'</span>: 368,
+    <span style="color: #66cccc;">'&#28216;&#25103;'</span>: 127,
+    <span style="color: #66cccc;">'&#32842;&#22825;'</span>: 106,
+    <span style="color: #66cccc;">'&#26202;&#39277;'</span>: 83,
+    <span style="color: #66cccc;">'&#25972;&#29702;'</span>: 76,
+    <span style="color: #66cccc;">'&#21320;&#39277;'</span>: 75,
+    <span style="color: #66cccc;">'&#26089;&#39277;'</span>: 74,
+    <span style="color: #66cccc;">'&#27927;&#28465;'</span>: 60,
+    <span style="color: #66cccc;">'&#29238;&#27597;'</span>: 55
+}
+<span style="color: #ffcc66;">wc</span> = WordCloud(background_color=<span style="color: #66cccc;">'white'</span>, width=200, height=200)
+wc.generate_from_frequencies(freqs)
+wc.to_file(<span style="color: #66cccc;">'wordcloud.png'</span>)
+</pre>
+</div>
+
+<p>
+不过它默认的实现不支持中文绘制，上面的代码会得到这样的图
+</p>
+
+
+<div id="orgab8cdb8" class="figure">
+<p><img src="/assets/img/wordcloud_example_without_cnfont.png" alt="wordcloud_example_without_cnfont.png" />
+</p>
+</div>
+
+<p>
+通过 font_path 参数设置一下中文字体路径即可，我使用了文泉驿微米黑这个字体：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ffcc66;">wc</span> = WordCloud(
+    background_color=<span style="color: #66cccc;">'white'</span>,
+    width=200,
+    height=200,
+    font_path=<span style="color: #66cccc;">"/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"</span>
+)
+</pre>
+</div>
+
+<p>
+这样就能得到
+</p>
+
+
+<div id="orgc3bd933" class="figure">
+<p><img src="/assets/img/wordcloud_example_with_cnfont.png" alt="wordcloud_example_with_cnfont.png" />
+</p>
+</div>
+
+<p>
+如果想要将词云绘制成特定的形状，就要使用前面用 ImageMagick 生成的 mask 图像了，通过 mask 参数传入对应的图像即可，最终会在 mask 图像的黑色区域绘制，比如使用前面那个圆形的 mask 图像：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">from</span> wordcloud <span style="color: #99cc99;">import</span> WordCloud
+<span style="color: #99cc99;">from</span> PIL <span style="color: #99cc99;">import</span> Image
+<span style="color: #99cc99;">import</span> numpy <span style="color: #99cc99;">as</span> np
+
+<span style="color: #ffcc66;">mask_image</span> = np.array(Image.<span style="color: #cc99cc;">open</span>(<span style="color: #66cccc;">'circle400.png'</span>))
+<span style="color: #ffcc66;">freqs</span> = {
+    <span style="color: #66cccc;">'&#26379;&#21451;'</span>: 432,
+    <span style="color: #66cccc;">'&#21507;&#39277;'</span>: 368,
+    <span style="color: #66cccc;">'&#28216;&#25103;'</span>: 127,
+    <span style="color: #66cccc;">'&#32842;&#22825;'</span>: 106,
+    <span style="color: #66cccc;">'&#26202;&#39277;'</span>: 83,
+    <span style="color: #66cccc;">'&#25972;&#29702;'</span>: 76,
+    <span style="color: #66cccc;">'&#21320;&#39277;'</span>: 75,
+    <span style="color: #66cccc;">'&#26089;&#39277;'</span>: 74,
+    <span style="color: #66cccc;">'&#27927;&#28465;'</span>: 60,
+    <span style="color: #66cccc;">'&#29238;&#27597;'</span>: 55
+}
+<span style="color: #ffcc66;">wc</span> = WordCloud(
+    background_color=<span style="color: #66cccc;">'white'</span>,
+    mask=mask_image,
+    width=<span style="color: #cc99cc;">len</span>(mask_image[0]),
+    height=<span style="color: #cc99cc;">len</span>(mask_image),
+    font_path=<span style="color: #66cccc;">"/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"</span>,
+)
+wc.generate_from_frequencies(freqs)
+wc.to_file(<span style="color: #66cccc;">'wordcloud.png'</span>)
+</pre>
+</div>
+
+<p>
+结果如下图所示，虽然因为词比较少看着不太圆，但大体形状上能看出来和前面那张图的差别。
+</p>
+
+
+<div id="orgd1e5bec" class="figure">
+<p><img src="/assets/img/wordcloud_example_circle.png" alt="wordcloud_example_circle.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org00a4661" class="outline-2">
+<h2 id="org00a4661">用 matplotlib_venn_wordcloud 绘制韦恩图形式的词云</h2>
+<div class="outline-text-2" id="text-org00a4661">
+<p>
+韦恩图（Venn Diagram）是用来展示两个集合之间关系（是否有交集、交集部分有多少等）的一个图形，如下图所示：
+</p>
+
+
+<div id="org79e38da" class="figure">
+<p><img src="/assets/img/venn_example.png" alt="venn_example.png" />
+</p>
+</div>
+
+<p>
+写《我的2021》分析聊天记录的时候，我想要分析我和一个特定的人交流的时候我们双方说的内容之间的同异同时又希望能把交流中高频的词突出显示，所以就想要在一个韦恩图形式的词云，具体来说是下面这个样子：
+</p>
+
+
+<div id="orgb6b364e" class="figure">
+<p><img src="/assets/img/venn_wordcloud_example1.png" alt="venn_wordcloud_example1.png" />
+</p>
+</div>
+
+<p>
+可以看到，总体上它还是一个词云图，但又引入了韦恩图的概念，左边的圆是我说过的话里的关键词、右边的图则是朋友说过的话里的关键词，两个圆的交集则是我们双方都说过的词。
+</p>
+
+<p>
+这个是一个比较小众的需求，但最后还真找到了一个实现，也就是 <a href="https://github.com/paulbrodersen/matplotlib_venn_wordcloud">matplotlib_venn_wordcloud</a> 这个工具，其使用方法如下所示：
+</p>
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> matplotlib.pyplot <span style="color: #99cc99;">as</span> plt
+<span style="color: #99cc99;">from</span> matplotlib_venn_wordcloud <span style="color: #99cc99;">import</span> venn2_wordcloud
+
+plt.<span style="color: #ffcc66;">rcParams</span>[<span style="color: #66cccc;">"font.sans-serif"</span>] = [<span style="color: #66cccc;">"WenQuanYi Micro Hei"</span>]
+
+<span style="color: #ffcc66;">words</span> = {
+    <span style="color: #66cccc;">'&#25105;'</span>: {<span style="color: #66cccc;">'&#30693;&#35782;'</span>, <span style="color: #66cccc;">'&#24037;&#20855;'</span>, <span style="color: #66cccc;">'&#31508;&#35760;'</span>, <span style="color: #66cccc;">'&#24314;&#31435;'</span>, <span style="color: #66cccc;">'&#20307;&#31995;'</span>, <span style="color: #66cccc;">'&#31649;&#29702;'</span>, <span style="color: #66cccc;">'&#26041;&#24335;'</span>, <span style="color: #66cccc;">'&#24819;&#27861;'</span>, <span style="color: #66cccc;">'&#20215;&#20540;'</span>, <span style="color: #66cccc;">'&#20248;&#31168;'</span>, <span style="color: #66cccc;">'&#29702;&#35299;'</span>},
+    <span style="color: #66cccc;">'&#26379;&#21451;'</span>: {<span style="color: #66cccc;">'&#31508;&#35760;'</span>, <span style="color: #66cccc;">'&#30693;&#35782;'</span>, <span style="color: #66cccc;">'&#20307;&#31995;'</span>, <span style="color: #66cccc;">'&#20869;&#23481;'</span>, <span style="color: #66cccc;">'&#25945;&#32946;'</span>, <span style="color: #66cccc;">'&#23884;&#20837;'</span>, <span style="color: #66cccc;">'&#24341;&#29992;'</span>, <span style="color: #66cccc;">'&#21151;&#33021;'</span>, <span style="color: #66cccc;">'&#38142;&#25509;'</span>, <span style="color: #66cccc;">'&#20851;&#31995;'</span>},
+}
+<span style="color: #ffcc66;">freqs</span> = {
+    <span style="color: #66cccc;">'&#30693;&#35782;'</span>: 69,
+    <span style="color: #66cccc;">'&#31508;&#35760;'</span>: 68,
+    <span style="color: #66cccc;">'&#20869;&#23481;'</span>: 65,
+    <span style="color: #66cccc;">'&#20307;&#31995;'</span>: 63,
+    <span style="color: #66cccc;">'&#24314;&#31435;'</span>: 61,
+    <span style="color: #66cccc;">'&#24037;&#20855;'</span>: 61,
+    <span style="color: #66cccc;">'&#25945;&#32946;'</span>: 59,
+    <span style="color: #66cccc;">'&#26041;&#24335;'</span>: 57,
+    <span style="color: #66cccc;">'&#24819;&#27861;'</span>: 57,
+    <span style="color: #66cccc;">'&#29702;&#35299;'</span>: 55,
+    <span style="color: #66cccc;">'&#38142;&#25509;'</span>: 44,
+    <span style="color: #66cccc;">'&#23884;&#20837;'</span>: 44,
+    <span style="color: #66cccc;">'&#21151;&#33021;'</span>: 43,
+    <span style="color: #66cccc;">'&#20215;&#20540;'</span>: 32,
+    <span style="color: #66cccc;">'&#24341;&#29992;'</span>: 27,
+    <span style="color: #66cccc;">'&#31649;&#29702;'</span>: 25,
+    <span style="color: #66cccc;">'&#20851;&#31995;'</span>: 23,
+    <span style="color: #66cccc;">'&#20248;&#31168;'</span>: 19,
+}
+<span style="color: #ffcc66;">names</span>, <span style="color: #ffcc66;">sets</span> = <span style="color: #cc99cc;">list</span>(<span style="color: #cc99cc;">zip</span>(*words.items()))
+venn2_wordcloud(
+    [<span style="color: #cc99cc;">set</span>(item) <span style="color: #99cc99;">for</span> item <span style="color: #99cc99;">in</span> sets],
+    alpha=0.8,
+    set_labels=names,
+    word_to_frequency=freqs,
+    wordcloud_kwargs={
+        <span style="color: #66cccc;">'font_path'</span>: <span style="color: #66cccc;">'/usr/share/fonts/truetype/wqy/wqy-microhei.ttc'</span>,
+    }
+)
+plt.savefig(<span style="color: #66cccc;">'venn_wordcloud.png'</span>)
+</pre>
+</div>
+
+<p>
+由于这个工具对中文支持也不是很好，所以需要像我上面的代码一样，分别在两处设置一下中文字体。
+</p>
+
+<p>
+上面的代码会得到如下的图像：
+</p>
+
+
+<div id="org227670f" class="figure">
+<p><img src="/assets/img/venn_wordcloud_example2.png" alt="venn_wordcloud_example2.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org032a7c6" class="outline-2">
+<h2 id="org032a7c6">用 matplotlib.pyplot.subplot_mosaic 进行布局设置</h2>
+<div class="outline-text-2" id="text-org032a7c6">
+<p>
+除此以外的大部分图像如柱状图、线图、饼图等我都是用 pandas 和 matplotlib 来绘制的，这一块的公开资料很多，所以这里只提一下要在一张图里画多个图表时设置布局的心得，具体来说是用 matplotlib.pyplot.subplot_mosaic 这个函数，它可以用比较直观地方式进行绘图的布局设计 —— 图像分为几行几列、某一个子图占据哪几行哪几列之类的，比如说：
+</p>
+<ul class="org-ul">
+<li><p>
+绘制 A/B/C/D 四个子图，A/B/C 一起在第一行并且各占 1/3 的宽度，子图 D 占据第二行整行
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> matplotlib.pyplot <span style="color: #99cc99;">as</span> plt
+plt.subplot_mosaic(<span style="color: #66cccc;">'ABC;DDD'</span>)
+</pre>
+</div>
+
+<p>
+上面的代码会得到下面的布局：
+</p>
+
+
+<div id="org2fa0f3c" class="figure">
+<p><img src="/assets/img/subplot_mosaic_example1.png" alt="subplot_mosaic_example1.png" />
+</p>
+</div></li>
+
+<li><p>
+绘制 A/B/C 三个子图，A/B 一起在第一列并且各占 1/2 的高度，C 占据第二列整列
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> matplotlib.pyplot <span style="color: #99cc99;">as</span> plt
+plt.subplot_mosaic(<span style="color: #66cccc;">'AC;BC'</span>)
+</pre>
+</div>
+
+<p>
+上面的代码会得到下面的布局：
+</p>
+
+
+<div id="orge47c8e2" class="figure">
+<p><img src="/assets/img/subplot_mosaic_example2.png" alt="subplot_mosaic_example2.png" />
+</p>
+</div></li>
+
+<li><p>
+绘制一个 3x3 的布局，但只在中心和 4 个角进行绘图
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #99cc99;">import</span> matplotlib.pyplot <span style="color: #99cc99;">as</span> plt
+plt.subplot_mosaic([
+    [<span style="color: #66cccc;">'A'</span>, <span style="color: #66cccc;">'.'</span>, <span style="color: #66cccc;">'B'</span>],
+    [<span style="color: #66cccc;">'.'</span>, <span style="color: #66cccc;">'C'</span>, <span style="color: #66cccc;">'.'</span>],
+    [<span style="color: #66cccc;">'D'</span>, <span style="color: #66cccc;">'.'</span>, <span style="color: #66cccc;">'E'</span>],
+])
+</pre>
+</div>
+
+<p>
+上面的代码会得到下面的布局：
+</p>
+
+
+<div id="orgd51411b" class="figure">
+<p><img src="/assets/img/subplot_mosaic_example3.png" alt="subplot_mosaic_example3.png" />
+</p>
+</div></li>
+</ul>
+</div>
+</div>
