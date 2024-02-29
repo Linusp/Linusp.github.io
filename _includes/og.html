@@ -12,7 +12,7 @@
 {% if page.desc %}
   <meta content="{{ page.desc }}" property="og:description">
 {% elsif page.excerpt %}
-  <meta content="{{ page.excerpt }}" property="og:description">
+  <meta content="{{ post.excerpt | strip_html | truncate: 100 }}" property="og:description">
 {% else %}
   <meta content="{{ site.description }}" property="og:description">
 {% endif %}
